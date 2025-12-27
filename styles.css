@@ -477,13 +477,16 @@ input:focus, select:focus, textarea:focus{
   gap:1rem; flex-wrap:wrap;
 }
 .footer__brand{display:flex; align-items:center; gap:.75rem; color:rgba(243,246,249,.88)}
-.footer__mark{
-  display:grid; place-items:center;
-  width:42px; height:42px;
+
+.footer__logo{
+  width:42px;
+  height:42px;
+  object-fit:contain;
   border-radius:16px;
-  border:1px solid color-mix(in oklab, var(--gbd-mustard) 35%, transparent);
-  background: color-mix(in oklab, var(--gbd-mustard) 10%, transparent);
-  font-weight:1000;
+  padding:6px;
+  background: rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow: 0 16px 36px rgba(0,0,0,.35);
 }
 .footer__links{display:flex; gap:1rem; flex-wrap:wrap}
 .footer__links a{color:rgba(243,246,249,.80)}
