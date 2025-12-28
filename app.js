@@ -141,7 +141,7 @@
   const form = document.getElementById("contactForm");
   const formNote = document.getElementById("formNote");
   const emailLink = document.getElementById("emailLink");
-  const toEmail = "hello@goyonebydesign.com"; // change if needed
+  const toEmail = "admin@goyonebydesign.com"; // change if needed
   if (emailLink) emailLink.href = `mailto:${toEmail}`;
 
   if (form) {
