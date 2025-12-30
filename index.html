@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Goyone By Design | Futuristic Premium Branding & Design</title>
-  <meta name="description" content="Premium brand systems—logos, menus, ads, and modern web. Designed to look expensive and convert." />
+  <meta name="description" content="Premium brand systems—logos, menus, ads, and modern web." />
   <meta name="theme-color" content="#060709" />
 
   <!-- Fonts -->
@@ -12,25 +12,37 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Styles / Scripts -->
+  <!-- CSS / JS -->
   <link rel="stylesheet" href="styles.css" />
   <script defer src="app.js"></script>
 
-  <!-- Avatar Enhancement -->
+  <!-- Avatar enhancement -->
   <style>
-    .contactCard__avatar {
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin-right: 14px;
-      filter: grayscale(100%);
-      transition: all 0.35s ease;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    .contactCard__avatar{
+      width:72px;
+      height:72px;
+      border-radius:50%;
+      object-fit:cover;
+      filter:grayscale(100%);
+      transition:all .35s ease;
+      box-shadow:0 8px 24px rgba(0,0,0,.35);
     }
-    .contactCard__top:hover .contactCard__avatar {
-      filter: grayscale(0%);
-      box-shadow: 0 10px 30px rgba(255,180,90,0.35);
+    .contactCard__top:hover .contactCard__avatar{
+      filter:grayscale(0%);
+      box-shadow:0 10px 30px rgba(255,180,90,.35);
+    }
+    .formActions{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      margin-top:10px;
+    }
+    @media(min-width:820px){
+      .formActions{
+        flex-direction:row;
+        align-items:center;
+        gap:16px;
+      }
     }
   </style>
 </head>
@@ -38,11 +50,10 @@
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
 
-<!-- HEADER -->
 <header class="header">
   <div class="container header__inner">
     <a class="brand" href="#">
-      <img src="logo.png" alt="Goyone By Design logo" class="brand__logo" />
+      <img src="logo.png" class="brand__logo" alt="Goyone By Design logo">
       <div>
         <span class="brand__name">Goyone By Design</span>
         <span class="brand__sub">Futuristic premium design systems</span>
@@ -59,18 +70,16 @@
 
 <main id="main">
 
-<!-- HERO -->
 <section class="hero">
   <div class="container hero__grid">
     <div class="hero__copy">
       <h1>Design that looks <span class="highlight">expensive</span> — and performs.</h1>
-      <p>Logos, menus, ads, and modern websites built with clarity, hierarchy, and luxury spacing.</p>
-      <a href="#contact" class="btn btn--primary">Get a Quote</a>
+      <p>Premium logos, menus, ads, and modern websites.</p>
+      <a href="#contact" class="btn btn--primary">Get a quote</a>
     </div>
   </div>
 </section>
 
-<!-- SERVICES -->
 <section class="section" id="services">
   <div class="container">
     <h2>Services</h2>
@@ -82,46 +91,20 @@
   </div>
 </section>
 
-<!-- WORK -->
 <section class="section section--alt" id="work">
   <div class="container">
     <h2>Selected Work</h2>
-
     <div class="workGrid">
-      <div class="workCard">
-        <img src="assets/work/aurelian-logo.png" alt="Aurelian logo">
-        <h3>Aurelian — Logo</h3>
-      </div>
-
-      <div class="workCard">
-        <img src="assets/work/nox-storefront.png" alt="Nox storefront">
-        <h3>Nox — Storefront</h3>
-      </div>
-
-      <div class="workCard">
-        <img src="assets/work/velora-card.png" alt="Velora brand card">
-        <h3>Velora — Brand Card</h3>
-      </div>
-
-      <div class="workCard">
-        <img src="assets/work/aurelian-menu.png" alt="Aurelian menu">
-        <h3>Aurelian — Menu</h3>
-      </div>
-
-      <div class="workCard">
-        <img src="assets/work/nox-menu.png" alt="Nox menu">
-        <h3>Nox — Menu</h3>
-      </div>
-
-      <div class="workCard">
-        <img src="assets/work/velora-menu.png" alt="Velora menu">
-        <h3>Velora — Menu</h3>
-      </div>
+      <div class="workCard"><img src="assets/work/aurelian-logo.png"><h3>Aurelian — Logo</h3></div>
+      <div class="workCard"><img src="assets/work/nox-storefront.png"><h3>Nox — Storefront</h3></div>
+      <div class="workCard"><img src="assets/work/velora-card.png"><h3>Velora — Card</h3></div>
+      <div class="workCard"><img src="assets/work/aurelian-menu.png"><h3>Aurelian — Menu</h3></div>
+      <div class="workCard"><img src="assets/work/nox-menu.png"><h3>Nox — Menu</h3></div>
+      <div class="workCard"><img src="assets/work/velora-menu.png"><h3>Velora — Menu</h3></div>
     </div>
   </div>
 </section>
 
-<!-- PROCESS -->
 <section class="section" id="process">
   <div class="container">
     <h2>Process</h2>
@@ -134,37 +117,53 @@
   </div>
 </section>
 
-<!-- CONTACT -->
+<!-- CONTACT (FIXED) -->
 <section class="section section--alt" id="contact">
   <div class="container">
     <h2>Contact</h2>
 
     <div class="contactGrid">
-      <!-- REAL FORM -->
-      <form class="form" action="https://formspree.io/f/mregjvak" method="POST">
-        <input name="name" placeholder="Name" required />
-        <input name="email" type="email" placeholder="Email" required />
-        <select name="service" required>
-          <option value="" disabled selected>What do you need?</option>
-          <option>Logo / Brand Identity</option>
-          <option>Menu / Restaurant Design</option>
-          <option>Flyers / Ads</option>
-          <option>Website</option>
-        </select>
-        <textarea name="message" rows="5" placeholder="Tell me about your project" required></textarea>
+      <!-- FORM -->
+      <form class="form" id="contactForm" novalidate>
+        <div class="fieldRow">
+          <div class="field">
+            <label>Name</label>
+            <input name="name" required placeholder="Your name">
+          </div>
+          <div class="field">
+            <label>Email</label>
+            <input type="email" name="email" required placeholder="you@email.com">
+          </div>
+        </div>
 
-        <input type="hidden" name="_subject" value="New Goyone By Design Inquiry">
-        <button class="btn btn--primary">Send Request</button>
+        <div class="field">
+          <label>What do you need?</label>
+          <select name="service" required>
+            <option value="" disabled selected>Select one…</option>
+            <option>Logo / Brand Identity</option>
+            <option>Menu / Restaurant Design</option>
+            <option>Flyers / Ads</option>
+            <option>Website</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Details</label>
+          <textarea name="message" rows="6" required placeholder="Tell me about your project"></textarea>
+        </div>
+
+        <div class="formActions">
+          <button class="btn btn--primary btn--lg" id="sendBtn">Send request</button>
+          <p class="formNote muted" id="formNote">Messages are sent securely.</p>
+        </div>
+
+        <input type="text" name="_gotcha" style="display:none">
       </form>
 
       <!-- QUICK INFO -->
       <aside class="contactCard">
         <div class="contactCard__top">
-          <img
-            src="assets/work/mike.png"
-            class="contactCard__avatar"
-            alt="Michael Goyone portrait"
-          />
+          <img src="assets/work/mike.png" class="contactCard__avatar" alt="Michael Goyone">
           <div>
             <h3>Michael Goyone</h3>
             <p class="muted">Founder · Creative Director</p>
@@ -189,7 +188,44 @@
 </footer>
 
 <script>
-  document.getElementById("year").textContent = new Date().getFullYear();
+document.getElementById("year").textContent = new Date().getFullYear();
+
+(() => {
+  const form = document.getElementById("contactForm");
+  const note = document.getElementById("formNote");
+  const btn = document.getElementById("sendBtn");
+  if (!form) return;
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
+    btn.disabled = true;
+    note.textContent = "Sending…";
+
+    try {
+      const res = await fetch("https://formspree.io/f/mregjvak", {
+        method: "POST",
+        headers: { "Accept": "application/json" },
+        body: new FormData(form)
+      });
+
+      if (res.ok) {
+        form.reset();
+        note.textContent = "✅ Sent! I’ll reply soon.";
+      } else {
+        note.textContent = "Error. Please email admin@goyonebydesign.com.";
+      }
+    } catch {
+      note.textContent = "Network error. Please try again.";
+    } finally {
+      btn.disabled = false;
+    }
+  });
+})();
 </script>
 
 </body>
