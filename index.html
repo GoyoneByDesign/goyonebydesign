@@ -1,83 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Goyone By Design | Futuristic Premium Branding & Design</title>
+  <meta name="description" content="Futuristic premium design systems—logos, menus, ads, and modern web. Built to look expensive and convert." />
+  <meta name="theme-color" content="#060709" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Fraunces:opsz,wght@9..144,300;9..144,600;9..144,800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./styles.css" />
+  <script defer src="./app.js"></script>
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- Ambient FX -->
+  <div class="fx fx--aurora" aria-hidden="true"></div>
+  <div class="fx fx--grid" aria-hidden="true"></div>
+  <div class="fx fx--vignette" aria-hidden="true"></div>
+  <canvas id="particles" aria-hidden="true"></canvas>
+  <div class="cursorGlow" aria-hidden="true"></div>
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="container topbar__inner">
+      <span class="chip chip--live">
+        <span class="chip__dot" aria-hidden="true"></span>
+        Now Booking
+      </span>
+      <span class="topbar__text">Logos • Menus • Ads • Websites • Brand Systems</span>
+      <a class="btn btn--tiny btn--ghost" href="#contact">Request a quote</a>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="header" data-elevate="false">
+    <div class="container header__inner">
+      <a class="brand" href="#" aria-label="Goyone By Design home">
+        <img class="brand__logo" src="logo.png" alt="Goyone By Design logo" />
+        <div class="brand__stack">
+          <span class="brand__name">Goyone By Design</span>
+          <span class="brand__sub">Futuristic premium design systems</span>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="Primary">
+        <button class="nav__toggle" aria-expanded="false" aria-controls="navMenu">
+          <span class="nav__toggleLines" aria-hidden="true"></span>
+          <span class="sr-only">Menu</span>
+        </button>
+
+        <div class="nav__menu" id="navMenu">
+          <a href="#services">Services</a>
+          <a href="#work">Work</a>
+          <a href="#process">Process</a>
+          <a href="#about">About</a>
+          <a class="btn btn--small btn--primary magnetic" href="#contact">Contact</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero">
+      <div class="container hero__grid">
+        <div class="hero__copy">
+          <p class="eyebrow">
+            <span class="eyebrow__line" aria-hidden="true"></span>
+            PREMIUM • FUTURISTIC • CONVERSION-FOCUSED
+          </p>
+
+          <h1 class="hero__title">
+            Design that looks <span class="textGlow">expensive</span> —
+            <span class="gradText">and performs.</span>
+          </h1>
+
+          <p class="hero__sub">
+            I build premium brand systems: logos, restaurant menus, ad creatives, and sleek websites.
+            Clean hierarchy, luxury spacing, modern motion. Everything aligned.
+          </p>
+
+          <div class="hero__cta">
+            <a class="btn btn--primary btn--lg magnetic" href="#contact">
+              Get a quote
+              <span class="btn__shine" aria-hidden="true"></span>
+            </a>
+            <a class="btn btn--ghost btn--lg magnetic" href="#work">See work</a>
+          </div>
+
+          <div class="hero__stats">
+            <div class="statCard reveal">
+              <p class="statCard__kpi">Brand Systems</p>
+              <p class="statCard__desc">Logos, menus, templates, signage</p>
+            </div>
+            <div class="statCard reveal" style="transition-delay:80ms">
+              <p class="statCard__kpi">Premium Output</p>
+              <p class="statCard__desc">Futuristic glass UI + clean type</p>
+            </div>
+            <div class="statCard reveal" style="transition-delay:160ms">
+              <p class="statCard__kpi">Fast Delivery</p>
+              <p class="statCard__desc">Clear rounds, quick iteration</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero__visual" aria-hidden="true">
+          <div class="orb orb--a"></div>
+          <div class="orb orb--b"></div>
+          <div class="orb orb--c"></div>
+
+          <div class="device tilt" data-tilt>
+            <div class="device__top">
+              <span class="pill">GBD</span>
+              <span class="pill pill--ghost">Premium</span>
+            </div>
+            <div class="device__mid">
+              <div class="scanline"></div>
+              <p class="device__title">Futuristic Brand Stack</p>
+              <p class="device__text">Logo • Menu • Ads • Web • Templates</p>
+              <div class="bars">
+                <span class="bar bar--1"></span>
+                <span class="bar bar--2"></span>
+                <span class="bar bar--3"></span>
+              </div>
+            </div>
+            <div class="device__bottom">
+              <span class="dot dot--m"></span>
+              <span class="dot dot--r"></span>
+              <span class="dot dot--b"></span>
+              <span class="dot dot--o"></span>
+            </div>
+          </div>
+
+          <div class="frame"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services -->
+    <section class="section" id="services">
+      <div class="container">
+        <div class="sectionHead">
+          <h2 class="reveal">Services</h2>
+          <p class="reveal" style="transition-delay:80ms">
+            Premium deliverables with futuristic polish. Choose one service or bundle everything into a full system.
+          </p>
+        </div>
+
+        <div class="cards cards--3">
+          <article class="card card--glow reveal" data-glow>
+            <div class="card__icon" aria-hidden="true">⟡</div>
+            <h3>Brand Identity</h3>
+            <p>Logo design, color systems, typography, brand rules, and social kits.</p>
+            <ul>
+              <li>Primary + alternate logos</li>
+              <li>Brand guidelines (PDF)</li>
+              <li>Export pack for print & web</li>
+            </ul>
+          </article>
+
+          <article class="card card--glow reveal" data-glow style="transition-delay:80ms">
+            <div class="card__icon" aria-hidden="true">⌁</div>
+            <h3>Restaurant Design</h3>
+            <p>Menus, flyers, coupons, posters, signage, packaging, uniforms.</p>
+            <ul>
+              <li>Upsell-friendly hierarchy</li>
+              <li>Print-ready + digital versions</li>
+              <li>Consistent look across locations</li>
+            </ul>
+          </article>
+
+          <article class="card card--glow reveal" data-glow style="transition-delay:160ms">
+            <div class="card__icon" aria-hidden="true">⌬</div>
+            <h3>Web & Digital</h3>
+            <p>Fast landing pages, modern sites, promo graphics, thumbnails and content kits.</p>
+            <ul>
+              <li>Mobile-first layout</li>
+              <li>Speed + SEO basics</li>
+              <li>Conversion-focused sections</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
     <!-- Work -->
     <section class="section section--alt" id="work">
       <div class="container">
         <div class="sectionHead">
           <h2 class="reveal">Selected Work</h2>
           <p class="reveal" style="transition-delay:80ms">
-            A few recent samples—logos, menus, and brand assets.
+            Replace these placeholders with your real projects. I can also build a gallery page next.
           </p>
         </div>
 
         <div class="workGrid">
-          <!-- AURELIAN LOGO -->
           <article class="workCard reveal" data-tilt>
             <div class="workCard__thumb">
-              <img
-                src="assets/work/aurelian-logo.png"
-                alt="Aurelian logo design"
-                loading="lazy"
-                style="width:100%;height:100%;object-fit:cover;display:block;"
-              />
-              <div class="workCard__meta">
-                <span class="tag">Brand Identity</span>
-                <span class="workCard__title">Aurelian — Logo</span>
-              </div>
-            </div>
-            <div class="workCard__body">
-              <p class="muted">Futuristic mark with premium spacing and clean geometry.</p>
-            </div>
-          </article>
-
-          <!-- NOX STOREFRONT -->
-          <article class="workCard reveal" data-tilt style="transition-delay:80ms">
-            <div class="workCard__thumb">
-              <img
-                src="assets/work/nox-storefront.png"
-                alt="Nox storefront mockup"
-                loading="lazy"
-                style="width:100%;height:100%;object-fit:cover;display:block;"
-              />
-              <div class="workCard__meta">
-                <span class="tag">Brand Application</span>
-                <span class="workCard__title">Nox — Storefront</span>
-              </div>
-            </div>
-            <div class="workCard__body">
-              <p class="muted">Real-world brand placement with high-end contrast and clarity.</p>
-            </div>
-          </article>
-
-          <!-- VELORA CARD -->
-          <article class="workCard reveal" data-tilt style="transition-delay:160ms">
-            <div class="workCard__thumb">
-              <img
-                src="assets/work/velora-card.png"
-                alt="Velora brand card design"
-                loading="lazy"
-                style="width:100%;height:100%;object-fit:cover;display:block;"
-              />
-              <div class="workCard__meta">
-                <span class="tag">Print Design</span>
-                <span class="workCard__title">Velora — Brand Card</span>
-              </div>
-            </div>
-            <div class="workCard__body">
-              <p class="muted">Premium typography and layout designed to look expensive.</p>
-            </div>
-          </article>
-
-          <!-- AURELIAN MENU -->
-          <article class="workCard reveal" data-tilt style="transition-delay:240ms">
-            <div class="workCard__thumb">
-              <img
-                src="assets/work/aurelian-menu.png"
-                alt="Aurelian menu design"
-                loading="lazy"
-                style="width:100%;height:100%;object-fit:cover;display:block;"
-              />
               <div class="workCard__meta">
                 <span class="tag">Menu Design</span>
-                <span class="workCard__title">Aurelian — Menu</span>
+                <span class="workCard__title">Premium Catering Menu</span>
               </div>
             </div>
             <div class="workCard__body">
@@ -85,47 +212,208 @@
             </div>
           </article>
 
-          <!-- NOX MENU -->
-          <article class="workCard reveal" data-tilt style="transition-delay:320ms">
+          <article class="workCard reveal" data-tilt style="transition-delay:80ms">
             <div class="workCard__thumb">
-              <img
-                src="assets/work/nox-menu.png"
-                alt="Nox menu design"
-                loading="lazy"
-                style="width:100%;height:100%;object-fit:cover;display:block;"
-              />
               <div class="workCard__meta">
-                <span class="tag">Menu Design</span>
-                <span class="workCard__title">Nox — Menu</span>
+                <span class="tag">Brand Identity</span>
+                <span class="workCard__title">Logo + Brand Kit</span>
               </div>
             </div>
             <div class="workCard__body">
-              <p class="muted">Premium layout built for readability and conversion.</p>
+              <p class="muted">Distinct mark, consistent palette, real-world outputs.</p>
             </div>
           </article>
 
-          <!-- VELORA MENU -->
-          <article class="workCard reveal" data-tilt style="transition-delay:400ms">
+          <article class="workCard reveal" data-tilt style="transition-delay:160ms">
             <div class="workCard__thumb">
-              <img
-                src="assets/work/velora-menu.png"
-                alt="Velora menu design"
-                loading="lazy"
-                style="width:100%;height:100%;object-fit:cover;display:block;"
-              />
               <div class="workCard__meta">
-                <span class="tag">Menu Design</span>
-                <span class="workCard__title">Velora — Menu</span>
+                <span class="tag">Promo Design</span>
+                <span class="workCard__title">Seasonal Campaign Assets</span>
               </div>
             </div>
             <div class="workCard__body">
-              <p class="muted">Modern type + spacing with a future-luxury presentation.</p>
+              <p class="muted">High-impact visuals built for speed + clarity.</p>
+            </div>
+          </article>
+
+          <article class="workCard reveal" data-tilt style="transition-delay:240ms">
+            <div class="workCard__thumb">
+              <div class="workCard__meta">
+                <span class="tag">Web</span>
+                <span class="workCard__title">Landing Page System</span>
+              </div>
+            </div>
+            <div class="workCard__body">
+              <p class="muted">Glass UI, smooth motion, mobile-first structure.</p>
             </div>
           </article>
         </div>
 
-        <div class="centerRow reveal" style="transition-delay:480ms">
+        <div class="centerRow reveal" style="transition-delay:320ms">
           <a class="btn btn--ghost magnetic" href="#contact">Want this style for your brand?</a>
         </div>
       </div>
     </section>
+
+    <!-- Process -->
+    <section class="section" id="process">
+      <div class="container">
+        <div class="sectionHead">
+          <h2 class="reveal">Process</h2>
+          <p class="reveal" style="transition-delay:80ms">Simple, fast, and professional—built for real business deadlines.</p>
+        </div>
+
+        <div class="steps">
+          <div class="step reveal">
+            <div class="step__num">01</div>
+            <h3>Discovery</h3>
+            <p>Goal, audience, examples, timeline, deliverables.</p>
+          </div>
+          <div class="step reveal" style="transition-delay:80ms">
+            <div class="step__num">02</div>
+            <h3>Design</h3>
+            <p>First concepts delivered quickly with clear direction.</p>
+          </div>
+          <div class="step reveal" style="transition-delay:160ms">
+            <div class="step__num">03</div>
+            <h3>Refine</h3>
+            <p>Revisions until it feels premium and correct.</p>
+          </div>
+          <div class="step reveal" style="transition-delay:240ms">
+            <div class="step__num">04</div>
+            <h3>Deliver</h3>
+            <p>Organized exports for print, web, and social.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section class="section section--alt" id="about">
+      <div class="container about">
+        <div class="about__copy reveal">
+          <h2>About</h2>
+          <p>
+            Goyone By Design builds premium visual systems that make brands look sharp, consistent, and high-end.
+            If you want “future-luxury” presentation—logos, menus, ads, web—this is built for you.
+          </p>
+          <div class="about__bullets">
+            <div class="bullet"><span class="bullet__dot"></span> High-end typography + spacing</div>
+            <div class="bullet"><span class="bullet__dot"></span> Strong hierarchy (easy to read)</div>
+            <div class="bullet"><span class="bullet__dot"></span> Clean, modern motion</div>
+          </div>
+        </div>
+
+        <div class="about__panel reveal" style="transition-delay:100ms">
+          <div class="quoteBox">
+            <p class="quoteBox__quote">“Clean design isn’t minimal — it’s intentional.”</p>
+            <p class="quoteBox__by">— Goyone By Design</p>
+          </div>
+          <div class="pillRow">
+            <span class="chip">Premium Layout</span>
+            <span class="chip">Brand Consistency</span>
+            <span class="chip">Fast Execution</span>
+            <span class="chip">Modern Web</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="section" id="contact">
+      <div class="container">
+        <div class="sectionHead">
+          <h2 class="reveal">Contact</h2>
+          <p class="reveal" style="transition-delay:80ms">Send a request—I'll reply with timeline + options.</p>
+        </div>
+
+        <div class="contactGrid">
+          <form class="form reveal" id="contactForm">
+            <div class="fieldRow">
+              <div class="field">
+                <label for="name">Name</label>
+                <input id="name" name="name" type="text" placeholder="Your name" required />
+              </div>
+              <div class="field">
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" placeholder="you@email.com" required />
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="service">What do you need?</label>
+              <select id="service" name="service" required>
+                <option value="" selected disabled>Select one…</option>
+                <option>Logo / Brand Identity</option>
+                <option>Menu / Restaurant Design</option>
+                <option>Flyers / Ads / Promo</option>
+                <option>Website / Landing Page</option>
+                <option>Other</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="message">Details</label>
+              <textarea id="message" name="message" rows="5" placeholder="Goal, deadline, and what you want designed." required></textarea>
+            </div>
+
+            <button class="btn btn--primary btn--lg magnetic" type="submit">
+              Send request
+              <span class="btn__shine" aria-hidden="true"></span>
+            </button>
+
+            <p class="formNote muted" id="formNote">
+              This form opens your email app. Want a real submission form? Tell me and I’ll wire it up.
+            </p>
+          </form>
+
+          <aside class="contactCard reveal" style="transition-delay:100ms">
+            <div class="contactCard__top">
+              <img class="contactCard__logo" src="logo.png" alt="Goyone By Design logo" />
+              <div>
+                <h3>Quick Info</h3>
+                <p class="muted">Update these details to your real info.</p>
+              </div>
+            </div>
+
+            <div class="contactList">
+              <div class="contactItem">
+                <span class="contactLabel">Email</span>
+                <a id="emailLink" href="mailto:admin@goyonebydesign.com">admin@goyonebydesign.com</a>
+              </div>
+              <div class="contactItem">
+                <span class="contactLabel">Location</span>
+                <span>Northern Virginia / Remote</span>
+              </div>
+              <div class="contactItem">
+                <span class="contactLabel">Style</span>
+                <span>Futuristic • Premium • Clean</span>
+              </div>
+            </div>
+
+            <div class="ctaBox">
+              <p><strong>Want a full portfolio gallery?</strong></p>
+              <p class="muted">Next step: a Projects page with filters and full-size previews.</p>
+              <a class="btn btn--ghost btn--small magnetic" href="#work">See placeholders</a>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <img class="footer__logo" src="logo.png" alt="Goyone By Design logo" />
+        <span>© <span id="year"></span> Goyone By Design. All rights reserved.</span>
+      </div>
+      <div class="footer__links">
+        <a href="#services">Services</a>
+        <a href="#work">Work</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
