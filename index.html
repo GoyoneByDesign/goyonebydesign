@@ -4,47 +4,201 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Goyone By Design | Futuristic Premium Branding & Design</title>
-  <meta name="description" content="Premium brand systems—logos, menus, ads, and modern web." />
+  <meta name="description" content="Premium brand systems—logos, menus, ads, and modern web. Designed to look expensive and convert." />
   <meta name="theme-color" content="#060709" />
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://www.goyonebydesign.com/" />
+
+  <!-- Open Graph / Social -->
+  <meta property="og:title" content="Goyone By Design | Futuristic Premium Branding & Design" />
+  <meta property="og:description" content="Premium brand systems—logos, menus, ads, and modern web. Designed to look expensive and convert." />
+  <meta property="og:url" content="https://www.goyonebydesign.com/" />
+  <meta property="og:type" content="website" />
+  <!-- Optional: add an OG image later -->
+  <!-- <meta property="og:image" content="https://www.goyonebydesign.com/assets/og/og-image.jpg" /> -->
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- Robots -->
+  <meta name="robots" content="index,follow" />
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- CSS / JS -->
+  <!-- Your existing CSS / JS -->
   <link rel="stylesheet" href="styles.css" />
   <script defer src="app.js"></script>
 
-  <!-- Avatar enhancement -->
+  <!-- Enhancements (safe overrides) -->
   <style>
+    /* ---------- Avatar Enhancement ---------- */
     .contactCard__avatar{
-      width:72px;
-      height:72px;
-      border-radius:50%;
-      object-fit:cover;
-      filter:grayscale(100%);
+      width:72px;height:72px;border-radius:50%;
+      object-fit:cover;filter:grayscale(100%);
       transition:all .35s ease;
       box-shadow:0 8px 24px rgba(0,0,0,.35);
+      flex:0 0 auto;
     }
     .contactCard__top:hover .contactCard__avatar{
       filter:grayscale(0%);
       box-shadow:0 10px 30px rgba(255,180,90,.35);
     }
+
+    /* ---------- Form UX Enhancements ---------- */
     .formActions{
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      margin-top:10px;
+      display:flex;flex-direction:column;gap:12px;margin-top:10px;
     }
     @media(min-width:820px){
-      .formActions{
-        flex-direction:row;
-        align-items:center;
-        gap:16px;
-      }
+      .formActions{flex-direction:row;align-items:center;gap:16px;}
+      .formActions .formNote{margin:0;}
     }
+    .formNote{scroll-margin-top:110px;}
+    .field .errorText{
+      display:none;
+      margin-top:8px;
+      font-size:.9rem;
+      line-height:1.2;
+      color:#ff6b6b;
+    }
+    .field.is-error .errorText{display:block;}
+    .field.is-error input,
+    .field.is-error select,
+    .field.is-error textarea{
+      outline:2px solid rgba(255,107,107,.55);
+      box-shadow:0 0 0 6px rgba(255,107,107,.10);
+    }
+    .field.is-ok input,
+    .field.is-ok select,
+    .field.is-ok textarea{
+      outline:2px solid rgba(120,255,190,.25);
+    }
+
+    /* ---------- Lightbox (Portfolio) ---------- */
+    .lightboxOverlay{
+      position:fixed;inset:0;
+      background:rgba(0,0,0,.78);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      z-index:9999;
+      backdrop-filter: blur(6px);
+    }
+    .lightboxOverlay.is-open{display:flex;}
+    .lightbox{
+      width:min(1100px, 96vw);
+      max-height:92vh;
+      border-radius:18px;
+      overflow:hidden;
+      background:rgba(10,10,12,.92);
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow: 0 28px 90px rgba(0,0,0,.6);
+      display:flex;
+      flex-direction:column;
+    }
+    .lightboxTop{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:14px 14px;
+      border-bottom:1px solid rgba(255,255,255,.10);
+      gap:12px;
+    }
+    .lightboxTitle{
+      font-weight:700;
+      font-size:0.98rem;
+      opacity:.95;
+      margin:0;
+      padding:0 6px;
+      overflow:hidden;
+      white-space:nowrap;
+      text-overflow:ellipsis;
+    }
+    .lightboxBtns{
+      display:flex; gap:10px; align-items:center;
+    }
+    .lbBtn{
+      appearance:none;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(255,255,255,.06);
+      color:#fff;
+      padding:10px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      font:inherit;
+      transition:.2s ease;
+    }
+    .lbBtn:hover{background:rgba(255,255,255,.10);}
+    .lightboxBody{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+      overflow:auto;
+    }
+    .lightboxBody img{
+      max-width:100%;
+      height:auto;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background:#0b0b0f;
+    }
+
+    /* Make your work images clickable */
+    .workCard__thumb img,
+    .workCard img{
+      cursor: zoom-in;
+    }
+
+    /* Reduce motion for accessibility */
+    @media (prefers-reduced-motion: reduce){
+      .contactCard__avatar{transition:none;}
+      .lbBtn{transition:none;}
+    }
+
+    /* ---------- Rate limit warning style ---------- */
+    .formNote.is-warn{color:#ffd36a;}
+    .formNote.is-bad{color:#ff6b6b;}
+    .formNote.is-good{color:#8dffb7;}
   </style>
+
+  <!-- JSON-LD Schema: Organization + Person + Website -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.goyonebydesign.com/#website",
+        "url": "https://www.goyonebydesign.com/",
+        "name": "Goyone By Design",
+        "description": "Premium brand systems—logos, menus, ads, and modern web. Designed to look expensive and convert.",
+        "inLanguage": "en-US",
+        "publisher": { "@id": "https://www.goyonebydesign.com/#organization" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://www.goyonebydesign.com/#organization",
+        "name": "Goyone By Design",
+        "url": "https://www.goyonebydesign.com/",
+        "email": "admin@goyonebydesign.com",
+        "founder": { "@id": "https://www.goyonebydesign.com/#person" }
+      },
+      {
+        "@type": "Person",
+        "@id": "https://www.goyonebydesign.com/#person",
+        "name": "Michael Goyone",
+        "jobTitle": "Founder, Creative Director",
+        "email": "admin@goyonebydesign.com",
+        "worksFor": { "@id": "https://www.goyonebydesign.com/#organization" }
+      }
+    ]
+  }
+  </script>
 </head>
 
 <body>
@@ -52,14 +206,15 @@
 
 <header class="header">
   <div class="container header__inner">
-    <a class="brand" href="#">
-      <img src="logo.png" class="brand__logo" alt="Goyone By Design logo">
-      <div>
+    <a class="brand" href="#" aria-label="Goyone By Design home">
+      <img src="logo.png" class="brand__logo" alt="Goyone By Design logo" />
+      <div class="brand__stack">
         <span class="brand__name">Goyone By Design</span>
         <span class="brand__sub">Futuristic premium design systems</span>
       </div>
     </a>
-    <nav class="nav">
+
+    <nav class="nav" aria-label="Primary">
       <a href="#services">Services</a>
       <a href="#work">Work</a>
       <a href="#process">Process</a>
@@ -69,116 +224,182 @@
 </header>
 
 <main id="main">
-
-<section class="hero">
-  <div class="container hero__grid">
-    <div class="hero__copy">
-      <h1>Design that looks <span class="highlight">expensive</span> — and performs.</h1>
-      <p>Premium logos, menus, ads, and modern websites.</p>
-      <a href="#contact" class="btn btn--primary">Get a quote</a>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container hero__grid">
+      <div class="hero__copy">
+        <h1>Design that looks <span class="highlight">expensive</span> — and performs.</h1>
+        <p>Premium logos, menus, ads, and modern websites built with clarity, hierarchy, and luxury spacing.</p>
+        <a href="#contact" class="btn btn--primary btn--lg">Get a quote</a>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="section" id="services">
-  <div class="container">
-    <h2>Services</h2>
-    <div class="cards">
-      <div class="card">Brand Identity</div>
-      <div class="card">Restaurant Design</div>
-      <div class="card">Web & Digital</div>
+  <!-- SERVICES -->
+  <section class="section" id="services">
+    <div class="container">
+      <h2>Services</h2>
+      <div class="cards cards--3">
+        <article class="card">
+          <h3>Brand Identity</h3>
+          <p>Logo design, color systems, typography, brand rules, and export packs.</p>
+        </article>
+        <article class="card">
+          <h3>Restaurant Design</h3>
+          <p>Menus, flyers, coupons, posters, signage, packaging, and uniforms.</p>
+        </article>
+        <article class="card">
+          <h3>Web & Digital</h3>
+          <p>Landing pages, websites, promo graphics, thumbnails, and conversion sections.</p>
+        </article>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="section section--alt" id="work">
-  <div class="container">
-    <h2>Selected Work</h2>
-    <div class="workGrid">
-      <div class="workCard"><img src="assets/work/aurelian-logo.png"><h3>Aurelian — Logo</h3></div>
-      <div class="workCard"><img src="assets/work/nox-storefront.png"><h3>Nox — Storefront</h3></div>
-      <div class="workCard"><img src="assets/work/velora-card.png"><h3>Velora — Card</h3></div>
-      <div class="workCard"><img src="assets/work/aurelian-menu.png"><h3>Aurelian — Menu</h3></div>
-      <div class="workCard"><img src="assets/work/nox-menu.png"><h3>Nox — Menu</h3></div>
-      <div class="workCard"><img src="assets/work/velora-menu.png"><h3>Velora — Menu</h3></div>
-    </div>
-  </div>
-</section>
+  <!-- WORK -->
+  <section class="section section--alt" id="work">
+    <div class="container">
+      <h2>Selected Work</h2>
 
-<section class="section" id="process">
-  <div class="container">
-    <h2>Process</h2>
-    <ol>
-      <li>Discovery</li>
-      <li>Design</li>
-      <li>Refine</li>
-      <li>Deliver</li>
-    </ol>
-  </div>
-</section>
-
-<!-- CONTACT (FIXED) -->
-<section class="section section--alt" id="contact">
-  <div class="container">
-    <h2>Contact</h2>
-
-    <div class="contactGrid">
-      <!-- FORM -->
-      <form class="form" id="contactForm" novalidate>
-        <div class="fieldRow">
-          <div class="field">
-            <label>Name</label>
-            <input name="name" required placeholder="Your name">
+      <div class="workGrid">
+        <!-- Each image is clickable for the lightbox -->
+        <article class="workCard" data-lightbox-title="Aurelian — Logo">
+          <div class="workCard__thumb">
+            <img src="assets/work/aurelian-logo.png" alt="Aurelian logo design" loading="lazy">
           </div>
-          <div class="field">
-            <label>Email</label>
-            <input type="email" name="email" required placeholder="you@email.com">
+          <div class="workCard__body">
+            <h3>Aurelian — Logo</h3>
           </div>
-        </div>
+        </article>
 
-        <div class="field">
-          <label>What do you need?</label>
-          <select name="service" required>
-            <option value="" disabled selected>Select one…</option>
-            <option>Logo / Brand Identity</option>
-            <option>Menu / Restaurant Design</option>
-            <option>Flyers / Ads</option>
-            <option>Website</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label>Details</label>
-          <textarea name="message" rows="6" required placeholder="Tell me about your project"></textarea>
-        </div>
-
-        <div class="formActions">
-          <button class="btn btn--primary btn--lg" id="sendBtn">Send request</button>
-          <p class="formNote muted" id="formNote">Messages are sent securely.</p>
-        </div>
-
-        <input type="text" name="_gotcha" style="display:none">
-      </form>
-
-      <!-- QUICK INFO -->
-      <aside class="contactCard">
-        <div class="contactCard__top">
-          <img src="assets/work/mike.png" class="contactCard__avatar" alt="Michael Goyone">
-          <div>
-            <h3>Michael Goyone</h3>
-            <p class="muted">Founder · Creative Director</p>
+        <article class="workCard" data-lightbox-title="Nox — Storefront">
+          <div class="workCard__thumb">
+            <img src="assets/work/nox-storefront.png" alt="Nox storefront mockup" loading="lazy">
           </div>
-        </div>
+          <div class="workCard__body">
+            <h3>Nox — Storefront</h3>
+          </div>
+        </article>
 
-        <p><strong>Email:</strong> admin@goyonebydesign.com</p>
-        <p><strong>Location:</strong> Northern Virginia · Remote</p>
-        <p><strong>Specialty:</strong> Brand Systems · Restaurant · Web</p>
-        <p><strong>Style:</strong> Futuristic · Premium · Clean</p>
-      </aside>
+        <article class="workCard" data-lightbox-title="Velora — Brand Card">
+          <div class="workCard__thumb">
+            <img src="assets/work/velora-card.png" alt="Velora brand card design" loading="lazy">
+          </div>
+          <div class="workCard__body">
+            <h3>Velora — Brand Card</h3>
+          </div>
+        </article>
+
+        <article class="workCard" data-lightbox-title="Aurelian — Menu">
+          <div class="workCard__thumb">
+            <img src="assets/work/aurelian-menu.png" alt="Aurelian menu design" loading="lazy">
+          </div>
+          <div class="workCard__body">
+            <h3>Aurelian — Menu</h3>
+          </div>
+        </article>
+
+        <article class="workCard" data-lightbox-title="Nox — Menu">
+          <div class="workCard__thumb">
+            <img src="assets/work/nox-menu.png" alt="Nox menu design" loading="lazy">
+          </div>
+          <div class="workCard__body">
+            <h3>Nox — Menu</h3>
+          </div>
+        </article>
+
+        <article class="workCard" data-lightbox-title="Velora — Menu">
+          <div class="workCard__thumb">
+            <img src="assets/work/velora-menu.png" alt="Velora menu design" loading="lazy">
+          </div>
+          <div class="workCard__body">
+            <h3>Velora — Menu</h3>
+          </div>
+        </article>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
+  <!-- PROCESS -->
+  <section class="section" id="process">
+    <div class="container">
+      <h2>Process</h2>
+      <ol>
+        <li>Discovery</li>
+        <li>Design</li>
+        <li>Refine</li>
+        <li>Deliver</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="section section--alt" id="contact">
+    <div class="container">
+      <h2>Contact</h2>
+
+      <div class="contactGrid">
+        <form class="form" id="contactForm" novalidate>
+          <div class="fieldRow">
+            <div class="field" data-field="name">
+              <label for="name">Name</label>
+              <input id="name" name="name" autocomplete="name" required placeholder="Your name">
+              <div class="errorText">Please enter your name.</div>
+            </div>
+            <div class="field" data-field="email">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" autocomplete="email" required placeholder="you@email.com">
+              <div class="errorText">Please enter a valid email address.</div>
+            </div>
+          </div>
+
+          <div class="field" data-field="service">
+            <label for="service">What do you need?</label>
+            <select id="service" name="service" required>
+              <option value="" disabled selected>Select one…</option>
+              <option>Logo / Brand Identity</option>
+              <option>Menu / Restaurant Design</option>
+              <option>Flyers / Ads / Promo</option>
+              <option>Website / Landing Page</option>
+              <option>Other</option>
+            </select>
+            <div class="errorText">Please select a service.</div>
+          </div>
+
+          <div class="field" data-field="message">
+            <label for="message">Details</label>
+            <textarea id="message" name="message" rows="6" required placeholder="Goal, deadline, and what you want designed."></textarea>
+            <div class="errorText">Please enter your project details.</div>
+          </div>
+
+          <!-- Honeypot (spam) -->
+          <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;opacity:0;">
+
+          <div class="formActions">
+            <button class="btn btn--primary btn--lg" id="sendBtn" type="submit">Send request</button>
+            <p class="formNote muted" id="formNote" role="status" aria-live="polite">
+              Messages are sent securely.
+            </p>
+          </div>
+        </form>
+
+        <aside class="contactCard">
+          <div class="contactCard__top">
+            <img src="assets/work/mike.png" class="contactCard__avatar" alt="Michael Goyone portrait">
+            <div>
+              <h3>Michael Goyone</h3>
+              <p class="muted">Founder · Creative Director</p>
+            </div>
+          </div>
+
+          <p><strong>Email:</strong> admin@goyonebydesign.com</p>
+          <p><strong>Location:</strong> Northern Virginia · Remote</p>
+          <p><strong>Specialty:</strong> Brand Systems · Restaurant · Web</p>
+          <p><strong>Style:</strong> Futuristic · Premium · Clean</p>
+        </aside>
+      </div>
+    </div>
+  </section>
 </main>
 
 <footer class="footer">
@@ -187,43 +408,217 @@
   </div>
 </footer>
 
+<!-- LIGHTBOX -->
+<div class="lightboxOverlay" id="lightboxOverlay" aria-hidden="true">
+  <div class="lightbox" role="dialog" aria-modal="true" aria-label="Portfolio image preview">
+    <div class="lightboxTop">
+      <p class="lightboxTitle" id="lightboxTitle">Preview</p>
+      <div class="lightboxBtns">
+        <button class="lbBtn" id="lbPrev" type="button" aria-label="Previous image">Prev</button>
+        <button class="lbBtn" id="lbNext" type="button" aria-label="Next image">Next</button>
+        <button class="lbBtn" id="lbClose" type="button" aria-label="Close preview">Close</button>
+      </div>
+    </div>
+    <div class="lightboxBody">
+      <img id="lightboxImg" alt="Portfolio preview">
+    </div>
+  </div>
+</div>
+
 <script>
+/* =========================
+   Basics
+========================= */
 document.getElementById("year").textContent = new Date().getFullYear();
 
+/* =========================
+   Contact: Validation + Submit + Auto-scroll + Rate limit
+========================= */
 (() => {
+  const ENDPOINT = "https://formspree.io/f/mregjvak";
   const form = document.getElementById("contactForm");
-  const note = document.getElementById("formNote");
-  const btn = document.getElementById("sendBtn");
   if (!form) return;
+
+  const note = document.getElementById("formNote");
+  const btn  = document.getElementById("sendBtn");
+  const fields = {
+    name: form.querySelector('[data-field="name"]'),
+    email: form.querySelector('[data-field="email"]'),
+    service: form.querySelector('[data-field="service"]'),
+    message: form.querySelector('[data-field="message"]')
+  };
+
+  const setNote = (msg, state = "") => {
+    note.textContent = msg;
+    note.classList.remove("is-warn","is-bad","is-good");
+    if (state) note.classList.add(state);
+  };
+
+  // Inline validation styling
+  const markField = (fieldEl, ok) => {
+    if (!fieldEl) return;
+    fieldEl.classList.toggle("is-error", !ok);
+    fieldEl.classList.toggle("is-ok", ok);
+  };
+
+  const validate = () => {
+    const name = form.name.value.trim();
+    const email = form.email.value.trim();
+    const service = form.service.value.trim();
+    const message = form.message.value.trim();
+
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+    markField(fields.name, name.length > 1);
+    markField(fields.email, emailOk);
+    markField(fields.service, !!service);
+    markField(fields.message, message.length > 5);
+
+    return (name.length > 1 && emailOk && !!service && message.length > 5);
+  };
+
+  // Auto validate on input/change
+  ["input","change","blur"].forEach(evt => {
+    form.addEventListener(evt, (e) => {
+      if (["INPUT","TEXTAREA","SELECT"].includes(e.target.tagName)) validate();
+    }, true);
+  });
+
+  // Rate limiting: 1 submit per 45 seconds
+  const RATE_KEY = "gbd_form_last_submit";
+  const COOLDOWN_MS = 45 * 1000;
+
+  const getRemaining = () => {
+    const last = Number(localStorage.getItem(RATE_KEY) || "0");
+    const now = Date.now();
+    const remaining = (last + COOLDOWN_MS) - now;
+    return remaining > 0 ? remaining : 0;
+  };
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    if (!form.checkValidity()) {
-      form.reportValidity();
+
+    // Honeypot
+    if (form._gotcha && form._gotcha.value) {
+      setNote("Thanks!", "is-good");
+      return;
+    }
+
+    const remaining = getRemaining();
+    if (remaining > 0) {
+      const secs = Math.ceil(remaining / 1000);
+      setNote(`Please wait ${secs}s before sending another message.`, "is-warn");
+      note.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+
+    if (!validate()) {
+      setNote("Please fix the highlighted fields.", "is-bad");
+      note.scrollIntoView({ behavior: "smooth", block: "center" });
+      // focus first error
+      const firstError = form.querySelector(".field.is-error input, .field.is-error select, .field.is-error textarea");
+      firstError?.focus();
       return;
     }
 
     btn.disabled = true;
-    note.textContent = "Sending…";
+    setNote("Sending…");
 
     try {
-      const res = await fetch("https://formspree.io/f/mregjvak", {
+      const res = await fetch(ENDPOINT, {
         method: "POST",
         headers: { "Accept": "application/json" },
         body: new FormData(form)
       });
 
       if (res.ok) {
+        localStorage.setItem(RATE_KEY, String(Date.now()));
         form.reset();
-        note.textContent = "✅ Sent! I’ll reply soon.";
+        Object.values(fields).forEach(f => f?.classList.remove("is-error","is-ok"));
+        setNote("✅ Sent! Thanks — I’ll reply soon.", "is-good");
+        note.scrollIntoView({ behavior: "smooth", block: "center" });
       } else {
-        note.textContent = "Error. Please email admin@goyonebydesign.com.";
+        setNote("Something went wrong. Please email admin@goyonebydesign.com.", "is-bad");
+        note.scrollIntoView({ behavior: "smooth", block: "center" });
       }
     } catch {
-      note.textContent = "Network error. Please try again.";
+      setNote("Network error. Please try again.", "is-bad");
+      note.scrollIntoView({ behavior: "smooth", block: "center" });
     } finally {
       btn.disabled = false;
     }
+  });
+})();
+
+/* =========================
+   Portfolio Lightbox: click any work image
+========================= */
+(() => {
+  const overlay = document.getElementById("lightboxOverlay");
+  const imgEl = document.getElementById("lightboxImg");
+  const titleEl = document.getElementById("lightboxTitle");
+  const btnClose = document.getElementById("lbClose");
+  const btnPrev = document.getElementById("lbPrev");
+  const btnNext = document.getElementById("lbNext");
+
+  const cards = Array.from(document.querySelectorAll(".workCard"));
+  if (!overlay || !imgEl || cards.length === 0) return;
+
+  const items = cards.map(card => {
+    const img = card.querySelector("img");
+    return {
+      src: img?.getAttribute("src"),
+      alt: img?.getAttribute("alt") || "Portfolio preview",
+      title: card.getAttribute("data-lightbox-title") || img?.getAttribute("alt") || "Preview"
+    };
+  }).filter(x => !!x.src);
+
+  let idx = 0;
+  let lastFocus = null;
+
+  const open = (i) => {
+    idx = (i + items.length) % items.length;
+    const it = items[idx];
+    imgEl.src = it.src;
+    imgEl.alt = it.alt;
+    titleEl.textContent = it.title;
+
+    lastFocus = document.activeElement;
+    overlay.classList.add("is-open");
+    overlay.setAttribute("aria-hidden", "false");
+    btnClose.focus();
+    document.body.style.overflow = "hidden";
+  };
+
+  const close = () => {
+    overlay.classList.remove("is-open");
+    overlay.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  };
+
+  const prev = () => open(idx - 1);
+  const next = () => open(idx + 1);
+
+  cards.forEach((card, i) => {
+    const img = card.querySelector("img");
+    img?.addEventListener("click", () => open(i));
+  });
+
+  btnClose?.addEventListener("click", close);
+  btnPrev?.addEventListener("click", prev);
+  btnNext?.addEventListener("click", next);
+
+  overlay.addEventListener("click", (e) => {
+    // click outside the modal closes
+    if (e.target === overlay) close();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (!overlay.classList.contains("is-open")) return;
+    if (e.key === "Escape") close();
+    if (e.key === "ArrowLeft") prev();
+    if (e.key === "ArrowRight") next();
   });
 })();
 </script>
