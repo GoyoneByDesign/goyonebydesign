@@ -157,11 +157,6 @@
       const body = encodeURIComponent(
         `Name: ${name}\nEmail: ${email}\nService: ${service}\n\nDetails:\n${message}\n\n— Sent from goyonebydesign.github.io`
       );
-      window.location.href = `mailto:${toEmail}?subject=${subject}&body=${body}`;
-
-      if (formNote) {
-        formNote.textContent = "Opening your email app… If nothing happens, copy/paste the info and email it manually.";
-      }
     });
   }
 
