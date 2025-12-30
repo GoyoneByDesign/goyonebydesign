@@ -160,7 +160,7 @@
     .formNote.is-good{color:#8dffb7;}
   </style>
 
-  <!-- JSON-LD Schema -->
+  <!-- JSON-LD Schema (fixed invalid JSON) -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -188,7 +188,7 @@
         "name": "Michael Goyone",
         "jobTitle": "Founder, Creative Director",
         "email": "admin@goyonebydesign.com",
-        "worksFor": { Canadian? : null }
+        "worksFor": { "@id": "https://www.goyonebydesign.com/#organization" }
       }
     ]
   }
@@ -479,7 +479,7 @@
       </div>
     </section>
 
-    <!-- Contact (real submission + validation + rate limit + auto-scroll) -->
+    <!-- Contact (fixed Formspree POST + still uses fetch for inline success) -->
     <section class="section" id="contact">
       <div class="container">
         <div class="sectionHead">
@@ -488,7 +488,15 @@
         </div>
 
         <div class="contactGrid">
-          <form class="form reveal" id="contactForm" novalidate>
+          <!-- ✅ IMPORTANT FIX: action + method added -->
+          <form
+            class="form reveal"
+            id="contactForm"
+            action="https://formspree.io/f/mregjvak"
+            method="POST"
+            accept-charset="UTF-8"
+            novalidate
+          >
             <div class="fieldRow">
               <div class="field" data-field="name">
                 <label for="name">Name</label>
@@ -520,6 +528,10 @@
               <textarea id="message" name="message" rows="6" placeholder="Goal, deadline, and what you want designed." required></textarea>
               <div class="errorText">Please enter your project details.</div>
             </div>
+
+            <!-- Optional (helps Formspree emails look nicer) -->
+            <input type="hidden" name="_subject" value="New GoyoneByDesign Contact Request" />
+            <input type="hidden" name="_format" value="plain" />
 
             <!-- Honeypot -->
             <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;opacity:0;" />
@@ -606,9 +618,11 @@
 
     /* CONTACT: validation + formspree + auto-scroll + rate limit */
     (() => {
-      const ENDPOINT = "https://formspree.io/f/mregjvak";
       const form = document.getElementById("contactForm");
       if (!form) return;
+
+      // ✅ Endpoint now comes from the real form action (never drifts)
+      const ENDPOINT = form.getAttribute("action");
 
       const note = document.getElementById("formNote");
       const btn  = document.getElementById("sendBtn");
@@ -662,6 +676,8 @@
       };
 
       form.addEventListener("submit", async (e) => {
+        // ✅ We keep preventDefault for the inline success UX,
+        // but the form is still a real POST form if JS is blocked/disabled.
         e.preventDefault();
 
         if (form._gotcha && form._gotcha.value) {
