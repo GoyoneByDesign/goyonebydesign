@@ -15,23 +15,19 @@
   <meta property="og:description" content="Premium brand systems—logos, menus, ads, and modern web. Designed to look expensive and convert." />
   <meta property="og:url" content="https://www.goyonebydesign.com/" />
   <meta property="og:type" content="website" />
-  <!-- Optional: add an OG image later -->
-  <!-- <meta property="og:image" content="https://www.goyonebydesign.com/assets/og/og-image.jpg" /> -->
-
-  <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
 
   <!-- Robots -->
   <meta name="robots" content="index,follow" />
 
-  <!-- Fonts -->
+  <!-- Fonts (match your original) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Fraunces:opsz,wght@9..144,300;9..144,600;9..144,800&display=swap" rel="stylesheet">
 
-  <!-- Your existing CSS / JS -->
-  <link rel="stylesheet" href="styles.css" />
-  <script defer src="app.js"></script>
+  <!-- Your existing CSS/JS (keeps the moving background behavior you already like) -->
+  <link rel="stylesheet" href="./styles.css" />
+  <script defer src="./app.js"></script>
 
   <!-- Enhancements (safe overrides) -->
   <style>
@@ -77,7 +73,7 @@
       outline:2px solid rgba(120,255,190,.25);
     }
 
-    /* ---------- Lightbox (Portfolio) ---------- */
+    /* ---------- Lightbox ---------- */
     .lightboxOverlay{
       position:fixed;inset:0;
       background:rgba(0,0,0,.78);
@@ -148,25 +144,23 @@
       background:#0b0b0f;
     }
 
-    /* Make your work images clickable */
+    /* Make work images clickable */
     .workCard__thumb img,
-    .workCard img{
-      cursor: zoom-in;
-    }
+    .workCard img{cursor: zoom-in;}
 
-    /* Reduce motion for accessibility */
+    /* Reduced motion */
     @media (prefers-reduced-motion: reduce){
       .contactCard__avatar{transition:none;}
       .lbBtn{transition:none;}
     }
 
-    /* ---------- Rate limit warning style ---------- */
+    /* Rate limit note colors */
     .formNote.is-warn{color:#ffd36a;}
     .formNote.is-bad{color:#ff6b6b;}
     .formNote.is-good{color:#8dffb7;}
   </style>
 
-  <!-- JSON-LD Schema: Organization + Person + Website -->
+  <!-- JSON-LD Schema -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -194,7 +188,7 @@
         "name": "Michael Goyone",
         "jobTitle": "Founder, Creative Director",
         "email": "admin@goyonebydesign.com",
-        "worksFor": { "@id": "https://www.goyonebydesign.com/#organization" }
+        "worksFor": { Canadian? : null }
       }
     ]
   }
@@ -202,426 +196,590 @@
 </head>
 
 <body>
-<a class="skip-link" href="#main">Skip to content</a>
+  <a class="skip-link" href="#main">Skip to content</a>
 
-<header class="header">
-  <div class="container header__inner">
-    <a class="brand" href="#" aria-label="Goyone By Design home">
-      <img src="logo.png" class="brand__logo" alt="Goyone By Design logo" />
-      <div class="brand__stack">
-        <span class="brand__name">Goyone By Design</span>
-        <span class="brand__sub">Futuristic premium design systems</span>
-      </div>
-    </a>
+  <!-- Ambient FX (this is your moving background) -->
+  <div class="fx fx--aurora" aria-hidden="true"></div>
+  <div class="fx fx--grid" aria-hidden="true"></div>
+  <div class="fx fx--vignette" aria-hidden="true"></div>
+  <canvas id="particles" aria-hidden="true"></canvas>
+  <div class="cursorGlow" aria-hidden="true"></div>
 
-    <nav class="nav" aria-label="Primary">
-      <a href="#services">Services</a>
-      <a href="#work">Work</a>
-      <a href="#process">Process</a>
-      <a href="#contact" class="btn btn--small">Contact</a>
-    </nav>
+  <!-- Topbar (from your original) -->
+  <div class="topbar">
+    <div class="container topbar__inner">
+      <span class="chip chip--live">
+        <span class="chip__dot" aria-hidden="true"></span>
+        Now Booking
+      </span>
+      <span class="topbar__text">Logos • Menus • Ads • Websites • Brand Systems</span>
+      <a class="btn btn--tiny btn--ghost" href="#contact">Request a quote</a>
+    </div>
   </div>
-</header>
 
-<main id="main">
-  <!-- HERO -->
-  <section class="hero">
-    <div class="container hero__grid">
-      <div class="hero__copy">
-        <h1>Design that looks <span class="highlight">expensive</span> — and performs.</h1>
-        <p>Premium logos, menus, ads, and modern websites built with clarity, hierarchy, and luxury spacing.</p>
-        <a href="#contact" class="btn btn--primary btn--lg">Get a quote</a>
-      </div>
+  <!-- Header (from your original) -->
+  <header class="header" data-elevate="false">
+    <div class="container header__inner">
+      <a class="brand" href="#" aria-label="Goyone By Design home">
+        <img class="brand__logo" src="logo.png" alt="Goyone By Design logo" />
+        <div class="brand__stack">
+          <span class="brand__name">Goyone By Design</span>
+          <span class="brand__sub">Futuristic premium design systems</span>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="Primary">
+        <button class="nav__toggle" aria-expanded="false" aria-controls="navMenu">
+          <span class="nav__toggleLines" aria-hidden="true"></span>
+          <span class="sr-only">Menu</span>
+        </button>
+
+        <div class="nav__menu" id="navMenu">
+          <a href="#services">Services</a>
+          <a href="#work">Work</a>
+          <a href="#process">Process</a>
+          <a href="#contact">Contact</a>
+          <a class="btn btn--small btn--primary magnetic" href="#contact">Get a quote</a>
+        </div>
+      </nav>
     </div>
-  </section>
+  </header>
 
-  <!-- SERVICES -->
-  <section class="section" id="services">
-    <div class="container">
-      <h2>Services</h2>
-      <div class="cards cards--3">
-        <article class="card">
-          <h3>Brand Identity</h3>
-          <p>Logo design, color systems, typography, brand rules, and export packs.</p>
-        </article>
-        <article class="card">
-          <h3>Restaurant Design</h3>
-          <p>Menus, flyers, coupons, posters, signage, packaging, and uniforms.</p>
-        </article>
-        <article class="card">
-          <h3>Web & Digital</h3>
-          <p>Landing pages, websites, promo graphics, thumbnails, and conversion sections.</p>
-        </article>
-      </div>
-    </div>
-  </section>
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero">
+      <div class="container hero__grid">
+        <div class="hero__copy">
+          <p class="eyebrow">
+            <span class="eyebrow__line" aria-hidden="true"></span>
+            PREMIUM • FUTURISTIC • CONVERSION-FOCUSED
+          </p>
 
-  <!-- WORK -->
-  <section class="section section--alt" id="work">
-    <div class="container">
-      <h2>Selected Work</h2>
+          <h1 class="hero__title">
+            Design that looks <span class="textGlow">expensive</span> —
+            <span class="gradText">and performs.</span>
+          </h1>
 
-      <div class="workGrid">
-        <!-- Each image is clickable for the lightbox -->
-        <article class="workCard" data-lightbox-title="Aurelian — Logo">
-          <div class="workCard__thumb">
-            <img src="assets/work/aurelian-logo.png" alt="Aurelian logo design" loading="lazy">
-          </div>
-          <div class="workCard__body">
-            <h3>Aurelian — Logo</h3>
-          </div>
-        </article>
+          <p class="hero__sub">
+            I build premium brand systems: logos, restaurant menus, ad creatives, and sleek websites.
+            Clean hierarchy, luxury spacing, modern motion. Everything aligned.
+          </p>
 
-        <article class="workCard" data-lightbox-title="Nox — Storefront">
-          <div class="workCard__thumb">
-            <img src="assets/work/nox-storefront.png" alt="Nox storefront mockup" loading="lazy">
+          <div class="hero__cta">
+            <a class="btn btn--primary btn--lg magnetic" href="#contact">
+              Get a quote
+              <span class="btn__shine" aria-hidden="true"></span>
+            </a>
+            <a class="btn btn--ghost btn--lg magnetic" href="#work">See work</a>
           </div>
-          <div class="workCard__body">
-            <h3>Nox — Storefront</h3>
-          </div>
-        </article>
+        </div>
 
-        <article class="workCard" data-lightbox-title="Velora — Brand Card">
-          <div class="workCard__thumb">
-            <img src="assets/work/velora-card.png" alt="Velora brand card design" loading="lazy">
-          </div>
-          <div class="workCard__body">
-            <h3>Velora — Brand Card</h3>
-          </div>
-        </article>
+        <div class="hero__visual" aria-hidden="true">
+          <div class="orb orb--a"></div>
+          <div class="orb orb--b"></div>
+          <div class="orb orb--c"></div>
 
-        <article class="workCard" data-lightbox-title="Aurelian — Menu">
-          <div class="workCard__thumb">
-            <img src="assets/work/aurelian-menu.png" alt="Aurelian menu design" loading="lazy">
-          </div>
-          <div class="workCard__body">
-            <h3>Aurelian — Menu</h3>
-          </div>
-        </article>
-
-        <article class="workCard" data-lightbox-title="Nox — Menu">
-          <div class="workCard__thumb">
-            <img src="assets/work/nox-menu.png" alt="Nox menu design" loading="lazy">
-          </div>
-          <div class="workCard__body">
-            <h3>Nox — Menu</h3>
-          </div>
-        </article>
-
-        <article class="workCard" data-lightbox-title="Velora — Menu">
-          <div class="workCard__thumb">
-            <img src="assets/work/velora-menu.png" alt="Velora menu design" loading="lazy">
-          </div>
-          <div class="workCard__body">
-            <h3>Velora — Menu</h3>
-          </div>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- PROCESS -->
-  <section class="section" id="process">
-    <div class="container">
-      <h2>Process</h2>
-      <ol>
-        <li>Discovery</li>
-        <li>Design</li>
-        <li>Refine</li>
-        <li>Deliver</li>
-      </ol>
-    </div>
-  </section>
-
-  <!-- CONTACT -->
-  <section class="section section--alt" id="contact">
-    <div class="container">
-      <h2>Contact</h2>
-
-      <div class="contactGrid">
-        <form class="form" id="contactForm" novalidate>
-          <div class="fieldRow">
-            <div class="field" data-field="name">
-              <label for="name">Name</label>
-              <input id="name" name="name" autocomplete="name" required placeholder="Your name">
-              <div class="errorText">Please enter your name.</div>
+          <div class="device tilt" data-tilt>
+            <div class="device__top">
+              <span class="pill">GBD</span>
+              <span class="pill pill--ghost">Premium</span>
             </div>
-            <div class="field" data-field="email">
-              <label for="email">Email</label>
-              <input id="email" name="email" type="email" autocomplete="email" required placeholder="you@email.com">
-              <div class="errorText">Please enter a valid email address.</div>
+            <div class="device__mid">
+              <div class="scanline"></div>
+              <p class="device__title">Futuristic Brand Stack</p>
+              <p class="device__text">Logo • Menu • Ads • Web • Templates</p>
+              <div class="bars">
+                <span class="bar bar--1"></span>
+                <span class="bar bar--2"></span>
+                <span class="bar bar--3"></span>
+              </div>
+            </div>
+            <div class="device__bottom">
+              <span class="dot dot--m"></span>
+              <span class="dot dot--r"></span>
+              <span class="dot dot--b"></span>
+              <span class="dot dot--o"></span>
             </div>
           </div>
 
-          <div class="field" data-field="service">
-            <label for="service">What do you need?</label>
-            <select id="service" name="service" required>
-              <option value="" disabled selected>Select one…</option>
-              <option>Logo / Brand Identity</option>
-              <option>Menu / Restaurant Design</option>
-              <option>Flyers / Ads / Promo</option>
-              <option>Website / Landing Page</option>
-              <option>Other</option>
-            </select>
-            <div class="errorText">Please select a service.</div>
-          </div>
+          <div class="frame"></div>
+        </div>
+      </div>
+    </section>
 
-          <div class="field" data-field="message">
-            <label for="message">Details</label>
-            <textarea id="message" name="message" rows="6" required placeholder="Goal, deadline, and what you want designed."></textarea>
-            <div class="errorText">Please enter your project details.</div>
-          </div>
+    <!-- Services -->
+    <section class="section" id="services">
+      <div class="container">
+        <div class="sectionHead">
+          <h2 class="reveal">Services</h2>
+          <p class="reveal" style="transition-delay:80ms">
+            Premium deliverables with futuristic polish. Choose one service or bundle everything into a full system.
+          </p>
+        </div>
 
-          <!-- Honeypot (spam) -->
-          <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;opacity:0;">
+        <div class="cards cards--3">
+          <article class="card card--glow reveal" data-glow>
+            <div class="card__icon" aria-hidden="true">⟡</div>
+            <h3>Brand Identity</h3>
+            <p>Logo design, color systems, typography, brand rules, and social kits.</p>
+            <ul>
+              <li>Primary + alternate logos</li>
+              <li>Brand guidelines (PDF)</li>
+              <li>Export pack for print & web</li>
+            </ul>
+          </article>
 
-          <div class="formActions">
-            <button class="btn btn--primary btn--lg" id="sendBtn" type="submit">Send request</button>
-            <p class="formNote muted" id="formNote" role="status" aria-live="polite">
-              Messages are sent securely.
-            </p>
-          </div>
-        </form>
+          <article class="card card--glow reveal" data-glow style="transition-delay:80ms">
+            <div class="card__icon" aria-hidden="true">⌁</div>
+            <h3>Restaurant Design</h3>
+            <p>Menus, flyers, coupons, posters, signage, packaging, uniforms.</p>
+            <ul>
+              <li>Upsell-friendly hierarchy</li>
+              <li>Print-ready + digital versions</li>
+              <li>Consistent look across locations</li>
+            </ul>
+          </article>
 
-        <aside class="contactCard">
-          <div class="contactCard__top">
-            <img src="assets/work/mike.png" class="contactCard__avatar" alt="Michael Goyone portrait">
-            <div>
-              <h3>Michael Goyone</h3>
-              <p class="muted">Founder · Creative Director</p>
+          <article class="card card--glow reveal" data-glow style="transition-delay:160ms">
+            <div class="card__icon" aria-hidden="true">⌬</div>
+            <h3>Web & Digital</h3>
+            <p>Fast landing pages, modern sites, promo graphics, thumbnails and content kits.</p>
+            <ul>
+              <li>Mobile-first layout</li>
+              <li>Speed + SEO basics</li>
+              <li>Conversion-focused sections</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Work (with Lightbox) -->
+    <section class="section section--alt" id="work">
+      <div class="container">
+        <div class="sectionHead">
+          <h2 class="reveal">Selected Work</h2>
+          <p class="reveal" style="transition-delay:80ms">
+            Click any image to view full-size.
+          </p>
+        </div>
+
+        <div class="workGrid">
+          <article class="workCard reveal" data-tilt data-lightbox-title="Aurelian — Logo">
+            <div class="workCard__thumb">
+              <img src="assets/work/aurelian-logo.png" alt="Aurelian logo design" loading="lazy" />
+              <div class="workCard__meta">
+                <span class="tag">Brand Identity</span>
+                <span class="workCard__title">Aurelian — Logo</span>
+              </div>
             </div>
+            <div class="workCard__body">
+              <p class="muted">Futuristic mark with premium spacing and clean geometry.</p>
+            </div>
+          </article>
+
+          <article class="workCard reveal" data-tilt style="transition-delay:80ms" data-lightbox-title="Nox — Storefront">
+            <div class="workCard__thumb">
+              <img src="assets/work/nox-storefront.png" alt="Nox storefront mockup" loading="lazy" />
+              <div class="workCard__meta">
+                <span class="tag">Brand Application</span>
+                <span class="workCard__title">Nox — Storefront</span>
+              </div>
+            </div>
+            <div class="workCard__body">
+              <p class="muted">Real-world brand placement with high-end contrast and clarity.</p>
+            </div>
+          </article>
+
+          <article class="workCard reveal" data-tilt style="transition-delay:160ms" data-lightbox-title="Velora — Brand Card">
+            <div class="workCard__thumb">
+              <img src="assets/work/velora-card.png" alt="Velora brand card design" loading="lazy" />
+              <div class="workCard__meta">
+                <span class="tag">Print Design</span>
+                <span class="workCard__title">Velora — Brand Card</span>
+              </div>
+            </div>
+            <div class="workCard__body">
+              <p class="muted">Premium typography and layout designed to look expensive.</p>
+            </div>
+          </article>
+
+          <article class="workCard reveal" data-tilt style="transition-delay:240ms" data-lightbox-title="Aurelian — Menu">
+            <div class="workCard__thumb">
+              <img src="assets/work/aurelian-menu.png" alt="Aurelian menu design" loading="lazy" />
+              <div class="workCard__meta">
+                <span class="tag">Menu Design</span>
+                <span class="workCard__title">Aurelian — Menu</span>
+              </div>
+            </div>
+            <div class="workCard__body">
+              <p class="muted">Clean hierarchy, modern spacing, upscale finish.</p>
+            </div>
+          </article>
+
+          <article class="workCard reveal" data-tilt style="transition-delay:320ms" data-lightbox-title="Nox — Menu">
+            <div class="workCard__thumb">
+              <img src="assets/work/nox-menu.png" alt="Nox menu design" loading="lazy" />
+              <div class="workCard__meta">
+                <span class="tag">Menu Design</span>
+                <span class="workCard__title">Nox — Menu</span>
+              </div>
+            </div>
+            <div class="workCard__body">
+              <p class="muted">Premium layout built for readability and conversion.</p>
+            </div>
+          </article>
+
+          <article class="workCard reveal" data-tilt style="transition-delay:400ms" data-lightbox-title="Velora — Menu">
+            <div class="workCard__thumb">
+              <img src="assets/work/velora-menu.png" alt="Velora menu design" loading="lazy" />
+              <div class="workCard__meta">
+                <span class="tag">Menu Design</span>
+                <span class="workCard__title">Velora — Menu</span>
+              </div>
+            </div>
+            <div class="workCard__body">
+              <p class="muted">Modern type + spacing with a future-luxury presentation.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Process -->
+    <section class="section" id="process">
+      <div class="container">
+        <div class="sectionHead">
+          <h2 class="reveal">Process</h2>
+          <p class="reveal" style="transition-delay:80ms">Simple, fast, and professional—built for real business deadlines.</p>
+        </div>
+
+        <div class="steps">
+          <div class="step reveal">
+            <div class="step__num">01</div>
+            <h3>Discovery</h3>
+            <p>Goal, audience, examples, timeline, deliverables.</p>
           </div>
+          <div class="step reveal" style="transition-delay:80ms">
+            <div class="step__num">02</div>
+            <h3>Design</h3>
+            <p>First concepts delivered quickly with clear direction.</p>
+          </div>
+          <div class="step reveal" style="transition-delay:160ms">
+            <div class="step__num">03</div>
+            <h3>Refine</h3>
+            <p>Revisions until it feels premium and correct.</p>
+          </div>
+          <div class="step reveal" style="transition-delay:240ms">
+            <div class="step__num">04</div>
+            <h3>Deliver</h3>
+            <p>Organized exports for print, web, and social.</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-          <p><strong>Email:</strong> admin@goyonebydesign.com</p>
-          <p><strong>Location:</strong> Northern Virginia · Remote</p>
-          <p><strong>Specialty:</strong> Brand Systems · Restaurant · Web</p>
-          <p><strong>Style:</strong> Futuristic · Premium · Clean</p>
-        </aside>
+    <!-- Contact (real submission + validation + rate limit + auto-scroll) -->
+    <section class="section" id="contact">
+      <div class="container">
+        <div class="sectionHead">
+          <h2 class="reveal">Contact</h2>
+          <p class="reveal" style="transition-delay:80ms">Send a request—I'll reply with timeline + options.</p>
+        </div>
+
+        <div class="contactGrid">
+          <form class="form reveal" id="contactForm" novalidate>
+            <div class="fieldRow">
+              <div class="field" data-field="name">
+                <label for="name">Name</label>
+                <input id="name" name="name" type="text" placeholder="Your name" autocomplete="name" required />
+                <div class="errorText">Please enter your name.</div>
+              </div>
+              <div class="field" data-field="email">
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" placeholder="you@email.com" autocomplete="email" required />
+                <div class="errorText">Please enter a valid email address.</div>
+              </div>
+            </div>
+
+            <div class="field" data-field="service">
+              <label for="service">What do you need?</label>
+              <select id="service" name="service" required>
+                <option value="" selected disabled>Select one…</option>
+                <option>Logo / Brand Identity</option>
+                <option>Menu / Restaurant Design</option>
+                <option>Flyers / Ads / Promo</option>
+                <option>Website / Landing Page</option>
+                <option>Other</option>
+              </select>
+              <div class="errorText">Please select a service.</div>
+            </div>
+
+            <div class="field" data-field="message">
+              <label for="message">Details</label>
+              <textarea id="message" name="message" rows="6" placeholder="Goal, deadline, and what you want designed." required></textarea>
+              <div class="errorText">Please enter your project details.</div>
+            </div>
+
+            <!-- Honeypot -->
+            <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;opacity:0;" />
+
+            <div class="formActions">
+              <button class="btn btn--primary btn--lg magnetic" id="sendBtn" type="submit">
+                Send request
+                <span class="btn__shine" aria-hidden="true"></span>
+              </button>
+              <p class="formNote muted" id="formNote" role="status" aria-live="polite">
+                Messages are sent securely.
+              </p>
+            </div>
+          </form>
+
+          <aside class="contactCard reveal" style="transition-delay:100ms">
+            <div class="contactCard__top">
+              <img src="assets/work/mike.png" class="contactCard__avatar" alt="Michael Goyone portrait" />
+              <div>
+                <h3>Michael Goyone</h3>
+                <p class="muted">Founder · Creative Director</p>
+              </div>
+            </div>
+
+            <div class="contactList">
+              <div class="contactItem">
+                <span class="contactLabel">Email</span>
+                <a href="mailto:admin@goyonebydesign.com">admin@goyonebydesign.com</a>
+              </div>
+              <div class="contactItem">
+                <span class="contactLabel">Location</span>
+                <span>Northern Virginia · Remote</span>
+              </div>
+              <div class="contactItem">
+                <span class="contactLabel">Specialty</span>
+                <span>Brand Systems · Restaurant · Web</span>
+              </div>
+              <div class="contactItem">
+                <span class="contactLabel">Style</span>
+                <span>Futuristic · Premium · Clean</span>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <img class="footer__logo" src="logo.png" alt="Goyone By Design logo" />
+        <span>© <span id="year"></span> Goyone By Design. All rights reserved.</span>
+      </div>
+      <div class="footer__links">
+        <a href="#services">Services</a>
+        <a href="#work">Work</a>
+        <a href="#contact">Contact</a>
       </div>
     </div>
-  </section>
-</main>
+  </footer>
 
-<footer class="footer">
-  <div class="container">
-    <p>© <span id="year"></span> Goyone By Design</p>
-  </div>
-</footer>
-
-<!-- LIGHTBOX -->
-<div class="lightboxOverlay" id="lightboxOverlay" aria-hidden="true">
-  <div class="lightbox" role="dialog" aria-modal="true" aria-label="Portfolio image preview">
-    <div class="lightboxTop">
-      <p class="lightboxTitle" id="lightboxTitle">Preview</p>
-      <div class="lightboxBtns">
-        <button class="lbBtn" id="lbPrev" type="button" aria-label="Previous image">Prev</button>
-        <button class="lbBtn" id="lbNext" type="button" aria-label="Next image">Next</button>
-        <button class="lbBtn" id="lbClose" type="button" aria-label="Close preview">Close</button>
+  <!-- LIGHTBOX -->
+  <div class="lightboxOverlay" id="lightboxOverlay" aria-hidden="true">
+    <div class="lightbox" role="dialog" aria-modal="true" aria-label="Portfolio image preview">
+      <div class="lightboxTop">
+        <p class="lightboxTitle" id="lightboxTitle">Preview</p>
+        <div class="lightboxBtns">
+          <button class="lbBtn" id="lbPrev" type="button" aria-label="Previous image">Prev</button>
+          <button class="lbBtn" id="lbNext" type="button" aria-label="Next image">Next</button>
+          <button class="lbBtn" id="lbClose" type="button" aria-label="Close preview">Close</button>
+        </div>
+      </div>
+      <div class="lightboxBody">
+        <img id="lightboxImg" alt="Portfolio preview">
       </div>
     </div>
-    <div class="lightboxBody">
-      <img id="lightboxImg" alt="Portfolio preview">
-    </div>
   </div>
-</div>
 
-<script>
-/* =========================
-   Basics
-========================= */
-document.getElementById("year").textContent = new Date().getFullYear();
+  <script>
+    /* Year */
+    const yearEl = document.getElementById("year");
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-/* =========================
-   Contact: Validation + Submit + Auto-scroll + Rate limit
-========================= */
-(() => {
-  const ENDPOINT = "https://formspree.io/f/mregjvak";
-  const form = document.getElementById("contactForm");
-  if (!form) return;
+    /* CONTACT: validation + formspree + auto-scroll + rate limit */
+    (() => {
+      const ENDPOINT = "https://formspree.io/f/mregjvak";
+      const form = document.getElementById("contactForm");
+      if (!form) return;
 
-  const note = document.getElementById("formNote");
-  const btn  = document.getElementById("sendBtn");
-  const fields = {
-    name: form.querySelector('[data-field="name"]'),
-    email: form.querySelector('[data-field="email"]'),
-    service: form.querySelector('[data-field="service"]'),
-    message: form.querySelector('[data-field="message"]')
-  };
+      const note = document.getElementById("formNote");
+      const btn  = document.getElementById("sendBtn");
 
-  const setNote = (msg, state = "") => {
-    note.textContent = msg;
-    note.classList.remove("is-warn","is-bad","is-good");
-    if (state) note.classList.add(state);
-  };
+      const fields = {
+        name: form.querySelector('[data-field="name"]'),
+        email: form.querySelector('[data-field="email"]'),
+        service: form.querySelector('[data-field="service"]'),
+        message: form.querySelector('[data-field="message"]')
+      };
 
-  // Inline validation styling
-  const markField = (fieldEl, ok) => {
-    if (!fieldEl) return;
-    fieldEl.classList.toggle("is-error", !ok);
-    fieldEl.classList.toggle("is-ok", ok);
-  };
+      const setNote = (msg, state = "") => {
+        note.textContent = msg;
+        note.classList.remove("is-warn","is-bad","is-good");
+        if (state) note.classList.add(state);
+      };
 
-  const validate = () => {
-    const name = form.name.value.trim();
-    const email = form.email.value.trim();
-    const service = form.service.value.trim();
-    const message = form.message.value.trim();
+      const markField = (fieldEl, ok) => {
+        if (!fieldEl) return;
+        fieldEl.classList.toggle("is-error", !ok);
+        fieldEl.classList.toggle("is-ok", ok);
+      };
 
-    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      const validate = () => {
+        const name = (form.name?.value || "").trim();
+        const email = (form.email?.value || "").trim();
+        const service = (form.service?.value || "").trim();
+        const message = (form.message?.value || "").trim();
+        const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-    markField(fields.name, name.length > 1);
-    markField(fields.email, emailOk);
-    markField(fields.service, !!service);
-    markField(fields.message, message.length > 5);
+        markField(fields.name, name.length > 1);
+        markField(fields.email, emailOk);
+        markField(fields.service, !!service);
+        markField(fields.message, message.length > 5);
 
-    return (name.length > 1 && emailOk && !!service && message.length > 5);
-  };
+        return (name.length > 1 && emailOk && !!service && message.length > 5);
+      };
 
-  // Auto validate on input/change
-  ["input","change","blur"].forEach(evt => {
-    form.addEventListener(evt, (e) => {
-      if (["INPUT","TEXTAREA","SELECT"].includes(e.target.tagName)) validate();
-    }, true);
-  });
-
-  // Rate limiting: 1 submit per 45 seconds
-  const RATE_KEY = "gbd_form_last_submit";
-  const COOLDOWN_MS = 45 * 1000;
-
-  const getRemaining = () => {
-    const last = Number(localStorage.getItem(RATE_KEY) || "0");
-    const now = Date.now();
-    const remaining = (last + COOLDOWN_MS) - now;
-    return remaining > 0 ? remaining : 0;
-  };
-
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    // Honeypot
-    if (form._gotcha && form._gotcha.value) {
-      setNote("Thanks!", "is-good");
-      return;
-    }
-
-    const remaining = getRemaining();
-    if (remaining > 0) {
-      const secs = Math.ceil(remaining / 1000);
-      setNote(`Please wait ${secs}s before sending another message.`, "is-warn");
-      note.scrollIntoView({ behavior: "smooth", block: "center" });
-      return;
-    }
-
-    if (!validate()) {
-      setNote("Please fix the highlighted fields.", "is-bad");
-      note.scrollIntoView({ behavior: "smooth", block: "center" });
-      // focus first error
-      const firstError = form.querySelector(".field.is-error input, .field.is-error select, .field.is-error textarea");
-      firstError?.focus();
-      return;
-    }
-
-    btn.disabled = true;
-    setNote("Sending…");
-
-    try {
-      const res = await fetch(ENDPOINT, {
-        method: "POST",
-        headers: { "Accept": "application/json" },
-        body: new FormData(form)
+      ["input","change","blur"].forEach(evt => {
+        form.addEventListener(evt, (e) => {
+          if (["INPUT","TEXTAREA","SELECT"].includes(e.target.tagName)) validate();
+        }, true);
       });
 
-      if (res.ok) {
-        localStorage.setItem(RATE_KEY, String(Date.now()));
-        form.reset();
-        Object.values(fields).forEach(f => f?.classList.remove("is-error","is-ok"));
-        setNote("✅ Sent! Thanks — I’ll reply soon.", "is-good");
-        note.scrollIntoView({ behavior: "smooth", block: "center" });
-      } else {
-        setNote("Something went wrong. Please email admin@goyonebydesign.com.", "is-bad");
-        note.scrollIntoView({ behavior: "smooth", block: "center" });
-      }
-    } catch {
-      setNote("Network error. Please try again.", "is-bad");
-      note.scrollIntoView({ behavior: "smooth", block: "center" });
-    } finally {
-      btn.disabled = false;
-    }
-  });
-})();
+      const RATE_KEY = "gbd_form_last_submit";
+      const COOLDOWN_MS = 45 * 1000;
+      const getRemaining = () => {
+        const last = Number(localStorage.getItem(RATE_KEY) || "0");
+        const remaining = (last + COOLDOWN_MS) - Date.now();
+        return remaining > 0 ? remaining : 0;
+      };
 
-/* =========================
-   Portfolio Lightbox: click any work image
-========================= */
-(() => {
-  const overlay = document.getElementById("lightboxOverlay");
-  const imgEl = document.getElementById("lightboxImg");
-  const titleEl = document.getElementById("lightboxTitle");
-  const btnClose = document.getElementById("lbClose");
-  const btnPrev = document.getElementById("lbPrev");
-  const btnNext = document.getElementById("lbNext");
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
 
-  const cards = Array.from(document.querySelectorAll(".workCard"));
-  if (!overlay || !imgEl || cards.length === 0) return;
+        if (form._gotcha && form._gotcha.value) {
+          setNote("✅ Sent!", "is-good");
+          note.scrollIntoView({ behavior: "smooth", block: "center" });
+          return;
+        }
 
-  const items = cards.map(card => {
-    const img = card.querySelector("img");
-    return {
-      src: img?.getAttribute("src"),
-      alt: img?.getAttribute("alt") || "Portfolio preview",
-      title: card.getAttribute("data-lightbox-title") || img?.getAttribute("alt") || "Preview"
-    };
-  }).filter(x => !!x.src);
+        const remaining = getRemaining();
+        if (remaining > 0) {
+          setNote(`Please wait ${Math.ceil(remaining/1000)}s before sending another message.`, "is-warn");
+          note.scrollIntoView({ behavior: "smooth", block: "center" });
+          return;
+        }
 
-  let idx = 0;
-  let lastFocus = null;
+        if (!validate()) {
+          setNote("Please fix the highlighted fields.", "is-bad");
+          note.scrollIntoView({ behavior: "smooth", block: "center" });
+          const firstError = form.querySelector(".field.is-error input, .field.is-error select, .field.is-error textarea");
+          firstError?.focus();
+          return;
+        }
 
-  const open = (i) => {
-    idx = (i + items.length) % items.length;
-    const it = items[idx];
-    imgEl.src = it.src;
-    imgEl.alt = it.alt;
-    titleEl.textContent = it.title;
+        btn.disabled = true;
+        setNote("Sending…");
 
-    lastFocus = document.activeElement;
-    overlay.classList.add("is-open");
-    overlay.setAttribute("aria-hidden", "false");
-    btnClose.focus();
-    document.body.style.overflow = "hidden";
-  };
+        try {
+          const res = await fetch(ENDPOINT, {
+            method: "POST",
+            headers: { "Accept": "application/json" },
+            body: new FormData(form)
+          });
 
-  const close = () => {
-    overlay.classList.remove("is-open");
-    overlay.setAttribute("aria-hidden", "true");
-    document.body.style.overflow = "";
-    if (lastFocus && lastFocus.focus) lastFocus.focus();
-  };
+          if (res.ok) {
+            localStorage.setItem(RATE_KEY, String(Date.now()));
+            form.reset();
+            Object.values(fields).forEach(f => f?.classList.remove("is-error","is-ok"));
+            setNote("✅ Sent! Thanks — I’ll reply soon.", "is-good");
+            note.scrollIntoView({ behavior: "smooth", block: "center" });
+          } else {
+            setNote("Something went wrong. Please email admin@goyonebydesign.com.", "is-bad");
+            note.scrollIntoView({ behavior: "smooth", block: "center" });
+          }
+        } catch {
+          setNote("Network error. Please try again.", "is-bad");
+          note.scrollIntoView({ behavior: "smooth", block: "center" });
+        } finally {
+          btn.disabled = false;
+        }
+      });
+    })();
 
-  const prev = () => open(idx - 1);
-  const next = () => open(idx + 1);
+    /* PORTFOLIO LIGHTBOX */
+    (() => {
+      const overlay = document.getElementById("lightboxOverlay");
+      const imgEl = document.getElementById("lightboxImg");
+      const titleEl = document.getElementById("lightboxTitle");
+      const btnClose = document.getElementById("lbClose");
+      const btnPrev = document.getElementById("lbPrev");
+      const btnNext = document.getElementById("lbNext");
 
-  cards.forEach((card, i) => {
-    const img = card.querySelector("img");
-    img?.addEventListener("click", () => open(i));
-  });
+      const cards = Array.from(document.querySelectorAll(".workCard"));
+      if (!overlay || !imgEl || cards.length === 0) return;
 
-  btnClose?.addEventListener("click", close);
-  btnPrev?.addEventListener("click", prev);
-  btnNext?.addEventListener("click", next);
+      const items = cards.map(card => {
+        const img = card.querySelector("img");
+        return {
+          src: img?.getAttribute("src"),
+          alt: img?.getAttribute("alt") || "Portfolio preview",
+          title: card.getAttribute("data-lightbox-title") || img?.getAttribute("alt") || "Preview"
+        };
+      }).filter(x => !!x.src);
 
-  overlay.addEventListener("click", (e) => {
-    // click outside the modal closes
-    if (e.target === overlay) close();
-  });
+      let idx = 0;
+      let lastFocus = null;
 
-  document.addEventListener("keydown", (e) => {
-    if (!overlay.classList.contains("is-open")) return;
-    if (e.key === "Escape") close();
-    if (e.key === "ArrowLeft") prev();
-    if (e.key === "ArrowRight") next();
-  });
-})();
-</script>
+      const open = (i) => {
+        idx = (i + items.length) % items.length;
+        const it = items[idx];
+        imgEl.src = it.src;
+        imgEl.alt = it.alt;
+        titleEl.textContent = it.title;
 
+        lastFocus = document.activeElement;
+        overlay.classList.add("is-open");
+        overlay.setAttribute("aria-hidden", "false");
+        btnClose.focus();
+        document.body.style.overflow = "hidden";
+      };
+
+      const close = () => {
+        overlay.classList.remove("is-open");
+        overlay.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+        if (lastFocus && lastFocus.focus) lastFocus.focus();
+      };
+
+      const prev = () => open(idx - 1);
+      const next = () => open(idx + 1);
+
+      cards.forEach((card, i) => {
+        const img = card.querySelector("img");
+        img?.addEventListener("click", () => open(i));
+      });
+
+      btnClose?.addEventListener("click", close);
+      btnPrev?.addEventListener("click", prev);
+      btnNext?.addEventListener("click", next);
+
+      overlay.addEventListener("click", (e) => { if (e.target === overlay) close(); });
+
+      document.addEventListener("keydown", (e) => {
+        if (!overlay.classList.contains("is-open")) return;
+        if (e.key === "Escape") close();
+        if (e.key === "ArrowLeft") prev();
+        if (e.key === "ArrowRight") next();
+      });
+    })();
+  </script>
 </body>
 </html>
