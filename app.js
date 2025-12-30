@@ -157,6 +157,57 @@
       const body = encodeURIComponent(
         `Name: ${name}\nEmail: ${email}\nService: ${service}\n\nDetails:\n${message}\n\n— Sent from goyonebydesign.github.io`
       );
+
+
+      (() => {
+  const form = document.getElementById("contactForm");
+  if (!form) return;
+
+  const note = document.getElementById("formNote");
+  const btn  = document.getElementById("sendBtn");
+  const ENDPOINT = form.getAttribute("action") || "https://formspree.io/f/mregjvak";
+
+  const setNote = (msg, state = "") => {
+    if (!note) return;
+    note.textContent = msg;
+    note.classList.remove("is-warn","is-bad","is-good");
+    if (state) note.classList.add(state);
+  };
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    e.stopPropagation(); // IMPORTANT: prevents any other submit listener (like old mailto code)
+
+    // Honeypot
+    if (form._gotcha && form._gotcha.value) {
+      setNote("✅ Sent!", "is-good");
+      return;
+    }
+
+    btn && (btn.disabled = true);
+    setNote("Sending…");
+
+    try {
+      const res = await fetch(ENDPOINT, {
+        method: "POST",
+        headers: { "Accept": "application/json" },
+        body: new FormData(form)
+      });
+
+      if (res.ok) {
+        form.reset();
+        setNote("✅ Sent! Thanks — I’ll reply soon.", "is-good");
+      } else {
+        setNote("Something went wrong. Please email admin@goyonebydesign.com.", "is-bad");
+      }
+    } catch {
+      setNote("Network error. Please try again.", "is-bad");
+    } finally {
+      btn && (btn.disabled = false);
+    }
+  });
+})();
+
     });
   }
 
