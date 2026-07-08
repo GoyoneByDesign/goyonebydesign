@@ -161,6 +161,8 @@ blockquote{margin:0;padding:1rem;border-radius:14px;background:#f8fbff;color:#1d
 .glassesRow span{padding:.55rem .75rem;border-radius:10px;background:#eff6ff;font-weight:800}
 .priceGrid strong{display:block;color:var(--blue);font-size:1.8rem;margin:.35rem 0}
 .priceGrid .featured{border-color:var(--blue);box-shadow:0 18px 45px rgba(11,87,255,.16)}
+.pricingNote{max-width:780px;margin:1rem auto 0;color:var(--muted);text-align:center}
+.pricingNote a{color:var(--blue);font-weight:850}
 .faq{display:grid;gap:.8rem}
 .faq .sectionHead{grid-column:1/-1}
 summary{cursor:pointer;font-weight:900}
@@ -186,6 +188,10 @@ details p{margin:.7rem 0 0;background:transparent;border:0;box-shadow:none;paddi
 .emailBox div{display:flex;border:1px solid var(--line);border-radius:12px;overflow:hidden}
 .emailBox input{min-width:0;flex:1;border:0;padding:.8rem}
 .emailBox button{border:0;background:var(--blue);color:#fff;padding:0 .95rem;font-weight:850}
+.legalPage{max-width:860px}
+.legalPage h1{font-size:clamp(2.2rem,5vw,3.4rem);letter-spacing:-.03em}
+.legalPage h2{margin-top:2rem}
+.legalPage a{color:var(--blue);font-weight:850}
 @media (max-width:1020px){
   .siteHeader{align-items:flex-start;flex-direction:column}
   .hero,.benefits,.footer{grid-template-columns:1fr}
