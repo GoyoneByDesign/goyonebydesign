@@ -170,6 +170,48 @@ details p{margin:.7rem 0 0;background:transparent;border:0;box-shadow:none;paddi
 .cta{margin-top:2rem;background:linear-gradient(135deg,#0b57ff,#073bb5);color:#fff}
 .cta img{width:150px;max-height:90px;object-fit:contain}
 .cta p{margin:0;color:#dbe9ff}
+.contactPanel .sectionHead p:not(.eyebrow){max-width:760px;margin:0 auto;color:var(--muted)}
+.contactPanel .sectionHead a{color:var(--blue);font-weight:850}
+.contactGrid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(280px,.65fr);gap:1rem;align-items:stretch}
+.contactForm,.contactAside{
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:#fff;
+  box-shadow:0 10px 30px rgba(25,57,104,.08);
+  padding:1.15rem;
+}
+.contactForm{display:grid;gap:.9rem}
+.fieldRow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem}
+.contactForm label{display:grid;gap:.35rem;font-weight:850;color:#1d2939}
+.contactForm span{font-size:.92rem}
+.contactForm input,.contactForm select,.contactForm textarea{
+  width:100%;
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:.8rem .85rem;
+  color:var(--ink);
+  background:#fbfdff;
+  font:inherit;
+}
+.contactForm textarea{resize:vertical}
+.contactForm button{justify-self:start}
+.hiddenField{position:absolute;left:-9999px;opacity:0}
+.contactAside{display:grid;align-content:start;gap:.75rem}
+.contactAside strong{font-size:1.2rem}
+.contactAside p{margin:0;color:var(--muted)}
+.emailLink{
+  display:inline-flex;
+  align-items:center;
+  width:max-content;
+  max-width:100%;
+  padding:.7rem .85rem;
+  border-radius:10px;
+  background:var(--soft);
+  color:var(--blue2);
+  font-weight:900;
+  overflow-wrap:anywhere;
+}
+.smallText{font-size:.9rem}
 .footer{
   display:grid;
   grid-template-columns:1.2fr .75fr .75fr 1fr;
@@ -197,6 +239,7 @@ details p{margin:.7rem 0 0;background:transparent;border:0;box-shadow:none;paddi
   .hero,.benefits,.footer{grid-template-columns:1fr}
   .heroVisual{min-height:520px}
   .appStrip,.cta{grid-template-columns:1fr}
+  .contactGrid{grid-template-columns:1fr}
   .steps,.priceGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media (max-width:640px){
@@ -213,5 +256,7 @@ details p{margin:.7rem 0 0;background:transparent;border:0;box-shadow:none;paddi
   .rxCard{position:relative;right:auto;bottom:auto;width:100%;margin-top:1rem}
   .appStrip ul{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
   .appStrip li{width:auto}
+  .fieldRow{grid-template-columns:1fr}
+  .contactForm button{width:100%}
   .cta img{width:110px}
 }

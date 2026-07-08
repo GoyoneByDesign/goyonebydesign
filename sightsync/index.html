@@ -25,7 +25,7 @@
       <a href="#benefits">Benefits</a>
       <a href="#pricing">Pricing</a>
       <a href="#faq">FAQ</a>
-      <a href="#support">Support</a>
+      <a href="#contact">Contact Us</a>
     </nav>
     <div class="headerActions">
       <a href="../">GoyoneByDesign</a>
@@ -204,6 +204,57 @@
       </div>
       <a class="button light" href="../downloads/SightSync_0.1.0_x64-setup.exe" download>Start Your Free Trial</a>
     </section>
+
+    <section class="section contactPanel" id="contact">
+      <div class="sectionHead">
+        <p class="eyebrow">Contact Us</p>
+        <h2>Questions or suggestions about SightSync?</h2>
+        <p>Send your message to the Goyone By Design team. We review SightSync questions, support requests, and product suggestions at <a href="mailto:admin@goyonebydesign.com">admin@goyonebydesign.com</a>.</p>
+      </div>
+      <div class="contactGrid">
+        <form
+          class="contactForm"
+          action="https://formspree.io/f/mregjvak"
+          method="POST"
+          accept-charset="UTF-8"
+        >
+          <div class="fieldRow">
+            <label>
+              <span>Name</span>
+              <input name="name" type="text" autocomplete="name" placeholder="Your name" required />
+            </label>
+            <label>
+              <span>Email</span>
+              <input name="email" type="email" autocomplete="email" placeholder="you@email.com" required />
+            </label>
+          </div>
+          <label>
+            <span>Message type</span>
+            <select name="message_type" required>
+              <option value="" selected disabled>Select one</option>
+              <option>Question</option>
+              <option>Suggestion</option>
+              <option>Billing support</option>
+              <option>Technical support</option>
+            </select>
+          </label>
+          <label>
+            <span>Message</span>
+            <textarea name="message" rows="5" placeholder="Tell us what you need help with or what you would like SightSync to improve." required></textarea>
+          </label>
+          <input type="hidden" name="_subject" value="New SightSync Question or Suggestion" />
+          <input type="hidden" name="_format" value="plain" />
+          <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="hiddenField" />
+          <button class="button" type="submit">Send Message</button>
+        </form>
+        <aside class="contactAside">
+          <strong>Prefer email?</strong>
+          <p>Questions, suggestions, support requests, billing questions, and installer feedback can be sent directly to:</p>
+          <a class="emailLink" href="mailto:admin@goyonebydesign.com?subject=SightSync%20Question%20or%20Suggestion">admin@goyonebydesign.com</a>
+          <p class="smallText">For billing requests, include the email address used for your SightSync subscription so we can locate the account safely.</p>
+        </aside>
+      </div>
+    </section>
   </main>
 
   <footer class="footer">
@@ -225,8 +276,8 @@
     </nav>
     <nav aria-label="Support links">
       <strong>Support</strong>
-      <a href="../#contact">Contact Goyone By Design</a>
-      <a href="mailto:admin@goyonebydesign.com">Email Support</a>
+      <a href="#contact">Contact Us</a>
+      <a href="mailto:admin@goyonebydesign.com?subject=SightSync%20Question%20or%20Suggestion">Email Support</a>
       <a href="../downloads/sightsync-checksums.txt">Installer Checksum</a>
     </nav>
     <form class="emailBox" action="../#contact">
