@@ -1,0 +1,36 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">View4Real logo</title>
+  <desc id="desc">A blue app tile with a phone outline, eye, iris, and green comfort arc.</desc>
+  <defs>
+    <linearGradient id="tile" x1="60" y1="452" x2="452" y2="60" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0836D8"/>
+      <stop offset="0.48" stop-color="#0787FF"/>
+      <stop offset="1" stop-color="#24F0D6"/>
+    </linearGradient>
+    <linearGradient id="iris" x1="190" y1="318" x2="318" y2="190" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5CFFB2"/>
+      <stop offset="0.5" stop-color="#10C7FF"/>
+      <stop offset="1" stop-color="#0749FF"/>
+    </linearGradient>
+    <linearGradient id="arc" x1="84" y1="209" x2="428" y2="209" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#21D9FF"/>
+      <stop offset="0.55" stop-color="#55F0A8"/>
+      <stop offset="1" stop-color="#B7FF3D"/>
+    </linearGradient>
+    <filter id="shadow" x="27" y="39" width="458" height="448" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="22" stdDeviation="24" flood-color="#002D92" flood-opacity="0.26"/>
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="108" fill="url(#tile)"/>
+  <g filter="url(#shadow)">
+    <rect x="158" y="64" width="196" height="384" rx="38" stroke="white" stroke-width="20"/>
+    <rect x="223" y="93" width="66" height="16" rx="8" fill="white"/>
+    <path d="M71 256C113 187 177 153 256 153C335 153 399 187 441 256C399 325 335 359 256 359C177 359 113 325 71 256Z" fill="white"/>
+    <path d="M90 223C138 178 193 156 256 156C319 156 374 178 422 223C361 199 306 187 256 187C206 187 151 199 90 223Z" fill="url(#arc)"/>
+    <circle cx="256" cy="256" r="78" fill="url(#iris)"/>
+    <circle cx="256" cy="256" r="39" fill="#052259"/>
+    <circle cx="292" cy="219" r="23" fill="white"/>
+    <circle cx="309" cy="274" r="11" fill="#8DE9FF" opacity="0.85"/>
+    <path d="M102 306C150 341 202 359 256 359C310 359 362 341 410 306" stroke="url(#arc)" stroke-width="21" stroke-linecap="round"/>
+  </g>
+</svg>
