@@ -31,3 +31,20 @@ The source build emits `dist/client` assets, `dist/server/index.js`, and `dist/.
 Version 2.0.0 · Build 4. Browser visual testing has not been requested. Computational, source-file and export checks were run; local model inference was exercised on CPU.
 
 MAX's calculator uses math.js 15.2.0 in a dedicated worker with a four-second timeout and a constrained expression tree. Arithmetic, statistics, small matrices, units and derivatives are computed deterministically. Type `math: expression` in chat or open Calculate with MAX; successful results are saved to private history. No general-purpose code execution is enabled. Coding assistance drafts/explains/reviews code through the model and may be limited by model capability. See the primary [math.js security guidance](https://mathjs.org/docs/expressions/security.html). Future plugins need explicit, individually scoped integration; there is no automatic installation of all tools.
+
+
+## MAX Create (2.1.0)
+
+Create with MAX adds editable Markdown-to-Word/PDF, CSV/JSON multi-sheet Excel, source code and isolated HTML preview, LaTeX rendering, symbolic math, image format conversion, looping GIFs, browser-recorded slideshows with optional audio, and instrumental PCM WAV synthesis. The main PMIX exporter remains the route for specialized reporting formats. Use saved drafts to sync text; original media stays on the device. Examples are labeled example data.
+
+Chat and drafting default to on-device mode with no API calls. Select Cloud AI to use paid OpenAI chat/drafting. Image/video controls separately require selecting paid AI generation. No paid generation occurs merely from saving a key. Provider availability, permissions, model limits and billing still apply. AI music with singing/full arrangements is not implemented; WAV synthesis supports editable notes, chords and tempo. Browser video uses WebM or MP4 depending on encoder support and must keep the tab visible. Downloads are produced locally and are not auto-uploaded. Unicode Word text is preserved; PDF uses bundled DejaVu Sans and refuses unsupported characters instead of silently replacing them.
+
+### Private AI connections
+
+The owner signs into Work and unlocks the PIN before entering a key in MAX → AI connections. Keys are tested with the provider models endpoint then AES-GCM encrypted in the owner-scoped D1 settings table. The encryption key is derived from the server SESSION_SECRET; retain that secret or reconnect keys after rotating it. Keys are never returned to the client, put in app source, or stored in browser storage. OPENAI_API_KEY / GEMINI_API_KEY environment secrets are also supported and take precedence. Removing a saved connection does not revoke the provider key or remove an environment secret. Revoke unwanted keys at the provider.
+
+OpenAI draft/image adapter follows https://developers.openai.com/api/docs/guides/image-generation . Gemini video adapter follows https://ai.google.dev/gemini-api/docs/veo . Video jobs use signed owner-bound expiring tokens and restricted download hosts. No Sora integration is added because its API is scheduled to retire September 24, 2026. API media calls have not been tested against a paid live account in this release; mocked routes and failure cases are covered.
+
+### Learning communication
+
+Teach MAX my wording saves an explicit owner note describing shorthand or misspellings. Future AI prompts receive those notes along with instructions to resolve informal English/Tagalog in context, reason through requirements and ask when ambiguity matters. This is contextual memory, not model retraining or a guarantee of accuracy. Saved wording never rewrites source quantities or code.

@@ -21,3 +21,5 @@ main{max-width:1900px;margin-left:var(--sidebar);padding:28px 32px 42px;min-widt
 #chatHistory{max-height:420px;overflow:auto}.chat-turn{border-bottom:1px solid #ddd;padding:12px 0}.chat-turn p{white-space:pre-wrap;line-height:1.6}.layout-preview{white-space:pre-wrap;overflow:auto;font-size:12px}
 
 .max-heading{display:flex;align-items:center;gap:9px}.chat-turn p,.help-answer{white-space:pre-wrap}.chat-turn small{display:block;margin:8px 0;color:#666}#chatHistory{max-height:620px;overflow:auto}#chatSearchForm input{flex:1;min-width:180px}
+
+.company-home{display:inline-flex;align-items:center;gap:10px;color:inherit;text-decoration:none}.company-home:hover strong{text-decoration:underline}.company-home:focus-visible{outline:2px solid #222;outline-offset:5px;border-radius:4px}
