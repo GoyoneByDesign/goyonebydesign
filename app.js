@@ -1,6 +1,69 @@
 (() => {
   const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  const applyView4RealBranding = () => {
+    document.title = "Goyone By Design | Branding, Websites & View4Real";
+
+    const metaUpdates = new Map([
+      ["meta[name='description']", "Professional branding, websites, ads, menus, and product launch work from Goyone By Design. Featuring View4Real, a vision-adaptive display comfort utility."],
+      ["meta[property='og:title']", "Goyone By Design | Branding, Websites & View4Real"],
+      ["meta[property='og:description']", "Professional branding, websites, ads, menus, and product launch work from Goyone By Design. Featuring View4Real for Windows and iPhone."]
+    ]);
+
+    metaUpdates.forEach((content, selector) => {
+      const meta = document.querySelector(selector);
+      if (meta) meta.setAttribute("content", content);
+    });
+
+    document.querySelectorAll("a[href]").forEach((link) => {
+      const href = link.getAttribute("href");
+      if (!href) return;
+      link.setAttribute("href", href.replace(/sightsync\//gi, "view4real/"));
+    });
+
+    const oldProduct = document.getElementById("sightsync");
+    if (oldProduct) oldProduct.id = "view4real";
+
+    const exactText = new Map([
+      ["SightSync for Windows is now available.", "View4Real for Windows and iPhone is now in development."],
+      ["View SightSync", "View View4Real"],
+      ["See SightSync", "See View4Real"],
+      ["SightSync for Windows", "View4Real for Windows and iPhone"],
+      ["Open SightSync Page", "Open View4Real Page"],
+      ["SightSync / Software Launch", "View4Real / Software Launch"],
+      ["Brand Systems · Restaurant · Web · SightSync", "Brand Systems · Restaurant · Web · View4Real"],
+      ["Windows Display Profile", "Display Comfort Profile"],
+      ["Ctrl + F5", "Quick switch"],
+      ["Toggle regular view", "Change profile anytime"]
+    ]);
+
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+
+    nodes.forEach((node) => {
+      const trimmed = node.nodeValue.trim();
+      if (exactText.has(trimmed)) {
+        node.nodeValue = node.nodeValue.replace(trimmed, exactText.get(trimmed));
+        return;
+      }
+      if (node.nodeValue.includes("SightSync is a Windows display comfort utility created by Goyone By Design.")) {
+        node.nodeValue = "View4Real is a vision-adaptive display comfort utility created by Goyone By Design. It helps users create local readability profiles and tune brightness, contrast, warmth, text scaling, and prescription-inspired settings for more comfortable screen reading.";
+        return;
+      }
+      if (node.nodeValue.includes("Windows 10 and Windows 11.")) {
+        node.nodeValue = "Windows desktop MVP and iPhone MVP are in active development. Recommendations are comfort-based display suggestions and are not medical advice.";
+        return;
+      }
+      node.nodeValue = node.nodeValue.replace(/SightSync/g, "View4Real");
+    });
+
+    const mock = document.querySelector(".productMock");
+    if (mock) mock.setAttribute("aria-label", "View4Real app preview");
+  };
+
+  applyView4RealBranding();
+
   // Year
   const year = document.getElementById("year");
   if (year) year.textContent = new Date().getFullYear();
