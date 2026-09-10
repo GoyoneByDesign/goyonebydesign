@@ -1,10 +1,10 @@
 {
   "name": "anitas-pmix",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "private": true,
   "scripts": {
     "build": "node build.mjs",
-    "test": "node --test tests/*.test.cjs tests/worker.test.mjs",
+    "test": "node --test tests/*.test.cjs tests/*.test.mjs",
     "db:generate": "drizzle-kit generate",
     "prepare:assets": "node prepare-assets.mjs"
   },

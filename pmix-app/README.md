@@ -48,3 +48,8 @@ OpenAI draft/image adapter follows https://developers.openai.com/api/docs/guides
 ### Learning communication
 
 Teach MAX my wording saves an explicit owner note describing shorthand or misspellings. Future AI prompts receive those notes along with instructions to resolve informal English/Tagalog in context, reason through requirements and ask when ambiguity matters. This is contextual memory, not model retraining or a guarantee of accuracy. Saved wording never rewrites source quantities or code.
+
+
+### Connection fix (2.1.2)
+
+The production key test failed before any provider response because the deployed Cloudflare runtime rejects `redirect: "error"`. Reproduced using the Cloudflare workerd runtime at compatibility date 2025-01-01: the old setting throws `Invalid redirect value`; manual mode succeeds. Provider requests now use manual redirect handling and a portable AbortController timer. Redirects are rejected without forwarding credentials. HTTP authentication, API credit exhaustion, rate limits and transport errors have separate messages. Diagnostic logs contain only provider name, failure category and elapsed time; no keys or user content. Key validation still must succeed before encrypted persistence.
