@@ -1,0 +1,22 @@
+{
+  "revision": 1,
+  "updatedAt": "2026-09-10T12:24:51.005199Z",
+  "lastCheckedAt": null,
+  "entries": [
+    {
+      "id": "pmix-comparison",
+      "topic": "PMIX comparison",
+      "fact": "DIFF = Previous - Current. VAR = DIFF / Previous. When Previous is zero, VAR is unavailable. Grand-total VAR uses grand-total DIFF divided by grand-total Previous.",
+      "source": "Michael Goyone's reporting requirements",
+      "sourceType": "owner_instruction"
+    },
+    {
+      "id": "pmix-source-policy",
+      "topic": "Uploaded references",
+      "fact": "The uploaded example reports are layout references, not current sales data. New uploaded sales reports determine quantities and net sales.",
+      "source": "Michael Goyone's reporting requirements",
+      "sourceType": "owner_instruction"
+    }
+  ],
+  "dailyReview": "Daily documentation and sourced-knowledge review is enabled through Michael\u2019s ChatGPT task. New knowledge is applied only when supported and validated. Model weights do not retrain."
+}

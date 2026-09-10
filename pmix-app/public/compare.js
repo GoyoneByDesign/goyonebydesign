@@ -1,0 +1,12 @@
+(function(root){'use strict';const P=root.PMIX;
+const sum=v=>v.length&&v.every(n=>n!=null)?v.reduce((a,b)=>a+b,0):null;
+const calc=(a,b,k)=>a==null||b==null?null:k==='diff'?a-b:a===0?null:(a-b)/a;
+function compare(previous,current){if(previous.stores.join()!==current.stores.join())throw Error('Comparison locations must match.');const keys=r=>previous.combineNames&&current.combineNames?r.item.toLowerCase():r.group+'\0'+r.item,pm=new Map(previous.rows.map(r=>[keys(r),r])),cm=new Map(current.rows.map(r=>[keys(r),r]));const rows=[];
+function absent(report){return report.stores.map(c=>{const bs=report.batches.filter(b=>b.stores.includes(c));return bs.length&&bs.every(b=>b.zeroForMissing)?0:null;});}
+const pa=absent(previous),ca=absent(current);
+function block(a,b,group,item){const ar=a.values,br=b.values;return ['Previous','Current','DIFF','VAR'].map((label,i)=>({group,item:item+' · '+label,metric:label,format:i===3?'percent':a.format||b.format||'quantity',values:i===0?ar:i===1?br:ar.map((v,j)=>calc(v,br[j],i===2?'diff':'var')),total:i===0?a.total:i===1?b.total:calc(a.total,b.total,i===2?'diff':'var')}));}
+for(const k of new Set([...pm.keys(),...cm.keys()])){const a=pm.get(k),b=cm.get(k),r=a||b;rows.push(...block(a||{values:pa,total:sum(pa),format:r.format},b||{values:ca,total:sum(ca),format:r.format},r.group,r.item));}
+return {...current,rows,comparison:true,period:'Previous: '+previous.period+' | Current: '+current.period,batches:[...previous.batches,...current.batches],footerRows:block({values:previous.totals,total:previous.total,format:previous.format},{values:current.totals,total:current.total,format:current.format},'','GRAND TOTAL'),total:null,totals:current.stores.map(()=>null)};}
+function combineMetrics(qty,sales){const q=qty.rows.map(r=>({...r,item:r.item+' · Qty',format:r.format||'quantity'})),s=sales.rows.map(r=>({...r,item:r.item+' · Net sales',format:r.format==='percent'?'percent':'currency'}));return {...qty,extended:true,rows:[...q,...s],footerRows:[...(qty.footerRows||[{item:'GRAND TOTAL · Qty',values:qty.totals,total:qty.total}]),...(sales.footerRows||[{item:'GRAND TOTAL · Net sales',values:sales.totals,total:sales.total}]).map(r=>({...r,item:r.item.includes('Net sales')?r.item:r.item+' · Net sales',format:r.format==='percent'?'percent':'currency'}))]};}
+root.PMIX_COMPARE={compare,combineMetrics,calc};
+})(typeof window!=='undefined'?window:globalThis);

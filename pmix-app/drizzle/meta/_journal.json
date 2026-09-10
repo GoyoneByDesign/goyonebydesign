@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1789040836154,
+      "tag": "0000_faulty_warbound",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1789042918934,
+      "tag": "0001_supreme_bastion",
+      "breakpoints": true
+    }
+  ]
+}
