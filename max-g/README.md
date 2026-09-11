@@ -1,3 +1,7 @@
+# MAX-G 1.6.3 save places
+
+**Places & directions → Save location** now saves your typed place, country, travel mode and nearby radius directly from the Places page. A visible confirmation appears after the save completes, and edited fields show **Unsaved changes**. Saved details return after reopening MAX-G in the same browser, including offline. Your preferred maps app is retained; saving does not request GPS or search the internet. [Places guide](LOCATIONS.md)
+
 # MAX-G 1.6.2 iPhone sound recovery
 
 **Sound help** below the message box now includes a short local speaker test, a direct voice retry and visible download/playback status. Audio selects media playback mode where supported and primes playback on eligible Send/Enter gestures when Speak replies is enabled. Stop voice leaves the text conversation available. This fixes app-side audio startup and recovery gaps; physical iPhone output still depends on device/browser settings. [iPhone sound steps](VOICE-SETUP.md#iphone-sound-help)

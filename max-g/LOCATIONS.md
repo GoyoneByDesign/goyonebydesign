@@ -55,6 +55,21 @@ weather effects. Forecasts remain estimates.
 
 ## Settings and data
 
+On the **Places & directions** page, enter a city, address or postal code and its
+country, choose the travel mode and nearby radius, then tap **Save location**.
+Wait for **Location saved on this device**. These details return when you leave
+the page or reopen MAX-G in the same browser. Changes show **Unsaved changes**
+until saved. Saving works offline and does not run a search or request GPS.
+Leading zeros in postal codes are retained. If storage fails, MAX-G shows an
+error and keeps your typed details so you can retry.
+
+The save applies to this browser or installed app on this device; it does not
+sync automatically to another device. **Use current location** still provides a
+temporary position: Save location requires a typed place and never stores that
+GPS fix. **Find this place** searches without saving a new default. Your preferred
+maps app is retained. To remove a saved default, clear the default place under
+**Settings → Location & maps** and save the preferences there.
+
 **Settings → Location & maps** saves a default country, optional typed place,
 travel mode, radius and preferred maps app. **Settings → Permissions → Location**
 offers Ask / Allow / Deny; browser and OS permission are still required. A clear
