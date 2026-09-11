@@ -1,3 +1,7 @@
+# MAX-G 1.8 original songs and hip-hop dance
+
+**Dance** now plays an original hip-hop instrumental with a beat-matched Orbit. **Sing a new song** composes a fresh short melody and three lyric lines, then sings those words with a built-in stylized male voice. The lyrics appear in chat. A bounded counter keeps compositions changing across plays and reloads in the same browser. **Stop play** stops both audio and movement; **Settings → Display & animation → Music & singing** controls sound independently of motion. The small singing sample bank is cached with the app, so no AI model or paid API is needed for musical play. [Music controls and limits](COMPANION-PLAY.md)
+
 # MAX-G 1.7 current-device support
 
 **Settings → This device** checks feature support and saves an automatic, lower-memory or keep-ready mode. The default local model adapts to GPU compatibility at load time. **Connectors & devices → This device** adds calling, messaging, email-draft and Spotify handoffs; store links also open directly without the Mac companion. Existing native Mac workflows remain available when paired. Browser capabilities and device permissions still determine availability; profiles and account connections do not automatically sync. [Device guide and coverage](DEVICE-GUIDE.md)

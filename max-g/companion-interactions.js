@@ -8,8 +8,8 @@ export function performanceCommand(value){
   const q=addressed(value);
   if(/^(?:stop|stop (?:singing|humming|dancing|the (?:song|music|dance|performance)))$/u.test(q))return 'stop';
   if(/^(?:\/?sing and dance|\/?dance and sing)(?: for me)?$/u.test(q))return 'sing';
-  if(/^(?:\/?sing|hum)(?: (?:me )?(?:a |an )?(?:song|tune|melody))?(?: for me)?$/u.test(q))return 'sing';
-  if(/^\/?dance(?: for me)?$/u.test(q))return 'dance';
+  if(/^(?:\/?sing|hum)(?: (?:me )?(?:a |an |another )?(?:(?:new|original|different) )?(?:song|tune|melody))?(?: for me)?$/u.test(q))return 'sing';
+  if(/^\/?dance(?: (?:for me|to hip[ -]?hop(?: music)?|with (?:hip[ -]?hop )?music))?$/u.test(q))return 'dance';
   if(/^\/?sneeze(?: for me)?$/u.test(q))return 'sneeze';
   return null;
 }

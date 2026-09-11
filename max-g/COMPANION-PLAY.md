@@ -17,18 +17,43 @@ all MAX-G windows and reopen the page so the new offline version can activate.
   The buttons beside the composer also work. **Stop play** stops immediately;
   typing **“stop”** also stops the current operation.
 - **Settings → Display & animation** contains independent controls for weather
-  accessories, spring sneezes, dancing and musical play. Still mode and the
+  accessories, spring sneezes, dancing and Music & singing. Still mode and the
   device's reduced-motion preference stop decorative movement. Musical audio
   has its own toggle so it can play with a still Orbit.
 - Existing emotion colors, expressive eyes, holiday outfits, birthday setting,
   umbrella and other weather props remain available.
 
-The song mode is an original nine-second **wordless synthesized hum** called
-“Orbit hello.” It runs without downloading a singing model. It does not sing
-arbitrary lyrics, reproduce a singer, or use your cloned speaking voice. It is a
-light musical animation; a human-quality singing voice would need a separate
-singing engine. MAX-G can still help write original lyrics using the local chat
-model. No tune plays automatically when the page opens or as a spring effect.
+## Original music, version 1.8
+
+- **Dance** creates a 16-second, 96 BPM hip-hop groove: kick, snare, claps,
+  swung hi-hats, bass, chords and a melodic motif. Orbit's movement follows
+  the beat. The instruments are synthesized on your device.
+- **Sing a new song** writes three short English lyric lines and a new melody,
+  then sings the words using a built-in male vocal bank. The title and lyrics
+  appear in the conversation. “Sing another song” and “sing and dance” work too.
+- Each request advances a single saved composition counter. The notes, lyrics,
+  chord pattern and timbre vary by seed; MAX-G no longer replays one fixed hum.
+  This is a finite procedural composer, not an unlimited music-generation model.
+  Clearing/resetting browser data resets the counter; devices have separate histories.
+- **Stop play**, a new conversation/task, opening Settings, leaving the app or
+  hiding the page stops audio and releases the music worker. Nothing auto-plays
+  when MAX-G opens. On mobile, tap the button or press Enter to enable audio;
+  a spoken command may require a confirming tap because of browser audio rules.
+- Turn off **Music & singing** for silent dance animations. Disable **Dance
+  animations**, use Still mode, or enable the device's reduced-motion setting
+  for music with no dance movement. The sneezing effect stays silent.
+
+The music runs locally without WebGPU, a loaded chat model, a paid API, or the
+Mac companion. Its initial app update includes a roughly 1.3 MB vocal bank;
+once the offline app is installed, both dance and song work from the cache.
+Use **Sound help** if you do not hear audio, and check the device's media volume.
+
+The singing voice is **stylized synthetic male singing**. It uses short words
+synthesized locally with Kokoro, then changes their musical pitch and duration.
+It is separate from your conversational voice choice and voice clone. It does
+not imitate an artist, sing arbitrary supplied lyrics, or currently sing in
+other languages. The limited vocabulary lets short original songs render quickly
+without a large singing model. [Vocal sample provenance](assets/song/README.md).
 
 ## Conversation and speed
 

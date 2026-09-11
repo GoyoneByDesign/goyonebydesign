@@ -2,7 +2,7 @@
  * Model tensors/config/tokenizers/WASM belong to WebLLM's IndexedDB cache.
  * This worker never caches searches, conversations, uploads or arbitrary pages.
  */
-const VERSION = '2026-09-11.15';
+const VERSION = '2026-09-11.16';
 const SCOPE = new URL(self.registration.scope);
 const PREFIX = `maxg-pwa:${encodeURIComponent(SCOPE.pathname)}:`;
 const SHELL_CACHE = `${PREFIX}shell:${VERSION}`;
@@ -11,7 +11,7 @@ const WEBLLM_URL = 'https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@0.2.85/+esm';
 const SHELL_FILES = [
   './', './index.html', './style.css', './app.js', './state.js', './tools.js',
   './improvement.js', './improvement-ui.js', './improvement.css', './connectors.js', './connectors.css', './unit-data.js', './voice.js', './files.js', './engine.js', './inference-worker.js',
-  './device.js', './device-ui.js', './device.css', './locations.js', './locations-ui.js', './locations.css', './companion-interactions.js', './performance.js', './performance-worker.js', './profile.js', './profile-ui.js', './profile.css', './orbit.js', './orbit.css',
+  './device.js', './device-ui.js', './device.css', './locations.js', './locations-ui.js', './locations.css', './companion-interactions.js', './performance.js', './performance-worker.js', './music-composer.js', './song-vocals.js', './assets/song/male-syllables-v1.json', './profile.js', './profile-ui.js', './profile.css', './orbit.js', './orbit.css',
   './voice-config.js', './neural-voice.js', './voice-worker.js', './voice-studio.js', './voice-studio.css', './assets/goyonebydesign-logo.png',
   './manifest.json', './assets/icon.svg', './icons/icon-192.png', './icons/icon-512.png',
   './icons/maskable-512.png', './icons/apple-touch-icon.png',

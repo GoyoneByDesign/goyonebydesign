@@ -13,7 +13,7 @@ import {applyAppearance,applyOwnerProfile,ownerContext,normalizeProfile,normaliz
 import {renderProfileSettings,renderDisplaySettings} from './profile-ui.js';
 import {attachOrbit,renderOrbitSettings} from './orbit.js';
 import {COMPANION_PERSONA,performanceCommand,isLocalConversation,socialReply} from './companion-interactions.js';
-import {performSong,stop as stopSong,PERFORMANCE_INFO} from './performance.js';
+import {performSong,stop as stopSong} from './performance.js';
 import {createLocationHub} from './locations-ui.js';
 import {parseLocationIntent,normalizeLocationSettings} from './locations.js';
 import {initializeConnectors,parseDirectCommand} from './connectors.js';
@@ -38,20 +38,29 @@ async function runPlay(kind,{userText}={}){
   if(active)return toast('Finish or stop the current reply before musical play.');
   stopPlay();voice.stop();voiceMode=false;$('voiceModeBtn').setAttribute('aria-pressed','false');$('micBtn').setAttribute('aria-pressed','false');
   const epoch=performanceEpoch;setOrb('idle','playful');
-  if(kind==='sing'&&state.settings.orbit.singing===false)return toast('Musical play is off in Settings → Display & animation.');
-  let result;
-  if(kind==='sing'){
-    if(navigator.userActivation?.isActive===false){const hint='Tap “Sing a tune” below to start audio on this device.';if(userText)connectorReply(hint,userText);toast(hint);return;}
+  const music=state.settings.orbit.singing!==false;
+  if(kind==='sing'&&!music)return toast('Music & singing is off in Settings → Display & animation.');
+  if((kind==='sing'||kind==='dance')&&music){
+    if(navigator.userActivation?.isActive===false){const hint=`Tap “${kind==='sing'?'Sing a new song':'Dance'}” below to start audio on this device.`;if(userText)connectorReply(hint,userText);toast(hint);return;}
     playing=true;$('playStopBtn').hidden=false;
-    // Start Web Audio in the click/Enter handler, before asynchronous work.
-    const song=performSong({onStart:()=>{if(epoch!==performanceEpoch)return;$('orb').style.setProperty('--orbit-dance-duration',`${4*60/PERFORMANCE_INFO.tempo}s`);if(!orbit.playDance({durationMs:PERFORMANCE_INFO.duration*1000}))orbit.setSinging(true);$('orbStatus').textContent='Humming an original tune';if(userText)connectorReply('Here’s a little original wordless tune. You can stop it at any time.',userText);},onLevel:level=>{if(epoch===performanceEpoch)$('orb').style.setProperty('--speech-level',String(level));},onStatus:text=>{if(epoch===performanceEpoch)$('orbStatus').textContent=text;}});
-    try{result=await song;}finally{if(epoch===performanceEpoch){stopPlay();setOrb('idle','happy');}}
-    return result;
+    // A single bounded counter varies the composition across plays and reloads.
+    const seed=(state.settings.performanceSeed+2654435761)>>>0;state.settings.performanceSeed=seed;
+    // Web Audio resumes inside the original click/Enter, before storage or rendering.
+    const song=performSong({kind,seed,onStart:info=>{
+      if(epoch!==performanceEpoch)return;
+      $('orb').style.setProperty('--orbit-dance-duration',`${4*60/info.tempo}s`);
+      const moving=orbit.playDance({durationMs:info.duration*1000});if(!moving&&kind==='sing')orbit.setSinging(true);
+      $('orbStatus').textContent=`${kind==='sing'?'Singing':'Hip-hop'} · ${info.title}${moving?'':' · motion paused'}`;
+      if(kind==='sing')connectorReply(`I composed “${info.title}” for this play.\n\n${info.lyrics.join('\n')}\n\nOriginal lyrics and melody · local stylized singing voice.`,userText||'Sing a new song');
+      else if(userText)connectorReply('A fresh hip-hop beat for our dance break! You can stop it at any time.',userText);
+    },onLevel:level=>{if(epoch===performanceEpoch)$('orb').style.setProperty('--speech-level',String(level));},onStatus:text=>{if(epoch===performanceEpoch)$('orbStatus').textContent=text;}});
+    persist();
+    try{return await song;}finally{if(epoch===performanceEpoch){stopPlay();setOrb('idle','happy');}}
   }
   const started=kind==='dance'?orbit.playDance():orbit.playSneeze();
   if(!started)return toast('This animation is off or paused. Check Display & animation and your device’s reduced-motion setting.');
   playing=true;$('playStopBtn').hidden=false;
-  if(userText)connectorReply(kind==='dance'?'A little dance break!':'A tiny springtime achoo—just a playful animation.',userText);
+  if(userText)connectorReply(kind==='dance'?'A little silent dance break—music is off in your settings.':'A tiny springtime achoo—just a playful animation.',userText);
   playTimer=setTimeout(()=>{if(epoch===performanceEpoch){stopPlay();setOrb('idle','happy');}},kind==='dance'?6500:2800);
 }
 function setOrb(status='idle',emotion){orbit.setMood(status,emotion);$('orb').dataset.state=status;if($('orbStatus'))$('orbStatus').textContent={idle:'MAX-G is here',thinking:'Thinking locally…',listening:'Listening to you',speaking:'Speaking to you'}[status]||status;if(emotion&&EMOTIONS.includes(emotion))$('orb').dataset.emotion=emotion;}
@@ -61,7 +70,7 @@ function audioFeedback(text,kind='info',busy=false){const node=$('voiceFeedback'
 function pauseVoiceOutput(){audioAttempt++;voiceMode=false;voice.stop();$('voiceModeBtn').setAttribute('aria-pressed','false');$('micBtn').setAttribute('aria-pressed','false');}
 function stopVoiceOutput(){pauseVoiceOutput();audioFeedback('Voice stopped. Your text conversation stays available.');}
 function primeAudioFromGesture(){if(normalizeVoice(state.settings.voice).engine==='system')return;const attempt=++audioAttempt,generation=voice.generation;voice.enableAudio().catch(error=>{if(error.name!=='AbortError'&&attempt===audioAttempt&&generation===voice.generation)audioFeedback('Audio needs another tap. Use Hear MAX-G or Sound help to enable it.','error');});}
-function sendFromGesture(){const text=$('messageInput').value.trim();if(text&&!active&&!isResetCode(text)&&state.settings.speak)primeAudioFromGesture();submit().catch(showError);}
+function sendFromGesture(){const text=$('messageInput').value.trim();if(text&&!active&&!isResetCode(text)&&!performanceCommand(text)&&state.settings.speak)primeAudioFromGesture();submit().catch(showError);}
 function canSpeakReply(){return (state.settings.speak||voiceMode)&&!$('settingsDialog').open&&!$('soundDialog').open;}
 function scheduleVoiceListen(delay){const generation=voice.generation;setTimeout(()=>{if(!voiceMode||generation!==voice.generation||active||document.hidden||$('settingsDialog').open||$('soundDialog').open)return;startDictation(true).catch(error=>{voiceMode=false;showError(error);});},delay);}
 function openSoundHelp(){pauseVoiceOutput();soundController?.abort();soundController=new AbortController();audioFeedback('Turn up your media volume, then tap Play speaker test.');$('soundDialog').showModal();}
