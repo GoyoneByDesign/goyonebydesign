@@ -1,0 +1,51 @@
+/* Small transform-only gestures layered over the original MAX-G SVG. */
+.orb.orbit-enhanced{--orbit-lift:4px;--orbit-lean:1deg;--orbit-breathe:1.006;--orbit-duration:6.4s;isolation:isolate}
+.orb.orbit-enhanced[data-orbit-motion=lively]{--orbit-lift:7px;--orbit-lean:1.5deg;--orbit-breathe:1.012;--orbit-duration:5.4s}
+.orbit-enhanced .orb-character,.orbit-enhanced .orbit-accessories{animation:orbit-float-body var(--orbit-duration) ease-in-out infinite;transform-origin:50% 50%}
+.orb.orbit-enhanced .orb-character{transform-origin:200px 160px}
+.orbit-accessories{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;filter:none;z-index:2}
+.orbit-enhanced .orb-shadow{animation-duration:var(--orbit-duration)}
+.orb.orbit-enhanced .hoop{animation:orbit-hoop 10s ease-in-out infinite;transform-origin:200px 159px}
+.orb.orbit-enhanced[data-state=thinking] .hoop{animation-duration:5.2s}
+.orb.orbit-enhanced[data-state=speaking] .hoop{animation-duration:6s}
+.orb.orbit-enhanced[data-state=listening] .hoop{animation-duration:8s}
+.orb.orbit-enhanced[data-state=speaking] .orb-character,.orb.orbit-enhanced[data-state=speaking] .orbit-accessories{animation:orbit-speak-soft 1.4s ease-in-out infinite}
+.orb.orbit-enhanced[data-orbit-motion=lively][data-state=speaking] .orb-character,.orb.orbit-enhanced[data-orbit-motion=lively][data-state=speaking] .orbit-accessories{animation-duration:1.05s}
+.orbit-enhanced .voice-bars i{height:14px;transform-origin:center;animation:orbit-voice .95s ease-in-out infinite alternate}
+.orbit-enhanced .orbit-float,.orbit-enhanced .orbit-umbrella{animation:orbit-accessory-drift 7s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 65%}
+.orbit-enhanced .orbit-sun{animation:orbit-sun-turn 15s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.orbit-enhanced .orbit-rain{animation:orbit-rain-fall 2.8s ease-in-out infinite;opacity:.75}
+.orbit-enhanced .orbit-snow{animation:orbit-snow-drift 8s ease-in-out infinite;opacity:.9}
+.orbit-enhanced .orbit-celebrate{animation:orbit-accessory-drift 6s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.orb.orbit-enhanced[data-orbit-joke=wink] .eye-right{animation:orbit-little-wink 1.2s ease-in-out 1}
+.orb.orbit-enhanced[data-orbit-joke=peek] .orb-face{animation:orbit-curious-peek 2.4s ease-in-out 1}
+.orb.orbit-enhanced[data-orbit-joke=tilt] .orb-character,.orb.orbit-enhanced[data-orbit-joke=tilt] .orbit-accessories{animation:orbit-little-tilt 2.4s ease-in-out 1}
+.orb.orbit-enhanced[data-orbit-running=false] *{animation-play-state:paused!important;transition:none!important}
+.orb.orbit-enhanced[data-orbit-motion=off] *{animation:none!important;transition:none!important}
+.orb.orbit-enhanced[data-orbit-motion=off] .voice-bars{display:none}
+@keyframes orbit-float-body{0%,100%{transform:translateY(0) rotate(calc(-1 * var(--orbit-lean)))}50%{transform:translateY(calc(-1 * var(--orbit-lift))) rotate(var(--orbit-lean))}}
+@keyframes orbit-hoop{0%,100%{transform:rotate(-2deg) translateY(1px)}50%{transform:rotate(3deg) translateY(-2px)}}
+@keyframes orbit-speak-soft{0%,100%{transform:translateY(-2px) scale(1)}50%{transform:translateY(calc(-.7 * var(--orbit-lift))) scale(var(--orbit-breathe))}}
+@keyframes orbit-voice{from{transform:scaleY(.3);opacity:.5}to{transform:scaleY(.85);opacity:.9}}
+@keyframes orbit-accessory-drift{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-3px) rotate(2deg)}}
+@keyframes orbit-sun-turn{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+@keyframes orbit-rain-fall{0%,100%{transform:translateY(-3px)}50%{transform:translateY(5px)}}
+@keyframes orbit-snow-drift{0%,100%{transform:translate(-2px,-3px)}50%{transform:translate(3px,4px)}}
+@keyframes orbit-little-wink{0%,28%,74%,100%{transform:scaleY(1)}43%,56%{transform:scaleY(.1)}}
+@keyframes orbit-curious-peek{0%,100%{transform:translate(0,0)}35%,62%{transform:translate(4px,-1px)}}
+@keyframes orbit-little-tilt{0%,100%{transform:rotate(0)}35%,58%{transform:rotate(-3deg)}78%{transform:rotate(1deg)}}
+.orbit-settings{border:1px solid var(--line,#293950);border-radius:15px;padding:16px;margin:18px 0;min-width:0}
+.orbit-settings legend{padding:0 7px;font-size:13px;font-weight:600;color:var(--text,#d5e5ef)}
+.orbit-settings .field{display:flex;flex-direction:column;gap:8px;margin:13px 0;font-size:12px}
+.orbit-settings .field input,.orbit-settings .field select{width:100%;background:var(--panel,#122032);color:var(--text,#d5e5ef);border:1px solid var(--line,#293950);border-radius:9px;padding:10px;font:inherit}
+.orbit-settings .toggle-row{display:flex;align-items:center;gap:10px;margin:13px 0;font-size:12px}
+.orbit-settings .toggle-row input{accent-color:var(--cyan,#70dbe7)}
+.orbit-settings-note{font-size:11px;line-height:1.65;color:var(--muted,#8ba0b7);margin:14px 0}
+.orbit-setting-error{color:var(--danger,#ffadb6);font-size:12px;line-height:1.5}
+@media(prefers-reduced-motion:reduce){.orb.orbit-enhanced *{animation:none!important;transition:none!important}.orbit-enhanced .voice-bars{display:none}}
+/* Real local playback level subtly lifts the eyes without replacing their blink
+   or emotion shape. The independent scale property preserves existing transforms. */
+.orb.orbit-enhanced[data-state=speaking][data-orbit-running=true]:not([data-orbit-motion=off]) .eye ellipse,
+.orb.orbit-enhanced[data-state=speaking][data-orbit-running=true]:not([data-orbit-motion=off]) .happy-eye{transform-box:fill-box;transform-origin:center;scale:1 calc(1 + clamp(0,var(--speech-level,0),1)*.08);transition:scale .1s linear}
+.orb.orbit-enhanced[data-state=speaking][data-orbit-running=true]:not([data-orbit-motion=off]) .voice-bars{scale:1 calc(.8 + clamp(0,var(--speech-level,0),1)*.4);transition:scale .1s linear}
+@media(prefers-reduced-motion:reduce){.orb.orbit-enhanced .eye ellipse,.orb.orbit-enhanced .happy-eye,.orb.orbit-enhanced .voice-bars{scale:none!important}}
