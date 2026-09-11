@@ -1,3 +1,7 @@
+# MAX-G 1.5 companion update
+
+Open [MAX-G on GoyoneByDesign](https://www.goyonebydesign.com/max-g/). This update adds weather sunglasses and a scarf, optional spring sneezes, a short original humming tune and dancing, faster local greetings, and a device compatibility check. Read [Companion play and device guide](COMPANION-PLAY.md) for controls and current limits.
+
 # MAX-G · browser edition
 
 A complete PWA for Michael Allan, with WebLLM inference on the device, a

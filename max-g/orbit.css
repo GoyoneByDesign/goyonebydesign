@@ -49,3 +49,31 @@
 .orb.orbit-enhanced[data-state=speaking][data-orbit-running=true]:not([data-orbit-motion=off]) .happy-eye{transform-box:fill-box;transform-origin:center;scale:1 calc(1 + clamp(0,var(--speech-level,0),1)*.08);transition:scale .1s linear}
 .orb.orbit-enhanced[data-state=speaking][data-orbit-running=true]:not([data-orbit-motion=off]) .voice-bars{scale:1 calc(.8 + clamp(0,var(--speech-level,0),1)*.4);transition:scale .1s linear}
 @media(prefers-reduced-motion:reduce){.orb.orbit-enhanced .eye ellipse,.orb.orbit-enhanced .happy-eye,.orb.orbit-enhanced .voice-bars{scale:none!important}}
+/* Short, requested performances. They never play sound or make network requests. */
+.orb.orbit-enhanced{--orbit-dance-step:6px;--orbit-dance-lean:4deg;--orbit-dance-duration:1.5s}
+.orb.orbit-enhanced[data-orbit-motion=lively]{--orbit-dance-step:9px;--orbit-dance-lean:6deg}
+.orb.orbit-enhanced[data-orbit-performance=dance] .orb-character,.orb.orbit-enhanced[data-orbit-performance=dance] .orbit-accessories{animation:orbit-dance-step var(--orbit-dance-duration) ease-in-out infinite}
+.orb.orbit-enhanced[data-orbit-performance=dance] .hoop{animation:orbit-dance-hoop var(--orbit-dance-duration) ease-in-out infinite}
+.orb.orbit-enhanced[data-orbit-performance=dance] .orb-shadow{animation:orbit-dance-shadow var(--orbit-dance-duration) ease-in-out infinite}
+.orb.orbit-enhanced[data-orbit-performance=sneeze] .orb-character,.orb.orbit-enhanced[data-orbit-performance=sneeze] .orbit-accessories{animation:orbit-sneeze-body 2.1s ease-in-out 1}
+.orb.orbit-enhanced[data-orbit-performance=sneeze] .eye{animation:orbit-sneeze-eyes 2.1s ease-in-out 1}
+.orb.orbit-enhanced[data-orbit-performance=sneeze] .hoop{animation:orbit-sneeze-hoop 2.1s ease-in-out 1}
+.orbit-tissue{transform-box:fill-box;transform-origin:center;animation:orbit-sneeze-tissue 2.1s ease-in-out 1}
+.orbit-sneeze-puff{transform-box:fill-box;transform-origin:center;animation:orbit-sneeze-puff 2.1s ease-out 1}
+.orb.orbit-enhanced[data-orbit-performance=singing] .orb-character,.orb.orbit-enhanced[data-orbit-performance=singing] .orbit-accessories{animation:orbit-song-sway 2.4s ease-in-out infinite}
+.orbit-music-note{transform-box:fill-box;transform-origin:center;animation:orbit-note-float 2.4s ease-in-out infinite}
+.orbit-music-note-second{animation-delay:-1.2s}
+.orbit-settings .button{margin:3px 6px 3px 0}
+@keyframes orbit-dance-step{0%,100%{transform:translate(0,-2px) rotate(0)}25%{transform:translate(calc(-1 * var(--orbit-dance-step)),-5px) rotate(calc(-1 * var(--orbit-dance-lean)))}50%{transform:translate(0,-2px) rotate(0)}75%{transform:translate(var(--orbit-dance-step),-5px) rotate(var(--orbit-dance-lean))}}
+@keyframes orbit-dance-hoop{0%,50%,100%{transform:rotate(-2deg)}25%{transform:rotate(6deg) translateY(-2px)}75%{transform:rotate(-6deg) translateY(2px)}}
+@keyframes orbit-dance-shadow{0%,50%,100%{transform:scaleX(1);opacity:.12}25%,75%{transform:scaleX(.91);opacity:.09}}
+@keyframes orbit-sneeze-body{0%,100%{transform:translate(0,0) rotate(0)}25%,42%{transform:translate(-2px,-3px) rotate(-2deg)}54%{transform:translate(4px,4px) rotate(3deg) scale(1.015,.985)}66%{transform:translate(-1px,-1px) rotate(-1deg)}82%{transform:translate(0,0) rotate(0)}}
+@keyframes orbit-sneeze-eyes{0%,100%{transform:scaleY(1)}30%,42%{transform:scaleY(.65)}50%,64%{transform:scaleY(.08)}80%{transform:scaleY(.8)}}
+@keyframes orbit-sneeze-hoop{0%,100%{transform:rotate(-2deg)}40%{transform:rotate(0)}54%{transform:rotate(6deg) translateY(3px)}72%{transform:rotate(-3deg)}}
+@keyframes orbit-sneeze-tissue{0%,15%,100%{opacity:0;transform:translate(10px,8px) rotate(8deg)}30%,72%{opacity:1;transform:translate(0,0) rotate(0)}85%{opacity:.5;transform:translate(4px,4px)}}
+@keyframes orbit-sneeze-puff{0%,42%,85%,100%{opacity:0;transform:translateX(0)}54%{opacity:.7;transform:translateX(2px)}75%{opacity:0;transform:translateX(9px)}}
+@keyframes orbit-song-sway{0%,100%{transform:translateY(-2px) rotate(-2deg)}50%{transform:translateY(-5px) rotate(2deg)}}
+@keyframes orbit-note-float{0%,100%{transform:translateY(0) rotate(-3deg);opacity:.65}50%{transform:translateY(-5px) rotate(3deg);opacity:.9}}
+/* Redundant CSS guard also covers the frame before the controller sees the media event. */
+@media(prefers-reduced-motion:reduce){.orb.orbit-enhanced .orbit-performance-layer{display:none}}
+.orb.orbit-enhanced[data-orbit-motion=off] .orbit-performance-layer,.orb.orbit-enhanced[data-orbit-running=false] .orbit-performance-layer{display:none}

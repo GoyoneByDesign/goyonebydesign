@@ -1,5 +1,5 @@
 /** Orbit appearance is decorative local UI. It never requests weather, infers feelings, or runs tools. */
-export const ORBIT_DEFAULTS=Object.freeze({intensity:'gentle',season:'auto',birthday:'',funny:true,weather:true});
+export const ORBIT_DEFAULTS=Object.freeze({intensity:'gentle',season:'auto',birthday:'',funny:true,weather:true,weatherAccessories:true,springSneezes:true,dancing:true,singing:true,hemisphere:'north'});
 export const ORBIT_SEASONS=Object.freeze({auto:'Seasonal, automatically',none:'Everyday Orbit',halloween:'Halloween',christmas:'Christmas',newyear:'New Year',valentine:'Valentine’s Day',stpatrick:'St. Patrick’s Day',birthday:'Birthday'});
 const MOODS=new Set(['neutral','happy','joyful','sad','embarrassed','surprised','excited','thoughtful','confused','concerned','proud','playful','sleepy','frustrated','affectionate','listening','thinking','curious']);
 const STATES=new Set(['idle','thinking','listening','speaking']);
@@ -20,7 +20,12 @@ export function normalizeOrbitSettings(value){
     season:Object.hasOwn(ORBIT_SEASONS,input.season)?input.season:ORBIT_DEFAULTS.season,
     birthday:validBirthday(input.birthday)?input.birthday:'',
     funny:typeof input.funny==='boolean'?input.funny:ORBIT_DEFAULTS.funny,
-    weather:typeof input.weather==='boolean'?input.weather:ORBIT_DEFAULTS.weather};
+    weather:typeof input.weather==='boolean'?input.weather:ORBIT_DEFAULTS.weather,
+    weatherAccessories:typeof input.weatherAccessories==='boolean'?input.weatherAccessories:ORBIT_DEFAULTS.weatherAccessories,
+    springSneezes:typeof input.springSneezes==='boolean'?input.springSneezes:ORBIT_DEFAULTS.springSneezes,
+    dancing:typeof input.dancing==='boolean'?input.dancing:ORBIT_DEFAULTS.dancing,
+    singing:typeof input.singing==='boolean'?input.singing:ORBIT_DEFAULTS.singing,
+    hemisphere:['north','south'].includes(input.hemisphere)?input.hemisphere:ORBIT_DEFAULTS.hemisphere};
 }
 
 /** Uses the device's local calendar; birthday takes priority over seasonal windows. */
@@ -38,6 +43,18 @@ export function seasonForDate(settings,date=new Date()){
   return 'none';
 }
 
+/** A calendar-only decorative season, unrelated to actual pollen or health. */
+export function springForDate(settings,date=new Date()){
+  const config=normalizeOrbitSettings(settings);
+  if(!(date instanceof Date)||!Number.isFinite(date.getTime()))return false;
+  const month=date.getMonth()+1;
+  return config.hemisphere==='south'?month>=9&&month<=11:month>=3&&month<=5;
+}
+
+export function performanceDuration(value=6000){
+  return typeof value==='number'&&Number.isFinite(value)?Math.round(Math.min(20000,Math.max(1500,value))):6000;
+}
+
 /** Only structured Open-Meteo result metadata supplied by the caller is accepted. */
 export function weatherAppearance(value){
   if(!value||typeof value!=='object'||value.source!=='open-meteo'||!Number.isInteger(value.code))return null;
@@ -49,7 +66,11 @@ export function weatherAppearance(value){
   else if([51,53,55,56,57,61,63,65,66,67,80,81,82].includes(code))kind='rain';
   else if([71,73,75,77,85,86].includes(code))kind='snow';
   else if([95,96,99].includes(code))kind='storm';
-  return kind?{kind,code,label:typeof value.label==='string'?value.label.replace(/[\u0000-\u001f]/g,' ').slice(0,140):''}:null;
+  if(!kind)return null;
+  const temperature=(value,min,max)=>typeof value==='number'&&Number.isFinite(value)&&value>=min&&value<=max?value:null;
+  const tempC=temperature(value.tempC,-100,65),apparentC=temperature(value.apparentC,-130,90),isDay=typeof value.isDay==='boolean'?value.isDay:null;
+  return {kind,code,label:typeof value.label==='string'?value.label.replace(/[\u0000-\u001f]/g,' ').slice(0,140):'',tempC,apparentC,isDay,
+    sunglasses:kind==='sun'&&isDay===true,scarf:tempC!==null&&tempC<=10||apparentC!==null&&apparentC<=10};
 }
 
 const star=(x,y,size=8)=>`<path d="M${x} ${y-size}l${size*.28} ${size*.72} ${size*.72} ${size*.28}-${size*.72} ${size*.28}-${size*.28} ${size*.72}-${size*.28}-${size*.72}-${size*.72}-${size*.28} ${size*.72}-${size*.28}z"/>`;
@@ -74,64 +95,108 @@ const WEATHER_ART={
   storm:umbrella+rain+'<path d="m312 104-10 18h10l-7 15 23-22h-13l9-11z" fill="#efd79b" stroke="#fff0be" stroke-width="1.5"/>',
 };
 
+const SUNGLASSES='<g class="orbit-sunglasses"><path d="m143 143 4 18q3 10 17 10h8q16-1 19-24m18 0q3 23 19 24h8q14 0 17-10l4-18" fill="#101b2d" stroke="#637287" stroke-width="3.5" stroke-linejoin="round"/><path d="M140 142q26-6 53 3 7-5 14 0 26-9 53-3m-69 6q9-6 18 0" fill="none" stroke="#a4b6c9" stroke-width="4" stroke-linecap="round"/><path d="m155 148 8 11m61-11 8 11" stroke="#d0ecf5" stroke-width="3" stroke-linecap="round" opacity=".65"/></g>';
+const SCARF='<g class="orbit-scarf"><path d="M113 219q87 27 174-1l-5 19q-79 28-165 0z" fill="#dd8b69" stroke="#ffc8a5" stroke-width="2.5"/><path d="m253 238 3 44-22 1 1-41" fill="#d58261" stroke="#ffc8a5" stroke-width="2.5" stroke-linejoin="round"/><path d="m243 248 13-1m-14 12 15-1m-17 23v6m8-6v6m7-7v6M137 225l-2 18m26-12-1 19m26-14v18m27-17 1 16" stroke="#f9bf92" stroke-width="3" stroke-linecap="round"/></g>';
+const SNEEZE_ART='<g class="orbit-tissue"><path d="m238 176 26-8 9 26-25 8z" fill="#f0f6f5" stroke="#bedde0" stroke-width="2.5" stroke-linejoin="round"/><path d="m244 179 12 10 11-17m-11 17-5 10" fill="none" stroke="#c7e0df" stroke-width="2"/></g><g class="orbit-sneeze-puff" fill="none" stroke="#b9e1e8" stroke-width="2.5" stroke-linecap="round"><path d="m282 165 9-4m-7 13h12m-14 12 9 4"/></g>';
+const SING_ART='<g class="orbit-music-note" fill="#d1c0f2"><path d="M293 98V71l19-4v25h-4V75l-11 3v20z"/><ellipse cx="288" cy="99" rx="8" ry="5" transform="rotate(-20 288 99)"/><ellipse cx="305" cy="94" rx="7" ry="5" transform="rotate(-20 305 94)"/></g><g class="orbit-music-note orbit-music-note-second" fill="#9bdece"><path d="M93 136v-20l12 6v5l-8-4v13z"/><ellipse cx="90" cy="137" rx="7" ry="5"/></g>';
+
 /** Enhance the existing SVG globe; preserve its original eyes, hoop, moods and accessible status. */
 export function attachOrbit(element,{settings=ORBIT_DEFAULTS,motion=true,now=()=>Date.now()}={}){
   if(!element?.querySelector('.orb-art'))throw new TypeError('Attach Orbit to the existing globe element.');
   attached.get(element)?.dispose();
   const document=element.ownerDocument,window=document.defaultView;
   let config=normalizeOrbitSettings(settings),enabled=motion!==false,visible=true,disposed=false,weather=null,weatherUntil=0;
-  let seasonal='',weatherKey='',jokeIndex=0,nextJoke=now()+45000,timer=null,jokeTimer=null;
+  let seasonal='',weatherKey='',outfitKey='',jokeIndex=0,nextJoke=now()+45000,nextSneeze=now()+180000,timer=null,jokeTimer=null;
+  let performance='',performanceTimer=null;
   const originalLabel=element.getAttribute('aria-label');
   const media=window.matchMedia?.('(prefers-reduced-motion: reduce)');
   const accessories=document.createElementNS(SVG_NS,'svg');accessories.setAttribute('viewBox','0 0 400 320');accessories.setAttribute('aria-hidden','true');accessories.classList.add('orbit-accessories');
-  const seasonLayer=document.createElementNS(SVG_NS,'g'),weatherLayer=document.createElementNS(SVG_NS,'g');
-  seasonLayer.classList.add('orbit-season-layer');weatherLayer.classList.add('orbit-weather-layer');accessories.append(seasonLayer,weatherLayer);element.append(accessories);element.classList.add('orbit-enhanced');
+  const layer=name=>{const node=document.createElementNS(SVG_NS,'g');node.classList.add(name);accessories.append(node);return node;};
+  const seasonLayer=layer('orbit-season-layer'),weatherLayer=layer('orbit-weather-layer'),outfitLayer=layer('orbit-outfit-layer'),performanceLayer=layer('orbit-performance-layer');
+  element.append(accessories);element.classList.add('orbit-enhanced');
   const reduced=()=>!enabled||config.intensity==='off'||media?.matches===true;
   const running=()=>!disposed&&!document.hidden&&visible&&!reduced();
+  const relaxed=()=>element.dataset.state==='idle'&&LIGHT_MOODS.has(element.dataset.emotion||'neutral');
   function stopJoke(){if(jokeTimer!==null)window.clearTimeout(jokeTimer);jokeTimer=null;delete element.dataset.orbitJoke;}
+  function stopPerformance(){
+    if(performanceTimer!==null)window.clearTimeout(performanceTimer);performanceTimer=null;performance='';
+    delete element.dataset.orbitPerformance;performanceLayer.replaceChildren();
+  }
+  function beginPerformance(kind,duration){
+    stopJoke();stopPerformance();performance=kind;element.dataset.orbitPerformance=kind;
+    performanceLayer.innerHTML=kind==='sneeze'?SNEEZE_ART:kind==='singing'?SING_ART:'';
+    performanceTimer=window.setTimeout(stopPerformance,duration);
+  }
+  function playDance({durationMs=6000}={}){
+    if(!running()||!config.dancing||['thinking','listening'].includes(element.dataset.state))return false;
+    beginPerformance('dance',performanceDuration(durationMs));return true;
+  }
+  function playSneeze(){
+    if(!running()||!config.springSneezes||!relaxed())return false;
+    beginPerformance('sneeze',2100);nextSneeze=now()+(config.intensity==='lively'?480000:720000);return true;
+  }
+  function setSinging(value){
+    if(value!==true){if(performance==='singing')stopPerformance();return false;}
+    if(!running()||!config.singing||['thinking','listening'].includes(element.dataset.state))return false;
+    beginPerformance('singing',20000);return true;
+  }
   function playFunny(){
-    if(!running()||!config.funny||element.dataset.state!=='idle'||!LIGHT_MOODS.has(element.dataset.emotion||'neutral'))return false;
+    if(!running()||!config.funny||performance||!relaxed())return false;
     stopJoke();element.dataset.orbitJoke=['wink','peek','tilt'][jokeIndex++%3];jokeTimer=window.setTimeout(stopJoke,2400);nextJoke=now()+(config.intensity==='lively'?55000:85000);return true;
   }
   function render(){
     if(disposed)return;
     if(weather&&now()>=weatherUntil)weather=null;
     const season=seasonForDate(config,new Date(now())),kind=config.weather&&weather?weather.kind:'none';
+    const sunglasses=kind!=='none'&&config.weatherAccessories&&weather.sunglasses,scarf=kind!=='none'&&config.weatherAccessories&&weather.scarf;
+    const outfit=[sunglasses?'sunglasses':'',scarf?'scarf':''].filter(Boolean).join(' ');
     if(season!==seasonal){seasonal=season;seasonLayer.innerHTML=SEASON_ART[season]||'';}
     if(kind!==weatherKey){weatherKey=kind;weatherLayer.innerHTML=WEATHER_ART[kind]||'';}
-    element.dataset.orbitSeason=season;element.dataset.orbitWeather=kind;
+    if(outfit!==outfitKey){outfitKey=outfit;outfitLayer.innerHTML=(scarf?SCARF:'')+(sunglasses?SUNGLASSES:'');}
+    element.dataset.orbitSeason=season;element.dataset.orbitWeather=kind;element.dataset.orbitOutfit=outfit||'none';
     element.dataset.orbitMotion=reduced()?'off':config.intensity;element.dataset.orbitRunning=String(running());
     const look=season==='none'?'':` ${ORBIT_SEASONS[season]} accessories.`;
     const condition=kind==='none'?'':` ${kind} decoration from returned weather data${weather.label?' for '+weather.label:''}.`;
-    element.setAttribute('aria-label',(originalLabel||'MAX-G, a globe with expressive eyes and an orbiting hoop.')+look+condition);
-    if(!running())stopJoke();
+    element.setAttribute('aria-label',(originalLabel||'MAX-G, a globe with expressive eyes and an orbiting hoop.')+look+condition+(outfit?` Wearing ${outfit.replace(' ', ' and ')}.`:''));
+    if(!running()){stopJoke();stopPerformance();}
   }
   function schedule(){
     if(timer!==null)window.clearTimeout(timer);timer=null;render();
     if(disposed||document.hidden||!visible)return;
-    // One coarse timer; SVG animation stays in CSS and performs no frame-by-frame JS layout.
+    // One coarse scheduling timer. All performance and accessory animation uses CSS.
+    const spring=config.springSneezes&&springForDate(config,new Date(now()));
     const untilJoke=running()&&config.funny?Math.max(1000,nextJoke-now()):3600000;
+    const untilSneeze=running()&&spring?Math.max(1000,nextSneeze-now()):3600000;
     const untilWeather=weather?Math.max(1000,weatherUntil-now()):3600000;
-    timer=window.setTimeout(()=>{if(now()>=nextJoke){if(!playFunny())nextJoke=now()+30000;}schedule();},Math.min(untilJoke,untilWeather,3600000));
+    timer=window.setTimeout(()=>{
+      if(spring&&now()>=nextSneeze){if(performance||!playSneeze())nextSneeze=now()+60000;}
+      if(now()>=nextJoke){if(!playFunny())nextJoke=now()+30000;}schedule();
+    },Math.min(untilJoke,untilSneeze,untilWeather,3600000));
   }
   function setMood(state='idle',emotion){
     if(disposed)return;
-    element.dataset.state=STATES.has(state)?state:'idle';if(MOODS.has(emotion))element.dataset.emotion=emotion;
-    if(element.dataset.state!=='idle'||!LIGHT_MOODS.has(element.dataset.emotion))stopJoke();schedule();
+    const previous=element.dataset.state;element.dataset.state=STATES.has(state)?state:'idle';if(MOODS.has(emotion))element.dataset.emotion=emotion;
+    if(!relaxed())stopJoke();
+    if(['thinking','listening'].includes(element.dataset.state)||performance==='sneeze'&&!relaxed()||performance==='singing'&&previous==='speaking'&&element.dataset.state!=='speaking')stopPerformance();
+    schedule();
   }
-  function setConfig(value,{motion:nextMotion=enabled}={}){config=normalizeOrbitSettings(value);enabled=nextMotion!==false;if(!config.funny)stopJoke();schedule();return {...config};}
+  function setConfig(value,{motion:nextMotion=enabled}={}){
+    config=normalizeOrbitSettings(value);enabled=nextMotion!==false;if(!config.funny)stopJoke();
+    if(performance==='sneeze'&&!config.springSneezes||performance==='dance'&&!config.dancing||performance==='singing'&&!config.singing)stopPerformance();
+    schedule();return {...config};
+  }
   function setWeather(value){weather=weatherAppearance(value);weatherUntil=weather?now()+WEATHER_LIFETIME:0;schedule();return weather?{...weather}:null;}
   const visibility=()=>schedule();document.addEventListener('visibilitychange',visibility);
   if(media?.addEventListener)media.addEventListener('change',visibility);else media?.addListener?.(visibility);
   const observer=window.IntersectionObserver?new window.IntersectionObserver(entries=>{visible=entries[0]?.isIntersecting!==false;schedule();},{threshold:0}):null;observer?.observe(element);
-  const controller={setMood,setConfig,setWeather,clearWeather:()=>setWeather(null),playFunny,
-    get snapshot(){return {settings:{...config},season:seasonal,weather:weatherKey,running:running(),reducedMotion:reduced()};},
-    dispose(){if(disposed)return;disposed=true;if(timer!==null)window.clearTimeout(timer);stopJoke();observer?.disconnect();document.removeEventListener('visibilitychange',visibility);if(media?.removeEventListener)media.removeEventListener('change',visibility);else media?.removeListener?.(visibility);accessories.remove();element.classList.remove('orbit-enhanced');for(const key of ['orbitSeason','orbitWeather','orbitMotion','orbitRunning'])delete element.dataset[key];if(originalLabel===null)element.removeAttribute('aria-label');else element.setAttribute('aria-label',originalLabel);attached.delete(element);}};
+  const controller={setMood,setConfig,setWeather,clearWeather:()=>setWeather(null),playFunny,playDance,playSneeze,stopPerformance,setSinging,
+    get snapshot(){return {settings:{...config},season:seasonal,weather:weatherKey,outfit:outfitKey,performance,running:running(),reducedMotion:reduced()};},
+    dispose(){if(disposed)return;disposed=true;if(timer!==null)window.clearTimeout(timer);stopJoke();stopPerformance();observer?.disconnect();document.removeEventListener('visibilitychange',visibility);if(media?.removeEventListener)media.removeEventListener('change',visibility);else media?.removeListener?.(visibility);accessories.remove();element.classList.remove('orbit-enhanced');for(const key of ['orbitSeason','orbitWeather','orbitOutfit','orbitMotion','orbitRunning'])delete element.dataset[key];if(originalLabel===null)element.removeAttribute('aria-label');else element.setAttribute('aria-label',originalLabel);attached.delete(element);}};
   attached.set(element,controller);schedule();return controller;
 }
 
 /** Standalone settings fieldset. The caller persists settings and updates the controller. */
-export function renderOrbitSettings({settings=ORBIT_DEFAULTS,onChange=()=>{},onPreview}={}){
+export function renderOrbitSettings({settings=ORBIT_DEFAULTS,onChange=()=>{},onPreview,onDance,onSneeze,onStop}={}){
   let config=normalizeOrbitSettings(settings);
   const node=(tag,text='',className='')=>{const item=document.createElement(tag);item.textContent=text;if(className)item.className=className;return item;};
   const panel=node('fieldset','','orbit-settings');panel.append(node('legend','Orbit’s look & movement'));
@@ -143,7 +208,9 @@ export function renderOrbitSettings({settings=ORBIT_DEFAULTS,onChange=()=>{},onP
   select('Seasonal style','season',ORBIT_SEASONS);
   const birthday=node('label','','field'),date=node('input');birthday.append(node('span','Birthday (month-day)'));date.type='text';date.inputMode='numeric';date.placeholder='MM-DD';date.maxLength=5;date.value=config.birthday;date.setAttribute('aria-label','Birthday (month-day)');date.addEventListener('change',()=>{const value=date.value.trim();date.setCustomValidity(value&&!validBirthday(value)?'Use a valid month and day, such as 07-24. Leave blank to disable.':'');if(!date.reportValidity())return;change('birthday',value);});birthday.append(date);panel.append(birthday);
   toggle('Occasional playful expressions','funny');toggle('React to returned weather','weather');
-  const note=node('p','Birthday needs only a month and day. Automatic styles use your device’s calendar. Weather accessories appear only after a real weather lookup and fade away after ten minutes. Reduced-motion preferences always take priority.','orbit-settings-note');panel.append(note);
-  if(onPreview){const preview=node('button','Preview a little wink','button button-small');preview.type='button';preview.addEventListener('click',()=>onPreview());panel.append(preview);}
+  toggle('Weather outfits · sunglasses & scarf','weatherAccessories');toggle('Spring sneeze animation','springSneezes');toggle('Dance animations','dancing');toggle('Musical play','singing');
+  select('Hemisphere for spring animations','hemisphere',{north:'Northern · spring is March–May',south:'Southern · spring is September–November'});
+  const note=node('p','Birthday needs only a month and day. Automatic styles use your device’s calendar. Weather accessories appear only after a real weather lookup and fade away after ten minutes. Sunglasses need returned sunny daylight; a scarf appears at 10°C or colder. Spring sneezes are rare, silent cartoon gestures from the calendar, not pollen or health information. They never interrupt speech or listening. Previews work in any season. Reduced-motion preferences always take priority.','orbit-settings-note');panel.append(note);
+  for(const [label,callback]of [['Preview a little wink',onPreview],['Preview a dance',onDance],['Preview a spring sneeze',onSneeze],['Stop performance',onStop]]){if(!callback)continue;const preview=node('button',label,'button button-small');preview.type='button';preview.addEventListener('click',()=>{try{Promise.resolve(callback()).then(result=>{if(result===false){error.textContent='This animation is paused. Check its toggle, motion settings, or return to an idle conversation.';error.hidden=false;}}).catch(problem=>{error.textContent=problem?.message||'Animation preview could not start.';error.hidden=false;});}catch(problem){error.textContent=problem?.message||'Animation preview could not start.';error.hidden=false;}});panel.append(preview);}
   panel.append(error);return panel;
 }
