@@ -6,6 +6,7 @@ export class NeuralVoice {
     Object.assign(this,{onState,onProgress,onLevel});
     this.worker=null;this.ready=false;this.pending=new Map();this.counter=0;this.epoch=0;
     this.context=null;this.current=null;this.playback=null;this.timer=null;this.idleTimer=null;this.unlocks=new Set();this.speaking=false;
+    this.audioSession=null;this.previousAudioSessionType=null;
   }
   clearIdle(){clearTimeout(this.idleTimer);this.idleTimer=null;}
   scheduleIdle(){
@@ -47,8 +48,29 @@ export class NeuralVoice {
       this.ready=true;this.onProgress('Natural voice ready on this device');
     } finally {signal?.removeEventListener('abort',abort);if(epoch===this.epoch)this.scheduleIdle();}
   }
+  setPlaybackSession() {
+    // Safari's default audio session can follow the iPhone silent switch.
+    // Playback is requested only when local audio is being explicitly unlocked.
+    try {
+      const session=globalThis.navigator?.audioSession;if(!session||typeof session.type!=='string')return;
+      if(session.type==='playback')return;
+      const previous=session.type;session.type='playback';
+      if(session.type==='playback'){this.audioSession=session;this.previousAudioSessionType=previous;}
+    } catch { /* Experimental/unsupported Audio Session setters must not block Web Audio. */ }
+  }
+  restoreAudioSession() {
+    const session=this.audioSession,previous=this.previousAudioSessionType;
+    this.audioSession=null;this.previousAudioSessionType=null;
+    try{if(session&&globalThis.navigator?.audioSession===session&&session.type==='playback')session.type=previous;}catch{}
+  }
+  closeContext() {
+    // Detach first: an old asynchronous close must never clear a new context.
+    const context=this.context;this.context=null;
+    if(context&&context.state!=='closed'){try{Promise.resolve(context.close()).catch(()=>{});}catch{}}
+  }
   async unlock({signal}={}) {
     if(signal?.aborted)throw abortError();this.clearIdle();
+    this.setPlaybackSession();
     if(!this.context||this.context.state==='closed') {
       const Context=globalThis.AudioContext||globalThis.webkitAudioContext;
       if(!Context)throw new Error('This browser cannot play local neural audio.');this.context=new Context({latencyHint:'interactive'});
@@ -77,9 +99,29 @@ export class NeuralVoice {
   }
   unload(error=abortError()) {
     this.clearIdle();this.epoch++;this.speaking=false;for(const abort of [...this.unlocks])abort();this.playback?.cancel();this.retireWorker(error);
-    const context=this.context;this.context=null;
-    if(context&&context.state!=='closed'){try{Promise.resolve(context.close()).catch(()=>{});}catch{}}
+    this.closeContext();this.restoreAudioSession();
     this.onLevel(0);this.onState('idle');
+  }
+  async testSound({signal,recover=false}={}) {
+    if(signal?.aborted)throw abortError();
+    this.stop();this.clearIdle();
+    if(recover)this.closeContext();
+    const epoch=this.epoch,verify=()=>{if(signal?.aborted||epoch!==this.epoch)throw abortError();};
+    const abort=()=>{if(epoch===this.epoch)this.stop();};signal?.addEventListener('abort',abort,{once:true});
+    this.speaking=true;
+    try {
+      // This call constructs/resumes synchronously, before the original tap is
+      // lost to an await. Recovery also replaces a stale "running" iOS context.
+      await this.unlock({signal});verify();
+      const sampleRate=24000,durationMs=480,samples=new Float32Array(sampleRate*durationMs/1000);
+      for(let i=0;i<samples.length;i++){
+        const t=i/sampleRate,envelope=Math.sin(Math.PI*i/(samples.length-1))**2;
+        samples[i]=.065*envelope*(Math.sin(2*Math.PI*523.25*t)+.45*Math.sin(2*Math.PI*659.25*t));
+      }
+      await this.play(samples,sampleRate,{pitch:0,depth:0},{signal,epoch});verify();
+      return {durationMs,sampleRate,contextState:this.context?.state||'closed'};
+    }catch(error){if(epoch===this.epoch)this.stop();throw error;}
+    finally{signal?.removeEventListener('abort',abort);if(epoch===this.epoch){this.speaking=false;this.onState('idle');this.scheduleIdle();}}
   }
   async play(samples,sampleRate,controls,{signal,epoch=this.epoch}={}) {
     const verify=()=>{if(signal?.aborted||epoch!==this.epoch)throw abortError();};
@@ -89,11 +131,12 @@ export class NeuralVoice {
     // settle or clear the meter of the next sentence (including after Stop).
     this.playback?.cancel();
     const ctx=this.context,nodes=[];
+    if(ctx?.state!=='running')throw new Error('Audio is paused or interrupted. Return to MAX-G and open Sound help and tap Play speaker test.');
     await new Promise((resolve,reject)=>{
-      let done=false,timer=null,source=null;
+      let done=false,timer=null,watchdog=null,source=null;
       const playback={cancel:()=>finish(abortError(),true)};
       const finish=(error,stopSource=false)=>{
-        if(done)return;done=true;signal?.removeEventListener('abort',abort);ctx.removeEventListener?.('statechange',interrupted);clearInterval(timer);
+        if(done)return;done=true;signal?.removeEventListener('abort',abort);ctx.removeEventListener?.('statechange',interrupted);clearInterval(timer);clearTimeout(watchdog);
         if(source){source.onended=null;if(stopSource){try{source.stop();}catch{}}try{source.buffer=null;}catch{}}
         for(const node of nodes){try{node.disconnect();}catch{}}
         if(this.playback===playback){this.playback=null;this.current=null;this.timer=null;this.onLevel(0);}
@@ -119,6 +162,9 @@ export class NeuralVoice {
           analyser.getFloatTimeDomainData(wave);
           this.onLevel(Math.min(1,Math.sqrt(wave.reduce((n,x)=>n+x*x,0)/wave.length)*5));
         },80);this.timer=timer;
+        const playbackMs=samples.length/sampleRate*1000/2**(controls.pitch/12);
+        watchdog=setTimeout(()=>finish(new Error('Audio playback did not finish. Open Sound help and tap Play speaker test.'),true),Math.min(75000,Math.max(5000,(Number.isFinite(playbackMs)?playbackMs:45000)+5000)));
+        watchdog.unref?.();
         source.start();this.onState('speaking');
       } catch(error) {finish(error,true);}
     });

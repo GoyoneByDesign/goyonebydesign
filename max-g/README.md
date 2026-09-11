@@ -1,3 +1,7 @@
+# MAX-G 1.6.2 iPhone sound recovery
+
+**Sound help** below the message box now includes a short local speaker test, a direct voice retry and visible download/playback status. Audio selects media playback mode where supported and primes playback on eligible Send/Enter gestures when Speak replies is enabled. Stop voice leaves the text conversation available. This fixes app-side audio startup and recovery gaps; physical iPhone output still depends on device/browser settings. [iPhone sound steps](VOICE-SETUP.md#iphone-sound-help)
+
 # MAX-G 1.6.1 male voice styles
 
 **Voice Studio** now offers **Young adult**, **Adult**, and **Older-sounding** male presets with individual previews. Adult is the new neural default. Each uses a distinct voice with modest delivery changes; age labels describe the sound. All existing voices, cloning and custom controls remain available. [Voice choices and setup](VOICE-SETUP.md)

@@ -6,6 +6,8 @@ export function spokenText(text){return String(text).replace(/\n\s*Sources?:[\s\
 export class LocalVoice{
   constructor({onState=()=>{},onProgress=()=>{},onLevel=()=>{},helper=null,permission=async()=>{}}={}){this.onState=onState;this.recognition=null;this.utterance=null;this.generation=0;this.helper=helper;this.permission=permission;this.neural=new NeuralVoice({onState,onProgress,onLevel});this.cloning=false;}
   load(options){return this.neural.load(options);}
+  enableAudio(options){return this.neural.unlock(options);}
+  testSound(options){this.stop();return this.neural.testSound(options);}
   unload(){this.stop();this.neural.unload();if(this.helper)this.helper('unload').catch(()=>{});}
   async preview(text,settings,{signal}={}){const config=normalizeVoice(settings.voice);return this.speak(text,{...config,language:({English:'en-US','Auto-detect':'en-US',Tagalog:'fil-PH',Spanish:'es-ES','Chinese (Mandarin)':'zh-CN',Japanese:'ja-JP',Italian:'it-IT',Russian:'ru-RU',Korean:'ko-KR'})[settings.language]||'en-US',profile:settings.voiceProfile,voiceURI:settings.voiceURI,rate:settings.rate,signal});}
   voices(){return globalThis.speechSynthesis?.getVoices().filter(v=>v.localService) || [];}

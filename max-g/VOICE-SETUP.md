@@ -31,6 +31,19 @@ pitch, warmth, speed and restrained expression. It does not reproduce ChatGPT’
 proprietary voice engine or guarantee identical quality. Listen to the previews
 before choosing a voice.
 
+## iPhone sound help
+
+1. Refresh MAX-G, then close and reopen all older MAX-G tabs and its Home Screen app so the update can activate. Keep MAX-G visible during this check.
+2. Turn up **media volume**. Open **Sound help** below the message box and tap **Play speaker test**. This short tone needs no model download, internet connection or microphone permission. It also recreates the audio context to recover stalled playback.
+3. If you hear the tone, tap **Try MAX-G’s voice**. The first natural-voice use on each device downloads a model and may take a few minutes. Progress and errors stay visible below the message box and in Sound help.
+4. Leave **Speak replies** on to hear future answers. **Stop voice** cancels speech without canceling your text conversation.
+
+If the tone is silent, check Control Center’s audio destination (Bluetooth or AirPlay may be receiving it), media volume and Silent Mode, then tap the test again. A finished test means the browser completed playback; MAX-G cannot measure what you heard. Browser and iOS versions vary, so these checks do not establish the exact cause on a particular phone.
+
+If the tone works but natural speech fails, open **Voice Studio** to retry loading the voice or explicitly choose an available **Installed system voice**. No paid or cloud speech fallback is added. Voice settings and cached downloads are separate on each device. A cloned voice stored with the Mac companion is not automatically available on your iPhone.
+
+The app requests the browser’s `playback` audio-session mode when available and unlocks audio from direct interactions. Unsupported browsers continue using their existing audio API. It reports stalled playback instead of waiting indefinitely. Mobile browser audio behavior can still require a fresh tap after switching apps or locking the phone.
+
 ## Natural voices on your browser
 
 1. Restart the updated MAX-G companion, or open the updated website.
