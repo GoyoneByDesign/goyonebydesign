@@ -1,3 +1,7 @@
+# MAX-G 1.7 current-device support
+
+**Settings → This device** checks feature support and saves an automatic, lower-memory or keep-ready mode. The default local model adapts to GPU compatibility at load time. **Connectors & devices → This device** adds calling, messaging, email-draft and Spotify handoffs; store links also open directly without the Mac companion. Existing native Mac workflows remain available when paired. Browser capabilities and device permissions still determine availability; profiles and account connections do not automatically sync. [Device guide and coverage](DEVICE-GUIDE.md)
+
 # MAX-G 1.6.3 save places
 
 **Places & directions → Save location** now saves your typed place, country, travel mode and nearby radius directly from the Places page. A visible confirmation appears after the save completes, and edited fields show **Unsaved changes**. Saved details return after reopening MAX-G in the same browser, including offline. Your preferred maps app is retained; saving does not request GPS or search the internet. [Places guide](LOCATIONS.md)

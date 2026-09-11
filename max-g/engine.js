@@ -2,9 +2,10 @@
 // Verified against the published 0.2.85 API, not an unversioned CDN alias.
 export const WEBLLM_URL = 'https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@0.2.85/+esm';
 export const DEFAULT_MODEL = 'Llama-3.2-1B-Instruct-q4f16_1-MLC';
+export const COMPATIBILITY_MODEL = 'Llama-3.2-1B-Instruct-q4f32_1-MLC';
 export const MODELS = Object.freeze([
   { id: DEFAULT_MODEL, label: 'Llama 3.2 · 1B · fast', shaderF16: true, memoryMB: 879 },
-  { id: 'Llama-3.2-1B-Instruct-q4f32_1-MLC', label: 'Llama 3.2 · 1B · GPU compatibility', shaderF16: false, memoryMB: 1129 },
+  { id: COMPATIBILITY_MODEL, label: 'Llama 3.2 · 1B · GPU compatibility', shaderF16: false, memoryMB: 1129 },
   { id: 'Llama-3.2-3B-Instruct-q4f16_1-MLC', label: 'Llama 3.2 · 3B · more memory', shaderF16: true, memoryMB: 2264 },
 ]);
 export const CONTEXT_TOKENS = 4096;
@@ -64,9 +65,9 @@ export function boundedMessages(input, maxTokens = OUTPUT_TOKENS) {
 
 export async function checkWebGPU(nav = globalThis.navigator, secure = globalThis.isSecureContext) {
   if (!secure) return { supported: false, reason: 'Open MAX-G over HTTPS or localhost to use WebGPU.' };
-  if (!nav?.gpu?.requestAdapter) return { supported: false, reason: 'WebGPU is unavailable. Try current Chrome or Edge with graphics acceleration enabled. Safari needs a supported macOS/iOS version.' };
+  if (!nav?.gpu?.requestAdapter) return { supported: false, reason: 'WebGPU is unavailable, so the local chat model cannot run in this browser. Try a supported browser with graphics acceleration enabled. Safari needs a supported macOS/iOS version.' };
   try {
-    const adapter = await nav.gpu.requestAdapter({ powerPreference: 'high-performance' });
+    const adapter = await timed(nav.gpu.requestAdapter({ powerPreference: 'high-performance' }), 10000, 'GPU capability check timed out. Reload MAX-G or try a supported browser.');
     if (!adapter) return { supported: false, reason: 'This browser could not obtain a WebGPU adapter. Check browser graphics acceleration and device support.' };
     return {
       supported: true,
@@ -77,6 +78,22 @@ export async function checkWebGPU(nav = globalThis.navigator, secure = globalThi
   } catch (error) {
     return { supported: false, reason: `WebGPU could not start: ${error.message || String(error)}` };
   }
+}
+
+/** Compatibility is selected before library/model download. f32 is still GPU
+ * inference and uses more memory; it is not a CPU or low-memory fallback.
+ * An explicit larger model is never silently replaced with a smaller one.
+ */
+export function selectCompatibleModel(requestedModelId, gpu) {
+  const requested = MODELS.find(model => model.id === requestedModelId);
+  if (!requested) throw new Error('Choose one of MAX-G’s supported local models.');
+  if (!gpu?.supported) throw new Error(gpu?.reason || 'WebGPU is unavailable. This browser cannot run the local chat model.');
+  if (requested.shaderF16 && !gpu.shaderF16) {
+    if (requestedModelId !== DEFAULT_MODEL) throw new Error('This GPU cannot run the selected 3B model because shader-f16 is unavailable. Choose the 1B model in Settings to use GPU compatibility mode.');
+    return { requestedModelId, modelId: COMPATIBILITY_MODEL, adapted: true,
+      reason: 'Using the 1B GPU compatibility model because this device does not support shader-f16. It still runs locally on this device’s GPU and may use more memory.' };
+  }
+  return { requestedModelId, modelId: requestedModelId, adapted: false, reason: '' };
 }
 
 function timed(promise, milliseconds, message, signal) {
@@ -127,6 +144,8 @@ export class MaxGEngine {
     this._loading = false;
     this._busy = false;
     this._modelId = null;
+    this._requestedModelId = null;
+    this._selection = null;
     this._failure = null;
     this._cacheClear = null;
   }
@@ -134,20 +153,31 @@ export class MaxGEngine {
   get ready() { return Boolean(this._engine && !this._loading); }
   get busy() { return this._busy || this._loading; }
   get modelId() { return this._modelId; }
-  _state(status, detail = {}) { this._onState({ status, modelId: this._modelId, ...detail }); }
+  get requestedModelId() { return this._requestedModelId || this._modelId; }
+  get selection() { return this._selection ? { ...this._selection } : null; }
+  readyFor(modelId) { return this.ready && (this.requestedModelId === modelId || this._modelId === modelId); }
+  _state(status, detail = {}) { this._onState({ status, modelId: this._modelId, requestedModelId: this.requestedModelId, selection: this.selection, ...detail }); }
 
   async load(modelId = DEFAULT_MODEL, { onProgress = () => {}, signal } = {}) {
     const model = MODELS.find(item => item.id === modelId);
     if (!model) throw new Error('Choose one of MAX-G’s supported local models.');
     if (signal?.aborted) throw abortError();
     while (this._cacheClear) await timed(this._cacheClear, 120000, 'Model cache removal is still running.', signal);
-    if (this.ready && this._modelId === modelId) return this;
+    if (this.ready && this._modelId === modelId) {
+      // A person can explicitly select a compatibility model that is already
+      // loaded, without unloading the same GPU weights to change its label.
+      this._requestedModelId = modelId;
+      this._selection = { requestedModelId: modelId, modelId, adapted: false, reason: '' };
+      return this;
+    }
+    if (this.ready && this.requestedModelId === modelId) return this;
     await this.unload();
     const epoch = ++this._epoch;
     const controller = new AbortController();
     this._controller = controller;
     this._loading = true;
     this._modelId = modelId;
+    this._requestedModelId = modelId;
     const cancel = () => controller.abort();
     signal?.addEventListener('abort', cancel, { once: true });
     if (signal?.aborted) cancel();
@@ -156,9 +186,14 @@ export class MaxGEngine {
       this._state('checking');
       const gpu = await timed(checkWebGPU(this._navigator, this._secure), 15000, 'GPU capability check timed out.', controller.signal);
       assertCurrent();
-      if (!gpu.supported) throw new Error(gpu.reason);
-      if (model.shaderF16 && !gpu.shaderF16) throw new Error('This GPU lacks shader-f16. Select “1B · GPU compatibility” in Settings. That model still runs on WebGPU.');
+      const selection = selectCompatibleModel(modelId, gpu);
+      this._selection = selection;
+      modelId = selection.modelId;
+      this._modelId = modelId;
       this._state('loading');
+      assertCurrent();
+      if (selection.adapted) onProgress({ progress: 0, text: selection.reason, modelId, requestedModelId: this._requestedModelId });
+      assertCurrent();
       const module = this._module || await timed(this._importModule(), 45000, 'The WebLLM library did not load. Connect once to cache it for offline use.', controller.signal);
       assertCurrent();
       this._module = module;
@@ -278,6 +313,8 @@ export class MaxGEngine {
     this._busy = false;
     this._loading = false;
     this._modelId = null;
+    this._requestedModelId = null;
+    this._selection = null;
     this._state('unloaded');
   }
 

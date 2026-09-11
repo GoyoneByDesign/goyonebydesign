@@ -15,7 +15,7 @@ const PROVIDERS = [
   { id: 'dropbox', name: 'Dropbox', detail: 'Cloud files', badge: 'D', features: ['drive.read','drive.write'] },
 ];
 const FEATURE_LABELS = { 'mail.read':'Read mail', 'mail.write':'Draft and manage mail', 'mail.send':'Send mail', 'drive.read':'Read files', 'drive.write':'Upload files' };
-const TABS = [['connect','Connections'],['mail','Mail'],['files','Cloud files'],['shopping','Shopping & food'],['mac','Mac & devices'],['browser','Browser'],['permissions','Permissions']];
+const TABS = [['connect','Connections'],['device','This device'],['mail','Mail'],['files','Cloud files'],['shopping','Shopping & food'],['mac','Mac & devices'],['browser','Browser'],['permissions','Permissions']];
 /** Official storefront entry points, not a claim of API integration or universal site support. */
 export const SHOPPING_MERCHANTS = Object.freeze([
   {id:'amazon',name:'Amazon',url:'https://www.amazon.com/',kind:'shopping'},
@@ -87,6 +87,42 @@ export function helperURL(value = HELPER_DEFAULT) {
   return url.origin;
 }
 
+/** User-tapped app handoffs only. SMS deliberately omits message body because
+ * handlers differ; Apple documents recipient-only sms: links. No fetch or launch.
+ * developer.apple.com/library/archive/featuredarticles/iPhoneURLScheme_Reference/
+ */
+export function devicePhoneURL(value,kind='call') {
+  if(typeof value!=='string'||!exactRecipient(value.trim(),true))throw new Error('Enter an exact phone number with its area code. Include + and the country code for an international number.');
+  if(!['call','sms'].includes(kind))throw new Error('Choose a call or text-message handoff.');
+  const phone=value.trim(),digits=phone.replace(/\D/g,'');
+  return `${kind==='call'?'tel':'sms'}:${phone.startsWith('+')?'+':''}${digits}`;
+}
+
+export function deviceMailURL({to='',subject='',body=''}={}) {
+  if(typeof to!=='string'||!to.includes('@')||!exactRecipient(to.trim()))throw new Error('Enter one exact email address.');
+  if(typeof subject!=='string'||subject.length>200||/[\r\n\u0000-\u001f\u007f]/.test(subject))throw new Error('Use an email subject of up to 200 characters without line breaks.');
+  if(typeof body!=='string'||body.length>3000||/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/.test(body))throw new Error('Keep the email draft below 3,000 characters.');
+  const query=`subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body.replace(/\r\n?|\n/g,'\r\n'))}`;
+  return `mailto:${encodeURIComponent(to.trim()).replace('%40','@')}?${query}`;
+}
+
+export function deviceSpotifyURL(value='') {
+  if(typeof value!=='string'||value.length>180||/[\u0000-\u001f\u007f]/.test(value))throw new Error('Use an artist or song search of up to 180 characters.');
+  const match=value.match(/^spotify:(track|album|artist):([A-Za-z0-9]{22})$/);
+  if(match)return `https://open.spotify.com/${match[1]}/${match[2]}`;
+  return 'https://open.spotify.com/search'+(value.trim()?'/'+encodeURIComponent(value.trim()):'');
+}
+
+export function deviceStoreURL(merchantId,custom='') {
+  const merchant=SHOPPING_MERCHANTS.find(item=>item.id===merchantId);
+  if(!merchant)throw new Error('Choose a store or restaurant.');
+  const raw=merchant.id==='custom'?String(custom).trim():merchant.url;
+  if(!raw||raw.length>2000||/[\u0000-\u0020\u007f]/.test(raw))throw new Error('Enter the store’s public HTTPS website address.');
+  const url=new URL(raw);
+  if(url.protocol!=='https:'||url.username||url.password)throw new Error('Use an HTTPS website address without account credentials.');
+  return url.href;
+}
+
 export function pairingFromURL(value) {
   const url = new URL(value);
   const hash = new URLSearchParams(url.hash.slice(1));
@@ -153,7 +189,7 @@ export function parseDirectCommand(text) {
   const input = String(text).trim();
   const shopping=shoppingCommand(input);if(shopping)return shopping;
   if (/^(?:\/connectors|open (?:my )?(?:connections|connectors|device settings))$/i.test(input)) return { kind:'hub' };
-  const navigation=[['mail',/^(?:\/mail|open (?:my )?(?:mail|email))$/i],['files',/^(?:\/files|open (?:my )?(?:cloud files|files))$/i],['browser',/^(?:\/browser|open (?:the )?automation browser)$/i],['mac',/^(?:\/devices|open (?:my )?devices)$/i]];
+  const navigation=[['device',/^(?:\/device|open (?:this|current) device)$/i],['mail',/^(?:\/mail|open (?:my )?(?:mail|email))$/i],['files',/^(?:\/files|open (?:my )?(?:cloud files|files))$/i],['browser',/^(?:\/browser|open (?:the )?automation browser)$/i],['mac',/^(?:\/devices|open (?:my )?devices)$/i]];
   for(const [tab,pattern]of navigation)if(pattern.test(input))return {kind:'hub',tab};
   let match;
   if((match=input.match(/^(?:call|facetime)\s+(.{1,254})$/i))&&exactRecipient(match[1]))return {action:'call.start',args:{recipient:match[1]}};
@@ -318,6 +354,7 @@ export function initializeConnectors({toast=()=>{},generateText,findMusic,onRepl
   const shoppingForm={merchant:'custom',url:'',request:'',budget:'',currency:'USD',fulfillment:'unspecified',phone:'',steps:3,target:'',newPurchaseReviewed:false};
   let shoppingAttempted=false;
   const deviceForm={recipient:'',body:'',messageService:'iMessage',spotifyQuery:'',spotifyURI:'',volume:50,brightness:0.5};
+  const handoffForm={phone:'',message:'',email:'',subject:'',emailBody:'',music:''};
   const clientIds={google:'',googleSecret:'',microsoft:'',dropbox:''};
   const features=Object.fromEntries(PROVIDERS.map(provider=>[provider.id,new Set(provider.features.filter(feature=>feature.endsWith('.read')))]));
   let policy={mode:'Limited',permissions:Object.fromEntries(Object.keys(POLICY_GROUPS).map(key=>[key,'ask']))};
@@ -330,6 +367,33 @@ export function initializeConnectors({toast=()=>{},generateText,findMusic,onRepl
   function input(label,value,{type='text',options,onInput,placeholder,rows=4}={}) {const wrap=node('label','','mg-field');wrap.append(node('span',label));const el=node(options?'select':type==='textarea'?'textarea':'input');el.setAttribute('aria-label',label);if(options)for(const entry of options){const option=node('option',typeof entry==='string'?entry:entry.label);option.value=typeof entry==='string'?entry:entry.value;el.append(option);}else if(type==='textarea')el.rows=rows;else el.type=type;el.value=value??'';if(placeholder)el.placeholder=placeholder;el.addEventListener(options?'change':'input',()=>onInput?.(el.value));wrap.append(el);return {wrap,el};}
   function card(title,description){const el=node('section','','mg-card');el.append(node('h3',title));if(description)el.append(node('p',description,'mg-muted'));return el;}
   function fieldsRow(...items){const row=node('div','','mg-row');row.append(...items.map(item=>item.wrap||item));return row;}
+  function handoffLink(label,url){const link=node('a',label,'mg-btn');link.href=url;link.rel='noopener noreferrer';link.referrerPolicy='no-referrer';if(url.startsWith('https:'))link.target='_blank';return link;}
+  async function copyHandoff(value,field){
+    if(!value)throw new Error('Write the message to copy first.');
+    try{if(!globalThis.navigator?.clipboard?.writeText)throw new Error('Clipboard unavailable');await navigator.clipboard.writeText(value);toast('Message copied. Paste it into your app, review it, and send it yourself.');}
+    catch{field?.focus();field?.select();toast('Select Copy in your device’s text menu, then paste the message into your app.');}
+  }
+  function renderDevice(panel){
+    panel.append(card('Use apps on this device','These links use this device’s installed app handlers or browser. Tap a link to continue; review calls and messages in that app. Availability depends on your device. No Mac pairing is needed, and MAX-G does not confirm delivery or playback.'));
+    const phone=card('Calls and text messages','Enter the exact number. The text link includes only the recipient; copy and paste the message so different device handlers preserve its contents. SMS, RCS and iMessage availability is controlled by your messaging app.');
+    const actions=node('div','','mg-row');
+    const updatePhone=()=>{actions.replaceChildren();try{actions.append(handoffLink('Open calling app',devicePhoneURL(handoffForm.phone)),handoffLink('Open messaging app',devicePhoneURL(handoffForm.phone,'sms')));}catch{actions.append(node('p','Enter a phone number with its area code to prepare app links. Email recipients require your messaging app or the paired Mac.','mg-note'));}};
+    const number=input('Phone number on this device',handoffForm.phone,{type:'tel',placeholder:'+1 202 555 0123',onInput:value=>{handoffForm.phone=value;updatePhone();}});number.el.maxLength=32;
+    const message=input('Message to copy',handoffForm.message,{type:'textarea',onInput:value=>handoffForm.message=value});message.el.maxLength=8000;
+    phone.append(number.wrap,actions,message.wrap,button('Copy message',()=>copyHandoff(handoffForm.message,message.el),{secondary:true}));updatePhone();panel.append(phone);
+    const mail=card('Email draft in your mail app','This opens a draft for you to review and send. Reading, cleaning up or automatically sending account mail still needs a connected account in the Mac companion.');
+    const mailActions=node('div','','mg-row');
+    const updateMail=()=>{mailActions.replaceChildren();try{mailActions.append(handoffLink('Open email draft',deviceMailURL({to:handoffForm.email,subject:handoffForm.subject,body:handoffForm.emailBody})));}catch{mailActions.append(node('p','Enter one email address and a subject of up to 200 characters. Drafts may contain up to 3,000 characters.','mg-note'));}};
+    const email=input('Email recipient on this device',handoffForm.email,{type:'email',onInput:value=>{handoffForm.email=value;updateMail();}});email.el.maxLength=254;
+    const subject=input('Email draft subject',handoffForm.subject,{onInput:value=>{handoffForm.subject=value;updateMail();}});subject.el.maxLength=200;
+    const body=input('Email draft body',handoffForm.emailBody,{type:'textarea',onInput:value=>{handoffForm.emailBody=value;updateMail();}});body.el.maxLength=3000;
+    mail.append(email.wrap,subject.wrap,body.wrap,mailActions,button('Copy email text',()=>copyHandoff(handoffForm.emailBody,body.el),{secondary:true}));updateMail();panel.append(mail);
+    const music=card('Spotify on this device','Open Spotify’s search or a specific track, album or artist. Choose and play it in Spotify; account and device requirements apply. No MAX-G search proxy or Mac companion is needed.');
+    const musicActions=node('div','','mg-row');
+    const updateMusic=()=>{musicActions.replaceChildren();try{musicActions.append(handoffLink('Open Spotify on this device',deviceSpotifyURL(handoffForm.music)));}catch{musicActions.append(node('p','Keep your artist or song search to 180 characters.','mg-note'));}};
+    const search=input('Spotify search on this device',handoffForm.music,{onInput:value=>{handoffForm.music=value;updateMusic();}});search.el.maxLength=180;music.append(search.wrap,musicActions);updateMusic();panel.append(music);
+    panel.append(node('p','These drafts stay in this tab and are cleared when connector data is reset. They do not transfer automatically to another device. Mac apps, desktop controls, browser automation and account connectors remain separate Mac-companion features.','mg-note'));
+  }
   function setBusy(value){busy=value;if(container){container.dataset.busy=String(value);const shell=container.querySelector('.mg-connectors');if(shell)shell.dataset.busy=String(value);}}
   async function guarded(action){if(busy)throw new Error('Finish or cancel the current connector operation first.');setBusy(true);operation=new AbortController();try{return await action(operation.signal);}finally{operation=null;setBusy(false);}}
   function cancelOperation(){operation?.abort();for(const controller of searchControllers)controller.abort();activeDialog?.close();}
@@ -412,7 +476,7 @@ export function initializeConnectors({toast=()=>{},generateText,findMusic,onRepl
     const endpoint=input('Mac helper address',client.url,{placeholder:HELPER_DEFAULT});
     intro.append(fieldsRow(endpoint,pairing),fieldsRow(button(client.token?'Pair / refresh connection':'Pair this browser',()=>guarded(async signal=>{
       const url=helperURL(endpoint.el.value),token=pairing.el.value.trim()||client.token;if(!/^[A-Za-z0-9_-]{24,256}$/.test(token))throw new Error('Paste a valid pairing key from the Mac helper.');
-      for(const controller of searchControllers)controller.abort();client=new HelperClient({url,token,fetchImpl});await refresh(signal);rememberPair();pairing.el.value='';toast('Connected to your Mac helper.');
+      for(const controller of searchControllers)controller.abort();status=null;client=new HelperClient({url,token,fetchImpl});await refresh(signal);rememberPair();pairing.el.value='';toast('Connected to your Mac helper.');
     })),button('Disconnect this browser',()=>disconnect(),{secondary:true})));
     intro.append(node('p','The helper must be running on this Mac. A website on an iPhone cannot control its operating system or another Mac through localhost. Hosted pages may ask for local-network access; open the helper’s local MAX-G page if your browser blocks the connection.','mg-note'));panel.append(intro);
     const grid=node('div','','mg-provider-grid');
@@ -475,7 +539,7 @@ export function initializeConnectors({toast=()=>{},generateText,findMusic,onRepl
     const result=await perform('spotify.search',{query:deviceForm.spotifyQuery},{signal});renderCurrent();return searchNote+actionSummary('spotify.search',{query:deviceForm.spotifyQuery},result);
   }
 
-  function renderMac(panel){const available=card('Applications on your Mac','MAX-G uses installed app identifiers from the helper. Closing an app may affect unsaved work and always gets a review.');available.append(button('Refresh installed apps',()=>runAction('app.list',{},result=>{apps=rowsOf(result);renderCurrent();})));const selector=input('Application',apps[0]?.bundle_id||'',{options:apps.map(app=>({value:app.bundle_id||app.bundleId,label:app.name}))});available.append(selector.wrap,fieldsRow(button('Open app',()=>{if(!selector.el.value)throw new Error('Load and choose an installed app.');return runAction('app.open',{bundle_id:selector.el.value});}),button('Close app',()=>runAction('app.close',{bundle_id:selector.el.value}),{secondary:true})));panel.append(available);
+  function renderMac(panel){panel.append(node('p','Mac companion required: these controls operate on the Mac running the helper. For phone, message, email and Spotify links on the device in your hand, choose This device.','mg-note'));const available=card('Applications on your Mac','MAX-G uses installed app identifiers from the helper. Closing an app may affect unsaved work and always gets a review.');available.append(button('Refresh installed apps',()=>runAction('app.list',{},result=>{apps=rowsOf(result);renderCurrent();})));const selector=input('Application',apps[0]?.bundle_id||'',{options:apps.map(app=>({value:app.bundle_id||app.bundleId,label:app.name}))});available.append(selector.wrap,fieldsRow(button('Open app',()=>{if(!selector.el.value)throw new Error('Load and choose an installed app.');return runAction('app.open',{bundle_id:selector.el.value});}),button('Close app',()=>runAction('app.close',{bundle_id:selector.el.value}),{secondary:true})));panel.append(available);
     const sound=card('Sound and display','Availability depends on your Mac, display, and macOS permissions.');const volume=input('Volume · 0–100',deviceForm.volume,{type:'number',onInput:value=>deviceForm.volume=Number(value)});volume.el.min=0;volume.el.max=100;const brightness=input('Brightness · 0–1',deviceForm.brightness,{type:'number',onInput:value=>deviceForm.brightness=Number(value)});brightness.el.min=0;brightness.el.max=1;brightness.el.step=.05;sound.append(fieldsRow(volume,brightness),fieldsRow(button('Set volume',()=>runAction('system.volume',{operation:'set',value:deviceForm.volume})),button('Volume up',()=>runAction('system.volume',{operation:'up'}),{secondary:true}),button('Volume down',()=>runAction('system.volume',{operation:'down'}),{secondary:true}),button('Set brightness',()=>runAction('system.brightness',{operation:'set',value:deviceForm.brightness}))));panel.append(sound);
     const spotify=card('Spotify','Find real Spotify choices, or open Spotify’s own search. Choose a track, album or artist before playback.');spotify.append(input('Artist or song',deviceForm.spotifyQuery,{onInput:value=>deviceForm.spotifyQuery=value}).wrap,fieldsRow(button('Find music',()=>guarded(async signal=>{const result=await searchMusic(deviceForm.spotifyQuery,signal);toast(result);})),button('Open Spotify search',()=>runAction('spotify.search',{query:deviceForm.spotifyQuery}),{secondary:true})));for(const choice of musicChoices)spotify.append(button(`Play · ${choice.title}`,()=>{deviceForm.spotifyURI=choice.uri;return runAction('spotify.play',{uri:choice.uri});},{secondary:true}));spotify.append(input('Spotify URI · track, album or artist',deviceForm.spotifyURI,{onInput:value=>deviceForm.spotifyURI=value,placeholder:'spotify:track:22-character-ID'}).wrap,fieldsRow(button('Play selected URI',()=>runAction('spotify.play',{uri:deviceForm.spotifyURI})),button('Pause',()=>runAction('spotify.pause'),{secondary:true}),button('Next',()=>runAction('spotify.next'),{secondary:true})));panel.append(spotify);
     const communications=card('Calls and Messages','Calls open the native call flow. SMS and RCS require compatible Messages accounts and configured iPhone forwarding; availability depends on the Mac.');communications.append(input('Messaging service',deviceForm.messageService,{options:['iMessage','SMS','RCS'],onInput:value=>deviceForm.messageService=value}).wrap,input('Recipient · phone number or email',deviceForm.recipient,{onInput:value=>deviceForm.recipient=value}).wrap,input('Message body',deviceForm.body,{type:'textarea',onInput:value=>deviceForm.body=value}).wrap,fieldsRow(button('Review call handoff',()=>runAction('call.start',{recipient:deviceForm.recipient})),button('Review message',()=>runAction('message.send',{recipient:deviceForm.recipient,body:deviceForm.body,service:deviceForm.messageService}))));panel.append(communications);
@@ -536,10 +600,13 @@ export function initializeConnectors({toast=()=>{},generateText,findMusic,onRepl
   }
 
   function renderShopping(panel){
-    const request=card('Shopping, groceries & food','Tell MAX-G what you need. It can help prepare a cart in the separate automation browser, then pause for your exact order review. Store availability, sign-in and site automation support vary.');
+    const request=card('Shopping, groceries & food','Open a store directly on this device, or use the Mac companion to help prepare a cart in its separate automation browser. The automated path pauses for your exact order review. Store availability, sign-in and site automation support vary.');
+    const direct=node('div','','mg-row');
+    const updateDirect=()=>{direct.replaceChildren();try{direct.append(handoffLink('Open store on this device',deviceStoreURL(shoppingForm.merchant,shoppingForm.url)));}catch{direct.append(node('p','Enter an HTTPS store address to prepare the direct website link.','mg-note'));}};
     const merchant=input('Store or delivery service',shoppingForm.merchant,{options:SHOPPING_MERCHANTS.map(item=>({value:item.id,label:item.name})),onInput:value=>{shoppingForm.merchant=value;renderCurrent();}});
     request.append(merchant.wrap);
-    if(shoppingForm.merchant==='custom')request.append(input('Store or restaurant website',shoppingForm.url,{type:'url',placeholder:'https://restaurant.example',onInput:value=>shoppingForm.url=value}).wrap);
+    if(shoppingForm.merchant==='custom')request.append(input('Store or restaurant website',shoppingForm.url,{type:'url',placeholder:'https://restaurant.example',onInput:value=>{shoppingForm.url=value;updateDirect();}}).wrap);
+    request.append(direct,node('p','The direct link opens the store for you to use yourself. It does not send this list, make a purchase, or give MAX-G access to the page. The Open shopping website automation below requires a paired Mac companion.','mg-note'));updateDirect();
     request.append(input('Shopping list or food order',shoppingForm.request,{type:'textarea',rows:4,placeholder:'Items, quantities, sizes, options, food preferences and substitution rules…',onInput:value=>shoppingForm.request=value}).wrap);
     const budget=input('Total budget (optional)',shoppingForm.budget,{placeholder:'Including taxes, delivery fees and tip',onInput:value=>shoppingForm.budget=value});budget.el.inputMode='decimal';
     const currency=input('Currency',shoppingForm.currency,{options:['USD','CAD','EUR','GBP','PHP','JPY','CNY','KRW','RUB'],onInput:value=>shoppingForm.currency=value});
@@ -580,13 +647,25 @@ export function initializeConnectors({toast=()=>{},generateText,findMusic,onRepl
   }
 
   function renderCurrent(){if(!container)return;render(container);}
-  function render(panel){container=panel;panel.replaceChildren();const shell=node('div','','mg-connectors');shell.dataset.busy=String(busy);const header=node('header','','mg-hub-header');header.append(node('div'));header.firstChild.append(node('span','MAX-G CONNECTIONS','mg-eyebrow'),node('h2','Your world, within reach'),node('p','Accounts, apps and devices — with access you control.','mg-muted'));const statusLabel=node('span',status?`${status.platform==='Darwin'?'Mac':status.platform||'Mac'} companion connected`:client.token?'Paired · refresh to check':'Mac helper not paired',`mg-connection-pill${status?' mg-online':''}`);header.append(statusLabel);shell.append(header);const nav=node('nav','','mg-tabs');nav.setAttribute('aria-label','Connector categories');for(const [id,label]of TABS){const control=button(label,()=>{tab=id;renderCurrent();},{secondary:true});control.classList.toggle('mg-active',tab===id);control.setAttribute('aria-current',tab===id?'page':'false');nav.append(control);}shell.append(nav);const content=node('div','','mg-hub-content');({connect:renderConnections,mail:renderMail,files:renderFiles,mac:renderMac,browser:renderBrowser,shopping:renderShopping,permissions:renderPermissions})[tab](content);shell.append(content);const activity=node('details','','mg-activity');activity.open=Boolean(lastOutput);activity.append(node('summary','Last helper result'),node('pre',lastOutput||'Actions and results will appear here.','mg-output'));shell.append(activity);shell.append(button('Cancel current operation',cancelOperation,{secondary:true}));panel.append(shell);panel.dataset.busy=String(busy);}
+  function render(panel){container=panel;panel.replaceChildren();const shell=node('div','','mg-connectors');shell.dataset.busy=String(busy);const header=node('header','','mg-hub-header');header.append(node('div'));header.firstChild.append(node('span','MAX-G CONNECTIONS','mg-eyebrow'),node('h2','Your world, within reach'),node('p','Accounts, apps and devices — with access you control.','mg-muted'));const statusLabel=node('span',status?`${status.platform==='Darwin'?'Mac':status.platform||'Mac'} companion connected`:client.token?'Paired · refresh to check':'Mac helper not paired',`mg-connection-pill${status?' mg-online':''}`);header.append(statusLabel);shell.append(header);const nav=node('nav','','mg-tabs');nav.setAttribute('aria-label','Connector categories');for(const [id,label]of TABS){const control=button(label,()=>{tab=id;renderCurrent();},{secondary:true});control.classList.toggle('mg-active',tab===id);control.setAttribute('aria-current',tab===id?'page':'false');nav.append(control);}shell.append(nav);const content=node('div','','mg-hub-content');({connect:renderConnections,device:renderDevice,mail:renderMail,files:renderFiles,mac:renderMac,browser:renderBrowser,shopping:renderShopping,permissions:renderPermissions})[tab](content);shell.append(content);const activity=node('details','','mg-activity');activity.open=Boolean(lastOutput);activity.append(node('summary','Last helper result'),node('pre',lastOutput||'Actions and results will appear here.','mg-output'));shell.append(activity);shell.append(button('Cancel current operation',cancelOperation,{secondary:true}));panel.append(shell);panel.dataset.busy=String(busy);}
 
-  async function disconnect(){cancelOperation();clearComposeAttachments();client.token='';status=null;accountMessages=[];selectedMessage=null;mailAccounts=[];cloudFiles=[];apps=[];musicChoices=[];browserObservation=null;desktopObservation=null;lastOutput='';for(const key of Object.keys(draft))draft[key]='';for(const key of Object.keys(clientIds))clientIds[key]='';mailSender='';mailAccount='';deviceForm.body='';deviceForm.recipient='';for(const key of ['url','request','budget','phone','target'])shoppingForm[key]='';shoppingForm.newPurchaseReviewed=false;shoppingAttempted=false;try{sessionStorage?.removeItem(PAIR_SESSION_KEY);}catch{}renderCurrent();return 'This browser is disconnected. Saved account connections remain in the Mac helper until you disconnect them or reset connector data.';}
+  async function disconnect(){cancelOperation();clearComposeAttachments();client.token='';status=null;accountMessages=[];selectedMessage=null;mailAccounts=[];cloudFiles=[];apps=[];musicChoices=[];browserObservation=null;desktopObservation=null;lastOutput='';for(const key of Object.keys(draft))draft[key]='';for(const key of Object.keys(clientIds))clientIds[key]='';for(const key of Object.keys(handoffForm))handoffForm[key]='';mailSender='';mailAccount='';deviceForm.body='';deviceForm.recipient='';for(const key of ['url','request','budget','phone','target'])shoppingForm[key]='';shoppingForm.newPurchaseReviewed=false;shoppingAttempted=false;try{sessionStorage?.removeItem(PAIR_SESSION_KEY);}catch{}renderCurrent();return 'This browser is disconnected. Saved account connections remain in the Mac helper until you disconnect them or reset connector data.';}
   async function reset(){cancelOperation();clearComposeAttachments();let message='This browser’s pairing was cleared. Pair with the Mac helper to reset any account connections stored there.';if(client.token){try{await client.request('/api/reset',{method:'POST',body:{code:'1435254'}});message='Connector credentials, the helper-owned browser profile and helper access settings were reset.';}catch(error){message=`Pairing was cleared here, but the helper reset could not be confirmed: ${error.message}`;}}await disconnect();return message;}
   function handleCommand(text){const command=parseDirectCommand(text);if(!command)return false;return guarded(async signal=>{
-    if(command.kind==='shopping'){shoppingForm.merchant=command.merchant;shoppingForm.request=command.request;shoppingForm.url='';shoppingForm.budget='';shoppingForm.fulfillment='unspecified';shoppingForm.newPurchaseReviewed=false;browserObservation=null;tab='shopping';if(onNavigate)onNavigate();renderCurrent();return {handled:true,text:'Shopping & food is open. Choose your store or restaurant, check the list and budget, then open the shopping website. MAX-G will help prepare the cart and pause for your separate final order review.'};}
-    if(command.kind==='hub'){tab=command.tab||'connect';if(onNavigate)onNavigate();renderCurrent();return {handled:true,text:({connect:'Open Connections to manage accounts, apps and devices.',mail:'Mail is open. Choose your connected mail service and select Load messages when you are ready.',files:'Cloud files is open. Choose your connected storage service, then list files or select a file to upload.',browser:'Browser controls are open. Enter a website URL, then select Open website to begin.',mac:'Mac & devices is open. Choose an app or device control; the helper will use your access settings.'})[tab]};}
+    if(command.kind==='shopping'){shoppingForm.merchant=command.merchant;shoppingForm.request=command.request;shoppingForm.url='';shoppingForm.budget='';shoppingForm.fulfillment='unspecified';shoppingForm.newPurchaseReviewed=false;browserObservation=null;tab='shopping';if(onNavigate)onNavigate();renderCurrent();return {handled:true,text:client.token?'Shopping & food is open. Choose your store or restaurant, check the list and budget, then open the shopping website. MAX-G will help prepare the cart and pause for your separate final order review.':'Shopping & food is open. Tap Open store on this device to browse and order yourself. Your list stays here; Mac-companion cart automation requires pairing.'};}
+    if(command.kind==='hub'){tab=command.tab||'connect';if(onNavigate)onNavigate();renderCurrent();return {handled:true,text:({connect:'Open Connections to manage accounts, apps and devices.',device:'This device is open. Prepare a phone, message, email or Spotify link, then tap it to continue in your device’s app.',mail:'Mail is open. Choose your connected mail service and select Load messages when you are ready.',files:'Cloud files is open. Choose your connected storage service, then list files or select a file to upload.',browser:'Browser controls are open. Enter a website URL, then select Open website to begin. Mac-companion automation requires pairing.',mac:'Mac & devices is open. These controls need a paired Mac companion. This device has separate links for calls, messages, email and Spotify.'})[tab]};}
+    if(!client.token&&(command.kind==='music'||command.action==='spotify.play'||command.kind==='app'&&command.operation==='open'&&/^spotify(?:\.app)?$/i.test(command.name)||['call.start','message.send'].includes(command.action))){
+      let reply;
+      if(['call.start','message.send'].includes(command.action)){
+        handoffForm.phone=command.args.recipient;handoffForm.message=command.action==='message.send'?command.args.body:'';
+        const phone=exactRecipient(handoffForm.phone,true);
+        reply=phone?(command.action==='call.start'?'Tap Open calling app in This device to continue with this number. MAX-G has not placed or connected a call.':'Your exact message is ready in This device. Tap Copy message, then Open messaging app; paste, review and send it there. MAX-G has not sent the message.'):'This device is ready with your recipient and any message text. Phone and text links require a phone number; enter one or continue manually in your messaging app. The paired Mac supports additional account recipients.';
+      }else{
+        handoffForm.music=command.query||command.args?.uri||'';
+        reply='Tap Open Spotify on this device in This device to continue in Spotify. Choose and play the result there; MAX-G has not started playback.';
+      }
+      tab='device';if(onNavigate)onNavigate();renderCurrent();return {handled:true,text:reply};
+    }
     if(command.kind==='music')return {handled:true,text:await searchMusic(command.query,signal)};
     let action=command.action,args=command.args,appName='';
     if(command.kind==='app'){const inventory=rowsOf(await perform('app.list',{}, {signal}));const app=resolveApp(command.name,inventory);appName=app.name;action=`app.${command.operation}`;args={bundle_id:app.bundle_id||app.bundleId};}
@@ -624,5 +703,5 @@ export function initializeConnectors({toast=()=>{},generateText,findMusic,onRepl
     catch(error){verify();if(/Unknown companion endpoint|Not found/i.test(error.message))throw new Error('Restart the updated MAX-G Companion to enable Voice Studio.');throw error;}
     finally{searchControllers.delete(controller);signal?.removeEventListener('abort',abort);}
   }
-  return {render,handleCommand,disconnect,reset,publicSearch,voiceRequest,cancel:cancelOperation,refresh:()=>guarded(refresh),get paired(){return Boolean(client.token);}};
+  return {render,handleCommand,disconnect,reset,publicSearch,voiceRequest,cancel:cancelOperation,refresh:()=>guarded(refresh),get paired(){return Boolean(client.token);},get deviceStatus(){return {paired:Boolean(client.token),connected:Boolean(client.token&&status),platform:typeof status?.platform==='string'?status.platform.slice(0,32):null};}};
 }
