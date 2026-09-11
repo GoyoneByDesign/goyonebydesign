@@ -1,5 +1,31 @@
 # MAX-G Voice Studio
 
+## Male voice styles
+
+Open **Settings → Voice Studio**. MAX-G now defaults to the male **Adult** voice.
+Choose a style, use **Hear** to compare, and select **Save voice settings** to keep
+it on this device:
+
+| Style | Voice | Accent | Delivery |
+| --- | --- | --- | --- |
+| Young adult | Puck | American English | Lively, slightly brighter, a little quicker |
+| Adult | Fenrir | American English | Warm, steady and clear |
+| Older-sounding | George | British English | Calmer, measured, slightly deeper |
+
+These labels describe MAX-G’s delivery presets; they are not verified ages of the
+source speakers. All three use distinct male identities from the
+[official Kokoro voice catalogue](https://huggingface.co/hexgrad/Kokoro-82M/blob/main/VOICES.md).
+The same local voice model is reused. Its first load may take time on an Intel Mac;
+subsequent previews reuse it while loaded. Pitch, depth/warmth, speed and expression
+remain adjustable. The full six-voice selector and your own recorded-voice option
+remain available. These neural voices currently speak English; other languages
+use your installed local voices, whose gender and availability vary by device.
+
+Existing legacy female neural selections switch once to the male default for this
+update, preserving custom delivery controls. Already selected male, cloned or
+installed-system voices are retained. Later deliberate choices remain yours.
+Refresh the app and close/reopen older MAX-G windows to activate the new controls.
+
 MAX-G 1.4 adds actual neural speech, your own voice recordings, and adjustable
 pitch, warmth, speed and restrained expression. It does not reproduce ChatGPT’s
 proprietary voice engine or guarantee identical quality. Listen to the previews

@@ -1,3 +1,7 @@
+# MAX-G 1.6.1 male voice styles
+
+**Voice Studio** now offers **Young adult**, **Adult**, and **Older-sounding** male presets with individual previews. Adult is the new neural default. Each uses a distinct voice with modest delivery changes; age labels describe the sound. All existing voices, cloning and custom controls remain available. [Voice choices and setup](VOICE-SETUP.md)
+
 # MAX-G 1.6 places update
 
 Your personal profile is now **Michael**, with **Created by GoyoneByDesign** and the company logo shown separately. **Places & directions** adds international postal/city lookup, optional one-time device location, nearby businesses and Google Maps / Apple Maps / Waze navigation links. **Settings → Location & maps** manages defaults; **Permissions → Location** controls access. [Location guide and coverage](LOCATIONS.md)

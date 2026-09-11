@@ -1,4 +1,4 @@
-import {NEURAL_VOICES,normalizeVoice} from './voice-config.js';
+import {NEURAL_VOICES,MALE_VOICE_PRESETS,applyMaleVoicePreset,normalizeVoice} from './voice-config.js';
 export const RECORDING_PHRASES=Object.freeze([
   'Hello, I’m recording my own voice for MAX-G. I like a warm, clear conversation, with a natural rhythm and a little personality. Let’s make something useful together.',
   'Good morning! What shall we work on today? That sounds interesting. Give me a moment to think. I understand, and I’m here to help you take the next step.',
@@ -20,28 +20,49 @@ export async function prepareRecording(blob,{signal}={}){
   const bytes=new Uint8Array(encodeWav(samples));let binary='';for(let i=0;i<bytes.length;i+=32768)binary+=String.fromCharCode(...bytes.subarray(i,i+32768));
   return {base64:btoa(binary),duration:decoded.duration,rms,warning:peak>.995?'Some audio may be clipped. A quieter recording could sound better.':''};
 }
-export function renderVoiceStudio({settings,voice,ownerName='GoyoneByDesign',languages,profiles,helper,permission,onSave,onNotice=()=>{},signal}){
+export function renderVoiceStudio({settings,voice,ownerName='Michael',languages,profiles,helper,permission,onSave,onNotice=()=>{},signal}){
   const root=el('section','','voice-studio'),draft=normalizeVoice(settings.voice),status=el('p','Choose a natural voice, or make MAX-G sound like you.','voice-status');status.setAttribute('role','status');root.append(el('h3','Voice Studio'),status);
   const bindings={},field=(key,label,value,options)=>{const wrap=el('label',label,'field'),input=el(options?'select':'input');if(options)for(const o of options){const option=el('option',typeof o==='string'?o:o.label);option.value=typeof o==='string'?o:o.value;input.append(option);}input.value=value;input.dataset.voiceField=key;input.setAttribute('aria-label',label);wrap.append(input);root.append(wrap);bindings[key]=input;return input;};
   const assertOpen=()=>{if(signal?.aborted)throw new DOMException('Settings closed.','AbortError');};
   const action=(label,fn,cls='button')=>{const b=el('button',label,cls);b.type='button';b.onclick=async()=>{if(b.disabled)return;b.disabled=true;try{assertOpen();await fn();}catch(error){if(error.name!=='AbortError'&&!signal?.aborted)status.textContent=error.message;}finally{b.disabled=false;}};return b;};
+  const presetSection=el('section','','male-voice-presets');presetSection.setAttribute('aria-label','Male voice styles');
+  presetSection.append(el('h4','A man’s voice, your way'),el('p','Choose the age style you like, then fine-tune its sound below. Preview each voice before saving.','male-voice-note'));
+  const presetCards=el('div','','male-voice-grid');presetSection.append(presetCards);root.append(presetSection);
   field('engine','Voice engine',draft.engine,[{value:'neural',label:'Natural neural voice · on this device'},{value:'clone',label:'My cloned voice · paired Mac companion'},{value:'system',label:'Installed system voice · other languages'}]);
   field('neuralVoice','Natural voice',draft.neuralVoice,NEURAL_VOICES.map(v=>({value:v.id,label:v.name})));
   field('language','Conversation language',settings.language,Object.keys(languages));field('voiceProfile','System voice delivery profile',settings.voiceProfile,Object.keys(profiles));
   field('voiceURI','Installed local voice',settings.voiceURI,[{value:'',label:'Automatic for selected language'},...voice.voices().map(v=>({value:v.voiceURI,label:`${v.name} · ${v.lang}`}))]);
-  const slider=(key,label,value,min,max,step,suffix)=>{const input=field(key,label,value);input.type='range';input.min=min;input.max=max;input.step=step;input.value=value;const output=el('output');const update=()=>output.textContent=Number(input.value).toFixed(key==='rate'?2:1)+suffix;input.addEventListener('input',update);input.parentElement.append(output);update();};
-  slider('rate','Speaking speed',settings.rate,.65,1.5,.05,'×');slider('pitch','Pitch',draft.pitch,-4,4,.5,' semitones');slider('depth','Depth / warmth',draft.depth,-6,6,.5,' dB');slider('expression','Expressive delivery',draft.expression,0,1,.1,'');
+  const slider=(key,label,value,min,max,step,suffix)=>{const input=field(key,label,value);input.type='range';input.min=min;input.max=max;input.step=step;input.value=value;const output=el('output');const update=()=>output.textContent=Number(input.value).toFixed(['rate','expression'].includes(key)?2:1)+suffix;input.addEventListener('input',update);input.parentElement.append(output);update();};
+  slider('rate','Speaking speed',settings.rate,.65,1.5,.01,'×');slider('pitch','Pitch',draft.pitch,-4,4,.5,' semitones');slider('depth','Depth / warmth',draft.depth,-6,6,.5,' dB');slider('expression','Expressive delivery',draft.expression,0,1,.01,'');
   root.append(el('p','Natural browser voices currently speak English. Other selected languages use the installed-system option; available voices vary by device. Expression adds gentle timing and pitch changes. Depth adjusts vocal warmth; pitch can also change playback length. This is not a copy of ChatGPT’s proprietary voices.','muted'));
   const values=()=>({...settings,language:bindings.language.value,voiceProfile:bindings.voiceProfile.value,voiceURI:bindings.voiceURI.value,rate:Number(bindings.rate.value),voice:normalizeVoice({...draft,engine:bindings.engine.value,neuralVoice:bindings.neuralVoice.value,pitch:Number(bindings.pitch.value),depth:Number(bindings.depth.value),expression:Number(bindings.expression.value),cloneId:bindings.cloneId?.value||draft.cloneId})});
   let voiceEpoch=0;
+  const stopPreview=()=>{voiceEpoch++;voice.stop();};
   const preview=field('preview','Preview words',`Hello ${ownerName}. I’m MAX-G. Let’s take this one step at a time. I’m listening.`);preview.maxLength=400;
-  root.append(action('Hear this voice',async()=>{
-    const epoch=++voiceEpoch;status.textContent='Preparing voice…';await voice.preview(preview.value,values(),{signal});
-    if(!signal?.aborted&&epoch===voiceEpoch)status.textContent='Preview complete. Adjust the voice and try again.';
-  }),action('Stop voice',()=>{voiceEpoch++;voice.stop();status.textContent='Voice stopped.';}),action('Load natural voice',async()=>{
-    const epoch=++voiceEpoch;await permission('internet');assertOpen();if(epoch!==voiceEpoch)return;
-    status.textContent='Downloading and preparing local speech…';await voice.load({signal});
-    if(!signal?.aborted&&epoch===voiceEpoch)status.textContent='Natural speech is ready. You can hear a preview now.';
+  async function hear(candidate,label='this voice'){
+    stopPreview();const epoch=voiceEpoch;status.textContent=`Preparing ${label}…`;
+    try{await voice.preview(preview.value,candidate,{signal});if(!signal?.aborted&&epoch===voiceEpoch)status.textContent='Preview complete. Adjust the voice and try again.';}
+    catch(error){if(!signal?.aborted&&epoch===voiceEpoch)throw error;}
+  }
+  const presetButtons=[];
+  const markPreset=()=>{const value=values();for(const {preset,card,choose}of presetButtons){const selected=value.voice.engine==='neural'&&value.voice.neuralVoice===preset.neuralVoice&&['pitch','depth','expression'].every(key=>Math.abs(value.voice[key]-preset[key])<.001)&&Math.abs(value.rate-preset.rate)<.001;card.dataset.selected=String(selected);choose.setAttribute('aria-pressed',String(selected));}};
+  for(const preset of MALE_VOICE_PRESETS){
+    const card=el('article','','male-voice-card');card.dataset.maleVoice=preset.id;
+    const icon=el('span','','male-voice-mark');icon.setAttribute('aria-hidden','true');for(let i=0;i<4;i++)icon.append(el('i'));
+    card.append(icon,el('h5',preset.name),el('p',preset.description,'male-voice-description'));
+    const choose=action('Choose',()=>{stopPreview();const next=applyMaleVoicePreset(values(),preset.id);for(const [key,value]of Object.entries({engine:next.voice.engine,neuralVoice:next.voice.neuralVoice,rate:next.rate,pitch:next.voice.pitch,depth:next.voice.depth,expression:next.voice.expression})){bindings[key].value=String(value);if(bindings[key].type==='range')bindings[key].dispatchEvent(new Event('input'));}markPreset();status.textContent=`${preset.name} staged. Save voice settings to keep this choice.`;},'button button-small');
+    choose.setAttribute('aria-label',`Choose ${preset.name}`);
+    const hearButton=action('Hear',()=>hear(applyMaleVoicePreset(values(),preset.id),preset.name.toLowerCase()),'button button-small');hearButton.setAttribute('aria-label',`Hear ${preset.name}`);
+    const actions=el('div','','male-voice-actions');actions.append(choose,hearButton);card.append(actions);presetCards.append(card);presetButtons.push({preset,card,choose});
+  }
+  for(const key of ['engine','neuralVoice','language','voiceProfile','voiceURI','rate','pitch','depth','expression'])bindings[key].addEventListener(bindings[key].type==='range'?'input':'change',()=>{stopPreview();markPreset();});
+  markPreset();
+  root.append(action('Hear this voice',()=>hear(values())),action('Stop voice',()=>{stopPreview();status.textContent='Voice stopped.';}),action('Load natural voice',async()=>{
+    stopPreview();const epoch=voiceEpoch;
+    try{await permission('internet');assertOpen();if(epoch!==voiceEpoch)return;
+      status.textContent='Downloading and preparing local speech…';await voice.load({signal});
+      if(!signal?.aborted&&epoch===voiceEpoch)status.textContent='Natural speech is ready. You can hear a preview now.';
+    }catch(error){if(!signal?.aborted&&epoch===voiceEpoch)throw error;}
   }),action('Unload voice model',()=>{voiceEpoch++;voice.unload();status.textContent='Voice model unloaded from memory. Downloaded voice files remain cached.';}));
   root.append(el('h3','Clone my own voice'),el('p','Record one phrase naturally in a quiet room, or upload your own clean audio. Use 3–30 seconds with one speaker and no music. You can keep several takes and choose the one that sounds best. Recordings go only to your paired Mac, and are not included in chat, website publishing or personal backups.','muted'));
   const setup=el('a','Local voice setup guide');setup.href='./VOICE-SETUP.md';setup.target='_blank';setup.rel='noopener';root.append(setup);
@@ -60,7 +81,7 @@ export function renderVoiceStudio({settings,voice,ownerName='GoyoneByDesign',lan
     recordEpoch++;stopCapture();preparation?.abort();preparation=null;pending=null;
     audio.pause();if(audioURL)URL.revokeObjectURL(audioURL);audioURL=null;audio.removeAttribute('src');audio.load();
   };
-  signal?.addEventListener('abort',()=>{cleanup();voice.stop();},{once:true});
+  signal?.addEventListener('abort',()=>{cleanup();stopPreview();},{once:true});
   const recordingAvailable=()=>{assertOpen();if(saving)throw new Error('Your recording is being saved. Wait for it to finish before changing takes.');};
   async function stage(blob){
     assertOpen();cleanup();const epoch=recordEpoch,controller=new AbortController();preparation=controller;
@@ -105,6 +126,6 @@ export function renderVoiceStudio({settings,voice,ownerName='GoyoneByDesign',lan
   async function refresh(){const result=await helper('samples',{}, {signal});if(signal?.aborted)return;const selected=select.value||draft.cloneId;select.replaceChildren(new Option('Choose a saved recording',''));for(const sample of result.samples||[])select.append(new Option(`${sample.name} · ${Number(sample.duration).toFixed(1)}s`,sample.id));select.value=selected;return result;}
   root.append(action('Check voice setup & recordings',async()=>{const capability=await helper('status',{}, {signal});if(signal?.aborted)return;status.textContent=capability.message||JSON.stringify(capability);await refresh();}),action('Save my voice recording',async()=>{if(!consent.checked)throw new Error('Confirm that this is your own voice before saving it.');if(!pending)throw new Error('Record or upload and preview a sample first.');const sample=pending;saving=true;try{const result=await helper('sample/add',{name:recordingName.value,base64:sample.base64,consent:true},{signal});if(signal?.aborted)return;await refresh();assertOpen();cleanup();select.value=result.id||result.sample?.id||'';draft.cloneId=select.value;status.textContent='Your recording is saved on this Mac. Select My cloned voice, then hear a preview.';}finally{saving=false;}}),action('Delete selected recording',async()=>{if(!select.value)throw new Error('Choose a recording to delete.');await helper('sample/delete',{id:select.value},{signal});if(signal?.aborted)return;select.value='';draft.cloneId='';await refresh();status.textContent='Recording and its derived voice data deleted from this Mac.';}),action('Discard unsaved recording',()=>{recordingAvailable();cleanup();status.textContent='Unsaved recording discarded.';}));
   root.append(el('p','A cloned voice needs the optional local voice runtime on the Mac you are paired with. It will not follow you to another device automatically. Small changes work best; strong pitch changes can sound less natural.','muted'));
-  root.append(action('Install local dictation language',async()=>{await permission('internet');assertOpen();await voice.installLanguage(languages[bindings.language.value]);assertOpen();status.textContent='On-device dictation language is ready.';}),action('Save voice settings',async()=>{const candidate=values();cleanup();if(candidate.voice.engine==='clone'&&!candidate.voice.cloneId)throw new Error('Choose a saved voice recording first.');if(await onSave(candidate)===false)throw new Error('Voice settings could not be saved. Keep this window open.');assertOpen();status.textContent='Voice settings saved on this device.';onNotice(status.textContent);}));
+  root.append(action('Install local dictation language',async()=>{await permission('internet');assertOpen();await voice.installLanguage(languages[bindings.language.value]);assertOpen();status.textContent='On-device dictation language is ready.';}),action('Save voice settings',async()=>{const candidate=values();stopPreview();cleanup();if(candidate.voice.engine==='clone'&&!candidate.voice.cloneId)throw new Error('Choose a saved voice recording first.');if(await onSave(candidate)===false)throw new Error('Voice settings could not be saved. Keep this window open.');assertOpen();status.textContent='Voice settings saved on this device.';onNotice(status.textContent);}));
   return root;
 }

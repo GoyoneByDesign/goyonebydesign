@@ -123,7 +123,7 @@ export class NeuralVoice {
       } catch(error) {finish(error,true);}
     });
   }
-  async speak(text,{signal,neuralVoice='af_heart',...options}={}) {
+  async speak(text,{signal,neuralVoice='am_fenrir',...options}={}) {
     this.stop();const epoch=this.epoch;
     const verify=()=>{if(signal?.aborted||epoch!==this.epoch)throw abortError();};
     verify();const chunks=sentenceChunks(text,220,{firstLimit:120});if(!chunks.length)return;

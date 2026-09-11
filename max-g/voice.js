@@ -11,7 +11,7 @@ export class LocalVoice{
   voices(){return globalThis.speechSynthesis?.getVoices().filter(v=>v.localService) || [];}
   async readyVoices(){if(this.voices().length)return this.voices();await new Promise(resolve=>{const timer=setTimeout(done,1500);const synth=globalThis.speechSynthesis;function done(){clearTimeout(timer);synth?.removeEventListener('voiceschanged',done);resolve();}synth?.addEventListener('voiceschanged',done,{once:true});});return this.voices();}
   stop(){this.generation++;this.neural.stop();if(this.cloning){this.cloning=false;this.helper?.('unload').catch(()=>{});}this.finishSpeech?.();this.finishSpeech=null;const recognition=this.recognition;this.recognition=null;try{recognition?.abort();}catch{}globalThis.speechSynthesis?.cancel();this.utterance=null;this.onState('idle');}
-  async speak(text,{engine='system',neuralVoice='af_heart',cloneId='',pitch=0,depth=0,expression=.35,language='en-US',profile='Warm',voiceURI='',rate=1,emotion='neutral',signal}={}){
+  async speak(text,{engine='system',neuralVoice='am_fenrir',cloneId='',pitch=0,depth=0,expression=.35,language='en-US',profile='Warm',voiceURI='',rate=1,emotion='neutral',signal}={}){
     if(signal?.aborted)throw new DOMException('Voice stopped.','AbortError');
     const clean=spokenText(text).trim();if(!clean){this.stop();return;}
     if(engine!=='system'){

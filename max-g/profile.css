@@ -91,6 +91,16 @@ html[data-mg-contrast=more] input::placeholder,html[data-mg-contrast=more] texta
 .mg-maker-profile{padding:13px 15px;margin-top:20px;border:1px solid var(--line);border-radius:15px;background:var(--panel-soft)}
 .mg-maker-profile small{font-size:.84em}.mg-maker-profile strong{font-size:1em;margin-top:3px}
 .mg-maker-mobile{display:none}
+.male-voice-presets{margin:22px 0 26px;min-width:0}.male-voice-presets>h4{font-size:1.1em;margin:0 0 8px;color:var(--text)}
+.male-voice-note{font-size:.9em;line-height:1.65;color:var(--muted);margin:0 0 16px;overflow-wrap:anywhere}
+.male-voice-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.male-voice-card{display:flex;flex-direction:column;min-width:0;padding:16px 13px;border:1px solid var(--line);border-radius:17px;background:var(--panel-soft)}
+.male-voice-card[data-selected=true]{border-color:var(--cyan);box-shadow:inset 0 0 0 1px var(--cyan)}
+.male-voice-card h5{font-size:1em;margin:14px 0 7px;line-height:1.45;overflow-wrap:anywhere}.male-voice-description{font-size:.86em;line-height:1.65;color:var(--muted);margin:0 0 16px;overflow-wrap:anywhere}
+.male-voice-mark{display:flex;align-items:center;justify-content:center;gap:4px;width:40px;height:40px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--cyan)}
+.male-voice-mark i{display:block;width:3px;border-radius:3px;background:currentColor;height:10px}.male-voice-mark i:nth-child(2){height:21px}.male-voice-mark i:nth-child(3){height:15px}.male-voice-mark i:nth-child(4){height:7px}
+.male-voice-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:auto}.male-voice-actions>.button{flex:1 1 58px;min-width:0;min-height:44px;padding:9px 10px;font-size:.85em}
+@media(max-width:700px){.male-voice-grid{grid-template-columns:minmax(0,1fr)}.male-voice-card{padding:16px}.male-voice-card h5{margin-top:10px}.male-voice-actions>.button{flex:1;max-width:none}}
 @media(max-width:700px){
   .mg-maker-mobile{display:flex;justify-content:center;gap:7px;margin:6px 0 0;font-size:10px;line-height:1.4}
   .mg-maker-mobile strong{display:inline;font-size:10px;font-weight:600}.mg-maker-mobile img{padding:2px;border-radius:6px}

@@ -1,20 +1,37 @@
 /** Local voice preferences only. Reference recordings never enter personal chat state. */
 export const NEURAL_VOICES=Object.freeze([
-  {id:'af_heart',name:'Heart · warm American',language:'en-US'},
-  {id:'af_bella',name:'Bella · bright American',language:'en-US'},
-  {id:'af_nicole',name:'Nicole · soft American',language:'en-US'},
-  {id:'am_fenrir',name:'Fenrir · rich American',language:'en-US'},
-  {id:'am_puck',name:'Puck · lively American',language:'en-US'},
-  {id:'bm_george',name:'George · British',language:'en-GB'},
+  {id:'af_heart',name:'Heart · female · warm American',language:'en-US'},
+  {id:'af_bella',name:'Bella · female · bright American',language:'en-US'},
+  {id:'af_nicole',name:'Nicole · female · soft American',language:'en-US'},
+  {id:'am_fenrir',name:'Fenrir · male · warm American',language:'en-US'},
+  {id:'am_puck',name:'Puck · male · lively American',language:'en-US'},
+  {id:'bm_george',name:'George · male · measured British',language:'en-GB'},
 ]);
-export const VOICE_DEFAULTS=Object.freeze({engine:'neural',neuralVoice:'af_heart',pitch:0,depth:0,expression:0.35,cloneId:''});
+// Perceived age is a delivery style, not verified speaker-age metadata.
+export const MALE_VOICE_PRESETS=Object.freeze([
+  Object.freeze({id:'young',name:'Young adult',description:'Lively, light American male voice · Puck',neuralVoice:'am_puck',rate:1.04,pitch:.5,depth:0,expression:.45}),
+  Object.freeze({id:'adult',name:'Adult',description:'Warm, steady American male voice · Fenrir',neuralVoice:'am_fenrir',rate:1,pitch:0,depth:1,expression:.35}),
+  Object.freeze({id:'older',name:'Older-sounding',description:'Calm, measured British male voice · George',neuralVoice:'bm_george',rate:.92,pitch:-.5,depth:1.5,expression:.3}),
+]);
+export const VOICE_DEFAULTS=Object.freeze({voiceRevision:1,engine:'neural',neuralVoice:'am_fenrir',pitch:0,depth:1,expression:0.35,cloneId:''});
 const number=(n,min,max,fallback)=>typeof n==='number'&&Number.isFinite(n)?Math.max(min,Math.min(max,n)):fallback;
-export function normalizeVoice(value={}){value=value&&typeof value==='object'?value:{};return {
-  engine:['neural','system','clone'].includes(value.engine)?value.engine:'neural',
-  neuralVoice:NEURAL_VOICES.some(v=>v.id===value.neuralVoice)?value.neuralVoice:'af_heart',
-  pitch:number(value.pitch,-4,4,0),depth:number(value.depth,-6,6,0),expression:number(value.expression,0,1,.35),
+export function normalizeVoice(value={}){value=value&&typeof value==='object'?value:{};
+const engine=['neural','system','clone'].includes(value.engine)?value.engine:'neural';
+const migrated=Number.isInteger(value.voiceRevision)&&value.voiceRevision>=1;
+// Michael requested a male default. Apply once to legacy neural female choices;
+// retain recorded-voice/system settings and any later deliberate selection.
+const legacyFemale=engine==='neural'&&!migrated&&/^af_/.test(value.neuralVoice||'');
+return {
+  voiceRevision:1,engine,
+  neuralVoice:!legacyFemale&&NEURAL_VOICES.some(v=>v.id===value.neuralVoice)?value.neuralVoice:VOICE_DEFAULTS.neuralVoice,
+  pitch:number(value.pitch,-4,4,0),depth:number(value.depth,-6,6,VOICE_DEFAULTS.depth),expression:number(value.expression,0,1,.35),
   cloneId:typeof value.cloneId==='string'&&/^[a-zA-Z0-9_-]{1,80}$/.test(value.cloneId)?value.cloneId:'',
 };}
+export function applyMaleVoicePreset(settings,presetId){
+  const preset=MALE_VOICE_PRESETS.find(item=>item.id===presetId);
+  if(!preset)throw new Error('Choose Young adult, Adult, or Older-sounding.');
+  return {...settings,rate:preset.rate,voice:normalizeVoice({...normalizeVoice(settings?.voice),voiceRevision:1,engine:'neural',neuralVoice:preset.neuralVoice,pitch:preset.pitch,depth:preset.depth,expression:preset.expression})};
+}
 export function sentenceChunks(text,limit=220,{firstLimit=limit}={}){
   limit=Math.round(number(limit,80,280,220));firstLimit=Math.round(number(firstLimit,80,limit,limit));
   const clean=String(text).trim().slice(0,1800).replace(/[\uD800-\uDBFF]$/u,''),chunks=[];
