@@ -11,7 +11,9 @@ installed Python environments. Each browser keeps its own local profile. A web
 address does not synchronize or remotely expose your Mac’s tools. Natural browser
 voices and local chat work on a compatible device after their model downloads;
 cloning and Mac controls require the companion on that device. Public search still
-needs either that companion or a configured deployed search Worker.
+needs either that companion or a configured deployed search Worker. Places, nearby
+lookup and weather use direct public data APIs and need no Worker URL; see
+[Location setup and coverage](LOCATIONS.md).
 
 For the optional Worker, include `https://www.goyonebydesign.com` in
 `ALLOWED_ORIGINS`; the path `/max-g/` is not part of an origin. The default
@@ -21,7 +23,7 @@ For the optional Worker, include `https://www.goyonebydesign.com` in
 
 The browser runs MAX-G’s language model locally through WebLLM. GitHub Pages serves the app files; the separate Cloudflare Worker requests public DuckDuckGo search results. No paid AI API or inference server is used. Live search is an online service and therefore cannot operate completely offline.
 
-This package is ready to configure and test. No repository has been published, Worker deployed, or DNS record changed for you. Your connected GitHub account is **GoyoneByDesign**; these steps use it as the repository owner. The remaining value is the **Worker URL returned by Cloudflare**. If you choose a different organization, use that owner’s GitHub Pages hostname instead. These are deployment settings; the application code is complete.
+The existing website above already hosts MAX-G. The following steps are only for a separate repository/subdomain deployment; that optional repository, Worker and DNS configuration have not been provisioned. Your connected GitHub account is **GoyoneByDesign**; these steps use it as the repository owner. The remaining value is the **Worker URL returned by Cloudflare**. If you choose a different organization, use that owner’s GitHub Pages hostname instead. These are deployment settings; the application code is complete.
 
 For account and native-device tools added in 1.1, install the local Mac companion
 using [CONNECTORS.md](CONNECTORS.md). GitHub Pages continues to host only the static

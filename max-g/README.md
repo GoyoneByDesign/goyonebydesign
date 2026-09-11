@@ -1,10 +1,14 @@
+# MAX-G 1.6 places update
+
+Your personal profile is now **Michael**, with **Created by GoyoneByDesign** and the company logo shown separately. **Places & directions** adds international postal/city lookup, optional one-time device location, nearby businesses and Google Maps / Apple Maps / Waze navigation links. **Settings → Location & maps** manages defaults; **Permissions → Location** controls access. [Location guide and coverage](LOCATIONS.md)
+
 # MAX-G 1.5 companion update
 
 Open [MAX-G on GoyoneByDesign](https://www.goyonebydesign.com/max-g/). This update adds weather sunglasses and a scarf, optional spring sneezes, a short original humming tune and dancing, faster local greetings, and a device compatibility check. Read [Companion play and device guide](COMPANION-PLAY.md) for controls and current limits.
 
 # MAX-G · browser edition
 
-A complete PWA for Michael Allan, with WebLLM inference on the device, a
+A complete PWA for Michael, with WebLLM inference on the device, a
 separate DuckDuckGo search Worker, an animated Orbit companion and local personal
 storage. Start with [DEPLOYMENT.md](DEPLOYMENT.md) for the tested setup commands and
 `max-g.goyonebydesign.com` configuration. No paid model API or hosted inference
@@ -19,7 +23,7 @@ voices currently support English; installed system voices retain the other langu
 paths. This Intel Mac produced a short neural clip in 12–19 seconds, so voice
 preparation is not instant. [Voice setup and recording guide](VOICE-SETUP.md)
 
-**Profile** lets you change GoyoneByDesign, use your logo/photo, and set your preferred
+**Profile** lets you change Michael, use your logo/photo, and set your preferred
 style, greeting, pronouns and time zone. **Display & animation** makes text and controls
 larger, increases composer height, and adds holiday/birthday outfits, occasional playful
 gestures and real-weather props. Motion can be reduced or switched off.
@@ -120,6 +124,7 @@ accuracy. [WebLLM usage](https://webllm.mlc.ai/docs/user/basic_usage.html)
 | `app.js` | Conversation, routing, settings, permissions, files, memory, skills and schedules |
 | `engine.js`, `inference-worker.js` | Pinned WebLLM, WebGPU checks, streaming, stop/unload/cache management |
 | `state.js` | Bounded personal IndexedDB state and exact reset-code recognition |
+| `locations.js`, `locations-ui.js`, `locations.css` | International place/postal lookup, optional device location, nearby results and maps handoffs |
 | `tools.js`, `unit-data.js` | Search/weather retrieval, safe arithmetic and existing unit tables |
 | `voice.js` | Local installed speech voices and strictly on-device dictation detection |
 | `files.js` | Text/source import, editing, ZIP, Word, Excel, slides and print-to-PDF exports |
@@ -149,7 +154,7 @@ connects it to the local Python connector service.
 
 | Existing MAX-G feature | Browser edition | Complete desktop edition |
 | --- | --- | --- |
-| Michael Allan identity; warm, lively, candid personality | Retained in the complete system prompt and user preferences | Retained unchanged |
+| Michael identity; warm, lively, candid personality | Retained in the complete system prompt and user preferences | Retained unchanged |
 | Globe, white eyes, moving hoop, emotional color/motion | SVG/CSS, 18 states, talking/listening/thinking; reduced motion | Original animated native avatar |
 | Chat, Enter/Shift+Enter, queued message, Stop | Retained; bounded local sessions; stale results discarded | Retained unchanged |
 | Six expressive voices | Six delivery profiles using locally installed browser voices; available voice identities vary | Six installed English voices and language engines |

@@ -43,6 +43,9 @@ async function committed(callback,value,signal){if(typeof callback!=='function')
  */
 export function renderProfileSettings({profile,style='Friendly',replyLength='Brief',onSave,onBeforeImage,signal,prepareImage=prepareProfileImage}={}){
   const original=normalizeProfile(profile),ui=layout('Your local profile','Personalize MAX-G on this browser. This is a local owner profile, not a website login or an account with administrator privileges.',{signal});
+  const maker=el('div','','mg-maker-credit mg-maker-profile'),makerLogo=el('img'),makerText=el('div');
+  makerLogo.src=new URL('./assets/goyonebydesign-logo.png',import.meta.url).href;makerLogo.alt='';makerLogo.width=44;makerLogo.height=44;
+  makerText.append(el('small','MAX-G is created by'),el('strong','GoyoneByDesign'));maker.append(makerLogo,makerText);ui.section.insertBefore(maker,ui.form);
   let draftAvatar=original.avatarDataURL;
   const avatarRow=el('div','','mg-profile-avatar-row'),preview=el('div','','mg-profile-avatar-preview');
   const imageInfo=el('div','','mg-profile-image-info');imageInfo.append(el('strong','Your photo or logo'),el('p','Choose a still PNG, JPEG or WebP, up to 6 MB. MAX-G keeps a small resized PNG; the original filename and photo metadata are discarded. The resized image is included in personal backups.','mg-profile-muted'));
@@ -72,7 +75,7 @@ export function renderProfileSettings({profile,style='Friendly',replyLength='Bri
   ui.fields.append(grid,greeting.wrap,about.wrap,personalize.wrap);
   const greetingPreview=el('div','','mg-profile-greeting-preview');greetingPreview.setAttribute('aria-label','Welcome greeting preview');
   const datePreview=el('p','','mg-profile-muted');ui.fields.append(greetingPreview,datePreview);
-  const candidate=()=>normalizeProfile({displayName:name.input.value,workspaceLabel:workspace.input.value,pronouns:pronouns.input.value,timezone:zone.input.value.trim(),greeting:greeting.input.value,about:about.input.value,personalize:personalize.input.value==='yes',avatarDataURL:draftAvatar});
+  const candidate=()=>normalizeProfile({ownerRevision:PROFILE_DEFAULTS.ownerRevision,displayName:name.input.value,workspaceLabel:workspace.input.value,pronouns:pronouns.input.value,timezone:zone.input.value.trim(),greeting:greeting.input.value,about:about.input.value,personalize:personalize.input.value==='yes',avatarDataURL:draftAvatar});
   function renderAvatar(){preview.replaceChildren();if(draftAvatar){const image=el('img');image.src=draftAvatar;image.alt='Selected profile photo or logo';image.width=88;image.height=88;preview.append(image);}else{preview.textContent=profileInitials(name.input.value);preview.setAttribute('aria-label','Profile initials');}remove.disabled=!draftAvatar;}
   function renderPreview(){greetingPreview.textContent=greetingText(candidate());if(validTimezone(zone.input.value.trim())){try{datePreview.textContent='Time zone preview: '+new Intl.DateTimeFormat(undefined,{timeZone:effectiveTimezone(zone.input.value.trim()),dateStyle:'medium',timeStyle:'short'}).format(new Date());}catch{datePreview.textContent='';}}else datePreview.textContent='Enter a valid IANA time zone or “device”.';}
   for(const input of [name.input,greeting.input,zone.input])input.addEventListener('input',()=>{renderPreview();if(input===name.input)renderAvatar();});

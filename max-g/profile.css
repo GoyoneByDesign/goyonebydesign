@@ -80,3 +80,19 @@ html[data-mg-contrast=more] input::placeholder,html[data-mg-contrast=more] texta
 }
 @media(max-width:360px){html[data-mg-display=ready] .composer-divider{display:none}html[data-mg-display=ready] .composer-left{gap:2px}html[data-mg-display=ready] .voice-button{gap:5px}.mg-profile-actions>.button{flex-basis:100%}}
 @media(max-height:540px){html[data-mg-display=ready] .composer textarea{min-height:70px;max-height:23dvh}html[data-mg-display=ready] .app-shell{min-height:0}html[data-mg-display=ready] .settings-dialog{max-height:calc(100dvh - 12px)}}
+
+/* The maker credit is separate from the owner's name and editable avatar. */
+.mg-maker-credit{display:flex;align-items:center;gap:10px;min-width:0;color:var(--muted);line-height:1.4}
+.mg-maker-credit img{flex:none;display:block;object-fit:contain;padding:3px;background:#fff;border:1px solid #dae2e9;border-radius:9px}
+.mg-maker-credit small{display:block;font-size:10px;letter-spacing:.03em;color:var(--muted)}
+.mg-maker-credit strong{display:block;font-size:12px;font-weight:600;color:var(--text);overflow-wrap:anywhere}
+.mg-maker-sidebar{padding:0 7px 13px;margin-top:2px}
+.mg-maker-sidebar>span{min-width:0}.mg-maker-sidebar strong{margin-top:2px}
+.mg-maker-profile{padding:13px 15px;margin-top:20px;border:1px solid var(--line);border-radius:15px;background:var(--panel-soft)}
+.mg-maker-profile small{font-size:.84em}.mg-maker-profile strong{font-size:1em;margin-top:3px}
+.mg-maker-mobile{display:none}
+@media(max-width:700px){
+  .mg-maker-mobile{display:flex;justify-content:center;gap:7px;margin:6px 0 0;font-size:10px;line-height:1.4}
+  .mg-maker-mobile strong{display:inline;font-size:10px;font-weight:600}.mg-maker-mobile img{padding:2px;border-radius:6px}
+  .mg-maker-sidebar{padding-top:2px;padding-bottom:10px}.mg-maker-profile{padding:11px 12px}
+}

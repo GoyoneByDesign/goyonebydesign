@@ -3,9 +3,10 @@ import {freshImprovement,validateImprovement} from './improvement.js';
 import {normalizeProfile,normalizeDisplay} from './profile.js';
 import {normalizeVoice} from './voice-config.js';
 import {normalizeOrbitSettings} from './orbit.js';
+import {normalizeLocationSettings} from './locations.js';
 export const DB_NAME='maxg-personal-v1';
 export const LANGUAGES={'Auto-detect':'en-US',English:'en-US',Tagalog:'fil-PH',Spanish:'es-ES','Chinese (Mandarin)':'zh-CN',Japanese:'ja-JP',Italian:'it-IT',Russian:'ru-RU',Korean:'ko-KR'};
-export const DEFAULTS=Object.freeze({model:'Llama-3.2-1B-Instruct-q4f16_1-MLC',language:'Auto-detect',style:'Friendly',replyLength:'Brief',instructions:'',onlineFirst:true,proxyURL:'',weatherCity:'',speak:true,voiceProfile:'Warm',voiceURI:'',rate:1,motion:true,theme:'Dark',saveChats:false,useMemory:true,accessMode:'Limited',permissions:{internet:'allow',files:'ask',microphone:'ask'},hourlyLearning:false,voice:normalizeVoice(),orbit:normalizeOrbitSettings()});
+export const DEFAULTS=Object.freeze({model:'Llama-3.2-1B-Instruct-q4f16_1-MLC',language:'Auto-detect',style:'Friendly',replyLength:'Brief',instructions:'',onlineFirst:true,proxyURL:'',weatherCity:'',speak:true,voiceProfile:'Warm',voiceURI:'',rate:1,motion:true,theme:'Dark',saveChats:false,useMemory:true,accessMode:'Limited',permissions:{internet:'allow',files:'ask',microphone:'ask',location:'ask'},hourlyLearning:false,voice:normalizeVoice(),orbit:normalizeOrbitSettings(),locations:normalizeLocationSettings()});
 const validTime=(value,fallback)=>Number.isFinite(Number(value))&&Number(value)>=0&&Number(value)<8640000000000000?Number(value):fallback;
 export function freshState(){return {version:1,profile:normalizeProfile(),display:normalizeDisplay(),settings:structuredClone(DEFAULTS),chats:[],notes:[],skills:[],jobs:[],improvement:freshImprovement(),study:{nextRun:Date.now()+3600000,cursor:0,history:[]}};}
 export function validateState(raw){
@@ -13,8 +14,8 @@ export function validateState(raw){
   clean.improvement=validateImprovement(raw.improvement);clean.profile=normalizeProfile(raw.profile);clean.display=normalizeDisplay(raw.display);
   const s=raw.settings||{};
   for(const [key,base]of Object.entries(DEFAULTS))if(key!=='permissions'&&typeof s[key]===typeof base)clean.settings[key]=s[key];
-  clean.settings.voice=normalizeVoice(s.voice);clean.settings.orbit=normalizeOrbitSettings(s.orbit);
-  for(const key of ['internet','files','microphone'])if(['ask','allow','deny'].includes(s.permissions?.[key]))clean.settings.permissions[key]=s.permissions[key];
+  clean.settings.voice=normalizeVoice(s.voice);clean.settings.orbit=normalizeOrbitSettings(s.orbit);clean.settings.locations=normalizeLocationSettings(s.locations);
+  for(const key of ['internet','files','microphone','location'])if(['ask','allow','deny'].includes(s.permissions?.[key]))clean.settings.permissions[key]=s.permissions[key];
   if(!Object.hasOwn(LANGUAGES,clean.settings.language))clean.settings.language='Auto-detect';
   for(const [key,values]of Object.entries({style:['Friendly','Professional','Casual','Playful'],replyLength:['Brief','Detailed'],accessMode:['Limited','Full'],voiceProfile:['Warm','Bright','Calm','Storyteller','Focused','Playful'],theme:['Dark','Light']}))if(!values.includes(clean.settings[key]))clean.settings[key]=DEFAULTS[key];
   for(const key of ['instructions','proxyURL','weatherCity','voiceURI'])clean.settings[key]=clean.settings[key].slice(0,key==='instructions'?1200:300);

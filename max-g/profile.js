@@ -1,5 +1,5 @@
 /** Local owner personalization and display preferences. No accounts or network. */
-export const PROFILE_DEFAULTS=Object.freeze({displayName:'GoyoneByDesign',workspaceLabel:'Personal workspace',pronouns:'',timezone:'device',greeting:'What’s on your mind, {name}?',about:'',personalize:true,avatarDataURL:''});
+export const PROFILE_DEFAULTS=Object.freeze({ownerRevision:1,displayName:'Michael',workspaceLabel:'Personal workspace',pronouns:'',timezone:'device',greeting:'What’s on your mind, {name}?',about:'',personalize:true,avatarDataURL:''});
 export const DISPLAY_DEFAULTS=Object.freeze({uiScale:100,textSize:18,fontFamily:'System',lineSpacing:'Comfortable',contrast:'Standard',composerSize:'Roomy',contentWidth:'Balanced'});
 export const RESPONSE_STYLES=Object.freeze(['Friendly','Professional','Casual','Playful']);
 export const REPLY_LENGTHS=Object.freeze(['Brief','Detailed']);
@@ -43,8 +43,14 @@ export function normalizeAvatar(value){
   }catch{return '';}
 }
 
-export function normalizeProfile(value){const raw=record(value);return {
-  displayName:text(raw.displayName,64)||PROFILE_DEFAULTS.displayName,
+/** Mark migration in the profile itself. Only exact, unmarked legacy defaults
+ * change; an intentional later edit (including the company name) stays intact. */
+export function normalizeProfile(value){const raw=record(value);
+  const alreadyMigrated=Number.isSafeInteger(raw.ownerRevision)&&raw.ownerRevision>=PROFILE_DEFAULTS.ownerRevision;
+  const legacyDefault=!alreadyMigrated&&['GoyoneByDesign','Michael Allan'].includes(raw.displayName);
+  return {
+  ownerRevision:PROFILE_DEFAULTS.ownerRevision,
+  displayName:legacyDefault?'Michael':text(raw.displayName,64)||PROFILE_DEFAULTS.displayName,
   workspaceLabel:text(raw.workspaceLabel,60)||PROFILE_DEFAULTS.workspaceLabel,
   pronouns:text(raw.pronouns,40),timezone:validTimezone(raw.timezone)?raw.timezone:PROFILE_DEFAULTS.timezone,
   greeting:text(raw.greeting,120)||PROFILE_DEFAULTS.greeting,about:text(raw.about,300),

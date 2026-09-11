@@ -18,6 +18,7 @@
   <link rel="stylesheet" href="./connectors.css">
   <link rel="stylesheet" href="./improvement.css">
   <link rel="stylesheet" href="./profile.css">
+  <link rel="stylesheet" href="./locations.css">
   <link rel="stylesheet" href="./orbit.css">
   <link rel="stylesheet" href="./voice-studio.css">
   <script type="module" src="./app.js"></script>
@@ -44,6 +45,7 @@
     <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1 1m12 12 1 1M5 19l1-1M18 6l1-1"/></symbol>
     <symbol id="i-code" viewBox="0 0 24 24"><path d="m7 7-5 5 5 5m10-10 5 5-5 5m-3-14-4 18"/></symbol>
     <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/></symbol>
+    <symbol id="i-location" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol>
     <symbol id="i-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></symbol>
   </defs></svg>
 
@@ -55,6 +57,7 @@
       <nav class="main-nav" aria-label="Workspace">
         <button class="nav-button active" data-view="chat" aria-current="page"><svg class="icon"><use href="#i-chat"/></svg>Conversation<span class="nav-dot"></span></button>
         <button class="nav-button" data-view="work"><svg class="icon"><use href="#i-work"/></svg>Work studio</button>
+        <button class="nav-button" data-view="places"><svg class="icon"><use href="#i-location"/></svg>Places &amp; directions</button>
         <button class="nav-button" data-view="memory"><svg class="icon"><use href="#i-memory"/></svg>Memory</button>
         <button class="nav-button" data-view="learn"><svg class="icon"><use href="#i-learn"/></svg>Learning</button>
         <button class="nav-button" data-view="connectors"><svg class="icon"><use href="#i-work"/></svg>Connectors & devices</button>
@@ -64,7 +67,8 @@
       <div id="chatList" class="chat-list"><p class="empty-history">A fresh start. Your conversations will appear here.</p></div>
       <div class="sidebar-bottom">
         <div class="local-card"><span class="local-card-icon"><svg class="icon"><use href="#i-lock"/></svg></span><div><strong>Your AI. Your device.</strong><p>Local reasoning, connected tools.</p></div></div>
-        <button id="settingsBtn" class="profile-button"><span class="profile-avatar">GO</span><span><strong data-owner-name>GoyoneByDesign</strong><small id="storageStatus" role="status" aria-live="polite">Personal workspace</small></span><svg class="icon"><use href="#i-settings"/></svg></button>
+        <div class="mg-maker-credit mg-maker-sidebar"><img src="./assets/goyonebydesign-logo.png" width="36" height="36" alt=""><span><small>Created by</small><strong>GoyoneByDesign</strong></span></div>
+        <button id="settingsBtn" class="profile-button"><span class="profile-avatar">MI</span><span><strong data-owner-name>Michael</strong><small id="storageStatus" role="status" aria-live="polite">Personal workspace</small></span><svg class="icon"><use href="#i-settings"/></svg></button>
       </div>
     </aside>
     <button id="sidebarBackdrop" class="sidebar-backdrop" aria-label="Close navigation" tabindex="-1"></button>
@@ -112,7 +116,7 @@
               </div>
             </div>
             <div class="welcome-eyebrow"><span></span> HERE FOR YOUR NEXT IDEA</div>
-            <h1 data-owner-greeting>What’s on your mind, GoyoneByDesign?</h1>
+            <h1 data-owner-greeting>What’s on your mind, Michael?</h1>
             <p class="welcome-description">A question, a little inspiration, or something to create.<br>Let’s figure it out together.</p>
             <div class="suggestions" aria-label="Conversation starters">
               <button class="suggestion" data-prompt="What is the weather today?"><svg class="icon"><use href="#i-sun"/></svg><span>Plan my day<small>Check today’s weather</small></span><span class="suggestion-arrow">↗</span></button>
@@ -133,6 +137,7 @@
           </form>
           <div class="composer-footer"><span id="composerHint">Enter to send · Shift + Enter for a new line</span><div class="voice-options"><label class="speak-toggle"><input id="speakReplies" type="checkbox"><span>Speak replies</span></label><button id="hearBtn" class="text-button" type="button"><svg class="icon"><use href="#i-volume"/></svg>Hear MAX-G</button></div></div>
           <p class="accuracy-note">Local AI can make mistakes. Check sources for important answers.</p>
+          <footer class="mg-maker-credit mg-maker-mobile" aria-label="MAX-G creator"><img src="./assets/goyonebydesign-logo.png" width="24" height="24" alt=""><span>Created by <strong>GoyoneByDesign</strong></span></footer>
         </div>
       </section>
 
@@ -140,7 +145,7 @@
     </main>
   </div>
 
-  <dialog id="settingsDialog" class="settings-dialog" aria-labelledby="settingsTitle"><header class="dialog-header"><div><p class="eyebrow">MAKE YOURSELF AT HOME</p><h2 id="settingsTitle">MAX-G settings</h2></div><button id="closeSettingsBtn" class="icon-button" aria-label="Close settings"><svg class="icon"><use href="#i-close"/></svg></button></header><div class="settings-layout"><nav class="settings-tabs" aria-label="Settings categories"><button class="settings-tab" data-tab="profile">Profile</button><button class="settings-tab" data-tab="display">Display &amp; animation</button><button class="settings-tab active" data-tab="general">General</button><button class="settings-tab" data-tab="connection">Connection</button><button class="settings-tab" data-tab="voice">Voice Studio</button><button class="settings-tab" data-tab="permissions">Permissions</button><button class="settings-tab" data-tab="memory">Memory &amp; data</button></nav><div id="settingsContent" class="settings-content"></div></div></dialog>
+  <dialog id="settingsDialog" class="settings-dialog" aria-labelledby="settingsTitle"><header class="dialog-header"><div><p class="eyebrow">MAKE YOURSELF AT HOME</p><h2 id="settingsTitle">MAX-G settings</h2></div><button id="closeSettingsBtn" class="icon-button" aria-label="Close settings"><svg class="icon"><use href="#i-close"/></svg></button></header><div class="settings-layout"><nav class="settings-tabs" aria-label="Settings categories"><button class="settings-tab" data-tab="profile">Profile</button><button class="settings-tab" data-tab="display">Display &amp; animation</button><button class="settings-tab active" data-tab="general">General</button><button class="settings-tab" data-tab="connection">Connection</button><button class="settings-tab" data-tab="locations">Location &amp; maps</button><button class="settings-tab" data-tab="voice">Voice Studio</button><button class="settings-tab" data-tab="permissions">Permissions</button><button class="settings-tab" data-tab="memory">Memory &amp; data</button></nav><div id="settingsContent" class="settings-content"></div></div></dialog>
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
   <a id="downloadAnchor" hidden></a>
   <noscript><div class="noscript-notice">MAX-G needs JavaScript for local AI and its conversation tools. Enable JavaScript, then reload this page.</div></noscript>
