@@ -1,7 +1,7 @@
 {
-  "revision": 1,
-  "updatedAt": "2026-09-10T12:24:51.005199Z",
-  "lastCheckedAt": null,
+  "revision": 2,
+  "updatedAt": "2026-09-11T12:42:00Z",
+  "lastCheckedAt": "2026-09-11T12:42:00Z",
   "entries": [
     {
       "id": "pmix-comparison",
@@ -16,7 +16,62 @@
       "fact": "The uploaded example reports are layout references, not current sales data. New uploaded sales reports determine quantities and net sales.",
       "source": "Michael Goyone's reporting requirements",
       "sourceType": "owner_instruction"
+    },
+    {
+      "id": "max-local-runtime",
+      "topic": "On-device AI",
+      "fact": "MAX uses Qwen2.5-0.5B-Instruct with Transformers.js and q4 weights. Browser model downloads/cache and available device memory affect startup; this is local inference, not model retraining.",
+      "source": "Qwen ONNX model card and Transformers.js v3",
+      "sourceType": "public_documentation",
+      "sourceUrls": ["https://huggingface.co/onnx-community/Qwen2.5-0.5B-Instruct", "https://huggingface.co/docs/transformers.js/v3.0.0/en/custom_usage"],
+      "checkedAt": "2026-09-11T12:42:00Z"
+    },
+    {
+      "id": "max-webgpu-fallback",
+      "topic": "Local AI compatibility",
+      "fact": "A browser may expose WebGPU but return no GPU adapter. MAX checks the adapter and falls back to WASM on the CPU if GPU setup fails. CPU inference may be slower.",
+      "source": "MDN WebGPU and Transformers.js WebGPU guide; MAX runtime implementation",
+      "sourceType": "public_documentation",
+      "sourceUrls": ["https://developer.mozilla.org/en-US/docs/Web/API/GPU/requestAdapter", "https://huggingface.co/docs/transformers.js/en/guides/webgpu"],
+      "checkedAt": "2026-09-11T12:42:00Z"
+    },
+    {
+      "id": "browser-speech-privacy",
+      "topic": "Voice input",
+      "fact": "Browser speech recognition has limited support and may send audio to the browser provider's service. Local MAX text inference does not make microphone transcription offline. Typing remains available.",
+      "source": "MDN SpeechRecognition",
+      "sourceType": "public_documentation",
+      "sourceUrls": ["https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition"],
+      "checkedAt": "2026-09-11T12:42:00Z"
+    },
+    {
+      "id": "cloud-connection-scope",
+      "topic": "AI connections",
+      "fact": "MAX tests a key by requesting the provider's model list. A saved connection is not proof that a paid generation will succeed; the requested model's permissions and API quota still apply.",
+      "source": "OpenAI model-list reference; MAX connection implementation",
+      "sourceType": "public_documentation",
+      "sourceUrls": ["https://developers.openai.com/api/reference/resources/models/methods/list"],
+      "checkedAt": "2026-09-11T12:42:00Z"
+    },
+    {
+      "id": "max-cloud-images",
+      "topic": "AI images",
+      "fact": "MAX's default cloud image model is gpt-image-2.5-sunburst through the Images API; it returns PNG image data. This is separate from the on-device text model and requires API access.",
+      "source": "OpenAI image-generation guide; MAX creation implementation",
+      "sourceType": "public_documentation",
+      "sourceUrls": ["https://developers.openai.com/api/docs/guides/image-generation"],
+      "checkedAt": "2026-09-11T12:42:00Z"
+    },
+    {
+      "id": "spreadsheet-repeat-footer",
+      "topic": "Excel reporting",
+      "fact": "SpreadsheetML uses oddHeader/oddFooter on all pages when differentOddEven is false. MAX keeps a repeating grayscale report footer with MG/date and page numbers; its report paper options remain Letter, Legal and Ledger in either orientation.",
+      "source": "Microsoft Open XML HeaderFooter reference; owner print requirements",
+      "sourceType": "public_documentation",
+      "sourceUrls": ["https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.spreadsheet.headerfooter?view=openxml-3.0.1"],
+      "checkedAt": "2026-09-11T12:42:00Z"
     }
   ],
+  "reviewLimitations": ["Toast documentation could not be retrieved on 2026-09-11. Existing import layouts and reporting rules were preserved, not re-certified against current Toast documentation."],
   "dailyReview": "Daily documentation and sourced-knowledge review is enabled through Michael\u2019s ChatGPT task. New knowledge is applied only when supported and validated. Model weights do not retrain."
 }
