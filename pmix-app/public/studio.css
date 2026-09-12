@@ -14,3 +14,5 @@ main{max-width:1900px;padding:36px 36px 48px}.page-heading h1{font-size:32px;let
 #comparisonSetup{font-size:12px;line-height:1.45;margin-top:7px}
 
 #reportTable:not(.dense-report) tbody td{background:#fff}#reportTable thead th{background:#f0f0f0}
+
+.upload-summary{display:grid;gap:.25rem;text-align:right}.upload-summary strong,.upload-count-small{font-size:1rem;color:#172e46}.upload-summary span{font-size:.875rem;color:#536477}.upload-controls{display:flex;align-items:center;gap:.65rem;flex-wrap:wrap;margin:.75rem 0}.upload-controls span{font-size:.875rem;color:#536477}.local-report-engine{font-size:.875rem;border-left:3px solid #42698b;padding:.5rem .75rem;background:#f1f5f9}.upload-count-small{margin-left:auto;margin-right:1rem}@media(max-width:600px){.upload-summary{text-align:left}.upload-controls button{flex:1}.upload-controls span{flex-basis:100%}.upload-count-small{margin-left:0}}

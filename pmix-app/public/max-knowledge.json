@@ -1,7 +1,7 @@
 {
-  "revision": 9,
-  "updatedAt": "2026-09-12T16:08:20Z",
-  "lastCheckedAt": "2026-09-12T15:16:27Z",
+  "revision": 10,
+  "updatedAt": "2026-09-12T16:29:27Z",
+  "lastCheckedAt": "2026-09-12T16:29:27Z",
   "entries": [
     {
       "id": "pmix-comparison",
@@ -224,15 +224,17 @@
     {
       "id": "drive-history-authorization",
       "topic": "Private History and Google Drive",
-      "fact": "Private Google Drive file access requires OAuth authorization. MAX requests drive.file for files created by its connection. New uploaded originals and downloads up to 40 MB are archived privately; after owner connection, Drive copies are verified before staging bytes are removed. Unconnected or failed transfers remain pending in private MAX storage. Delete moves History entries to Trash and Undo restores them. No private files are stored in public GitHub.",
+      "fact": "Private Google Drive file access requires OAuth authorization. MAX requests drive.file for files created by its connection. New uploaded originals and downloads up to 40 MB are archived privately; after owner connection, Drive copies are verified before staging bytes are removed. Unconnected or failed transfers remain pending in private MAX storage. Delete moves History entries to Trash and Undo restores them. No private files are stored in public GitHub. History provides separate Download original and Download generated report links, plus each generated file’s uploaded sources. The setup guide uses Google Auth Platform Branding, Audience, Data Access, and a Web application client with the exact /api/drive/callback redirect. External Testing authorization for drive.file expires after seven days. Client secrets must be copied at creation and stored privately.",
       "source": "Google OAuth and Drive documentation; applied MAX History behavior",
       "sourceType": "public_documentation",
       "sourceUrls": [
         "https://developers.google.com/identity/protocols/oauth2/web-server",
         "https://developers.google.com/workspace/drive/api/guides/api-specific-auth",
-        "https://developers.google.com/workspace/drive/api/guides/manage-uploads"
+        "https://developers.google.com/workspace/drive/api/guides/manage-uploads",
+        "https://developers.google.com/workspace/guides/configure-oauth-consent",
+        "https://developers.google.com/identity/protocols/oauth2#expiration"
       ],
-      "checkedAt": "2026-09-12T14:17:33Z"
+      "checkedAt": "2026-09-12T16:29:27Z"
     },
     {
       "id": "report-store-first-filenames",
@@ -261,6 +263,14 @@
       "source": "Owner naming instruction",
       "sourceType": "owner_instruction",
       "checkedAt": "2026-09-12T15:16:27Z"
+    },
+    {
+      "id": "local-report-session-controls",
+      "topic": "Independent reports and uploaded files",
+      "fact": "MAX ZETA parses source reports, calculates quantities/net sales/comparisons, and generates Excel, PDF and CSV locally without OpenAI or Gemini calls. Its optional on-device Qwen assistant requires an initial model download; owner sign-in and private History still need internet. Files Uploaded counts distinct original files, not workbook tabs or dining groups. Clear / reset uploaded data clears the working report and queued imports while preserving History and saved formats. Undo reset restores the working session until another report is opened/imported, new files are uploaded, or the page reloads. Generated History entries link the current report’s original uploads.",
+      "source": "Owner requirements and validated application behavior",
+      "sourceType": "owner_instruction",
+      "checkedAt": "2026-09-12T16:29:27Z"
     }
   ],
   "reviewLimitations": [

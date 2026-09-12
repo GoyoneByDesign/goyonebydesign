@@ -2,7 +2,7 @@
 
 Private reporting app for Michael Goyone. The GoyoneByDesign website footer opens this owner-only workspace. MAX uses an on-device Qwen model through Transformers.js, with no API key required. Confirmed layout/column/menu mappings persist in a private D1 database. The version, build, update timestamp, learning revision, and applied timestamp appear in the footer.
 
-## Current release: 3.4.0 · Build 15
+## Current release: 3.4.1 · Build 16
 
 Same-period reports align the union of line items across locations, with zero for items absent from a complete loaded source. Location display offers Side by side, two-location VS with DIFF/VAR and reversal, or Combined total only. Source-date comparisons remain separate. A supported Toast workbook with a row-level location field preserves each store's values. A workbook listing multiple stores only in Summary is treated as a combined-only source, with its store scope carried in `aggregateStores`; it cannot be used to infer individual shares. Combined and individual sources with overlapping coverage are blocked before import. Public tests use synthetic data; private supplied workbook values are never bundled.
 
@@ -85,3 +85,9 @@ Reusable formats support add/upload, edit, save, duplicate, delete and `.max-for
 The bundled Jspreadsheet CE editor is free for business use under MIT, with no license key or subscription. It edits worksheet cells and formatting, supports worksheet tabs, copy/paste, undo/redo and widths/heights, and downloads the edited workbook. It preserves native XLSX parts, existing formulas and print settings while applying the owner's margins. Formula execution is disabled in the browser; Excel recalculates formulas on open. It does not provide Excel macros, chart editing or the complete Excel feature set. Only format settings, not edited workbook data, go into the reusable format library.
 
 Evaluated primary documentation (2026-09-12): [Jspreadsheet CE](https://github.com/jspreadsheet/ce), [MIT license](https://github.com/jspreadsheet/ce/blob/master/LICENSE), [Handsontable licensing](https://handsontable.com/docs/javascript-data-grid/license-key/) (business use requires commercial licensing), and [Univer file conversion](https://docs.univer.ai/guides/sheets/features/import-export) (requires a conversion backend). CE was selected for a local, free editor that fits the existing app. Bundled license notices ship with the runtime.
+
+## Upload session and local reporting
+
+Files Uploaded counts original files across the review queue and working report, including workbooks split into several tabs or dining groups. Duplicate content is not counted twice. Clear / reset uploaded data clears data, filters and previews; Undo reset restores the prior working session until another report is opened/imported, new files are uploaded, or the page reloads. Saved formats and archived History files are preserved. History labels distinguish originals and generated reports, with links to each report’s source uploads.
+
+Parsing, calculations and Excel/PDF/CSV generation run locally without OpenAI or Gemini. The existing optional Qwen model runs through WebGPU or WASM after an initial download. Account sign-in and mandatory private History archiving still require internet and a working private server; this is not a fully offline hosting mode. Google Drive is optional storage and uses OAuth, separately from Gemini. Detailed setup instructions are in History & Google Drive.
