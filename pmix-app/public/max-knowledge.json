@@ -1,7 +1,7 @@
 {
-  "revision": 4,
-  "updatedAt": "2026-09-12T11:22:51Z",
-  "lastCheckedAt": "2026-09-12T11:22:51Z",
+  "revision": 5,
+  "updatedAt": "2026-09-12T12:17:48.070Z",
+  "lastCheckedAt": "2026-09-12T12:17:48.070Z",
   "entries": [
     {
       "id": "pmix-comparison",
@@ -156,10 +156,53 @@
         "https://github.com/GoyoneByDesign/goyonebydesign/blob/main/pmix-app/public/files.js"
       ],
       "checkedAt": "2026-09-12T11:22:51Z"
+    },
+    {
+      "id": "fixed-report-margins",
+      "topic": "Standard report margins",
+      "fact": "All report formats use inches: top 0.85, bottom 0.75, left/right 0.25, header/footer 0.30. The report body aligns left at 0.25 inch; the title stays centered in the native Excel header. Header/footer use Times New Roman. PDF uses the installed font when authorized, with the existing embedded serif fallback.",
+      "source": "Owner reporting requirements; Microsoft custom margin documentation",
+      "sourceType": "owner_instruction",
+      "sourceUrls": [
+        "https://support.microsoft.com/en-us/excel/set-page-margins-before-printing-a-worksheet"
+      ],
+      "checkedAt": "2026-09-12T12:17:48.070Z"
+    },
+    {
+      "id": "report-format-library",
+      "topic": "Saved report formats",
+      "fact": "Back to formats returns from the live document preview to the collection. The owner can add, edit, save, duplicate, delete and download reusable formats. Excel/PDF/CSV references supply structural layout measurements, not sales data. MAX can suggest constrained settings on the device; optional cloud assistance requires the owner to select paid API mode. Saved format definitions are owner-private and exclude report rows.",
+      "source": "Applied MAX format library and owner requirements",
+      "sourceType": "app_documentation",
+      "sourceUrls": [
+        "https://github.com/GoyoneByDesign/goyonebydesign/tree/main/pmix-app"
+      ],
+      "checkedAt": "2026-09-12T12:17:48.070Z"
+    },
+    {
+      "id": "free-workbook-editor",
+      "topic": "Free Excel-style editing",
+      "fact": "MAX embeds Jspreadsheet Community Edition 5.0.4 and jSuites 5.12.0, both MIT licensed. The editor supports worksheet tabs, cell edits, copy/paste, undo/redo, widths, row heights, font controls, grayscale shading and borders. Native XLSX parts and formulas are preserved in an edited download; formulas are not executed in the browser and recalculate in Excel. It is a focused workbook editor, not a complete Excel replacement. Reusable format settings can adopt selected cell styles without saving cell data.",
+      "source": "Jspreadsheet CE repository, license and installed runtime; MAX workbook editor",
+      "sourceType": "public_documentation",
+      "sourceUrls": [
+        "https://github.com/jspreadsheet/ce",
+        "https://github.com/jspreadsheet/ce/blob/master/LICENSE",
+        "https://github.com/jsuites/jsuites"
+      ],
+      "checkedAt": "2026-09-12T12:17:48.070Z"
+    },
+    {
+      "id": "report-total-placement",
+      "topic": "Category and grand totals",
+      "fact": "Category totals and grand totals each have independent Top/Bottom controls. A compact category total can occupy its heading row. Right-side totals always cover all selected location columns. Comparisons retain separate source-period totals at the right; different dates are not combined. Subtotal and grand-total VAR are calculated from aggregate Previous and Current values, never by adding percentages.",
+      "source": "Owner reporting requirements and applied PMIX calculation/export logic",
+      "sourceType": "owner_instruction",
+      "checkedAt": "2026-09-12T12:17:48.070Z"
     }
   ],
   "reviewLimitations": [
     "Toast Product Mix documentation could not be retrieved on 2026-09-12. Import changes were verified against supplied format examples and synthetic fixtures; they were not re-certified against current Toast documentation."
   ],
-  "dailyReview": "Daily documentation and sourced-knowledge review is enabled through Michael\u2019s ChatGPT task. New knowledge is applied only when supported and validated. Model weights do not retrain."
+  "dailyReview": "Daily documentation and sourced-knowledge review is enabled through Michael’s ChatGPT task. New knowledge is applied only when supported and validated. Model weights do not retrain."
 }

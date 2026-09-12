@@ -13,3 +13,7 @@ fs.cpSync('node_modules/katex/dist',createRoot+'/katex',{recursive:true});
 for(const [from,to]of [['node_modules/docx/LICENSE','docx-LICENSE'],['node_modules/gifenc/LICENSE.md','gifenc-LICENSE'],['node_modules/nerdamer/license.txt','nerdamer-LICENSE'],['node_modules/@pdf-lib/fontkit/README.md','fontkit-README'],['node_modules/katex/LICENSE','katex-LICENSE']])if(fs.existsSync(from))fs.cpSync(from,createRoot+'/'+to);
 
 fs.writeFileSync(createRoot+'/DejaVuSans.ttf',gunzipSync(fs.readFileSync('public/fonts/DejaVuSans.ttf.gz')));
+
+fs.writeFileSync('dist/server/formats-api.mjs',fs.readFileSync('src/formats-api.mjs','utf8').replace('../public/report-formats-core.js','./report-formats-core.js'));fs.cpSync('public/report-formats-core.js','dist/server/report-formats-core.js');
+
+const sheetsRoot='dist/client/vendor/sheets';fs.mkdirSync(sheetsRoot,{recursive:true});for(const [from,to]of [['node_modules/jspreadsheet-ce/dist/index.js','jspreadsheet.js'],['node_modules/jspreadsheet-ce/dist/jspreadsheet.css','jspreadsheet.css'],['node_modules/jspreadsheet-ce/LICENSE','jspreadsheet-LICENSE'],['node_modules/jsuites/dist/jsuites.js','jsuites.js'],['node_modules/jsuites/dist/jsuites.css','jsuites.css'],['node_modules/jsuites/LICENSE','jsuites-LICENSE']])fs.cpSync(from,sheetsRoot+'/'+to);

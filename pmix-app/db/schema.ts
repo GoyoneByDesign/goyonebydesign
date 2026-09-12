@@ -6,3 +6,5 @@ export const chats=sqliteTable('chat_history',{id:integer('id').primaryKey({auto
 
 export const maxSettings=sqliteTable('max_settings',{owner:text('owner').notNull(),name:text('name').notNull(),value:text('value').notNull(),updated:text('updated').notNull()},t=>[uniqueIndex('max_settings_owner_name').on(t.owner,t.name)]);
 export const maxDrafts=sqliteTable('max_drafts',{owner:text('owner').notNull(),id:text('id').notNull(),title:text('title').notNull(),kind:text('kind').notNull(),content:text('content').notNull(),updated:text('updated').notNull()},t=>[uniqueIndex('max_drafts_owner_id').on(t.owner,t.id)]);
+
+export const reportFormats=sqliteTable('report_formats',{owner:text('owner').notNull(),id:text('id').notNull(),data:text('data').notNull(),revision:integer('revision').notNull(),deleted:integer('deleted').notNull().default(0),updated:text('updated').notNull()},t=>[uniqueIndex('report_formats_owner_id').on(t.owner,t.id)]);
