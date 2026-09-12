@@ -1,7 +1,7 @@
 {
-  "revision": 6,
-  "updatedAt": "2026-09-12T12:54:23Z",
-  "lastCheckedAt": "2026-09-12T12:54:23Z",
+  "revision": 7,
+  "updatedAt": "2026-09-12T14:17:33Z",
+  "lastCheckedAt": "2026-09-12T14:17:33Z",
   "entries": [
     {
       "id": "pmix-comparison",
@@ -88,13 +88,13 @@
     {
       "id": "report-download-destination",
       "topic": "Downloads and CSV",
-      "fact": "The report footer defaults to Downloads. A browser download suggests a filename; the browser and user settings choose the actual destination. CSV exports filtered data and grand totals but has no printed page layout. Excel and PDF retain report headers and footers.",
+      "fact": "Printed footer paths are separate from the download location. Excel uses native Path and File fields. PDF uses the configured report folder and actual filename; CSV includes those values in Footer metadata rows because CSV has no page layout. The browser and user settings choose the actual download destination.",
       "source": "MDN anchor download attribute; MAX Report Studio implementation",
       "sourceType": "public_documentation",
       "sourceUrls": [
         "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a#download"
       ],
-      "checkedAt": "2026-09-12T10:31:17Z"
+      "checkedAt": "2026-09-12T14:17:33Z"
     },
     {
       "id": "report-font-access",
@@ -121,14 +121,14 @@
     {
       "id": "dense-native-report-header",
       "topic": "Compact report printing",
-      "fact": "All report formats use 12-point titles, 10-point headings, 8-point detail figures and 8-point total figures. Category labels may use 10 points; numbers remain 8 points. Fine gray borders and restrained grayscale fills distinguish headings, categories and grand totals. Excel title/date/filter information remains in the native print header; overflow filters remain in the legend. Existing saved formats use this typography when rendered.",
+      "fact": "Reports use 12-point titles and uppercase category labels, 10-point item labels, and 8-point numeric values. Headers and footers use Times New Roman, with fine grayscale borders and restrained gray fills. Excel title and date/filter information stays in its native print header; overflow filters stay in the legend. Saved formats apply this typography when rendered.",
       "source": "Microsoft Excel header/footer documentation; applied MAX report exporter",
       "sourceType": "public_documentation",
       "sourceUrls": [
         "https://support.microsoft.com/en-us/excel/headers-and-footers-in-a-worksheet",
         "https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.spreadsheet.oddheader?view=openxml-3.0.1"
       ],
-      "checkedAt": "2026-09-12T12:54:23Z"
+      "checkedAt": "2026-09-12T14:17:33Z"
     },
     {
       "id": "dining-subtypes",
@@ -207,6 +207,30 @@
       "source": "Owner instruction and applied MAX interface",
       "sourceType": "owner_instruction",
       "checkedAt": "2026-09-12T12:54:23Z"
+    },
+    {
+      "id": "native-excel-footer",
+      "topic": "Native report footers",
+      "fact": "Excel native print footers use &Z for the file path and &F for the filename (shown in Excel as &[Path] and &[File]), followed by MG and the export date. PDF and CSV use the owner-configured report folder and actual filename. Browser download location is separate from the printed path.",
+      "source": "Microsoft Excel header and footer documentation",
+      "sourceType": "public_documentation",
+      "sourceUrls": [
+        "https://learn.microsoft.com/en-us/office/vba/excel/concepts/workbooks-and-worksheets/formatting-and-vba-codes-for-headers-and-footers"
+      ],
+      "checkedAt": "2026-09-12T14:17:33Z"
+    },
+    {
+      "id": "drive-history-authorization",
+      "topic": "Private History and Google Drive",
+      "fact": "Private Google Drive file access requires OAuth authorization. MAX requests drive.file for files created by its connection. New uploaded originals and downloads up to 40 MB are archived privately; after owner connection, Drive copies are verified before staging bytes are removed. Unconnected or failed transfers remain pending in private MAX storage. Delete moves History entries to Trash and Undo restores them. No private files are stored in public GitHub.",
+      "source": "Google OAuth and Drive documentation; applied MAX History behavior",
+      "sourceType": "public_documentation",
+      "sourceUrls": [
+        "https://developers.google.com/identity/protocols/oauth2/web-server",
+        "https://developers.google.com/workspace/drive/api/guides/api-specific-auth",
+        "https://developers.google.com/workspace/drive/api/guides/manage-uploads"
+      ],
+      "checkedAt": "2026-09-12T14:17:33Z"
     }
   ],
   "reviewLimitations": [

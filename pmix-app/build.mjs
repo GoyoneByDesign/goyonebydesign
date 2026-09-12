@@ -17,3 +17,5 @@ fs.writeFileSync(createRoot+'/DejaVuSans.ttf',gunzipSync(fs.readFileSync('public
 fs.writeFileSync('dist/server/formats-api.mjs',fs.readFileSync('src/formats-api.mjs','utf8').replace('../public/report-formats-core.js','./report-formats-core.js'));fs.cpSync('public/report-formats-core.js','dist/server/report-formats-core.js');
 
 const sheetsRoot='dist/client/vendor/sheets';fs.mkdirSync(sheetsRoot,{recursive:true});for(const [from,to]of [['node_modules/jspreadsheet-ce/dist/index.js','jspreadsheet.js'],['node_modules/jspreadsheet-ce/dist/jspreadsheet.css','jspreadsheet.css'],['node_modules/jspreadsheet-ce/LICENSE','jspreadsheet-LICENSE'],['node_modules/jsuites/dist/jsuites.js','jsuites.js'],['node_modules/jsuites/dist/jsuites.css','jsuites.css'],['node_modules/jsuites/LICENSE','jsuites-LICENSE']])fs.cpSync(from,sheetsRoot+'/'+to);
+
+for(const f of ['history-api.mjs','drive-api.mjs'])fs.cpSync('src/'+f,'dist/server/'+f);

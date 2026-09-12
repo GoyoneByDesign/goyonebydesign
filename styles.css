@@ -909,3 +909,5 @@ input:focus, select:focus, textarea:focus{
   .cursorGlow{display:none}
   #particles{display:none}
 }
+
+.app-shortcut{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:5px 8px;border:1px solid currentColor;border-radius:6px}.app-shortcut img{display:block;flex:none}

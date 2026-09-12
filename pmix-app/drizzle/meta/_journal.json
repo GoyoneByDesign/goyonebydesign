@@ -29,6 +29,13 @@
       "when": 1789214081708,
       "tag": "0003_parallel_nebula",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1789222178667,
+      "tag": "0004_careless_hex",
+      "breakpoints": true
     }
   ]
 }
