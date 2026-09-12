@@ -1,7 +1,7 @@
 {
-  "revision": 8,
-  "updatedAt": "2026-09-12T14:46:36Z",
-  "lastCheckedAt": "2026-09-12T14:46:36Z",
+  "revision": 9,
+  "updatedAt": "2026-09-12T16:08:20Z",
+  "lastCheckedAt": "2026-09-12T15:16:27Z",
   "entries": [
     {
       "id": "pmix-comparison",
@@ -123,7 +123,7 @@
     {
       "id": "dense-native-report-header",
       "topic": "Compact report printing",
-      "fact": "Reports use 12-point bold ITEM and column headings, 12-point uppercase bold dining options, 10-point categories with initial capitals and semibold weight, and 8-point regular item labels and numeric values. Excel keeps the centered title and date/filter information in its native print header; long filters continue in the legend. Saved formats use the same compact grayscale hierarchy.",
+      "fact": "Report titles use 16-point bold; subtitles use 12-point bold with initial capitals per word and preserved abbreviations. All header/footer text uses Times New Roman; printed timestamps, path, filename, MG date and page numbers use 8 points. Printed timestamps have no timezone suffix. PDF embeds installed Times New Roman when authorized, otherwise the disclosed Times-compatible fallback. Body: 12-point bold ITEM/column and uppercase dining headings, 10-point semibold categories, 8-point regular items and numbers. Short reports use white body rows; dense reports use restrained light-gray shading. Native Excel headers repeat; overflowing filters continue in the legend.",
       "source": "Microsoft Excel header/footer documentation; applied MAX report exporter",
       "sourceType": "public_documentation",
       "sourceUrls": [
@@ -143,10 +143,10 @@
     {
       "id": "source-vs-setup",
       "topic": "Automatic source comparisons",
-      "fact": "Two files with matching table headers and different dates or stores select VS automatically; three or more select side-by-side source columns. Earlier dates are Previous; equal dates use import order, with an explicit reversal control. Columns and legends retain each source date and location. Distinct date intervals are never summed together. DIFF and VAR use source values, and grand-total VAR uses the corresponding grand totals.",
+      "fact": "Files with the same reporting dates automatically align locations side by side by item. Location display offers side-by-side columns, VS for two selected locations, or combined totals. Two matching-format files with different dates automatically select source VS; three or more select source columns. Earlier dates are Previous, with reversal available. Absent items in a complete loaded report show zero. Missing source values remain unavailable. Distinct intervals are not silently added.",
       "source": "Owner reporting requirements; applied MAX comparison engine",
       "sourceType": "owner_instruction",
-      "checkedAt": "2026-09-12T11:22:51Z"
+      "checkedAt": "2026-09-12T15:16:27Z"
     },
     {
       "id": "modifier-occurrences",
@@ -241,10 +241,30 @@
       "source": "Owner reporting requirements and applied report metadata generator",
       "sourceType": "owner_instruction",
       "checkedAt": "2026-09-12T14:46:36Z"
+    },
+    {
+      "id": "multi-location-source-scope",
+      "topic": "Combined-store Toast exports",
+      "fact": "MAX ZETA reads all workbook tabs. Explicit row-level Location/Store/Restaurant values are preserved for each item. A Summary that lists multiple stores with one merged Qty sold column is a combined-only source; listing stores is not an allocation of item quantities. Such exports remain labeled combined totals and cannot show individual-store VS. Overlapping combined and individual sources are rejected to avoid double counting. Missing item net sales are not inferred from Summary money.",
+      "source": "Applied importer and location-view logic; owner reporting requirements",
+      "sourceType": "app_implementation",
+      "sourceUrls": [
+        "https://github.com/GoyoneByDesign/goyonebydesign/blob/main/pmix-app/public/files.js",
+        "https://github.com/GoyoneByDesign/goyonebydesign/blob/main/pmix-app/public/source-comparison.js"
+      ],
+      "checkedAt": "2026-09-12T15:16:27Z"
+    },
+    {
+      "id": "max-zeta-name",
+      "topic": "Reporting workspace name",
+      "fact": "The private reporting workspace and main-website report button are named MAX ZETA. MAX-G remains the separate AI companion. The existing owner account, private data and reporting URL are preserved.",
+      "source": "Owner naming instruction",
+      "sourceType": "owner_instruction",
+      "checkedAt": "2026-09-12T15:16:27Z"
     }
   ],
   "reviewLimitations": [
     "Toast Product Mix documentation could not be retrieved on 2026-09-12. Import changes were verified against supplied format examples and synthetic fixtures; they were not re-certified against current Toast documentation."
   ],
-  "dailyReview": "Daily documentation and sourced-knowledge review is enabled through Michael\u2019s ChatGPT task. New knowledge is applied only when supported and validated. Model weights do not retrain."
+  "dailyReview": "Daily documentation and sourced-knowledge review is enabled through Michael’s ChatGPT task. New knowledge is applied only when supported and validated. Model weights do not retrain."
 }

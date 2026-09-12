@@ -13,12 +13,12 @@ function totals(report,rows,label,kind,group){
  }return out;
 }
 // Presentation never changes source identities or calculated values.
-const acronyms=new Set(['BB','PMIX','MG','CO','DI','DD','CT','HH','BK','LN','DN','DIFF','VAR','AR','AS','CH','FX','HN','LS','MN','SP','VN','KSK','ONL','WI','CI','DT']);
+const acronyms=new Set(['BB','PMIX','MG','CO','DI','DD','CT','HH','BK','LN','DN','DIFF','VAR','AR','AS','CH','FX','HN','LS','MN','SP','VN','KSK','ONL','WI','CI','DT','AM','PM','VS','DEL','PU']);
 function titleCase(value){return String(value||'').replace(/[A-Za-z]+(?:['’][A-Za-z]+)?/g,word=>acronyms.has(word.toUpperCase())?word.toUpperCase():/[a-z]/.test(word)&&/[A-Z]/.test(word)?word:word[0].toUpperCase()+word.slice(1).toLowerCase());}
 function hierarchy(group){const labels=Object.values(root.PMIX?.CHANNELS||{}),parts=String(group||'Items').split(' / '),known=labels.find(label=>label.toLowerCase()===parts[0].toLowerCase());return known?{dining:known,category:parts.slice(1).join(' / ')}:{dining:'',category:group||'Items'};}
 function present(report){return {...report,omitTotal:!!report.omitTotal||report.stores.length===1};}
-function columnLabel(report,index){return report.stores.length===1?(report.extended?'VALUE':report.format==='currency'||report.rows.every(r=>r.format==='currency')?'NET SALES':'QTY'):report.stores[index];}
-function headerTitle(report,title){const code=report.stores.length===1&&report.stores[0];return code&&!String(title).split(/[^A-Za-z0-9]+/).includes(code)?title+' · '+code:title;}
+function columnLabel(report,index){if(report.locationMode==='total')return 'TOTAL';return report.stores.length===1?(report.extended?'VALUE':report.format==='currency'||report.rows.every(r=>r.format==='currency')?'NET SALES':'QTY'):report.stores[index];}
+function headerTitle(report,title){const code=report.locationMode==='total'?report.locationCodes.join(' + '):report.stores.length===1&&report.stores[0];return code&&!code.split(/[^A-Za-z0-9]+/).filter(Boolean).every(c=>String(title).split(/[^A-Za-z0-9]+/).includes(c))?title+' · '+code:title;}
 function label(row){if(row.level==='dining')return String(row.item).toUpperCase();if(row.kind==='total')return row.item;return titleCase(row.displayLabel??row.item);}
 function rows(report,options={}){
  const groups=new Map();for(const row of report.rows){const group=row.group||'Items';if(!groups.has(group))groups.set(group,[]);groups.get(group).push(row);}

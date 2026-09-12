@@ -12,3 +12,5 @@ main{max-width:1900px;padding:36px 36px 48px}.page-heading h1{font-size:32px;let
 #channelFilters label:has(input:checked){font-weight:650}
 #modifierFilters{max-height:240px;overflow:auto}
 #comparisonSetup{font-size:12px;line-height:1.45;margin-top:7px}
+
+#reportTable:not(.dense-report) tbody td{background:#fff}#reportTable thead th{background:#f0f0f0}

@@ -34,3 +34,5 @@ main{max-width:1900px;margin-left:var(--sidebar);padding:28px 32px 42px;min-widt
 #reportTable .report-dining td:first-child,#reportTable .report-dining.report-subtotal td:nth-child(2){font-size:12pt;font-weight:700;text-transform:uppercase}#reportTable .report-category td:first-child,#reportTable .report-category.report-subtotal td:nth-child(2){font-family:'Aptos SemiBold','MAX Category','Aptos Display',Arial,sans-serif;font-size:10pt;font-weight:600;text-transform:none}#reportTable .report-item td{font-size:8pt;font-weight:400}#reportTable.single-value .report-item td:last-child{font-weight:400;background:transparent;border-left:0}
 
 #reportTable thead th{font-size:12pt;font-weight:700}
+
+.top .brand{font-size:26px}

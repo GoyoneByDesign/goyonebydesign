@@ -39,7 +39,7 @@
     return subject+(suffix?' · '+suffix:'')+(stores.length===1?' · '+stores[0]:'');
   }
   function filename(report,options={}){
-    const codes=(root.PMIX?.STORES||[]).map(s=>s[0]),selected=new Set(report.columns?.filter(c=>c.store).map(c=>c.store)||report.stores),stores=codes.filter(c=>selected.has(c));
+    const codes=(root.PMIX?.STORES||[]).map(s=>s[0]),selected=new Set(report.locationCodes||report.columns?.filter(c=>c.store).map(c=>c.store)||report.stores.flatMap(c=>c.split('+'))),stores=codes.filter(c=>selected.has(c));
     const {metric='quantity',special='all',groups=[],parts=[],view='items',itemKeys=[],search=''}=options;
     const cap=s=>String(s).replace(/\b\w+\b/g,w=>['BB','PMIX'].includes(w.toUpperCase())?w.toUpperCase():w[0].toUpperCase()+w.slice(1).toLowerCase());
     let subject=metric==='netSales'?'Net Sales':metric==='both'?'PMIX & Net Sales':special==='bb'?'PMIX BB':groups.length===1?'PMIX '+(/breakfast burrito/i.test(groups[0])?'BB':cap(groups[0].replace(/to go bev(?:erages)?/i,'Drinks'))):special!=='all'||itemKeys.length||search?'PMIX Selected':'PMIX Full';
