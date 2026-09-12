@@ -44,7 +44,7 @@ These are practical regression checks, not a comprehensive intelligence, safety,
 
 ## Hourly public-document study
 
-In **Learning → Hourly reference learning**, enable **Learn one topic each hour** for bounded reference study, or choose **Run one study now**. MAX-G rotates through public documentation about Google AI, OpenAI, Anthropic, Ollama, Python, and Playwright. It summarizes the search excerpts returned for the current topic. It does not gain access to another assistant's private training data, private conversations, accounts, or internal memory.
+In **Learning → Hourly reference learning**, enable **Learn one topic each hour** for bounded reference study, or choose **Run one study now**. MAX-G rotates through public MDN, WebLLM, W3C, Ollama, Python, and Playwright documentation. Its local model summarizes the search excerpts returned for the current topic, covering web development, accessibility, local inference and automation. Existing saved notes remain available for your review in Memory.
 
 New study notes are staged **disabled** for review in **Memory**. Read the note, open its sources, and then turn on **Use this note** if it is accurate and useful. A search excerpt can be stale, incomplete, or out of context; a generated summary can also be wrong. Enabling a note is your decision to make it available as reference data, not a guarantee that its contents are correct.
 
