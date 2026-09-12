@@ -19,3 +19,6 @@ body[data-theme=light] .sidebar{border-color:#d2dfea}body[data-theme=light] .mai
 /* Small companion controls stay reachable on phones without covering the composer. */
 .companion-play{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:4px 12px 8px;min-height:36px}.companion-play button{min-height:36px;padding:5px 8px}.companion-play span{font-size:12px;color:var(--muted)}
 @media(max-width:420px){.companion-play{gap:5px}.companion-play span{display:none}}
+
+/* Optional cloud support remains separate from the standard local composer. */
+.composer-support{display:flex;justify-content:flex-start;padding:9px 5px 0}.support-cloud-label{font-size:.85em;color:var(--muted);margin-left:4px}.gemini-dialog{max-width:680px;width:calc(100vw - 24px);max-height:calc(100dvh - 24px)}.gemini-body{padding:22px;overflow:auto;min-height:0}.gemini-body>p{font-size:13px;line-height:1.7}.gemini-body .field textarea{width:100%;min-height:150px;resize:vertical}.gemini-actions{display:flex;align-items:center;gap:13px;flex-wrap:wrap}.gemini-body #geminiStatus{min-height:1.7em;color:var(--cyan)}@media(max-width:420px){.gemini-body{padding:16px}.gemini-dialog .dialog-header{padding:18px 16px}.composer-support{padding-top:7px}.support-cloud-label{font-size:10px}}

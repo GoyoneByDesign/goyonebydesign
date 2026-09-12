@@ -1,6 +1,6 @@
-# MAX-G 1.8.3 independent Cloudflare connection
+# MAX-G 1.8.4 optional Gemini support
 
-MAX-G generates replies with a downloaded local model through WebLLM. It has no ChatGPT, Gemini or Claude chat backend, account dependency, or assistant shortcut. Optional hourly learning uses public MDN, WebLLM, W3C, Ollama, Python and Playwright documentation excerpts; notes remain reviewable and do not retrain the model. Existing personal notes are preserved. Model capability and accuracy still depend on the selected model and device; this release makes no claim of outperforming other assistants.
+MAX-G’s regular conversations use a downloaded local model through WebLLM. **Ask Gemini** adds optional cloud support for a question you review and send explicitly. The Cloudflare server needs a Gemini API key from a project marked Free, a separate MAX-G support access token, and free-tier confirmation before it can answer. The Google API key stays on the server. No automatic provider switch occurs; ChatGPT and Claude are not connected. [Gemini setup, privacy and limits](GEMINI-SUPPORT.md) Optional hourly learning uses public MDN, WebLLM, W3C, Ollama, Python and Playwright documentation excerpts; notes remain reviewable and do not retrain the model. Existing personal notes are preserved. Model capability and accuracy still depend on the selected model and device; this release makes no claim of outperforming other assistants.
 
 Public information requests get one bounded retry for eligible temporary failures, within the original timeout. Stop cancels the request and its retry. Failed factual searches offer **Search this question on Google** and a way to restore the question without overwriting another draft. If retrieval works but the local AI cannot start, MAX-G shows the source excerpts and links rather than losing the retrieved information. The optional Google Search links open ordinary web search separately; they do not provide AI inference or automatic Google-result reading.
 
@@ -88,7 +88,7 @@ cannot overwrite your personal notes. All improvement data is bounded, exportabl
 and removable. [Improvement guide](IMPROVEMENT.md)
 
 This adds personal reference memory and measurements, not model weight training or
-a guarantee of matching or surpassing another AI. No cloud inference is added.
+a guarantee of matching or surpassing another AI. These learning tools use local inference.
 The actual Intel Mac model baseline passed 6 of 8 narrow checks; the exact
 failures and verification limits are in [IMPROVEMENT-VERIFICATION.md](IMPROVEMENT-VERIFICATION.md).
 
@@ -142,8 +142,8 @@ connection. An explicit custom Worker URL remains an alternative. Weather and ca
 The default `Llama-3.2-1B-Instruct-q4f16_1-MLC` runs through pinned
 `@mlc-ai/web-llm@0.2.85` imported from a CDN. A GPU compatibility 1B model and a 3B
 model are selectable. Inference uses a dedicated Web Worker, temperature `0.0`,
-a 4,096-token context limit, bounded input, and streamed tokens. No cloud inference
-fallback is present. WebLLM requires WebGPU; it does not provide a CPU-only fallback
+a 4,096-token context limit, bounded input, and streamed tokens. No automatic cloud inference
+fallback is present; the separate Ask Gemini action is explicitly selected. WebLLM requires WebGPU; it does not provide a CPU-only fallback
 in this project. Temperature zero reduces sampling randomness; it cannot guarantee
 accuracy. [WebLLM usage](https://webllm.mlc.ai/docs/user/basic_usage.html)
 
@@ -161,7 +161,8 @@ accuracy. [WebLLM usage](https://webllm.mlc.ai/docs/user/basic_usage.html)
 | `voice.js` | Local installed speech voices and strictly on-device dictation detection |
 | `files.js` | Text/source import, editing, ZIP, Word, Excel, slides and print-to-PDF exports |
 | `manifest.json`, `sw.js` | Standalone installation and versioned offline UI/library caching |
-| `worker.js`, `wrangler.toml` | Configured Cloudflare DuckDuckGo adapter and deployment settings |
+| `gateway-worker.js`, `worker.js`, `gemini-worker.js`, `wrangler.toml` | Cloudflare entry point, public search and authenticated optional Gemini support |
+| `gemini.js` | Bounded client for explicit cloud-support requests; no Google API key in the browser |
 | `CNAME`, `.nojekyll` | GitHub Pages custom-domain publishing |
 | `icons/`, `assets/` | Complete app icons and Orbit branding |
 | `desktop/MAX-G-desktop-source.zip` | The complete, unmodified previous desktop source package |

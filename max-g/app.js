@@ -4,6 +4,7 @@ import {deviceHints,devicePolicy,IdleModelPolicy,normalizeDeviceMode} from './de
 import {renderDeviceSettings} from './device-ui.js';
 import {freshState,loadState,saveState,LANGUAGES,memoryContext,isResetCode} from './state.js';
 import {quickAnswer,weatherRequest,weather,search,safePublicURL,proxyBase,searchRoute,BUILTIN_SEARCH_URL} from './tools.js';
+import {askGemini,geminiHealth,validateSupportToken,validateSupportQuestion} from './gemini.js';
 import {addFeedback,stageLesson,relevantLessons,evaluationCases,scoreEvaluation,summarizeRun,validateImprovement} from './improvement.js';
 import {createFeedbackControls,renderImprovementPanel} from './improvement-ui.js';
 import {LocalVoice,PROFILES} from './voice.js';
@@ -26,6 +27,8 @@ let state=freshState(),session={id:crypto.randomUUID(),title:'New conversation',
 let active=null,taskEpoch=0,queued=null,voiceMode=false,dictationText='',voiceMisses=0,view='chat',settingsTab='general',selectedSkill='',deferredInstall=null,lastAnswer='',saveChain=Promise.resolve(),toastTimer;
 let evaluationProgress='',settingsController=null,performanceEpoch=0,playing=false,playTimer=null;
 let audioAttempt=0,soundController=null;
+// The owner's separate support access token lasts only in this open tab.
+let geminiAccessToken='',geminiDialogRun=null;
 const idleModel=new IdleModelPolicy();
 const orbit=attachOrbit($('orb'),{settings:state.settings.orbit,motion:state.settings.motion});
 let pendingSaves=0,storageOK=true,shellReady=Promise.resolve(),releaseOwnership=null;
@@ -71,7 +74,7 @@ function pauseVoiceOutput(){audioAttempt++;voiceMode=false;voice.stop();$('voice
 function stopVoiceOutput(){pauseVoiceOutput();audioFeedback('Voice stopped. Your text conversation stays available.');}
 function primeAudioFromGesture(){if(normalizeVoice(state.settings.voice).engine==='system')return;const attempt=++audioAttempt,generation=voice.generation;voice.enableAudio().catch(error=>{if(error.name!=='AbortError'&&attempt===audioAttempt&&generation===voice.generation)audioFeedback('Audio needs another tap. Use Hear MAX-G or Sound help to enable it.','error');});}
 function sendFromGesture(){const text=$('messageInput').value.trim();if(text&&!active&&!isResetCode(text)&&!performanceCommand(text)&&state.settings.speak)primeAudioFromGesture();submit().catch(showError);}
-function canSpeakReply(){return (state.settings.speak||voiceMode)&&!$('settingsDialog').open&&!$('soundDialog').open;}
+function canSpeakReply(){return (state.settings.speak||voiceMode)&&!$('settingsDialog').open&&!$('soundDialog').open&&!$('geminiDialog').open;}
 function scheduleVoiceListen(delay){const generation=voice.generation;setTimeout(()=>{if(!voiceMode||generation!==voice.generation||active||document.hidden||$('settingsDialog').open||$('soundDialog').open)return;startDictation(true).catch(error=>{voiceMode=false;showError(error);});},delay);}
 function openSoundHelp(){pauseVoiceOutput();soundController?.abort();soundController=new AbortController();audioFeedback('Turn up your media volume, then tap Play speaker test.');$('soundDialog').showModal();}
 async function testSpeaker(){pauseVoiceOutput();stopPlay();const attempt=++audioAttempt,signal=soundController?.signal;audioFeedback('Starting the speaker test…','preparing',true);const pending=voice.testSound({recover:true,signal}),generation=voice.generation;$('stopSpeechBtn').hidden=false;try{await pending;if(attempt===audioAttempt&&generation===voice.generation&&!signal?.aborted)audioFeedback('The test tone finished. If it was silent, check media volume and the audio destination in Control Center. If you heard it, try MAX-G’s voice.');}catch(error){if(error.name!=='AbortError'&&attempt===audioAttempt&&generation===voice.generation&&!signal?.aborted){audioFeedback(error.message,'error');showError(error);}}}
@@ -137,7 +140,7 @@ function languageCode(){return LANGUAGES[state.settings.language]||'en-US';}
 function networkLabel(){$('networkStatus').textContent=navigator.onLine?(state.settings.onlineFirst?'Web-first · local AI':'Local conversation'):'Offline · cached tools';}
 function applySettings(){if(state.settings.orbit.singing===false&&playing)stopPlay();applyAppearance(state.display);applyOwnerProfile(state.profile);orbit.setConfig(state.settings.orbit,{motion:state.settings.motion});document.body.dataset.theme=state.settings.theme.toLowerCase();document.body.classList.toggle('reduced-motion',!state.settings.motion);$('speakReplies').checked=state.settings.speak;networkLabel();}
 async function permission(capability,{background=false,picked=false}={}){const choice=state.settings.permissions[capability];if(choice==='deny')throw new Error(`${capability} access is denied in Settings → Permissions.`);if(choice==='ask'&&!picked){if(background)throw new Error('Background work waits for Allow in Permissions.');if(!window.confirm(`Allow MAX-G to use ${capability} for this operation?`))throw new DOMException('Permission was not granted.','AbortError');}return true;}
-function updateBusy(){const busy=Boolean(active);$('stopBtn').hidden=!busy;if($('stopTaskBtn'))$('stopTaskBtn').hidden=!busy;$('sendBtn').hidden=busy;$('loadModelBtn').disabled=busy;$('composerHint').textContent=queued?'One message queued · Stop restores it':'Enter to send · Shift + Enter for a new line';}
+function updateBusy(){const busy=Boolean(active);$('stopBtn').hidden=!busy;if($('stopTaskBtn'))$('stopTaskBtn').hidden=!busy;$('sendBtn').hidden=busy;$('loadModelBtn').disabled=busy;if($('askGeminiBtn'))$('askGeminiBtn').disabled=busy;$('composerHint').textContent=queued?'One message queued · Stop restores it':'Enter to send · Shift + Enter for a new line';}
 function checkRun(run){if(active!==run||run.signal.aborted)throw new DOMException('Operation stopped.','AbortError');}
 function begin(kind){idleModel.touch();stopPlay();if(active)throw new Error('Finish or stop the current operation first.');const controller=new AbortController();active={id:++taskEpoch,kind,controller,signal:controller.signal};updateBusy();return active;}
 function stop({preserveQueue=false}={}){audioAttempt++;stopPlay();locationHub.cancel();connectorHub?.cancel();active?.controller.abort();engine.stop();voice.stop();voiceMode=false;$('voiceModeBtn').setAttribute('aria-pressed','false');$('micBtn').setAttribute('aria-pressed','false');if(queued&&!preserveQueue){$('messageInput').value=queued.text+($('messageInput').value?'\n'+$('messageInput').value:'');attachments=[...queued.attachments,...attachments].slice(0,6);queued=null;renderAttachments();}updateBusy();setOrb('idle');if(!$('voiceFeedback').hidden)audioFeedback('Voice stopped.');}
@@ -164,7 +167,7 @@ function appendSearchRecovery(rendering,query,sources){
 function renderMessage(message){
   message.id ||= crypto.randomUUID();
   const article=element('article','',`message message-${message.role}`);
-  const header=element('div',message.role==='user'?'You':'MAX-G','message-label');
+  const header=element('div',message.role==='user'?'You':message.model?.startsWith('Gemini support · cloud')?'Gemini support · cloud':'MAX-G','message-label');
   const content=element('div',message.content,'message-content');article.append(header,content);
   if(message.sources?.length)article.append(sourceNodes(message.sources));
   if(message.role==='assistant'&&message.content){
@@ -228,6 +231,52 @@ async function generate(query,sources,files,run,contentNode,task='chat'){
   if(paint)cancelAnimationFrame(paint);checkRun(run);$('modelStatus').textContent=`Local response: ${((performance.now()-started)/1000).toFixed(1)} s${firstToken===null?'':` · first text ${((firstToken-started)/1000).toFixed(1)} s`}`;let answer=decodeReply(result.text);if(sources.length)answer=cleanWebReply(answer);if(result.contextTrimmed&&answer.trim()!=='[SEARCH]'){const notice='Some earlier history or supplied context was shortened to fit the local model. Use a shorter request and focused notes for a fuller review.';toast(notice);answer+='\n\n['+notice+']';}if(result.finishReason==='length'&&answer.trim()!=='[SEARCH]')answer+='\n\n[Reply reached the length limit. Ask me to continue.]';return answer.trim();
 }
 const smallTalk=isLocalConversation;
+function forgetGeminiToken(){geminiAccessToken='';if(active?.kind==='gemini-support')active.controller.abort();document.querySelectorAll('[data-gemini-token]').forEach(input=>{input.value='';});}
+function openGeminiDialog(){
+  if(active)return toast('Finish or stop the current task before asking Gemini.');
+  pauseVoiceOutput();stopPlay();
+  $('geminiQuestion').value=$('messageInput').value.trim()||session.messages.findLast(message=>message.role==='user')?.content||'';
+  $('geminiSendBtn').disabled=false;$('geminiQuestion').disabled=false;
+  $('geminiStatus').textContent=geminiAccessToken?'Review the exact text below. Only clicking Send to Gemini shares it.':'Add your MAX-G support access token in Settings → Connection before sending. Owner setup may still be needed.';
+  $('geminiDialog').showModal();$('geminiQuestion').focus();
+}
+async function sendGeminiSupport(){
+  if(active)return;
+  const question=validateSupportQuestion($('geminiQuestion').value),token=validateSupportToken(geminiAccessToken);
+  const run=begin('gemini-support');geminiDialogRun=run;$('geminiSendBtn').disabled=true;$('geminiQuestion').disabled=true;
+  $('geminiStatus').textContent='Connecting to Gemini through MAX-G’s Cloudflare Worker…';
+  try{
+    await permission('internet');checkRun(run);
+    setOrb('thinking','thoughtful');$('orbStatus').textContent='Asking Gemini · cloud support';
+    const reply=await askGemini(question,{token,signal:run.signal});checkRun(run);
+    session.messages.push({role:'user',content:question,sources:[]},{role:'assistant',content:reply.text,sources:[],model:'Gemini support · cloud · '+reply.model});
+    lastAnswer=reply.text;record();setView('chat');renderChat();
+    // Closing after success must not cancel the local read-aloud operation.
+    geminiDialogRun=null;$('geminiDialog').close();
+    if(canSpeakReply())try{await speak(reply.text,run.signal);}catch(error){showError(error);}
+  }catch(error){
+    if(active!==run)return;
+    $('geminiStatus').textContent=error.name==='AbortError'?'Stopped. The question was not retried.':error.message;
+    if(error.name!=='AbortError')toast(error.message);
+  }finally{
+    if(geminiDialogRun===run)geminiDialogRun=null;
+    $('geminiSendBtn').disabled=false;$('geminiQuestion').disabled=false;finish(run);
+  }
+}
+function renderGeminiSettings(signal){
+  const card=textCard('Optional Gemini support','Normal Send and Enter use local MAX-G. Ask Gemini opens a separate review step and sends only the text you approve through MAX-G’s Cloudflare Worker to Google. There is no automatic cloud fallback.');
+  card.dataset.geminiSettings='';
+  card.append(element('p','Free-tier Gemini has request limits and may use submitted text and responses to improve Google’s products. Use public, non-sensitive questions. A Gemini subscription does not provide an API key or free API credits.','muted'));
+  const tokenField=field('MAX-G support access token','',{type:'password'});tokenField.input.id='geminiTokenInput';tokenField.input.dataset.geminiToken='';tokenField.input.maxLength=256;tokenField.input.autocomplete='off';tokenField.input.spellcheck=false;
+  card.append(tokenField.wrap,element('p','Use the separate token your MAX-G owner configured in Cloudflare—not a Google API key. It stays only in this tab’s memory and is forgotten when you close or reload MAX-G, or reset personal data.','small muted'));
+  const status=element('p',geminiAccessToken?'Support access token is available for this tab only.':'No support access token in this tab.','muted');status.id='geminiSetupStatus';status.setAttribute('role','status');
+  const controls=element('div','','message-actions');
+  controls.append(button('Use for this session',()=>{geminiAccessToken=validateSupportToken(tokenField.input.value);tokenField.input.value='';status.textContent='Support access token is available for this tab only. Ask Gemini to review a question before sending.';}),button('Forget access token',()=>{forgetGeminiToken();status.textContent='Support access token forgotten. Local MAX-G remains available.';}),button('Check Gemini setup',async()=>{
+    await permission('internet');if(signal.aborted)return;const run=begin('gemini-health');const abort=()=>run.controller.abort();signal.addEventListener('abort',abort,{once:true});status.textContent='Checking the Worker’s setup; no question is sent…';
+    try{const result=await geminiHealth({signal:run.signal});checkRun(run);if(signal.aborted)return;status.textContent=result.ready?`Worker setup is ready for ${result.model}. This does not test Gemini availability or your token; free limits still apply.`:'Owner setup is required in Cloudflare: Google API key, separate support access token, confirmed free-tier project and shared rate limiter.';}catch(error){if(!signal.aborted&&error.name!=='AbortError')status.textContent=error.message;}finally{signal.removeEventListener('abort',abort);finish(run);}
+  }));
+  card.append(controls,status);return card;
+}
 async function submit(text=$('messageInput').value,selected=attachments){
   text=String(text).trim();if(isResetCode(text)){await factoryReset();return;}if(!text)return;
   if(text.length>3000)return toast('Please shorten the message to 3,000 characters or attach a text file.');
@@ -354,7 +403,7 @@ function renderSettings(tab=settingsTab){pauseVoiceOutput();stopPlay();locationH
   const showRoute=()=>{try{const route=searchRoute(endpoint.value,{connection:connection.value});effective.dataset.searchRoute=route.source;effective.textContent=route.source==='custom'?`Custom search endpoint: ${route.base}. This URL overrides the selected connection. Save settings to keep this override.`:route.source==='builtin'?`MAX-G Cloudflare: ${route.base}. This default is included on every device; leave the optional URL blank.`:'Search route: the paired Mac companion on this device. Pair it in Connectors & devices, keep the optional URL blank, and save settings.';}catch(error){effective.dataset.searchRoute='invalid';effective.textContent=error.message;}};
   endpoint.addEventListener('input',showRoute);connection.addEventListener('change',showRoute);showRoute();panel.append(effective);
   if(['localhost','127.0.0.1','[::1]'].includes(location.hostname)){const localNote=textCard('Using the local Mac launcher?','This local address is not enabled on the shared Cloudflare service. For Cloudflare search, open MAX-G on your website. To keep using this launcher for search, select Paired Mac companion, leave the optional URL blank, and save settings.');localNote.append(publicServiceLink('Open hosted MAX-G ↗','https://www.goyonebydesign.com/max-g/'));panel.append(localNote);}
-  panel.append(textCard('MAX-G’s independent AI','MAX-G generates replies on this device with its downloaded local model. Web search supplies public sources, and MAX-G uses the local model to write the answer.'));
+  panel.append(textCard('MAX-G’s independent AI','MAX-G normally generates replies on this device with its downloaded local model. Web search supplies public sources, and MAX-G uses the local model to write the answer. Optional Gemini support is a separate action you choose each time.'),renderGeminiSettings(settingsSignal));
   const searchLinks=element('div','','message-actions');searchLinks.append(publicServiceLink('Open Google Search ↗','https://www.google.com/'));panel.append(searchLinks,element('p','This optional link opens a separate search website. MAX-G uses its configured search connection to retrieve sources for answers in this chat.','muted'));
   add('weatherCity','Weather city, region and country');
   panel.append(element('p','MAX-G sends the current public query to the endpoint shown above, without conversation history, notes or attachments. MAX-G’s Cloudflare Worker retrieves public search results over this device’s internet connection. The free service has shared request limits and can be temporarily unavailable. The optional paired companion uses Bing. Internet access still follows Settings → Permissions. Weather and places use their own public services.','muted'),button('Test web search',async()=>{const url=pending.proxyURL.value,connection=pending.searchConnection.value;await permission('internet');const run=begin('search-test');try{const result=await searchPublic('site:docs.python.org Python documentation',run.signal,url,connection);checkRun(run);toast(`Web search connected: ${result.results.length} public results.`);}finally{finish(run);}}));
@@ -364,7 +413,7 @@ function renderSettings(tab=settingsTab){pauseVoiceOutput();stopPlay();locationH
  panel.append(button('Save settings',async()=>{stop();const oldModel=state.settings.model;const candidate=structuredClone(state.settings);for(const [key,input]of Object.entries(pending)){if(key.startsWith('permission:'))candidate.permissions[key.split(':')[1]]=input.value;else candidate[key]=key==='rate'?Math.max(.65,Math.min(1.5,Number(input.value)||1)):input.value.slice(0,key==='instructions'?1200:300);}if(candidate.proxyURL)proxyBase(candidate.proxyURL);state.settings=candidate;if(candidate.permissions.location==='deny')locationHub.forget();if(oldModel!==state.settings.model)await engine.unload();folderHandle=null;const saved=await persist();applySettings();if(!saved)throw new Error('Settings apply in this tab, but could not be saved. Keep this window open and export your notes.');$('settingsDialog').close();toast('Settings saved. Active work stopped; temporary access cleared.');}));}
 async function factoryReset(){
   if(active?.kind==='reset')return toast('The reset is already in progress.');
-  settingsController?.abort();stop();voice.unload();orbit.clearWeather();active=null;taskEpoch++;queued=null;const run=begin('reset');
+  settingsController?.abort();stop();forgetGeminiToken();geminiDialogRun=null;$('geminiDialog').close();voice.unload();orbit.clearWeather();active=null;taskEpoch++;queued=null;const run=begin('reset');
   try{
     await engine.unload();const connectorReset=await connectorHub.reset();await saveChain;
     state=freshState();locationHub.forget();session={id:crypto.randomUUID(),title:'New conversation',messages:[]};attachments=[];workspace=[];folderHandle=null;selectedSkill='';lastAnswer='';evaluationProgress='';
@@ -374,19 +423,20 @@ async function factoryReset(){
   }finally{if(active===run){active=null;updateBusy();}}
 }
 function bind(){
+ $('askGeminiBtn').onclick=openGeminiDialog;$('geminiForm').addEventListener('submit',event=>{event.preventDefault();sendGeminiSupport().catch(error=>{$('geminiStatus').textContent=error.message;showError(error);});});$('geminiCloseBtn').onclick=()=>$('geminiDialog').close();$('geminiCancelBtn').onclick=()=>$('geminiDialog').close();const cancelGemini=()=>{geminiDialogRun?.controller.abort();};$('geminiDialog').addEventListener('cancel',cancelGemini);$('geminiDialog').addEventListener('close',cancelGemini);$('geminiSettingsBtn').onclick=()=>{$('geminiDialog').close();renderSettings('connection');$('settingsDialog').showModal();};
  $('singBtn').onclick=()=>runPlay('sing').catch(showError);$('danceBtn').onclick=()=>runPlay('dance').catch(showError);$('playStopBtn').onclick=()=>stopPlay();
  document.addEventListener('visibilitychange',()=>{if(document.hidden){stopPlay();locationHub.cancel();}});
  $('composerForm').addEventListener('submit',event=>{event.preventDefault();sendFromGesture();});$('messageInput').addEventListener('keydown',event=>{if(event.key==='Enter'&&!event.shiftKey&&!event.isComposing){event.preventDefault();sendFromGesture();}});
  $('stopBtn').onclick=()=>stop();if($('stopTaskBtn'))$('stopTaskBtn').onclick=()=>stop();$('newChatBtn').onclick=newConversation;$('loadModelBtn').onclick=()=>loadModel().catch(showError);$('sidebarToggle').onclick=()=>document.body.classList.toggle('sidebar-open');$('sidebarBackdrop').onclick=()=>document.body.classList.remove('sidebar-open');
  for(const b of document.querySelectorAll('.nav-button'))b.onclick=()=>setView(b.dataset.view);for(const b of document.querySelectorAll('.suggestion'))b.onclick=()=>{$('messageInput').value=b.dataset.prompt;$('messageInput').focus();};
- $('settingsBtn').onclick=()=>{renderSettings();$('settingsDialog').showModal();};$('closeSettingsBtn').onclick=()=>$('settingsDialog').close();$('settingsDialog').addEventListener('close',()=>{settingsController?.abort();stopPlay();stopVoiceOutput();});$('settingsDialog').addEventListener('cancel',()=>{settingsController?.abort();stopPlay();stopVoiceOutput();});for(const b of document.querySelectorAll('.settings-tab'))b.onclick=()=>renderSettings(b.dataset.tab);
+ $('settingsBtn').onclick=()=>{renderSettings();$('settingsDialog').showModal();};$('closeSettingsBtn').onclick=()=>$('settingsDialog').close();$('settingsDialog').addEventListener('close',()=>{settingsController?.abort();document.querySelectorAll('[data-gemini-token]').forEach(input=>{input.value='';});stopPlay();stopVoiceOutput();});$('settingsDialog').addEventListener('cancel',()=>{settingsController?.abort();stopPlay();stopVoiceOutput();});for(const b of document.querySelectorAll('.settings-tab'))b.onclick=()=>renderSettings(b.dataset.tab);
  $('speakReplies').onchange=()=>{state.settings.speak=$('speakReplies').checked;if(state.settings.speak)primeAudioFromGesture();else stopVoiceOutput();persist();};$('hearBtn').onclick=()=>speak(lastAnswer||`Hello ${state.profile.displayName}! I’m MAX-G. I’m here, and ready to help.`).catch(showError);$('micBtn').onclick=()=>startDictation(false).catch(showError);$('voiceModeBtn').onclick=()=>{if(voiceMode)stop();else startDictation(true).catch(showError);};
  $('soundHelpBtn').onclick=openSoundHelp;$('soundCloseBtn').onclick=()=>$('soundDialog').close();$('soundDialog').addEventListener('close',()=>{soundController?.abort();soundController=null;stopVoiceOutput();});$('soundDialog').addEventListener('cancel',()=>{soundController?.abort();stopVoiceOutput();});$('testSpeakerBtn').onclick=testSpeaker;$('soundStopBtn').onclick=stopVoiceOutput;$('stopSpeechBtn').onclick=stopVoiceOutput;$('soundRetryBtn').onclick=()=>{pauseVoiceOutput();speak(`Hello ${state.profile.displayName}. I’m MAX-G. This is my voice on this device.`,soundController?.signal).catch(showError);};$('soundVoiceSettingsBtn').onclick=()=>{$('soundDialog').close();renderSettings('voice');$('settingsDialog').showModal();};
  $('attachBtn').onclick=()=>{ $('fileInput').dataset.destination='chat';$('fileInput').accept='.txt,.md,.csv,.json,.html,.css,.js,.ts,.py,.swift,.kt,.java,.rs,.go';$('fileInput').click();};
  $('fileInput').onchange=async()=>{const epoch=taskEpoch;const verify=()=>{if(epoch!==taskEpoch||state.settings.permissions.files==='deny')throw new DOMException('File operation stopped.','AbortError');};try{await permission('files',{picked:true});const target=$('fileInput').dataset.destination;if(target==='notes'){const file=$('fileInput').files[0];if(!file||file.size>500000)throw new Error('Choose a notes JSON file smaller than 500 KB.');const doc=JSON.parse(await file.text());verify();const notes=Array.isArray(doc.notes)?doc.notes:[];for(const note of notes.slice(0,60))if(note&&typeof note.text==='string')state.notes.push({id:crypto.randomUUID(),title:String(note.title||'Imported note').slice(0,150),text:note.text.slice(0,2000),source:String(note.source||'Imported by owner').slice(0,2000),kind:'manual',enabled:note.enabled!==false,time:Date.now()});state.notes=state.notes.slice(-60);await persist();renderMemory();}else{const files=await importTextFiles($('fileInput').files);verify();if(target==='work'){for(const file of files){const found=workspace.find(x=>x.name===file.name);if(found)found.text=file.text;else workspace.push(file);}workspace=workspace.slice(-20);renderWork();}else{attachments=[...attachments,...files].slice(0,6);renderAttachments();}}}catch(error){showError(error);}finally{$('fileInput').value='';}};
  window.addEventListener('online',networkLabel);window.addEventListener('offline',()=>{networkLabel();toast('I think I’m offline. Cached local AI and calculations remain available.');});
  window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();deferredInstall=event;$('installBtn').hidden=false;});$('installBtn').onclick=async()=>{if(deferredInstall){await deferredInstall.prompt();deferredInstall=null;$('installBtn').hidden=true;}else toast('On iPhone: Share → Add to Home Screen. On Mac Safari: File → Add to Dock.');};
- window.addEventListener('pagehide',()=>{stop();locationHub.forget();releaseOwnership?.();engine.unload().catch(()=>{});});window.addEventListener('pageshow',event=>{if(event.persisted)location.reload();});
+ window.addEventListener('pagehide',()=>{stop();forgetGeminiToken();locationHub.forget();releaseOwnership?.();engine.unload().catch(()=>{});});window.addEventListener('pageshow',event=>{if(event.persisted)location.reload();});
 }
 async function claimOwnership(){if(!navigator.locks)return true;return new Promise(resolve=>{navigator.locks.request('maxg-personal-owner',{ifAvailable:true},async lock=>{resolve(Boolean(lock));if(lock)await new Promise(release=>releaseOwnership=release);}).catch(()=>resolve(false));});}
 async function prepareOfflineShell(){if(!('serviceWorker'in navigator))return;try{const registration=await navigator.serviceWorker.register('./sw.js',{scope:'./',type:'module'});registration.addEventListener('updatefound',()=>{const worker=registration.installing;worker?.addEventListener('statechange',()=>{if(worker.state==='installed'&&navigator.serviceWorker.controller)toast('A MAX-G update is ready. Close all MAX-G windows and reopen to apply it.');});});await navigator.serviceWorker.ready;if(!navigator.serviceWorker.controller)await new Promise((resolve,reject)=>{const timer=setTimeout(()=>{navigator.serviceWorker.removeEventListener('controllerchange',done);reject(new Error('Reload once to finish offline setup.'));},10000);function done(){clearTimeout(timer);resolve();}navigator.serviceWorker.addEventListener('controllerchange',done,{once:true});});}catch(error){toast('Offline caching could not finish: '+error.message);}}

@@ -1,0 +1,38 @@
+name = "max-g-search"
+main = "gateway-worker.js"
+compatibility_date = "2026-09-12"
+workers_dev = true
+send_metrics = false
+
+[observability]
+# Preserve the existing dashboard settings when deploying this configuration.
+enabled = true
+
+[observability.logs]
+enabled = true
+invocation_logs = true
+head_sampling_rate = 1
+
+[observability.traces]
+enabled = false
+
+[vars]
+ALLOWED_ORIGINS = "https://max-g.goyonebydesign.com,https://www.goyonebydesign.com,https://goyonebydesign.com"
+# Optional Gemini support fails closed until the owner verifies a Free API
+# project and adds GEMINI_API_KEY, MAXG_SUPPORT_TOKEN and
+# GEMINI_FREE_TIER_CONFIRMED=true in Cloudflare. See GEMINI-SUPPORT.md.
+
+# Shared search budget per Cloudflare location; no visitor IDs or query keys.
+# Choose a different namespace_id if this number is already used in your account.
+[[ratelimits]]
+name = "SEARCH_RATE_LIMIT"
+namespace_id = "4101"
+simple = { limit = 24, period = 60 }
+
+[env.dev.vars]
+ALLOWED_ORIGINS = "http://127.0.0.1:8765,http://localhost:8765,http://127.0.0.1:8766,http://localhost:8766"
+
+[[env.dev.ratelimits]]
+name = "SEARCH_RATE_LIMIT"
+namespace_id = "4102"
+simple = { limit = 24, period = 60 }

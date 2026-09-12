@@ -25,7 +25,7 @@ search. Do not assume `dev` origins also apply to production.
 
 ## Optional separate max-g.goyonebydesign.com subdomain
 
-The browser runs MAX-G’s language model locally through WebLLM. GitHub Pages serves the app files; the separate Cloudflare Worker requests public DuckDuckGo search results. No paid AI API or inference server is used. Live search is an online service and therefore cannot operate completely offline.
+The browser runs MAX-G’s language model locally through WebLLM. GitHub Pages serves the app files; the separate Cloudflare Worker requests public DuckDuckGo search results. Regular inference remains local. Optional **Ask Gemini** uses Google’s free API tier through the same Cloudflare deployment only after separate secret configuration; see [GEMINI-SUPPORT.md](GEMINI-SUPPORT.md). Free eligibility depends on the Google project staying on the Free tier, not just the model name. Live search is an online service and therefore cannot operate completely offline.
 
 The existing website above already hosts MAX-G. This release includes **https://max-g-search.michael-goyone.workers.dev** as its default search address. Verify a real `/search` response before publishing any endpoint or Worker change. The following repository/subdomain instructions are only for a separate deployment; that optional repository and DNS configuration have not been provisioned. Your connected GitHub account is **GoyoneByDesign**; these steps use it as the repository owner. If you choose a different organization, use that owner’s GitHub Pages hostname instead.
 
@@ -45,7 +45,7 @@ node --version
 npm --version
 ```
 
-Open Terminal in the `max-g-web` folder containing `index.html`, `app.js`, `worker.js`, and `wrangler.toml`. This is a static application: no frontend build command and no Ollama installation are needed for the web edition.
+Open Terminal in the `max-g-web` folder containing `index.html`, `app.js`, `gateway-worker.js`, `worker.js`, `gemini-worker.js`, and `wrangler.toml`. This is a static application: no frontend build command and no Ollama installation are needed for the web edition.
 
 Run the built-in checks:
 
@@ -90,7 +90,7 @@ Create or sign in to a Cloudflare account and keep the **Workers Free** plan sel
 The supplied `wrangler.toml` has:
 
 - Worker name: `max-g-search`.
-- Entry point: `worker.js`.
+- Entry point: `gateway-worker.js`, importing `worker.js` for search and `gemini-worker.js` for optional support.
 - Production allowed origin: `https://max-g.goyonebydesign.com`, `https://www.goyonebydesign.com` and `https://goyonebydesign.com`.
 - A `SEARCH_RATE_LIMIT` binding: 24 searches per minute, shared across visitors within each Cloudflare location.
 - Application observability and Wrangler usage metrics disabled.
@@ -221,7 +221,7 @@ git commit -m "Update MAX-G"
 git push
 ```
 
-For Worker changes, run the tests and the pinned `wrangler deploy --env=""` command again. GitHub Pages cannot execute `worker.js`: the Worker must be deployed separately.
+For Worker changes, run the tests and the pinned `wrangler deploy --env=""` command again. GitHub Pages cannot execute `gateway-worker.js`: the Worker must be deployed separately.
 
 | Symptom | What to check |
 | --- | --- |
@@ -241,3 +241,7 @@ Cloudflare currently documents **100,000 requests/day** and **10 ms CPU time per
 The adapter forwards only the search query to a fixed DuckDuckGo endpoint, returns up to six text snippets, and never fetches arbitrary result pages. It does not store queries in a database/cache or emit application query logs. Cloudflare and DuckDuckGo necessarily process online requests. CORS is a browser access control, **not user authentication**; non-browser clients can forge an Origin header. This public free service is not suitable as a private authenticated gateway without adding a real authentication design.
 
 Search snippets are incomplete third-party material, not proof of truth. The app treats them as references and links their sources. DuckDuckGo makes no guarantee of accuracy, completeness, or uninterrupted availability. This implementation handles challenges and failures explicitly; it does not promise unrestricted access, bypass website restrictions, or guarantee 100% accuracy. [DuckDuckGo terms](https://duckduckgo.com/terms)
+
+## Optional Gemini support
+
+Deploy the complete gateway source using the same Wrangler command. Search keeps working without Gemini secrets. `/support/health` reports configuration only and never calls Google. Set up the optional authenticated `/support` endpoint using [GEMINI-SUPPORT.md](GEMINI-SUPPORT.md); do not publish API keys or support tokens. The production support route accepts only the existing three website origins. Local development and the paired companion continue using their existing local tools.
