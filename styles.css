@@ -911,3 +911,10 @@ input:focus, select:focus, textarea:focus{
 }
 
 .app-shortcut{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:5px 8px;border:1px solid currentColor;border-radius:6px}.app-shortcut img{display:block;flex:none}
+
+/* Warm-white companion glow; the static shadow remains when motion is reduced. */
+.maxg-shortcut{position:relative;isolation:isolate;border-color:#fff0bd;color:#fff8e5;box-shadow:0 0 8px rgba(255,236,170,.28)}
+.maxg-shortcut::before{content:"";position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;z-index:-1;box-shadow:0 0 10px rgba(255,251,230,.6),0 0 21px rgba(255,216,105,.32);opacity:.38;animation:maxgGlow 3.4s ease-in-out infinite}
+.maxg-shortcut:focus-visible{outline:2px solid #fff2bc;outline-offset:4px}
+@keyframes maxgGlow{0%,100%{opacity:.3}50%{opacity:.9}}
+@media(prefers-reduced-motion:reduce){.maxg-shortcut::before{animation:none;opacity:.5}}

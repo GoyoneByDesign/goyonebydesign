@@ -1,7 +1,7 @@
 {
-  "revision": 7,
-  "updatedAt": "2026-09-12T14:17:33Z",
-  "lastCheckedAt": "2026-09-12T14:17:33Z",
+  "revision": 8,
+  "updatedAt": "2026-09-12T14:46:36Z",
+  "lastCheckedAt": "2026-09-12T14:46:36Z",
   "entries": [
     {
       "id": "pmix-comparison",
@@ -99,13 +99,15 @@
     {
       "id": "report-font-access",
       "topic": "Report fonts",
-      "fact": "Excel headers and footers use Times New Roman, with Aptos Display in the body. PDF embeds Liberation Serif and Liberation Sans by default. A supporting browser can request access to installed Times New Roman and Aptos fonts after the owner clicks Report fonts; selected font data is kept on the device.",
-      "source": "MDN Local Font Access API; MAX Report Studio implementation",
+      "fact": "Excel headers and footers use Times New Roman; the body uses Aptos Display and categories use Aptos SemiBold. PDF embeds Liberation Serif, Liberation Sans and the OFL-licensed Source Sans 3 Semibold by default. Supporting browsers can request installed Times New Roman and Aptos fonts after the owner clicks Report fonts. Selected local font data stays on the device.",
+      "source": "Microsoft cloud font list, Adobe Source Sans license, MDN Local Font Access API; applied exporter",
       "sourceType": "public_documentation",
       "sourceUrls": [
-        "https://developer.mozilla.org/en-US/docs/Web/API/Local_Font_Access_API"
+        "https://developer.mozilla.org/en-US/docs/Web/API/Local_Font_Access_API",
+        "https://support.microsoft.com/en-us/office/fonts/cloud-fonts-in-office",
+        "https://github.com/adobe-fonts/source-sans"
       ],
-      "checkedAt": "2026-09-12T10:31:17Z"
+      "checkedAt": "2026-09-12T14:46:36Z"
     },
     {
       "id": "report-studio-workflow",
@@ -121,14 +123,14 @@
     {
       "id": "dense-native-report-header",
       "topic": "Compact report printing",
-      "fact": "Reports use 12-point titles and uppercase category labels, 10-point item labels, and 8-point numeric values. Headers and footers use Times New Roman, with fine grayscale borders and restrained gray fills. Excel title and date/filter information stays in its native print header; overflow filters stay in the legend. Saved formats apply this typography when rendered.",
+      "fact": "Reports use 12-point bold ITEM and column headings, 12-point uppercase bold dining options, 10-point categories with initial capitals and semibold weight, and 8-point regular item labels and numeric values. Excel keeps the centered title and date/filter information in its native print header; long filters continue in the legend. Saved formats use the same compact grayscale hierarchy.",
       "source": "Microsoft Excel header/footer documentation; applied MAX report exporter",
       "sourceType": "public_documentation",
       "sourceUrls": [
         "https://support.microsoft.com/en-us/excel/headers-and-footers-in-a-worksheet",
         "https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.spreadsheet.oddheader?view=openxml-3.0.1"
       ],
-      "checkedAt": "2026-09-12T14:17:33Z"
+      "checkedAt": "2026-09-12T14:46:36Z"
     },
     {
       "id": "dining-subtypes",
@@ -195,10 +197,10 @@
     {
       "id": "report-total-placement",
       "topic": "Category and grand totals",
-      "fact": "Category totals and grand totals each have independent Top/Bottom controls. A compact category total can occupy its heading row. Right-side totals always cover all selected location columns. Comparisons retain separate source-period totals at the right; different dates are not combined. Subtotal and grand-total VAR are calculated from aggregate Previous and Current values, never by adding percentages.",
+      "fact": "Category totals and grand totals each have independent Top/Bottom controls. One numeric column omits the duplicate right-side TOTAL; its location appears in the report header and its column is labeled QTY, NET SALES or VALUE. Multiple location columns retain their right-side totals. Comparisons retain separate source-period totals, and different dates are never combined. Subtotal and grand-total VAR use aggregate Previous and Current values.",
       "source": "Owner reporting requirements and applied PMIX calculation/export logic",
       "sourceType": "owner_instruction",
-      "checkedAt": "2026-09-12T12:17:48.070Z"
+      "checkedAt": "2026-09-12T14:46:36Z"
     },
     {
       "id": "app-build-metadata-standard",
@@ -231,6 +233,14 @@
         "https://developers.google.com/workspace/drive/api/guides/manage-uploads"
       ],
       "checkedAt": "2026-09-12T14:17:33Z"
+    },
+    {
+      "id": "report-store-first-filenames",
+      "topic": "Report titles and filenames",
+      "fact": "Automatic filenames place selected store abbreviations first in standard store order, followed by a short title, report year and MMDD_MMDD date range. Full product-mix reports use PMIX Full, without the redundant word Menu. Cross-year ranges keep both years; comparisons retain distinct source intervals. Single-store location codes stay in the native report header. Example: FX - PMIX Full 2026 - 0819_0825.xlsx. Explicit manual filenames remain editable.",
+      "source": "Owner reporting requirements and applied report metadata generator",
+      "sourceType": "owner_instruction",
+      "checkedAt": "2026-09-12T14:46:36Z"
     }
   ],
   "reviewLimitations": [
