@@ -2,7 +2,11 @@
 
 Private reporting app for Michael Goyone. The GoyoneByDesign website footer opens this owner-only workspace. MAX uses an on-device Qwen model through Transformers.js, with no API key required. Confirmed layout/column/menu mappings persist in a private D1 database. The version, build, update timestamp, learning revision, and applied timestamp appear in the footer.
 
-## Current release: 3.5.0 · Build 17
+## Current release: 3.6.0 · Build 18
+
+Ready supported uploads open the report preview automatically. Missing source scope and required reviews are visible beside the upload controls with Generate report & preview. PDF generation runs one job at a time and retains only the latest pending filter view, with cached bytes reused for unchanged previews and PDF downloads. Layout thumbnails refresh on request rather than competing after every filter change. History archiving and reconciliation remain intact.
+
+Report fonts accepts locally selected Aptos and Times New Roman font files as well as supported installed-font access. Internal face names select the report roles, and embedding flags are checked. Bytes remain in browser IndexedDB; public source contains no supplied Microsoft fonts. The interface identifies selected faces and the Times-compatible fallback until actual Times New Roman regular and bold are supplied. Excel font names follow selected Aptos body and category faces.
 
 Related Toast CSV sets recognize all nine standard views by headers. The owner confirms common location/date/filter scope before linking summaries to All levels. Parent item quantities and Net item amt supply the report; Items, Menus, Menu groups (including nested subtotals), Modifiers, Special requests, Open items and Total sales reconcile independently. Percentage breakdown checks row identities only and never reconstructs amounts. Standalone Items/Open items and a Total sales net summary are available explicitly, without inventing missing detail. Checked originals are retained as report History sources. No supplied business data ships in public tests.
 

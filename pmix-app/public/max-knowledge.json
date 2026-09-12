@@ -1,7 +1,7 @@
 {
-  "revision": 11,
-  "updatedAt": "2026-09-12T17:01:14Z",
-  "lastCheckedAt": "2026-09-12T17:01:14Z",
+  "revision": 12,
+  "updatedAt": "2026-09-12T17:44:45Z",
+  "lastCheckedAt": "2026-09-12T17:44:45Z",
   "entries": [
     {
       "id": "pmix-comparison",
@@ -293,6 +293,30 @@
         "https://developers.google.com/workspace/guides/configure-oauth-consent"
       ],
       "checkedAt": "2026-09-12T17:01:14Z"
+    },
+    {
+      "id": "report-preview-performance",
+      "topic": "Report preview and speed",
+      "fact": "Ready, supported uploads with explicit source scope automatically open the PDF preview. Missing dates, locations, CSV roles and PDF/column review remain explicit checks beside the upload controls. Preview requests serialize PDF generation, discard intermediate pending filter views, and reuse unchanged bytes for preview and PDF downloads. Layout thumbnails refresh on request instead of generating multiple extra PDFs after every filter change. Private History archiving and source reconciliation stay required.",
+      "source": "Applied application behavior and synthetic preview/controller tests",
+      "sourceType": "app_implementation",
+      "sourceUrls": [
+        "https://github.com/GoyoneByDesign/goyonebydesign/blob/main/pmix-app/public/studio.js",
+        "https://github.com/GoyoneByDesign/goyonebydesign/blob/main/pmix-app/public/report-render-cache.js"
+      ],
+      "checkedAt": "2026-09-12T17:44:45Z"
+    },
+    {
+      "id": "local-report-font-files",
+      "topic": "Report font files",
+      "fact": "Report fonts accepts locally chosen Aptos regular, semibold and bold variants, Aptos Display, Aptos Narrow, and Times New Roman regular/bold by internal font names. Selected bytes stay in device IndexedDB and are embedded in generated PDFs according to font embedding flags; no font binaries are bundled in public source. Loading Aptos alone does not provide Times New Roman. Excel body/category styles follow selected font family names but do not install fonts. The UI names the chosen PDF faces and discloses fallback header/footer fonts.",
+      "source": "Applied local font loader; OpenType OS/2 embedding fields",
+      "sourceType": "app_implementation",
+      "sourceUrls": [
+        "https://github.com/GoyoneByDesign/goyonebydesign/blob/main/pmix-app/public/report-fonts.js",
+        "https://learn.microsoft.com/en-us/typography/opentype/spec/os2#fstype"
+      ],
+      "checkedAt": "2026-09-12T17:44:45Z"
     }
   ],
   "reviewLimitations": [
