@@ -1,7 +1,7 @@
 {
-  "revision": 10,
-  "updatedAt": "2026-09-12T16:29:27Z",
-  "lastCheckedAt": "2026-09-12T16:29:27Z",
+  "revision": 11,
+  "updatedAt": "2026-09-12T17:01:14Z",
+  "lastCheckedAt": "2026-09-12T17:01:14Z",
   "entries": [
     {
       "id": "pmix-comparison",
@@ -271,6 +271,28 @@
       "source": "Owner requirements and validated application behavior",
       "sourceType": "owner_instruction",
       "checkedAt": "2026-09-12T16:29:27Z"
+    },
+    {
+      "id": "toast-related-csv-roles",
+      "topic": "Related Toast CSV exports",
+      "fact": "MAX ZETA recognizes All levels, Items, Menu groups, Menus, Modifiers, Open items, Percentage breakdown, Special requests and Total sales by their column layouts. After the owner confirms matching scope, All levels supplies parent item quantities and Net item amt; the other files check quantities, monetary controls and row identities without adding their amounts again. Group/subgroup totals overlap; gift-card reloads, modifiers and special requests are excluded from parent item totals. Summary modifier/request labels can combine occurrences across multiple parent items, so their parent IDs are not used to allocate counts. Percentage rows remain references only. Missing location and reporting dates require explicit entry. Standalone Items/Open items and Total sales are selectable with their available detail. All checked originals stay linked in private History.",
+      "source": "Applied importer and synthetic/owner-private CSV reconciliation checks",
+      "sourceType": "app_implementation",
+      "sourceUrls": [
+        "https://github.com/GoyoneByDesign/goyonebydesign/blob/main/pmix-app/public/toast-csv.js"
+      ],
+      "checkedAt": "2026-09-12T17:01:14Z"
+    },
+    {
+      "id": "google-oauth-testing-block",
+      "topic": "Google Drive connection troubleshooting",
+      "fact": "A Google OAuth access_denied page saying the app is being tested can require adding the connecting Google account under Audience > Test users in the existing project containing the configured OAuth client. A project-selection screen requires selecting that existing project first. This is separate from the MAX ZETA website audience; it does not require making the reporting site public.",
+      "source": "Google Workspace OAuth consent configuration",
+      "sourceType": "public_documentation",
+      "sourceUrls": [
+        "https://developers.google.com/workspace/guides/configure-oauth-consent"
+      ],
+      "checkedAt": "2026-09-12T17:01:14Z"
     }
   ],
   "reviewLimitations": [

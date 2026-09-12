@@ -2,7 +2,9 @@
 
 Private reporting app for Michael Goyone. The GoyoneByDesign website footer opens this owner-only workspace. MAX uses an on-device Qwen model through Transformers.js, with no API key required. Confirmed layout/column/menu mappings persist in a private D1 database. The version, build, update timestamp, learning revision, and applied timestamp appear in the footer.
 
-## Current release: 3.4.1 · Build 16
+## Current release: 3.5.0 · Build 17
+
+Related Toast CSV sets recognize all nine standard views by headers. The owner confirms common location/date/filter scope before linking summaries to All levels. Parent item quantities and Net item amt supply the report; Items, Menus, Menu groups (including nested subtotals), Modifiers, Special requests, Open items and Total sales reconcile independently. Percentage breakdown checks row identities only and never reconstructs amounts. Standalone Items/Open items and a Total sales net summary are available explicitly, without inventing missing detail. Checked originals are retained as report History sources. No supplied business data ships in public tests.
 
 Same-period reports align the union of line items across locations, with zero for items absent from a complete loaded source. Location display offers Side by side, two-location VS with DIFF/VAR and reversal, or Combined total only. Source-date comparisons remain separate. A supported Toast workbook with a row-level location field preserves each store's values. A workbook listing multiple stores only in Summary is treated as a combined-only source, with its store scope carried in `aggregateStores`; it cannot be used to infer individual shares. Combined and individual sources with overlapping coverage are blocked before import. Public tests use synthetic data; private supplied workbook values are never bundled.
 
