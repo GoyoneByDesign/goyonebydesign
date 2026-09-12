@@ -7,6 +7,8 @@ import {normalizeLocationSettings} from './locations.js';
 import {normalizeDeviceMode} from './device.js';
 export const DB_NAME='maxg-personal-v1';
 export const LANGUAGES={'Auto-detect':'en-US',English:'en-US',Tagalog:'fil-PH',Spanish:'es-ES','Chinese (Mandarin)':'zh-CN',Japanese:'ja-JP',Italian:'it-IT',Russian:'ru-RU',Korean:'ko-KR'};
+// Blank proxyURL means the shipped default search route, not a copied endpoint.
+// Internet permission remains the control for disabling all public requests.
 export const DEFAULTS=Object.freeze({model:'Llama-3.2-1B-Instruct-q4f16_1-MLC',language:'Auto-detect',style:'Friendly',replyLength:'Brief',instructions:'',onlineFirst:true,proxyURL:'',weatherCity:'',speak:true,voiceProfile:'Warm',voiceURI:'',rate:1,motion:true,theme:'Dark',saveChats:false,useMemory:true,accessMode:'Limited',permissions:{internet:'allow',files:'ask',microphone:'ask',location:'ask'},hourlyLearning:false,voice:normalizeVoice(),orbit:normalizeOrbitSettings(),locations:normalizeLocationSettings(),deviceMode:'auto',performanceSeed:0});
 const validTime=(value,fallback)=>Number.isFinite(Number(value))&&Number(value)>=0&&Number(value)<8640000000000000?Number(value):fallback;
 export function freshState(){return {version:1,profile:normalizeProfile(),display:normalizeDisplay(),settings:structuredClone(DEFAULTS),chats:[],notes:[],skills:[],jobs:[],improvement:freshImprovement(),study:{nextRun:Date.now()+3600000,cursor:0,history:[]}};}

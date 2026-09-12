@@ -33,7 +33,40 @@ only at startup. The actual loaded model is shown and recorded in evaluations.
 The compatibility variant uses more estimated memory than the normal 1B variant;
 it is not a low-memory substitute. Supported manual 3B choices are preserved.
 
-## Feature coverage
+## Recover from an interrupted connection
+
+Eligible temporary failures in public GET requests receive at most one retry,
+within the request's original timeout. Server retry delays are respected; MAX-G
+does not keep retrying indefinitely or repeatedly submit an action. Permission
+denials, invalid data and reported bot-verification challenges are not retried.
+Stop cancels both the request and any pending backoff.
+
+When a factual search cannot complete, **Search this question on Google** opens
+that public question in Google Search on the current device. It shares no MAX-G
+history, notes or attachments and does not automatically send the query. MAX-G's
+Allow/Ask/Deny internet setting applies to clicking the link. Google results are
+shown on Google's website; MAX-G cannot read them through this link. The adjacent
+button restores the question to an empty composer, preserving any other draft.
+The recovery panel belongs to the current attempt; the original question remains
+in saved chat history when chat saving is enabled.
+
+If sources were retrieved but local generation fails, their excerpts and links
+remain visible, labeled as retrieved material rather than an AI-written answer.
+This supports useful lookup on devices that cannot run the local model; it does
+not provide a replacement conversational model on those devices.
+
+**Settings → Connection** provides Google Search and Gemini website links.
+You can sign in to Google's own Gemini app with your account. Your Google AI Pro
+membership does not automatically authenticate MAX-G or give it unlimited Gemini
+API requests. An integrated Gemini backend needs its own authorized API project,
+quotas and secure credential handling. This build has no Gemini API integration
+and introduces no paid API dependency. Google lists product benefits separately
+from developer API billing and rate limits:
+[Google AI Pro benefits](https://support.google.com/googleone/answer/14534406),
+[Gemini API billing](https://ai.google.dev/gemini-api/docs/billing),
+[Gemini API rate limits](https://ai.google.dev/gemini-api/docs/rate-limits).
+
+## Feature coverage by device capability
 
 | Feature | What runs on the current device |
 | --- | --- |

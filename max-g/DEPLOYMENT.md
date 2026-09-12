@@ -101,7 +101,9 @@ npm exec --yes --package=wrangler@4.131.0 -- wrangler login
 npm exec --yes --package=wrangler@4.131.0 -- wrangler deploy --env=""
 ```
 
-The empty `--env=""` explicitly selects the production configuration; do not deploy `--env dev` for the public app. Cloudflare prints your actual address, shaped like `https://max-g-search.YOUR_WORKERS_SUBDOMAIN.workers.dev`. Copy **that actual address** into MAX-G’s search proxy setting on every device where you use MAX-G. Enter only the base URL, without `/search` or a query string. The setting is local to that browser; it is not synced through GitHub.
+The empty `--env=""` explicitly selects the production configuration; do not deploy `--env dev` for the public app. Cloudflare prints your actual address, shaped like `https://max-g-search.YOUR_WORKERS_SUBDOMAIN.workers.dev`. Verify a real search first. To configure all installations, set `BUILTIN_SEARCH_URL` in `tools.js` to **that verified base address**, bump the shell version in `sw.js`, and publish the updated app. Existing blank settings will use the built-in endpoint after the app update; explicit custom endpoints remain unchanged. Enter only the base URL, without `/search` or a query string. A user can override it in Settings → Connection on each browser; personal overrides are not synced through GitHub. Leave the built-in constant empty for companion-only distributions or until deployment is verified. A Cloudflare starter page is not a working search service.
+
+The optional status endpoint at `/` or `/health` confirms only that the Worker code is running; its `upstream: "not-tested"` field deliberately does not claim that the search provider is available. Use `/search` for the actual end-to-end check below.
 
 You can check the deployed endpoint from Terminal after substituting your actual Worker address:
 

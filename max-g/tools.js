@@ -1,17 +1,95 @@
 /** Bounded public retrieval and deterministic calculation. No eval, model calls, or storage. */
 import {symbols,aliases,ambiguous} from './unit-data.js';
+// Release configuration: set this to the deployed public Worker base URL (no /search).
+// Keep it empty in distributions that only use a paired Mac companion.
+export const BUILTIN_SEARCH_URL='';
 export function safePublicURL(raw){try{const u=new URL(raw);if(u.protocol!=='https:'||u.username||u.password||u.port)return null;const host=u.hostname.toLowerCase().replace(/\.$/,'');if(!host.includes('.')||host==='localhost'||host.endsWith('.local')||host.endsWith('.internal')||/^[\d.]+$/.test(host)||host.includes(':'))return null;return u.href;}catch{return null;}}
 export function proxyBase(raw){const value=String(raw).trim();if(!value)throw new Error('Web search is not connected. Start MAX-G Companion or add an optional Cloudflare Worker URL in Settings → Connection.');const u=new URL(value);const local=['localhost','127.0.0.1'].includes(u.hostname);if((u.protocol!=='https:'&&!(u.protocol==='http:'&&local))||u.username||u.password||u.search||u.hash)throw new Error('Use a plain HTTPS Worker URL, without credentials, query or fragment.');return u.href.replace(/\/$/,'');}
-export async function readJSON(url,{signal,timeout=16000,maxBytes=180000}={}){
-  const controller=new AbortController();const abort=()=>controller.abort(signal?.reason);signal?.addEventListener('abort',abort,{once:true});if(signal?.aborted)abort();const timer=setTimeout(()=>controller.abort(new Error('The public service took too long to respond.')),timeout);
-  try{const response=await fetch(url,{signal:controller.signal,credentials:'omit',cache:'no-store',referrerPolicy:'no-referrer'});if(Number(response.headers.get('content-length'))>maxBytes)throw new Error('Public response exceeds the size limit.');const reader=response.body.getReader();let count=0;const chunks=[];while(true){const {done,value}=await reader.read();if(done)break;count+=value.byteLength;if(count>maxBytes){await reader.cancel();throw new Error('Public response exceeds the size limit.');}chunks.push(value);}const bytes=new Uint8Array(count);let at=0;for(const chunk of chunks){bytes.set(chunk,at);at+=chunk.length;}if(!response.headers.get('content-type')?.includes('json'))throw new Error(response.ok?'The service returned an unreadable response.':`Public service returned HTTP ${response.status}.`);const data=JSON.parse(new TextDecoder().decode(bytes));if(!response.ok)throw new Error(String(data.message||data.error||`Public service returned HTTP ${response.status}.`).slice(0,500));return data;}finally{clearTimeout(timer);signal?.removeEventListener('abort',abort);}
+/** Resolve defaults at request time so existing blank settings receive deployment updates.
+ * Invalid custom URLs fail visibly; they never silently send a query elsewhere.
+ */
+export function searchRoute(raw,{builtinURL=BUILTIN_SEARCH_URL}={}){
+  const custom=String(raw||'').trim(),builtIn=String(builtinURL||'').trim();
+  return custom?{source:'custom',base:proxyBase(custom)}:builtIn?{source:'builtin',base:proxyBase(builtIn)}:{source:'companion',base:''};
+}
+const RETRYABLE_PUBLIC_STATUS=new Set([429,502,503,504]);
+const RETRYABLE_PUBLIC_CODES=new Set(['SEARCH_TIMEOUT','SEARCH_UNAVAILABLE','RATE_LIMITED','SERVICE_UNAVAILABLE','GATEWAY_TIMEOUT','BAD_GATEWAY','TOO_MANY_REQUESTS']);
+function transientPublicResponse(data){
+  const raw=data?.code||data?.error?.code||data?.error;
+  // Typed setup, origin, parser and challenge failures need intervention, even
+  // when a provider represents them with HTTP 503. Unknown typed codes fail closed.
+  const code=typeof raw==='string'&&/^[A-Z][A-Z0-9_]{2,80}$/.test(raw)?raw:'';
+  return !code||RETRYABLE_PUBLIC_CODES.has(code);
+}
+function retryDelay(response){
+  const value=response.headers.get('retry-after')?.trim();
+  if(value&&/^\d+$/.test(value))return Number(value)*1000;
+  // HTTP dates contain a month name; do not interpret malformed numeric delays as dates.
+  if(value&&/[a-z]{3}/i.test(value)){const time=Date.parse(value);if(Number.isFinite(time))return Math.max(0,time-Date.now());}
+  return response.status===429?1000:250;
+}
+function transientPublicNetwork(error){
+  if(/cors|origin|security|certificate|invalid|unsupported|blocked|redirect/i.test(String(error?.message||'')))return false;
+  const code=error?.cause?.code||error?.code;
+  if(['ECONNRESET','ETIMEDOUT','EAI_AGAIN','ECONNABORTED','ENETDOWN','ENETUNREACH'].includes(code))return true;
+  // Fetch hides some CORS failures behind the same TypeError as a dropped connection.
+  // A single retry repeats only this validated GET; it never changes origin or access mode.
+  return error?.name==='TypeError'&&/failed to fetch|fetch failed|load failed|network|connection/i.test(String(error.message));
+}
+/** Public GET only, with at most one retry inside the original total deadline.
+ * Retry-After is never shortened: if it does not fit, return the service error.
+ * Parsing/size/security failures never trigger an alternate route or another request.
+ */
+export async function readJSON(url,{signal,timeout=16000,maxBytes=180000,method='GET'}={}){
+  if(signal?.aborted)throw signal.reason||new DOMException('Public request stopped.','AbortError');
+  if(method!=='GET'||!(typeof url==='string'||url instanceof URL))throw new TypeError('Public retrieval accepts a URL and GET requests only.');
+  const target=new URL(url),local=['localhost','127.0.0.1','[::1]'].includes(target.hostname);
+  if((target.protocol!=='https:'&&!(target.protocol==='http:'&&local))||target.username||target.password||target.hash)throw new TypeError('Use an HTTPS public URL without credentials or a fragment.');
+  if(!Number.isFinite(timeout)||timeout<=0||timeout>120000||!Number.isSafeInteger(maxBytes)||maxBytes<=0)throw new TypeError('Use a positive size limit and a timeout up to 120 seconds.');
+  const controller=new AbortController(),started=performance.now();let reader=null,response=null,rejectInterrupted;
+  const interrupted=new Promise((_,reject)=>{rejectInterrupted=reject;});
+  const stop=()=>rejectInterrupted(controller.signal.reason||new DOMException('Public request stopped.','AbortError'));
+  controller.signal.addEventListener('abort',stop,{once:true});
+  const abort=()=>controller.abort(signal?.reason);signal?.addEventListener('abort',abort,{once:true});if(signal?.aborted)abort();
+  const timer=setTimeout(()=>controller.abort(new Error('The public service took too long to respond.')),timeout);
+  const check=()=>{if(controller.signal.aborted)throw controller.signal.reason||new DOMException('Public request stopped.','AbortError');};
+  const discard=()=>{try{const done=reader?reader.cancel():response?.body?.cancel();Promise.resolve(done).catch(()=>{});}catch{}};
+  const pause=delay=>new Promise((resolve,reject)=>{
+    let timer;const cancel=()=>{clearTimeout(timer);controller.signal.removeEventListener('abort',cancel);reject(controller.signal.reason);};
+    controller.signal.addEventListener('abort',cancel,{once:true});if(controller.signal.aborted){cancel();return;}
+    timer=setTimeout(()=>{controller.signal.removeEventListener('abort',cancel);resolve();},delay);
+  });
+  const fits=delay=>Number.isFinite(delay)&&delay<timeout-(performance.now()-started);
+  async function retrieve(){
+    for(let attempt=0;attempt<2;attempt++){
+      check();reader=null;response=null;
+      try{response=await fetch(target.href,{method:'GET',signal:controller.signal,credentials:'omit',cache:'no-store',referrerPolicy:'no-referrer',redirect:'error'});}
+      catch(error){check();if(attempt===0&&transientPublicNetwork(error)&&fits(300)){await pause(300);continue;}throw error;}
+      if(controller.signal.aborted){discard();check();}
+      if(['opaque','opaqueredirect'].includes(response.type)||response.redirected)throw new Error('The public service returned a blocked or redirected response.');
+      if(Number(response.headers.get('content-length'))>maxBytes)throw new Error('Public response exceeds the size limit.');
+      if(!response.headers.get('content-type')?.includes('json'))throw new Error(response.ok?'The service returned an unreadable response.':`Public service returned HTTP ${response.status} with an unreadable response.`);
+      if(!response.body)throw new Error('The public service returned an empty response.');
+      reader=response.body.getReader();let count=0;const chunks=[];
+      while(true){const {done,value}=await reader.read();check();if(done)break;count+=value.byteLength;if(count>maxBytes)throw new Error('Public response exceeds the size limit.');chunks.push(value);}
+      reader.releaseLock();reader=null;
+      const bytes=new Uint8Array(count);let at=0;for(const chunk of chunks){bytes.set(chunk,at);at+=chunk.length;}
+      const data=JSON.parse(new TextDecoder().decode(bytes));check();
+      if(response.ok)return data;
+      const error=new Error(String(data?.message||data?.error||`Public service returned HTTP ${response.status}.`).slice(0,500));
+      if(attempt===0&&RETRYABLE_PUBLIC_STATUS.has(response.status)&&transientPublicResponse(data)){const delay=retryDelay(response);if(fits(delay)){await pause(delay);continue;}}
+      throw error;
+    }
+  }
+  try{return await Promise.race([retrieve(),interrupted]);}
+  finally{clearTimeout(timer);signal?.removeEventListener('abort',abort);controller.signal.removeEventListener('abort',stop);discard();}
 }
 
-export async function search(query,base,signal,localSearch){
+export async function search(query,base,signal,localSearch,configuration){
   if(signal?.aborted)throw new DOMException('Search stopped.','AbortError');
-  const text=String(query).slice(0,500);let data;
-  if(!String(base||'').trim()&&typeof localSearch==='function')data=await localSearch(text,{signal});
-  else {const url=new URL(proxyBase(base)+'/search');url.searchParams.set('q',text);data=await readJSON(url,{signal});}
+  const text=String(query).slice(0,500),route=searchRoute(base,configuration);let data;
+  if(!route.base&&typeof localSearch==='function')data=await localSearch(text,{signal});
+  else {const url=new URL(proxyBase(route.base)+'/search');url.searchParams.set('q',text);data=await readJSON(url,{signal});}
   if(signal?.aborted)throw new DOMException('Search stopped.','AbortError');
   const results=(Array.isArray(data.results)?data.results:[]).filter(x=>x&&safePublicURL(x.url)&&typeof x.snippet==='string').slice(0,4).map(x=>({title:String(x.title||'Public source').slice(0,180),url:safePublicURL(x.url),snippet:x.snippet.slice(0,750)}));if(!results.length)throw new Error('Search returned no usable evidence. Try another query or source.');return {results,timestamp:data.timestamp||new Date().toISOString(),provider:data.provider||'DuckDuckGo'};}
 const bounded=x=>{if(!Number.isFinite(x)||Math.abs(x)>1e100)throw new Error('Use finite numbers no larger than 10^100.');return x;};

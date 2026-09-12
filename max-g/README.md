@@ -1,3 +1,9 @@
+# MAX-G 1.8.1 connection recovery
+
+Public information requests get one bounded retry for eligible temporary failures, within the original timeout. Stop cancels the request and its retry. Failed factual searches offer **Search this question on Google** and a way to restore the question without overwriting another draft. If retrieval works but the local AI cannot start, MAX-G shows the source excerpts and links rather than losing the retrieved information. Google links open separately; no Gemini API, subscription access, or automatic Google-result reading is implied. **Settings → Connection** also links to Google Search and Gemini.
+
+Blank search settings can inherit a verified built-in Worker address in future deployments; explicit custom endpoints keep priority. This release leaves that address unconfigured because the Cloudflare search code was deployed but its required rate-limit binding has not been enabled. The owner chose to leave Cloudflare unchanged, so this build does not select that unfinished service. It does not claim that a starter Worker is a working search service. [Device guide and recovery](DEVICE-GUIDE.md)
+
 # MAX-G 1.8 original songs and hip-hop dance
 
 **Dance** now plays an original hip-hop instrumental with a beat-matched Orbit. **Sing a new song** composes a fresh short melody and three lyric lines, then sings those words with a built-in stylized male voice. The lyrics appear in chat. A bounded counter keeps compositions changing across plays and reloads in the same browser. **Stop play** stops both audio and movement; **Settings → Display & animation → Music & singing** controls sound independently of motion. The small singing sample bank is cached with the app, so no AI model or paid API is needed for musical play. [Music controls and limits](COMPANION-PLAY.md)

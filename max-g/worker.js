@@ -169,6 +169,17 @@ export function createHandler({ fetcher = globalThis.fetch, Rewriter = globalThi
     const url = new URL(request.url);
     const origin = request.headers.get("Origin");
     const allowedOrigin = allowedOrigins(env).has(origin) ? origin : null;
+    const statusPath = url.pathname === "/" || url.pathname === "/health";
+    // A direct browser visit can check that this service is running without
+    // consuming the search budget or sending a query to the upstream provider.
+    if (statusPath && request.method === "GET" && (!request.headers.has("Origin") || allowedOrigin)) {
+      return json({
+        service: "MAX-G Search",
+        status: "ready",
+        upstream: "not-tested",
+        message: "The search service is running. This status check does not test the search provider.",
+      }, 200, allowedOrigin);
+    }
     if (!allowedOrigin) return json({ error: "ORIGIN_DENIED", message: "This origin is not allowed to use MAX-G search." }, 403, null);
     if (url.pathname !== "/search") return json({ error: "NOT_FOUND", message: "Use /search?q=your+query." }, 404, allowedOrigin);
     if (request.method === "OPTIONS") {
