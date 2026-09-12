@@ -1,7 +1,7 @@
 {
-  "revision": 2,
-  "updatedAt": "2026-09-11T12:42:00Z",
-  "lastCheckedAt": "2026-09-11T12:42:00Z",
+  "revision": 3,
+  "updatedAt": "2026-09-12T10:31:17Z",
+  "lastCheckedAt": "2026-09-12T10:31:17Z",
   "entries": [
     {
       "id": "pmix-comparison",
@@ -23,7 +23,10 @@
       "fact": "MAX uses Qwen2.5-0.5B-Instruct with Transformers.js and q4 weights. Browser model downloads/cache and available device memory affect startup; this is local inference, not model retraining.",
       "source": "Qwen ONNX model card and Transformers.js v3",
       "sourceType": "public_documentation",
-      "sourceUrls": ["https://huggingface.co/onnx-community/Qwen2.5-0.5B-Instruct", "https://huggingface.co/docs/transformers.js/v3.0.0/en/custom_usage"],
+      "sourceUrls": [
+        "https://huggingface.co/onnx-community/Qwen2.5-0.5B-Instruct",
+        "https://huggingface.co/docs/transformers.js/v3.0.0/en/custom_usage"
+      ],
       "checkedAt": "2026-09-11T12:42:00Z"
     },
     {
@@ -32,7 +35,10 @@
       "fact": "A browser may expose WebGPU but return no GPU adapter. MAX checks the adapter and falls back to WASM on the CPU if GPU setup fails. CPU inference may be slower.",
       "source": "MDN WebGPU and Transformers.js WebGPU guide; MAX runtime implementation",
       "sourceType": "public_documentation",
-      "sourceUrls": ["https://developer.mozilla.org/en-US/docs/Web/API/GPU/requestAdapter", "https://huggingface.co/docs/transformers.js/en/guides/webgpu"],
+      "sourceUrls": [
+        "https://developer.mozilla.org/en-US/docs/Web/API/GPU/requestAdapter",
+        "https://huggingface.co/docs/transformers.js/en/guides/webgpu"
+      ],
       "checkedAt": "2026-09-11T12:42:00Z"
     },
     {
@@ -41,8 +47,10 @@
       "fact": "Browser speech recognition has limited support and may send audio to the browser provider's service. Local MAX text inference does not make microphone transcription offline. Typing remains available.",
       "source": "MDN SpeechRecognition",
       "sourceType": "public_documentation",
-      "sourceUrls": ["https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition"],
-      "checkedAt": "2026-09-11T12:42:00Z"
+      "sourceUrls": [
+        "https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition"
+      ],
+      "checkedAt": "2026-09-12T10:31:17Z"
     },
     {
       "id": "cloud-connection-scope",
@@ -50,7 +58,9 @@
       "fact": "MAX tests a key by requesting the provider's model list. A saved connection is not proof that a paid generation will succeed; the requested model's permissions and API quota still apply.",
       "source": "OpenAI model-list reference; MAX connection implementation",
       "sourceType": "public_documentation",
-      "sourceUrls": ["https://developers.openai.com/api/reference/resources/models/methods/list"],
+      "sourceUrls": [
+        "https://developers.openai.com/api/reference/resources/models/methods/list"
+      ],
       "checkedAt": "2026-09-11T12:42:00Z"
     },
     {
@@ -59,7 +69,9 @@
       "fact": "MAX's default cloud image model is gpt-image-2.5-sunburst through the Images API; it returns PNG image data. This is separate from the on-device text model and requires API access.",
       "source": "OpenAI image-generation guide; MAX creation implementation",
       "sourceType": "public_documentation",
-      "sourceUrls": ["https://developers.openai.com/api/docs/guides/image-generation"],
+      "sourceUrls": [
+        "https://developers.openai.com/api/docs/guides/image-generation"
+      ],
       "checkedAt": "2026-09-11T12:42:00Z"
     },
     {
@@ -68,10 +80,47 @@
       "fact": "SpreadsheetML uses oddHeader/oddFooter on all pages when differentOddEven is false. MAX keeps a repeating grayscale report footer with MG/date and page numbers; its report paper options remain Letter, Legal and Ledger in either orientation.",
       "source": "Microsoft Open XML HeaderFooter reference; owner print requirements",
       "sourceType": "public_documentation",
-      "sourceUrls": ["https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.spreadsheet.headerfooter?view=openxml-3.0.1"],
+      "sourceUrls": [
+        "https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.spreadsheet.headerfooter?view=openxml-3.0.1"
+      ],
       "checkedAt": "2026-09-11T12:42:00Z"
+    },
+    {
+      "id": "report-download-destination",
+      "topic": "Downloads and CSV",
+      "fact": "The report footer defaults to Downloads. A browser download suggests a filename; the browser and user settings choose the actual destination. CSV exports filtered data and grand totals but has no printed page layout. Excel and PDF retain report headers and footers.",
+      "source": "MDN anchor download attribute; MAX Report Studio implementation",
+      "sourceType": "public_documentation",
+      "sourceUrls": [
+        "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a#download"
+      ],
+      "checkedAt": "2026-09-12T10:31:17Z"
+    },
+    {
+      "id": "report-font-access",
+      "topic": "Report fonts",
+      "fact": "Excel headers and footers use Times New Roman, with Aptos Display in the body. PDF embeds Liberation Serif and Liberation Sans by default. A supporting browser can request access to installed Times New Roman and Aptos fonts after the owner clicks Report fonts; selected font data is kept on the device.",
+      "source": "MDN Local Font Access API; MAX Report Studio implementation",
+      "sourceType": "public_documentation",
+      "sourceUrls": [
+        "https://developer.mozilla.org/en-US/docs/Web/API/Local_Font_Access_API"
+      ],
+      "checkedAt": "2026-09-12T10:31:17Z"
+    },
+    {
+      "id": "report-studio-workflow",
+      "topic": "Report Studio workflow",
+      "fact": "ProductMix filenames containing an explicit ISO start/end range identify PMIX reporting dates. Verified report headers also supply metadata; conflicting dates require confirmation. Preview and PDF download use the same document generator. Save report includes source data, filters, layout and header/footer settings in a private portable JSON file.",
+      "source": "MAX Report Studio source and owner reporting requirements",
+      "sourceType": "app_documentation",
+      "sourceUrls": [
+        "https://github.com/GoyoneByDesign/goyonebydesign/tree/main/pmix-app"
+      ],
+      "checkedAt": "2026-09-12T10:31:17Z"
     }
   ],
-  "reviewLimitations": ["Toast documentation could not be retrieved on 2026-09-11. Existing import layouts and reporting rules were preserved, not re-certified against current Toast documentation."],
-  "dailyReview": "Daily documentation and sourced-knowledge review is enabled through Michael\u2019s ChatGPT task. New knowledge is applied only when supported and validated. Model weights do not retrain."
+  "reviewLimitations": [
+    "Toast Product Mix documentation could not be retrieved on 2026-09-12. Import changes were verified against supplied format examples and synthetic fixtures; they were not re-certified against current Toast documentation."
+  ],
+  "dailyReview": "Daily documentation and sourced-knowledge review is enabled through Michael’s ChatGPT task. New knowledge is applied only when supported and validated. Model weights do not retrain."
 }

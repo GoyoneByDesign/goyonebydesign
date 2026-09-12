@@ -1,6 +1,16 @@
-# Anita's PMIX Reports · MAX
+# MAX Report Studio
 
 Private reporting app for Michael Goyone. The GoyoneByDesign website footer opens this owner-only workspace. MAX uses an on-device Qwen model through Transformers.js, with no API key required. Confirmed layout/column/menu mappings persist in a private D1 database. The version, build, update timestamp, learning revision, and applied timestamp appear in the footer.
+
+## Report Studio 3.0
+
+The private workspace now supports PMIX, standalone net sales, and combined reports. Filenames such as `ProductMix_2026-08-19_2026-08-25` fill explicit dates; month/year headers, scopes, and locations are used where supported. Conflicts remain unresolved for review. Formatted workbooks use the declared print area and separate dining-option sheets. ORIG copies, category subtotals, parent day-part totals, and derived comparison columns are excluded from additive data.
+
+The dark report collection offers Classic grid, Compact ledger, and Category pages. Preview renders the actual generated PDF with pagination; changing filters invalidates old downloads and regenerates the document. The preview has PDF, Excel, CSV, print, and header/footer editing controls. Save report includes imported data plus filters and formatting, with a downloadable `.max-report.json` backup. This backup contains private report data and is not synced to public source.
+
+All paper layouts share centered titles, date/filter lines, printed timestamps, and the Downloads/MG/date/page footer. Excel uses Times New Roman headers/footers and Aptos Display body styles. PDF embeds licensed Liberation fonts by default; supported browsers can enable installed Times New Roman/Aptos faces with Local Font Access, storing them only in device IndexedDB. No Microsoft font files are redistributed. PDF widens or splits location columns across pages when needed; Compact ledger is useful for wide comparisons. CSV retains numerical ratios as decimals and does not preserve page styling. Excel includes live row totals, grand totals, DIFF and VAR formulas with cached results and zero/missing-data guards.
+
+Recognized PDF templates include quantity/net-sales subcolumns, revenue centers by store/year, category quantity tables by dining option, and store comparisons with separate source quantity and sales columns. Scans still require review. A summary that combines every location without separate store numbers cannot be distributed among stores; use a source with location detail. Older reference DIFF/VAR columns never override the owner rules.
 
 ## Reporting
 
@@ -16,7 +26,7 @@ Exact date/time slicing requires timestamped rows. Source aggregate reports cann
 
 ## MAX and memory
 
-Start MAX to download its local model on the current device. Model files are cached by the browser when supported; the first download requires internet and sufficient memory. WebGPU is preferred; WASM is the fallback. MAX serves deterministic PMIX help from verified reporting guidance, supports general on-device chat, and proposes column mappings for review. Public web search returns source links using a server-side RSS search request. Microphone input and text-to-speech use supported browser speech APIs; audio is not stored by MAX. Source calculations remain deterministic. Model weights are not retrained, and learning revision advances only for a changed confirmed mapping. Memory is checked when the app opens; a separate scheduled review maintains sourced knowledge and checks relevant documentation; model weights do not train unattended. Original reports stay on the importing device; Save report data transfers/backups that data.
+Start MAX to download its local model on the current device. Model files are cached by the browser when supported; the first download requires internet and sufficient memory. WebGPU is preferred; WASM is the fallback. MAX serves deterministic PMIX help from verified reporting guidance, supports general on-device chat, and proposes column mappings for review. Public web search returns source links using a server-side RSS search request. Microphone input and text-to-speech use supported browser speech APIs; audio is not stored by MAX. Source calculations remain deterministic. Model weights are not retrained, and learning revision advances only for a changed confirmed mapping. Memory is checked when the app opens; a separate scheduled review maintains sourced knowledge and checks relevant documentation; model weights do not train unattended. Original reports stay on the importing device; Save report includes source data and settings in a private portable backup.
 
 Optional OpenAI Responses API support provides cloud help and official Toast web research when a server-side API key is configured. The provisioning connector rejected key creation in this session. No key was created or embedded. Standalone MAX remains usable without it. Standalone web search is also available without the optional OpenAI connection. Saved owner notes and full conversations with source links are private and searchable across devices. Conversation history is not treated as verified factual knowledge. Relevant prior conversations are retrieved for local MAX context; model context and database storage remain finite. Main-site MAX and PMIX buttons open the same owner-only workspace. Uploaded reports are reference layouts unless explicitly imported as a reporting dataset.
 
@@ -28,7 +38,7 @@ The worker expects Sites identity headers, owner-only platform access, D1 bindin
 
 The source build emits `dist/client` assets, `dist/server/index.js`, and `dist/.openai` hosting/migration metadata. MAX and OCR runtime code is bundled; the model downloads directly from its public model repository. Original GoyoneByDesign logo is reused from the portfolio.
 
-Version 2.0.0 · Build 4. Browser visual testing has not been requested. Computational, source-file and export checks were run; local model inference was exercised on CPU.
+Version 3.0.0 · Build 9. Browser visual testing has not been requested. Computational, source-file and export checks were run; local model inference was exercised on CPU.
 
 MAX's calculator uses math.js 15.2.0 in a dedicated worker with a four-second timeout and a constrained expression tree. Arithmetic, statistics, small matrices, units and derivatives are computed deterministically. Type `math: expression` in chat or open Calculate with MAX; successful results are saved to private history. No general-purpose code execution is enabled. Coding assistance drafts/explains/reviews code through the model and may be limited by model capability. See the primary [math.js security guidance](https://mathjs.org/docs/expressions/security.html). Future plugins need explicit, individually scoped integration; there is no automatic installation of all tools.
 

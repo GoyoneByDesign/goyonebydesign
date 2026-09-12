@@ -1,11 +1,11 @@
 (function(root) {
   'use strict';
   const STORES = [['AR','Arlington','South'],['AS','Ashburn','North'],['BK','Burke','South'],['CH','Chantilly','North'],['FX','Fairfax','South'],['HN','Herndon','North'],['LS','Leesburg','North'],['MN','Manassas','North'],['SP','Springfield','South'],['VN','Vienna','South']];
-  const CHANNELS = {ALL:'All channels',CO:'Carry-Out',DI:'Dine-In',DD:'DoorDash',CT:'Catering',HH:'Happy Hour',UNMAPPED:'Unassigned dining option',OTHER:'Other'};
+  const CHANNELS = {ALL:'All channels',CO:'Carry-Out',DI:'Dine-In',DD:'DoorDash',CT:'Catering',HH:'Happy Hour',OO:'Online Order',BAR:'Bar',DT:'Drive Thru',UNMAPPED:'Unassigned dining option',OTHER:'Other'};
   const PARTS = {ALL:'All day',BK:'4:00 AM - 10:59 AM',LN:'11:00 AM - 3:59 PM',DN:'4:00 PM - 11:59 PM',UNASSIGNED:'12:00 AM - 3:59 AM'};
   const clean = v => String(v ?? '').replace(/\s+/g,' ').trim();
-  function storeCode(v) { const s=clean(v); if (/commissary|office/i.test(s)) return null; return STORES.find(([c,n]) => s.toUpperCase()===c || new RegExp('\\b'+n+'\\b','i').test(s))?.[0] || null; }
-  function channelCode(v) {const s=clean(v).toUpperCase().replace(/[\s_\/-]/g,''); return ({CO:'CO',CARRYOUT:'CO',TAKEOUT:'CO',DIN:'DI',DI:'DI',DINEIN:'DI',DD:'DD',DOORDASH:'DD',CT:'CT',CATERING:'CT',HH:'HH',HAPPYHOUR:'HH',ALL:'ALL',ALLCHANNELS:'ALL'})[s] || null;}
+  function storeCode(v) { const s=clean(v); if (/commissary|office/i.test(s)) return null; return STORES.find(([c,n]) => s.toUpperCase().replace(/\s*\(\d+\)$/,'')===c || new RegExp('\\b'+n+'\\b','i').test(s))?.[0] || null; }
+  function channelCode(v) {const s=clean(v).toUpperCase().replace(/[\s_\/-]/g,''); return ({CO:'CO',CARRYOUT:'CO',TAKEOUT:'CO',DIN:'DI',DI:'DI',DINEIN:'DI',DININGROOM:'DI',OO:'OO',ONLINEORDER:'OO',BAR:'BAR',DT:'DT',DRIVETHRU:'DT',TOGO:'CO',ONLINEORDERING:'OO',DD:'DD',DOORDASH:'DD',CT:'CT',CATERING:'CT',HH:'HH',HAPPYHOUR:'HH',ALL:'ALL',ALLCHANNELS:'ALL'})[s] || null;}
   function qty(v) { if (typeof v==='number') {if(!Number.isFinite(v)) throw Error('Quantity is not finite.');return v;} const s=clean(v); if(!s || /^[-–—]$/.test(s))return null; if(s.includes('%'))throw Error('Percentage found where item quantity was expected.'); const n=s.replace(/,/g,'').replace(/^\((.*)\)$/,'-$1');if(!/^[+-]?(\d+(\.\d*)?|\.\d+)$/.test(n))throw Error('Invalid quantity: '+s);return Number(n); }
   function money(v){return qty(typeof v==='string'?v.replace(/[$]/g,''):v);}
   function dayPart(time) {const m=clean(time).match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?$/i);if(!m)throw Error('Use restaurant-local HH:MM or HH:MM AM/PM.');let h=+m[1];const min=+m[2],sec=+(m[3]||0);if(m[4]){if(h<1||h>12)throw Error('Invalid time');h=h%12+(/pm/i.test(m[4])?12:0);}if(h>23||min>59||sec>59)throw Error('Invalid time');return h<4?'UNASSIGNED':h<11?'BK':h<16?'LN':'DN';}
@@ -63,7 +63,7 @@
     if(!batch.confirmed)throw Error('Review the source scope and row types before saving.');
     const keys=new Set();for(const row of batch.rows.filter(x=>x.kind==='item')){const key=clean(row.group)+'\0'+clean(row.item)+(batch.meta?.toast?'\0'+clean(row.menu):'');if(keys.has(key))throw Error('Duplicate item in the same group: '+row.item+'. Use distinct group paths or remove the repeated row.');keys.add(key);}
     if(!keys.size)throw Error('There are no included item rows.');
-    for(const b of batches){if(b.id===replaceId)continue;const period=batch.start<=b.end&&b.start<=batch.end;const stores=batch.stores.some(s=>b.stores.includes(s));const channel=batch.meta?.toast&&b.meta?.toast?batch.meta.sourceMenus.some(m=>b.meta.sourceMenus.includes(m)):batch.channel==='ALL'||b.channel==='ALL'||batch.channel===b.channel;const part=batch.part==='ALL'||b.part==='ALL'||batch.part===b.part;if(period&&stores&&channel&&part)throw Error('This overlaps an existing capture ('+b.label+'). Remove that capture before replacing it, or use a different period/channel/day part.');}
+    for(const b of batches){if(b.id===replaceId)continue;if((batch.meta?.metricOnly||'quantity')!==(b.meta?.metricOnly||'quantity'))continue;const period=batch.start<=b.end&&b.start<=batch.end;const stores=batch.stores.some(s=>b.stores.includes(s));const channel=batch.meta?.toast&&b.meta?.toast?batch.meta.sourceMenus.some(m=>b.meta.sourceMenus.includes(m)):batch.channel==='ALL'||b.channel==='ALL'||batch.channel===b.channel;const part=batch.part==='ALL'||b.part==='ALL'||batch.part===b.part;if(period&&stores&&channel&&part)throw Error('This overlaps an existing capture ('+b.label+'). Remove that capture before replacing it, or use a different period/channel/day part.');}
   }
   function report(batches,filter={}){
     const identity=r=>filter.combineNames?clean(r.item).toLowerCase():clean(r.group)+'\0'+clean(r.item);
@@ -91,7 +91,7 @@
       for(const code of b.stores){const v=filter.metric==='netSales'?r.netSales?.[code]:r.values[code];t.seen.add(code);if(v==null)t.unknown.add(code);else t.values[code]=(t.values[code]||0)+v;}
     }
     // Complete exports establish a zero for an absent item within their source scope.
-    for(const b of selected){const keys=new Set(b.rows.filter(x=>x.kind==='item').map(identity));for(const [key,t]of byKey)if(!keys.has(key))for(const c of b.stores){if(b.zeroForMissing){t.seen.add(c);t.values[c]=t.values[c]||0;}else t.unknown.add(c);}}
+    for(const b of selected){const keys=new Set(b.rows.filter(x=>x.kind==='item').map(identity));for(const [key,t]of byKey)if(!keys.has(key)&&b.meta?.metricOnly!=='netSales')for(const c of b.stores){if(b.zeroForMissing){t.seen.add(c);t.values[c]=t.values[c]||0;}else t.unknown.add(c);}}
     const rows=[...byKey.values()].map(t=>{const values=stores.map(c=>t.unknown.has(c)||!t.seen.has(c)?null:t.values[c]??null);return {group:t.group,item:t.item,values,total:values.some(v=>v===null)?null:values.reduce((a,b)=>a+b,0)};});
     const totals=stores.map((c,i)=>rows.length&&rows.every(r=>r.values[i]!==null)?rows.reduce((s,r)=>s+r.values[i],0):null);
     return {combineNames:!!filter.combineNames,stores,rows,totals,total:totals.every(v=>v!==null)?totals.reduce((a,b)=>a+b,0):null,batches:selected,period:periods[0]||'',missing:stores.filter(c=>!selected.some(b=>b.stores.includes(c)))};
