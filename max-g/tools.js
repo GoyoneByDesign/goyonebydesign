@@ -2,15 +2,17 @@
 import {symbols,aliases,ambiguous} from './unit-data.js';
 // Release configuration: set this to the deployed public Worker base URL (no /search).
 // Keep it empty in distributions that only use a paired Mac companion.
-export const BUILTIN_SEARCH_URL='';
+export const BUILTIN_SEARCH_URL='https://max-g-search.michael-goyone.workers.dev';
 export function safePublicURL(raw){try{const u=new URL(raw);if(u.protocol!=='https:'||u.username||u.password||u.port)return null;const host=u.hostname.toLowerCase().replace(/\.$/,'');if(!host.includes('.')||host==='localhost'||host.endsWith('.local')||host.endsWith('.internal')||/^[\d.]+$/.test(host)||host.includes(':'))return null;return u.href;}catch{return null;}}
 export function proxyBase(raw){const value=String(raw).trim();if(!value)throw new Error('Web search is not connected. Start MAX-G Companion or add an optional Cloudflare Worker URL in Settings → Connection.');const u=new URL(value);const local=['localhost','127.0.0.1'].includes(u.hostname);if((u.protocol!=='https:'&&!(u.protocol==='http:'&&local))||u.username||u.password||u.search||u.hash)throw new Error('Use a plain HTTPS Worker URL, without credentials, query or fragment.');return u.href.replace(/\/$/,'');}
 /** Resolve defaults at request time so existing blank settings receive deployment updates.
  * Invalid custom URLs fail visibly; they never silently send a query elsewhere.
  */
-export function searchRoute(raw,{builtinURL=BUILTIN_SEARCH_URL}={}){
+export function searchRoute(raw,{builtinURL=BUILTIN_SEARCH_URL,connection='default'}={}){
   const custom=String(raw||'').trim(),builtIn=String(builtinURL||'').trim();
-  return custom?{source:'custom',base:proxyBase(custom)}:builtIn?{source:'builtin',base:proxyBase(builtIn)}:{source:'companion',base:''};
+  if(custom)return {source:'custom',base:proxyBase(custom)};
+  if(connection==='companion')return {source:'companion',base:''};
+  return builtIn?{source:'builtin',base:proxyBase(builtIn)}:{source:'companion',base:''};
 }
 const RETRYABLE_PUBLIC_STATUS=new Set([429,502,503,504]);
 const RETRYABLE_PUBLIC_CODES=new Set(['SEARCH_TIMEOUT','SEARCH_UNAVAILABLE','RATE_LIMITED','SERVICE_UNAVAILABLE','GATEWAY_TIMEOUT','BAD_GATEWAY','TOO_MANY_REQUESTS']);

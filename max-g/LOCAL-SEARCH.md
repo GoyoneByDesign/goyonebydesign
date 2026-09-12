@@ -1,8 +1,20 @@
-# Fixing “Add your deployed search Worker URL”
+# MAX-G Cloudflare and optional local Mac search
 
-MAX-G 1.3.1 can search through its paired local Mac companion. Leave the optional
-Cloudflare Worker URL blank. No Cloudflare account, paid AI API or hosted search
-proxy is required for this local route. Search still needs internet access.
+MAX-G 1.8.3 includes **https://max-g-search.michael-goyone.workers.dev** as its
+default public search address. In **Settings → Connection**, use **MAX-G Cloudflare
+(default)** under **Search connection** and leave the optional Worker URL blank.
+No address needs to be copied on each phone, tablet or computer. Select **Test web
+search** to check current availability; internet access, permission, shared free
+limits and the search provider still apply. MAX-G’s AI replies run on the device.
+
+The existing paired Mac companion remains an explicit alternative. Choose
+**Paired Mac companion** under **Search connection**, leave the optional URL blank
+and save settings. No Cloudflare account, paid AI API or hosted search proxy is
+required for this local route. An explicit custom URL takes priority over either
+selection. Clearing it restores the selected route. The shared production
+Cloudflare Worker permits the GoyoneByDesign website origins, not local launcher
+addresses. Use the companion route below on `localhost`/`127.0.0.1`, or open
+[hosted MAX-G](https://www.goyonebydesign.com/max-g/) for Cloudflare search.
 
 ## Activate the update on Michael’s Mac
 
@@ -17,7 +29,8 @@ folder on this Mac. The old running process must be restarted to load them:
    bash "/Users/user/Documents/Codex/2026-09-10/create-an-image-of-2/outputs/max-g-web/Start MAX-G Companion.command"
    ```
 
-4. Use the newly opened MAX-G window. In **Settings → Connection**, keep
+4. Use the newly opened MAX-G window. In **Settings → Connection**, choose
+   **Paired Mac companion** under **Search connection**, keep
    **Cloudflare Worker URL (optional)** empty and select **Test web search**.
 5. Keep **Check public web before factual answers** on and save the settings.
    Load the local AI model, then try a factual question.
@@ -32,7 +45,8 @@ alongside Playwright. Keep the whole source folder together.
 
 ## What changed
 
-- An empty Worker URL automatically uses the paired companion for public search.
+- The saved **Paired Mac companion** choice with an empty Worker URL uses the
+  authenticated companion for public search. The default choice uses Cloudflare.
 - Local search uses Bing’s public RSS search endpoint. The optional Cloudflare
   Worker keeps the original DuckDuckGo route for hosted deployments.
 - Search needs no email/cloud-account connection and never reads those accounts.
@@ -76,18 +90,19 @@ answers** and load the local model. Current facts still need retrieval; MAX-G ca
 report that it cannot verify them. Calculations use the built-in local tools, and
 weather uses its separate online weather source.
 
-The hosted PWA may instead use a deployed Worker URL, or a reachable paired local
-companion where the browser permits it. See [DEPLOYMENT.md](DEPLOYMENT.md) for that
+The hosted PWA defaults to MAX-G’s included Cloudflare address. It can also use an
+explicit custom Worker URL or a selected, reachable paired local companion where
+the browser permits it. See [DEPLOYMENT.md](DEPLOYMENT.md) for that
 optional setup. Native certificate integration follows the
 [Truststore documentation](https://truststore.readthedocs.io/en/latest/).
 
-## Verified on this Mac
+## Historical local-route verification (1.3.1)
 
 The 1.3.1 checks passed: 141 JavaScript tests, 166 Python tests (six optional
 browser tests skipped), 44 PWA interface checks and 14 storage checks. The actual
 companion entry point also started and shut down cleanly on an isolated test port.
 
-With the Worker URL empty, **Test web search** retrieved four real Bing results in
+Before Cloudflare became the default, with the Worker URL empty, **Test web search** retrieved four real Bing results in
 1.11 seconds. A subsequent factual question retrieved four source links and the
 cached local 1B model streamed a response. That complete response took 39.25 seconds;
 search speed does not imply equally fast generation or perfect model accuracy.

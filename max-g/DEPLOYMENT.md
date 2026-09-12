@@ -10,20 +10,24 @@ Website files never include the companion’s private data, recordings, models o
 installed Python environments. Each browser keeps its own local profile. A web
 address does not synchronize or remotely expose your Mac’s tools. Natural browser
 voices and local chat work on a compatible device after their model downloads;
-cloning and Mac controls require the companion on that device. Public search still
-needs either that companion or a configured deployed search Worker. Places, nearby
+cloning and Mac controls require the companion on that device. Public search uses
+MAX-G’s included Cloudflare Worker unless a custom URL or paired companion is
+explicitly selected in **Settings → Connection**. Places, nearby
 lookup and weather use direct public data APIs and need no Worker URL; see
 [Location setup and coverage](LOCATIONS.md).
 
-For the optional Worker, include `https://www.goyonebydesign.com` in
+For the hosted Worker, include `https://www.goyonebydesign.com` in
 `ALLOWED_ORIGINS`; the path `/max-g/` is not part of an origin. The default
-`wrangler.toml` now includes both the website and optional app subdomain.
+`wrangler.toml` now includes both the website and optional app subdomain. Production allows only these website origins; loopback launcher origins
+are not enabled. Use the paired companion or the separate dev Worker for local
+search testing. The Settings page links to the hosted app for shared Cloudflare
+search. Do not assume `dev` origins also apply to production.
 
 ## Optional separate max-g.goyonebydesign.com subdomain
 
 The browser runs MAX-G’s language model locally through WebLLM. GitHub Pages serves the app files; the separate Cloudflare Worker requests public DuckDuckGo search results. No paid AI API or inference server is used. Live search is an online service and therefore cannot operate completely offline.
 
-The existing website above already hosts MAX-G. The following steps are only for a separate repository/subdomain deployment; that optional repository, Worker and DNS configuration have not been provisioned. Your connected GitHub account is **GoyoneByDesign**; these steps use it as the repository owner. The remaining value is the **Worker URL returned by Cloudflare**. If you choose a different organization, use that owner’s GitHub Pages hostname instead. These are deployment settings; the application code is complete.
+The existing website above already hosts MAX-G. This release includes **https://max-g-search.michael-goyone.workers.dev** as its default search address. Verify a real `/search` response before publishing any endpoint or Worker change. The following repository/subdomain instructions are only for a separate deployment; that optional repository and DNS configuration have not been provisioned. Your connected GitHub account is **GoyoneByDesign**; these steps use it as the repository owner. If you choose a different organization, use that owner’s GitHub Pages hostname instead.
 
 For account and native-device tools added in 1.1, install the local Mac companion
 using [CONNECTORS.md](CONNECTORS.md). GitHub Pages continues to host only the static
@@ -54,9 +58,9 @@ The optional Worker runtime test is skipped unless `MAXG_MINIFLARE_MODULE` point
 ## 2. Try the app locally
 
 For the simplest Mac setup with web search, use **Setup MAX-G Companion.command**
-once, then **Start MAX-G Companion.command**. Leave the optional Worker URL blank;
-version 1.3.1 searches through the paired local companion. No Cloudflare deployment
-is needed for this route. See [LOCAL-SEARCH.md](LOCAL-SEARCH.md).
+once, then **Start MAX-G Companion.command**. In **Settings → Connection**, select
+**Paired Mac companion** under **Search connection**, leave the optional Worker
+URL blank and save settings. No Cloudflare deployment is needed for this route. See [LOCAL-SEARCH.md](LOCAL-SEARCH.md).
 
 The following static-server plus Worker workflow is an alternative for developing
 and publishing the standalone hosted PWA.
@@ -101,7 +105,7 @@ npm exec --yes --package=wrangler@4.131.0 -- wrangler login
 npm exec --yes --package=wrangler@4.131.0 -- wrangler deploy --env=""
 ```
 
-The empty `--env=""` explicitly selects the production configuration; do not deploy `--env dev` for the public app. Cloudflare prints your actual address, shaped like `https://max-g-search.YOUR_WORKERS_SUBDOMAIN.workers.dev`. Verify a real search first. To configure all installations, set `BUILTIN_SEARCH_URL` in `tools.js` to **that verified base address**, bump the shell version in `sw.js`, and publish the updated app. Existing blank settings will use the built-in endpoint after the app update; explicit custom endpoints remain unchanged. Enter only the base URL, without `/search` or a query string. A user can override it in Settings → Connection on each browser; personal overrides are not synced through GitHub. Leave the built-in constant empty for companion-only distributions or until deployment is verified. A Cloudflare starter page is not a working search service.
+The empty `--env=""` explicitly selects the production configuration; do not deploy `--env dev` for the public app. Cloudflare prints your actual address, shaped like `https://max-g-search.YOUR_WORKERS_SUBDOMAIN.workers.dev`. Verify a real search first. To configure all installations, set `BUILTIN_SEARCH_URL` in `tools.js` to **that verified base address**, bump the shell version in `sw.js`, and publish the updated app. Existing blank settings with the default connection choice use the built-in endpoint after the app update; explicit custom URLs and the saved Paired Mac companion choice remain unchanged. Enter only the base URL, without `/search` or a query string. A user can override it in Settings → Connection on each browser; personal overrides are not synced through GitHub. To use authenticated local search instead, choose Paired Mac companion, leave the URL blank, and save settings. Leave the built-in constant empty for companion-only distributions or until deployment is verified. A Cloudflare starter page is not a working search service.
 
 The optional status endpoint at `/` or `/health` confirms only that the Worker code is running; its `upstream: "not-tested"` field deliberately does not claim that the search provider is available. Use `/search` for the actual end-to-end check below.
 
@@ -221,7 +225,7 @@ For Worker changes, run the tests and the pinned `wrangler deploy --env=""` comm
 
 | Symptom | What to check |
 | --- | --- |
-| UI loads, but search says unconfigured | Save your actual `workers.dev` base URL in MAX-G settings. |
+| UI loads, but search says unconfigured | Close all old app windows and reopen the current release. Select MAX-G Cloudflare under Search connection with a blank custom URL; use Test web search. For a different deployment, set that verified Worker base URL. |
 | `ORIGIN_DENIED` / browser CORS error | Match the exact browser origin in `ALLOWED_ORIGINS`; redeploy the Worker. Local ports are part of the origin. |
 | `RATE_LIMIT_UNAVAILABLE` | Deploy with the supplied Wrangler file so `SEARCH_RATE_LIMIT` is bound. |
 | `RATE_LIMITED` | Wait one minute. The supplied budget is shared per Cloudflare location. |

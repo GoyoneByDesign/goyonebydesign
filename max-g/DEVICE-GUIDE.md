@@ -33,6 +33,32 @@ only at startup. The actual loaded model is shown and recorded in evaluations.
 The compatibility variant uses more estimated memory than the normal 1B variant;
 it is not a low-memory substitute. Supported manual 3B choices are preserved.
 
+## MAX-G’s Cloudflare search connection
+
+The included public search service is
+**https://max-g-search.michael-goyone.workers.dev**. On each device, leave
+**Settings → Connection → Cloudflare Worker URL (optional)** blank and use
+**MAX-G Cloudflare (default)** under **Search connection**. No account with another
+AI assistant is required. MAX-G retrieves public sources through its Worker and
+generates the answer with the device’s downloaded local model.
+
+An explicit custom URL overrides the selected connection and is preserved across
+updates. To use the existing local Mac route, select **Paired Mac companion**,
+clear the optional URL and **Save settings**. **Test web search** checks the
+connection currently shown, including unsaved changes. The selection and any
+override are saved in this browser only. Cloudflare’s default address ships with
+the app to every device; personal settings are not synchronized.
+
+Search uses the current device’s internet connection. Free hosting and public
+search providers impose limits, and a configured connection does not mean an
+availability check passed. The Worker only retrieves public search material; it
+does not grant MAX-G access to accounts, files or native device controls.
+
+The shared Worker permits the three GoyoneByDesign website origins. Local
+launcher addresses (`localhost` or `127.0.0.1`) are not enabled in production.
+If using a local launcher, select **Paired Mac companion**, or use
+[hosted MAX-G](https://www.goyonebydesign.com/max-g/) for Cloudflare search.
+
 ## Recover from an interrupted connection
 
 Eligible temporary failures in public GET requests receive at most one retry,
@@ -73,7 +99,7 @@ review in Memory. Existing personal notes and conversations remain intact.
 | Other speaking languages | Installed local voices exposed by the browser; availability varies by language/device. |
 | Microphone conversations | Verified on-device browser dictation and an available language pack, with microphone permission. Otherwise type or use the device keyboard's dictation under its own privacy settings. |
 | Places, postal codes, weather and directions | Current device's connection and optional one-time location permission. Directions open a maps app or website on this device. |
-| General live web search | A configured search Worker, or a paired companion on the same device. Internet access alone does not configure search. |
+| General live web search | MAX-G’s included Cloudflare Worker over this device’s internet connection, or an explicitly selected custom endpoint/paired companion. Internet permission and service availability still apply. |
 | Calls, messages, email drafts and Spotify | **Connectors & devices → This device** opens supported apps/sites. You finish the call, send or playback there. No completed call/send/play is inferred from opening a link. |
 | Shopping and food | Direct store links open on this device. Automated cart preparation still needs the companion; checkout can be completed in the store. |
 | Folder writing | Where supported, a folder selected with Full access. Import and ZIP downloads remain alternatives. |

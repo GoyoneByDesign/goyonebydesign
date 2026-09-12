@@ -7,9 +7,10 @@ import {normalizeLocationSettings} from './locations.js';
 import {normalizeDeviceMode} from './device.js';
 export const DB_NAME='maxg-personal-v1';
 export const LANGUAGES={'Auto-detect':'en-US',English:'en-US',Tagalog:'fil-PH',Spanish:'es-ES','Chinese (Mandarin)':'zh-CN',Japanese:'ja-JP',Italian:'it-IT',Russian:'ru-RU',Korean:'ko-KR'};
-// Blank proxyURL means the shipped default search route, not a copied endpoint.
+// Blank proxyURL uses searchConnection: the shipped default or an explicit companion.
+// Custom endpoint overrides remain authoritative and are never rewritten by an update.
 // Internet permission remains the control for disabling all public requests.
-export const DEFAULTS=Object.freeze({model:'Llama-3.2-1B-Instruct-q4f16_1-MLC',language:'Auto-detect',style:'Friendly',replyLength:'Brief',instructions:'',onlineFirst:true,proxyURL:'',weatherCity:'',speak:true,voiceProfile:'Warm',voiceURI:'',rate:1,motion:true,theme:'Dark',saveChats:false,useMemory:true,accessMode:'Limited',permissions:{internet:'allow',files:'ask',microphone:'ask',location:'ask'},hourlyLearning:false,voice:normalizeVoice(),orbit:normalizeOrbitSettings(),locations:normalizeLocationSettings(),deviceMode:'auto',performanceSeed:0});
+export const DEFAULTS=Object.freeze({model:'Llama-3.2-1B-Instruct-q4f16_1-MLC',language:'Auto-detect',style:'Friendly',replyLength:'Brief',instructions:'',onlineFirst:true,proxyURL:'',searchConnection:'default',weatherCity:'',speak:true,voiceProfile:'Warm',voiceURI:'',rate:1,motion:true,theme:'Dark',saveChats:false,useMemory:true,accessMode:'Limited',permissions:{internet:'allow',files:'ask',microphone:'ask',location:'ask'},hourlyLearning:false,voice:normalizeVoice(),orbit:normalizeOrbitSettings(),locations:normalizeLocationSettings(),deviceMode:'auto',performanceSeed:0});
 const validTime=(value,fallback)=>Number.isFinite(Number(value))&&Number(value)>=0&&Number(value)<8640000000000000?Number(value):fallback;
 export function freshState(){return {version:1,profile:normalizeProfile(),display:normalizeDisplay(),settings:structuredClone(DEFAULTS),chats:[],notes:[],skills:[],jobs:[],improvement:freshImprovement(),study:{nextRun:Date.now()+3600000,cursor:0,history:[]}};}
 export function validateState(raw){
@@ -21,7 +22,7 @@ export function validateState(raw){
   clean.settings.deviceMode=normalizeDeviceMode(s.deviceMode);clean.settings.voice=normalizeVoice(s.voice);clean.settings.orbit=normalizeOrbitSettings(s.orbit);clean.settings.locations=normalizeLocationSettings(s.locations);
   for(const key of ['internet','files','microphone','location'])if(['ask','allow','deny'].includes(s.permissions?.[key]))clean.settings.permissions[key]=s.permissions[key];
   if(!Object.hasOwn(LANGUAGES,clean.settings.language))clean.settings.language='Auto-detect';
-  for(const [key,values]of Object.entries({style:['Friendly','Professional','Casual','Playful'],replyLength:['Brief','Detailed'],accessMode:['Limited','Full'],voiceProfile:['Warm','Bright','Calm','Storyteller','Focused','Playful'],theme:['Dark','Light']}))if(!values.includes(clean.settings[key]))clean.settings[key]=DEFAULTS[key];
+  for(const [key,values]of Object.entries({searchConnection:['default','companion'],style:['Friendly','Professional','Casual','Playful'],replyLength:['Brief','Detailed'],accessMode:['Limited','Full'],voiceProfile:['Warm','Bright','Calm','Storyteller','Focused','Playful'],theme:['Dark','Light']}))if(!values.includes(clean.settings[key]))clean.settings[key]=DEFAULTS[key];
   for(const key of ['instructions','proxyURL','weatherCity','voiceURI'])clean.settings[key]=clean.settings[key].slice(0,key==='instructions'?1200:300);
   clean.settings.rate=Math.min(1.5,Math.max(.65,Number.isFinite(clean.settings.rate)?clean.settings.rate:1));
   clean.notes=(Array.isArray(raw.notes)?raw.notes:[]).filter(n=>n&&typeof n.id==='string'&&typeof n.text==='string').slice(-60).map(n=>({id:n.id.slice(0,80),title:String(n.title||'Note').slice(0,150),text:n.text.slice(0,2000),source:String(n.source||'Michael · direct note').slice(0,2000),enabled:n.enabled!==false,kind:n.kind==='study'?'study':'manual',time:validTime(n.time,Date.now())}));

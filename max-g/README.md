@@ -1,10 +1,12 @@
-# MAX-G 1.8.2 independent assistant
+# MAX-G 1.8.3 independent Cloudflare connection
 
 MAX-G generates replies with a downloaded local model through WebLLM. It has no ChatGPT, Gemini or Claude chat backend, account dependency, or assistant shortcut. Optional hourly learning uses public MDN, WebLLM, W3C, Ollama, Python and Playwright documentation excerpts; notes remain reviewable and do not retrain the model. Existing personal notes are preserved. Model capability and accuracy still depend on the selected model and device; this release makes no claim of outperforming other assistants.
 
 Public information requests get one bounded retry for eligible temporary failures, within the original timeout. Stop cancels the request and its retry. Failed factual searches offer **Search this question on Google** and a way to restore the question without overwriting another draft. If retrieval works but the local AI cannot start, MAX-G shows the source excerpts and links rather than losing the retrieved information. The optional Google Search links open ordinary web search separately; they do not provide AI inference or automatic Google-result reading.
 
-Blank search settings can inherit a verified built-in Worker address in future deployments; explicit custom endpoints keep priority. This release leaves that address unconfigured because the Cloudflare search code was deployed but its required rate-limit binding has not been enabled. The owner chose to leave Cloudflare unchanged, so this build does not select that unfinished service. It does not claim that a starter Worker is a working search service. [Device guide and recovery](DEVICE-GUIDE.md)
+MAX-G includes its own public search address: **https://max-g-search.michael-goyone.workers.dev**. After updating, blank URL settings use **MAX-G Cloudflare (default)** on each device without copying an address or signing in to another AI assistant. Explicit custom URLs keep priority. **Settings → Connection → Search connection** can instead select **Paired Mac companion**; leave the optional URL blank and save settings to retain that local route. Internet permissions and personal data are preserved. Select **Test web search** for a real lookup; a configured endpoint is not a guarantee of current availability. Cloudflare's shared free service and the upstream search provider have limits and may be unavailable. [Device guide and recovery](DEVICE-GUIDE.md)
+
+The public website uses the shared Cloudflare service. Local launcher addresses such as `http://127.0.0.1:8766` are not included in its allowed origins. On a local launcher, select **Paired Mac companion**, or open [hosted MAX-G](https://www.goyonebydesign.com/max-g/) for Cloudflare search.
 
 # MAX-G 1.8 original songs and hip-hop dance
 
@@ -64,10 +66,12 @@ administrator login.
 
 ## Fixed in 1.3.1: automatic search on your Mac
 
-A paired Mac companion now supplies public web search when **Settings → Connection →
-Cloudflare Worker URL (optional)** is blank. You do not need a Cloudflare account
-for this local route. Select **Test web search** to check it. The local route uses
-Bing's public RSS results; the separately hosted Worker still uses DuckDuckGo.
+A paired Mac companion supplies public web search. In current releases, select
+**Settings → Connection → Search connection → Paired Mac companion**, leave
+**Cloudflare Worker URL (optional)** blank, then save settings. You do not need a
+Cloudflare account for this local route. Select **Test web search** to check it.
+The local route uses Bing's public RSS results; the hosted Worker retrieves public
+search results separately.
 [Restart and troubleshooting steps](LOCAL-SEARCH.md)
 
 On this Mac the new dependency is already installed. Restart the companion and
@@ -131,9 +135,9 @@ npm run serve
 
 Open `http://127.0.0.1:8765/`. Use **Load local AI**, then type a message and press
 Enter. Shift+Enter adds a line. The first model load downloads weights; streaming
-begins after loading and prompt processing. For public searches, use a paired running Mac companion with a blank Worker URL,
-or configure your deployed Worker URL in **Settings → Connection**. Weather and calculations have
-separate direct paths. Turn off web-first mode for cached offline conversation.
+begins after loading and prompt processing. On this local address, choose **Paired Mac companion** in **Settings → Connection**
+for public searches, or open the hosted website for the included Cloudflare
+connection. An explicit custom Worker URL remains an alternative. Weather and calculations have separate direct paths. Turn off web-first mode for cached offline conversation.
 
 The default `Llama-3.2-1B-Instruct-q4f16_1-MLC` runs through pinned
 `@mlc-ai/web-llm@0.2.85` imported from a CDN. A GPU compatibility 1B model and a 3B
