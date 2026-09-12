@@ -1,7 +1,7 @@
 {
-  "revision": 3,
-  "updatedAt": "2026-09-12T10:31:17Z",
-  "lastCheckedAt": "2026-09-12T10:31:17Z",
+  "revision": 4,
+  "updatedAt": "2026-09-12T11:22:51Z",
+  "lastCheckedAt": "2026-09-12T11:22:51Z",
   "entries": [
     {
       "id": "pmix-comparison",
@@ -117,10 +117,49 @@
         "https://github.com/GoyoneByDesign/goyonebydesign/tree/main/pmix-app"
       ],
       "checkedAt": "2026-09-12T10:31:17Z"
+    },
+    {
+      "id": "dense-native-report-header",
+      "topic": "Compact report printing",
+      "fact": "Compact reports use 8-point detail text, bold category and total rows, and a larger centered title. Excel places the title and date/filter line in its native print header, visible in Page Layout, Print Preview and print. Native header/footer text has a 255-character limit including formatting; overflow filter descriptions remain in the report legend. Wide comparisons repeat the item column on additional printed pages.",
+      "source": "Microsoft Excel header/footer documentation; applied MAX report exporter",
+      "sourceType": "public_documentation",
+      "sourceUrls": [
+        "https://support.microsoft.com/en-us/excel/headers-and-footers-in-a-worksheet",
+        "https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.spreadsheet.oddheader?view=openxml-3.0.1"
+      ],
+      "checkedAt": "2026-09-12T11:22:51Z"
+    },
+    {
+      "id": "dining-subtypes",
+      "topic": "Dining options and abbreviations",
+      "fact": "Carry-Out contains W/I Walk-In, C/I Call-In, ONL Online Order, D/T Drive-Thru, KSK Kiosk and DD DoorDash. Dine-In contains BAR, PATIO and DI inside seating. Catering contains CT-DEL delivery, CT-P/U pickup and CT-ONL online. Filters display only source-supported scopes. Menu-level Dine-In or Carry-Out totals cannot establish more detailed subtypes. The report legend explains used abbreviations; All Dining Options refers to all dining scopes present in the uploaded source.",
+      "source": "Owner reporting requirements; applied source-driven dining filters",
+      "sourceType": "owner_instruction",
+      "checkedAt": "2026-09-12T11:22:51Z"
+    },
+    {
+      "id": "source-vs-setup",
+      "topic": "Automatic source comparisons",
+      "fact": "Two files with matching table headers and different dates or stores select VS automatically; three or more select side-by-side source columns. Earlier dates are Previous; equal dates use import order, with an explicit reversal control. Columns and legends retain each source date and location. Distinct date intervals are never summed together. DIFF and VAR use source values, and grand-total VAR uses the corresponding grand totals.",
+      "source": "Owner reporting requirements; applied MAX comparison engine",
+      "sourceType": "owner_instruction",
+      "checkedAt": "2026-09-12T11:22:51Z"
+    },
+    {
+      "id": "modifier-occurrences",
+      "topic": "Workbook tabs and modifiers",
+      "fact": "For supported Toast All levels workbooks, MAX reads every tab and checks item detail against Summary, Items, Menus and Menu groups, excluding gift-card rows from item PMIX; modifier occurrences are checked against the Modifiers tab. A separate modifier quantity view uses actual modifier counts. Modifiers can overlap and are not unique item counts or item net sales.",
+      "source": "MAX workbook importer and reconciliation checks",
+      "sourceType": "app_implementation",
+      "sourceUrls": [
+        "https://github.com/GoyoneByDesign/goyonebydesign/blob/main/pmix-app/public/files.js"
+      ],
+      "checkedAt": "2026-09-12T11:22:51Z"
     }
   ],
   "reviewLimitations": [
     "Toast Product Mix documentation could not be retrieved on 2026-09-12. Import changes were verified against supplied format examples and synthetic fixtures; they were not re-certified against current Toast documentation."
   ],
-  "dailyReview": "Daily documentation and sourced-knowledge review is enabled through Michael’s ChatGPT task. New knowledge is applied only when supported and validated. Model weights do not retrain."
+  "dailyReview": "Daily documentation and sourced-knowledge review is enabled through Michael\u2019s ChatGPT task. New knowledge is applied only when supported and validated. Model weights do not retrain."
 }

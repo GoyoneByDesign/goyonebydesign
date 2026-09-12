@@ -7,3 +7,8 @@ main{max-width:1900px;padding:36px 36px 48px}.page-heading h1{font-size:32px;let
 @media(max-width:800px){main{padding:22px 16px}.page-heading h1{font-size:28px}.brand{width:auto}.layout-gallery{padding:24px 20px}.mini-page{height:155px}.mini-page canvas{height:195px}.layout-cards{gap:10px}.layout-card{padding:10px}.layout-card-caption strong{font-size:11px}.layout-card-caption span{font-size:9px}.panel{padding:22px}.gallery-heading h2{font-size:20px}.top{padding-left:16px}}
 @media(max-width:520px){.layout-cards{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding:3px 3px 10px}.layout-card{min-width:210px;scroll-snap-align:start}.mini-page{height:175px}.mini-page canvas{height:215px}.filter-grid{grid-template-columns:1fr}.gallery-heading h2{font-size:21px;line-height:1.4}.gallery-heading p{line-height:1.6}.studio-summary{gap:20px 12px}.studio-summary strong{font-size:18px}.studio-summary>div{padding-left:12px}.panel{padding:18px}.preview-editor{grid-template-columns:1fr}.paper-stage{padding:12px}.preview-toolbar{padding:15px}.document-preview{margin-left:-10px;margin-right:-10px}.preview-pagination{gap:8px}.gallery-steps{display:none}}
 @media print{.layout-gallery,.studio-summary,.document-preview{display:none!important}body{background:#fff}}
+/* Compact source controls retain comfortable click targets; printed density lives in exporters. */
+#reportTable td,#reportTable th{padding:5px 8px;font-size:12px;line-height:1.25}
+#channelFilters label:has(input:checked){font-weight:650}
+#modifierFilters{max-height:240px;overflow:auto}
+#comparisonSetup{font-size:12px;line-height:1.45;margin-top:7px}
