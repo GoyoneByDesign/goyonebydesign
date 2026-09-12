@@ -1,1 +1,1 @@
-export const BUILD = {"version":"3.2.0","build":11,"updated":"2026-09-12T12:17:48.070Z"};
+export const BUILD = {"version": "3.2.1", "build": 12, "updated": "2026-09-12T12:54:23Z"};

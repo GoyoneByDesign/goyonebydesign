@@ -1,7 +1,7 @@
 {
-  "revision": 5,
-  "updatedAt": "2026-09-12T12:17:48.070Z",
-  "lastCheckedAt": "2026-09-12T12:17:48.070Z",
+  "revision": 6,
+  "updatedAt": "2026-09-12T12:54:23Z",
+  "lastCheckedAt": "2026-09-12T12:54:23Z",
   "entries": [
     {
       "id": "pmix-comparison",
@@ -121,14 +121,14 @@
     {
       "id": "dense-native-report-header",
       "topic": "Compact report printing",
-      "fact": "Compact reports use 8-point detail text, bold category and total rows, and a larger centered title. Excel places the title and date/filter line in its native print header, visible in Page Layout, Print Preview and print. Native header/footer text has a 255-character limit including formatting; overflow filter descriptions remain in the report legend. Wide comparisons repeat the item column on additional printed pages.",
+      "fact": "All report formats use 12-point titles, 10-point headings, 8-point detail figures and 8-point total figures. Category labels may use 10 points; numbers remain 8 points. Fine gray borders and restrained grayscale fills distinguish headings, categories and grand totals. Excel title/date/filter information remains in the native print header; overflow filters remain in the legend. Existing saved formats use this typography when rendered.",
       "source": "Microsoft Excel header/footer documentation; applied MAX report exporter",
       "sourceType": "public_documentation",
       "sourceUrls": [
         "https://support.microsoft.com/en-us/excel/headers-and-footers-in-a-worksheet",
         "https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.spreadsheet.oddheader?view=openxml-3.0.1"
       ],
-      "checkedAt": "2026-09-12T11:22:51Z"
+      "checkedAt": "2026-09-12T12:54:23Z"
     },
     {
       "id": "dining-subtypes",
@@ -199,10 +199,18 @@
       "source": "Owner reporting requirements and applied PMIX calculation/export logic",
       "sourceType": "owner_instruction",
       "checkedAt": "2026-09-12T12:17:48.070Z"
+    },
+    {
+      "id": "app-build-metadata-standard",
+      "topic": "Visible app version and update details",
+      "fact": "Owner standard for apps: always show Version number, Build number, Updated date and Updated time with an explicit timezone. MAX shows these in its footer and PIN screen, with static build details available before the status request completes. Applied source changes update build metadata; public knowledge revisions increase only when knowledge changes are applied.",
+      "source": "Owner instruction and applied MAX interface",
+      "sourceType": "owner_instruction",
+      "checkedAt": "2026-09-12T12:54:23Z"
     }
   ],
   "reviewLimitations": [
     "Toast Product Mix documentation could not be retrieved on 2026-09-12. Import changes were verified against supplied format examples and synthetic fixtures; they were not re-certified against current Toast documentation."
   ],
-  "dailyReview": "Daily documentation and sourced-knowledge review is enabled through Michael’s ChatGPT task. New knowledge is applied only when supported and validated. Model weights do not retrain."
+  "dailyReview": "Daily documentation and sourced-knowledge review is enabled through Michael\u2019s ChatGPT task. New knowledge is applied only when supported and validated. Model weights do not retrain."
 }
