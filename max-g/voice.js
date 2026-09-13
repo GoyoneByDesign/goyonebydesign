@@ -5,7 +5,11 @@ export const PROFILES={Warm:{pitch:1,rate:.98},Bright:{pitch:1.06,rate:1.03},Cal
 export function spokenText(text){return String(text).replace(/\n\s*Sources?:[\s\S]*$/i,'').replace(/```[\s\S]*?```/g,' Code is available in the message. ').replace(/\[([^\]]+)\]\(https?:\/\/[^)]+\)/g,'$1').replace(/https?:\/\/\S+/g,'').replace(/\[\d+\]/g,'').replace(/^#{1,6}\s*/gm,'').slice(0,1800);}
 export class LocalVoice{
   constructor({onState=()=>{},onProgress=()=>{},onLevel=()=>{},helper=null,permission=async()=>{},preferCompanionNeural=false}={}){this.onState=onState;this.recognition=null;this.utterance=null;this.generation=0;this.helper=helper;this.permission=permission;this.preferCompanionNeural=preferCompanionNeural;this.neural=new NeuralVoice({onState,onProgress,onLevel});this.cloning=false;}
-  async load(options){if(this.preferCompanionNeural&&this.helper){const result=await this.helper('status',{},options);if(!result.preset_ready)throw new Error('The installed MAX-G voice runtime needs repair. Open Voice Studio for status.');return result;}return this.neural.load(options);}
+  async load(options){
+    const generation=this.generation;this.onState('thinking');
+    try{if(this.preferCompanionNeural&&this.helper){const result=await this.helper('status',{},options);if(!result.preset_ready)throw new Error('The installed MAX-G voice runtime needs repair. Open Voice Studio for status.');return result;}return await this.neural.load(options);}
+    finally{if(generation===this.generation)this.onState('idle');}
+  }
   enableAudio(options){return this.neural.unlock(options);}
   testSound(options){this.stop();return this.neural.testSound(options);}
   unload(){this.stop();this.neural.unload();if(this.helper)this.helper('unload').catch(()=>{});}
