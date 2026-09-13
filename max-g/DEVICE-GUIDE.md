@@ -156,3 +156,7 @@ support are reported separately from the browser's online/offline hint.
 Close and reopen old MAX-G windows after an update so the new offline shell can
 activate. Native Mac installs also need the updated companion running to serve
 the new device-settings modules.
+
+## Install and stay current
+
+Use [Get MAX-G](https://www.goyonebydesign.com/max-g/install.html) for the free iPhone/iPad Home Screen app. On each device, open **Settings → Install & updates**. The shared version number identifies the website, installed web app and Mac interface. Updates need internet and never run over an active task. Apply a downloaded web update to reopen, or download a Mac update and quit/reopen MAX-G. Native Mac tools may need a newer installer. Chat data and downloads remain local to each device.

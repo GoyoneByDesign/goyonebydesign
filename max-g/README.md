@@ -340,3 +340,11 @@ verify search failures, model reload offline, mobile installation and the chosen
 local voice/recognition language on each target device. Cloudflare’s free tier has
 usage limits; no zero-cost or uptime guarantee is made beyond staying on its free
 plan without paid APIs. [Cloudflare limits](https://developers.cloudflare.com/workers/platform/limits/)
+
+## iPhone, iPad and shared app updates
+
+Install the free Home Screen app from [Get MAX-G](https://www.goyonebydesign.com/max-g/install.html). Follow [the iOS installation guide](./IOS-INSTALL.md). The website, iOS/iPadOS Home Screen app and Mac share release **1.10.0 / build 205**. Open **Settings → Install & updates** to see the version and check/apply a release. Shared updates do not sync private data between devices.
+
+The PWA caches a complete release with SHA-256 integrity checks; partial website deployments keep the previous cache. Mac downloads verified UI snapshots and switches only on its next launch. Native tools, local models, recordings and personal data remain outside this updater. A release can set `min_companion_build` when new native functionality needs an installer.
+
+Before publishing future releases, update `package.json`, `release-version.js` and the release constants/cache version in `sw.js`, then run `python3 scripts/build-release.py`. Publish **all changed app files and release.json in the same repository commit**. Never publish local companion/private/model folders. Keep the Mac native/companion version in step when its code changes.

@@ -316,7 +316,7 @@ export class HelperClient {
     const abort=()=>controller.abort();
     signal?.addEventListener('abort',abort,{once:true});
     if (signal?.aborted) abort();
-    const timeout=setTimeout(abort,path==='/api/voice/synthesize'||['/api/local-ai/chat','/api/local-ai/load'].includes(path)?360000:60000);
+    const timeout=setTimeout(abort,path==='/api/voice/synthesize'||['/api/local-ai/chat','/api/local-ai/load','/api/ui-updates/apply'].includes(path)?360000:60000);
     try {
       const response=await this.fetch(requestURL+path,{method,headers:{Authorization:`Bearer ${requestToken}`,...(body===undefined?{}:{'Content-Type':'application/json'})},
         ...(body===undefined?{}:{body:JSON.stringify(body)}),credentials:'omit',cache:'no-store',mode:'cors',redirect:'error',signal:controller.signal});
@@ -803,5 +803,11 @@ export function initializeConnectors({toast=()=>{},generateText,findMusic,onRepl
     try{verify();const result=await target.request('/api/extensions/'+operation,{method:'POST',body,signal:controller.signal});verify();return result;}
     finally{searchControllers.delete(controller);signal?.removeEventListener('abort',abort);}
   }
-  return {render,handleCommand,disconnect,reset,publicSearch,voiceRequest,localAIRequest,extensionRequest,browserWorkspace,cancel:cancelOperation,refresh:()=>guarded(refresh),get paired(){return Boolean(client.token);},get deviceStatus(){return {paired:Boolean(client.token),connected:Boolean(client.token&&status),platform:typeof status?.platform==='string'?status.platform.slice(0,32):null};}};
+  async function updateRequest(operation){
+    if(!['status','check','apply'].includes(operation))throw Error('Unknown app update operation.');
+    const address=new URL(globalThis.location?.href||'https://invalid.example/');
+    if(address.protocol!=='http:'||!['127.0.0.1','localhost'].includes(address.hostname)||address.searchParams.get('desktop')!=='1'||client.url!==address.origin)throw Error('Use app updates from the installed MAX-G Mac window.');
+    return client.request('/api/ui-updates/'+operation,{method:'POST',body:{}});
+  }
+  return {render,handleCommand,disconnect,reset,publicSearch,voiceRequest,localAIRequest,extensionRequest,updateRequest,browserWorkspace,cancel:cancelOperation,refresh:()=>guarded(refresh),get paired(){return Boolean(client.token);},get deviceStatus(){return {paired:Boolean(client.token),connected:Boolean(client.token&&status),platform:typeof status?.platform==='string'?status.platform.slice(0,32):null};}};
 }

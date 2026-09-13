@@ -1,0 +1,393 @@
+{
+  "schema": 1,
+  "version": "1.10.0",
+  "build": 205,
+  "min_companion_build": 205,
+  "files": [
+    {
+      "path": "DEVICE-GUIDE.md",
+      "sha256": "5ba23a511421e8e74123c52d532191e09d3c3872383afaa941ff0588802f277a",
+      "bytes": 11067
+    },
+    {
+      "path": "IOS-INSTALL.md",
+      "sha256": "e15606e801bfd5903a49c4f6e21ef8374ef5233808471d5f7ea615268496bb1c",
+      "bytes": 5720
+    },
+    {
+      "path": "README.md",
+      "sha256": "383a5a4e61037a563e0f3b5ce54104dbdcc92f00adad9aa9938e482f0d465131",
+      "bytes": 33049
+    },
+    {
+      "path": "VOICE-SETUP.md",
+      "sha256": "3bc6abe1722c3cb260895051ba465d2cd32e3e58fa3002557502effcc343f487",
+      "bytes": 15128
+    },
+    {
+      "path": "WEATHER-GUIDE.md",
+      "sha256": "2535e2dee1b4a4c0ad82cdb14da5d9fab67da56b4d0ea1b6297a3acea4abd8e3",
+      "bytes": 6091
+    },
+    {
+      "path": "activity-frame.js",
+      "sha256": "933ff76152ef28f2e21e51777ae7c320e47c3f0b71959e441f10a2286bcaa9d3",
+      "bytes": 3465
+    },
+    {
+      "path": "address-speech.js",
+      "sha256": "a8c07de3a910781cefafbe71c2cb775dcc86eddbdf2a1b29f3f728788a8ea4d6",
+      "bytes": 8704
+    },
+    {
+      "path": "answer-routing.js",
+      "sha256": "19393a33fee80134ff9f48e4242c61754b0606ad304a6f3ce437bdfd4f0d3210",
+      "bytes": 5218
+    },
+    {
+      "path": "app.js",
+      "sha256": "655bc8600e7c16131602156d51b44713fa0764e3bbfeb3aca3eed09b451b55ea",
+      "bytes": 103446
+    },
+    {
+      "path": "assets/goyonebydesign-logo.png",
+      "sha256": "b82e7e1d17708b3a44f7f4e6e6293ee5490a1196ae7aea488da63ad433262b1e",
+      "bytes": 10542
+    },
+    {
+      "path": "assets/icon.svg",
+      "sha256": "ba72fde27ed37425501f74c3894798ee4af2e02b6dd85ac32bc86b31eeabe40b",
+      "bytes": 2494
+    },
+    {
+      "path": "assets/song/male-syllables-v1.json",
+      "sha256": "a01ed48843afea8dd7d9509ddfaca407a37d0ece5ef35df79f84e02ef55b778e",
+      "bytes": 1255827
+    },
+    {
+      "path": "browser-panel.css",
+      "sha256": "48d6d5d40f50fb4ee4819fb014bca2075fa51dcbc060badb3b14ca6d2bfe901f",
+      "bytes": 6553
+    },
+    {
+      "path": "browser-panel.js",
+      "sha256": "0041d86582a4ef9ae359c009ee315c16785b58bb62f7bcb45891f24b73e3fdce",
+      "bytes": 9755
+    },
+    {
+      "path": "browser-task.js",
+      "sha256": "fc9fa4d387cd091c58d137c80d97cef187aabc04c0ed5142de98b94309d9008a",
+      "bytes": 9131
+    },
+    {
+      "path": "companion-interactions.js",
+      "sha256": "0881c41c5e41a56f3d13be597d0b2d2727374c5fcee7ecfedbdd54f95cbebcb9",
+      "bytes": 4612
+    },
+    {
+      "path": "connectors.css",
+      "sha256": "e959324476f0fa836b8be07f13cd8addd32bf7a477c75bb9cd46543ab20b4715",
+      "bytes": 10112
+    },
+    {
+      "path": "connectors.js",
+      "sha256": "9b4a9c694455a7f6069db0131cc1a35a6c795e8057284b98f3da7fdcce5d5669",
+      "bytes": 105029
+    },
+    {
+      "path": "country-data.js",
+      "sha256": "bb60fbda0a7d372bbafd1d913b2b7dc07d9309f7744b1ac904f07acffd04fd1b",
+      "bytes": 7410
+    },
+    {
+      "path": "device-ui.js",
+      "sha256": "269ec276265bfcb96d649d2b2b3f9cd88e8a6b3ca6732d220edecbda3bcfe767",
+      "bytes": 4393
+    },
+    {
+      "path": "device.css",
+      "sha256": "51558991979c4ff477f8a116f52857c015cb21cceffe396d72263c9c836a2119",
+      "bytes": 1387
+    },
+    {
+      "path": "device.js",
+      "sha256": "68b3e5f99b443e0ab447021dc99937d9e4570fd93f886518419a92d2fa5bc00f",
+      "bytes": 11647
+    },
+    {
+      "path": "engine.js",
+      "sha256": "e4a2e37b7970db2b1853cdb9964d8fc08304bd1ef5765a62057082c7894d454a",
+      "bytes": 16242
+    },
+    {
+      "path": "extensions.css",
+      "sha256": "84c3287c7b2bb9eeffc456f41f064ac700d6592ebb0f03190c2fec92adb770a9",
+      "bytes": 1344
+    },
+    {
+      "path": "extensions.js",
+      "sha256": "7a67b109deca1169a203d5482ebc627685edcf738705be090ece5a7ab2870f70",
+      "bytes": 11101
+    },
+    {
+      "path": "files.js",
+      "sha256": "6afba29232cfc6d8f1e6781157a217eb9ba9d88a48ae46b3f39f2f7651939560",
+      "bytes": 14771
+    },
+    {
+      "path": "gemini.js",
+      "sha256": "c674fcd108d9876248d008ed4a12b06e6117234cd1d5b248c7cc5cb50f658333",
+      "bytes": 7500
+    },
+    {
+      "path": "icons/apple-touch-icon.png",
+      "sha256": "77130acb011373925fcfcdeb6e5c513ec4c636d3ef7bb3ef66ccc1143604fa98",
+      "bytes": 44925
+    },
+    {
+      "path": "icons/icon-192.png",
+      "sha256": "a48a1a63becf0c27b538fbd3fde8ca6c2d6140cf4bf9ced0f27608950f2e45e5",
+      "bytes": 50624
+    },
+    {
+      "path": "icons/icon-512.png",
+      "sha256": "c286e72b475d992f2adc42c37ceea9dc013703e96f07a77527c44173e626a29c",
+      "bytes": 305355
+    },
+    {
+      "path": "icons/maskable-512.png",
+      "sha256": "c286e72b475d992f2adc42c37ceea9dc013703e96f07a77527c44173e626a29c",
+      "bytes": 305355
+    },
+    {
+      "path": "improvement-ui.js",
+      "sha256": "17b3e720542980ee8e6cd2ac9a31b05915e30a92ba0ce8846ce7a192e365c507",
+      "bytes": 13889
+    },
+    {
+      "path": "improvement.css",
+      "sha256": "78b2b275a1d4139b4706bb40f8b36681e32b01f7b2f03ae8631edb601088de8a",
+      "bytes": 5795
+    },
+    {
+      "path": "improvement.js",
+      "sha256": "05ab4ebfc303663c0efcfb9213943be19b66029b78c88192b944aa46908569bd",
+      "bytes": 11140
+    },
+    {
+      "path": "index.html",
+      "sha256": "548ad2fe696beae2971683771db6e06ede6da80ce865b894a1a2d3d75516a1c7",
+      "bytes": 23249
+    },
+    {
+      "path": "inference-worker.js",
+      "sha256": "f20fdd1e70577c090451147a9b41c6d8f54556bfa43041d166270f0cbed8b54d",
+      "bytes": 285
+    },
+    {
+      "path": "install.css",
+      "sha256": "af1dc83579663c809c6dd4d7cd7361e3e7819dd4c5d0f4ece41b80ff67b99e3b",
+      "bytes": 8188
+    },
+    {
+      "path": "install.html",
+      "sha256": "6072f61285299e9fcec397fe1eb8681a2f2520ccfc0e79198e78eaedd1f8631f",
+      "bytes": 11089
+    },
+    {
+      "path": "install.js",
+      "sha256": "94daaec938225140ca699c3f338be21223511017abf3fc5ab077ef03bab0b3e6",
+      "bytes": 4726
+    },
+    {
+      "path": "launch-context.js",
+      "sha256": "2f2f1e73e7ccb93b3d536977d3da04defdb79821681576acc672e3f302b9971a",
+      "bytes": 2893
+    },
+    {
+      "path": "local-ai.js",
+      "sha256": "105d113106afb839a97e30c9c820af8f82b7a170dbeff2f00cd3dc1473e00ae1",
+      "bytes": 8388
+    },
+    {
+      "path": "locations-ui.js",
+      "sha256": "7975d7d9c0734c9eb14d8ee2e0786400d12e04ed28d845d9e444f60c77dc5508",
+      "bytes": 35482
+    },
+    {
+      "path": "locations.css",
+      "sha256": "4dc8b1349661bcd61906a94e0a2acbb129086ca4d4b7890d99b792f157f732e7",
+      "bytes": 2068
+    },
+    {
+      "path": "locations.js",
+      "sha256": "2046a944ae0c1a6910f01249e803b8382b597249538905650b5ad4c5a665f0b2",
+      "bytes": 41094
+    },
+    {
+      "path": "manifest.json",
+      "sha256": "c039adc90cd4fd0bb61011aca9785638dad3619bc1c47598858ab9f8a7be9cf3",
+      "bytes": 944
+    },
+    {
+      "path": "mobile-viewport.css",
+      "sha256": "c3b27db5417993a5c337347c4ea1b70438fdbdc1d7961c3f481ba12487fa5d7d",
+      "bytes": 2668
+    },
+    {
+      "path": "mobile-viewport.js",
+      "sha256": "ce581c826b52362bb7468e4fc28d0009e17e34d83e4ba5b1f452373232e2eb5a",
+      "bytes": 2437
+    },
+    {
+      "path": "music-composer.js",
+      "sha256": "5f8da32e52c4df28ae514af11aa6b4f4b643cbf14f4ea295bd441609a109b9c7",
+      "bytes": 12353
+    },
+    {
+      "path": "neural-voice.js",
+      "sha256": "974724ab059dd23f18de1268e91b63a8b5961e4bbe395f8cf17c703a746273ae",
+      "bytes": 12428
+    },
+    {
+      "path": "orbit.css",
+      "sha256": "a9450a7eedf55d8b20a2e8c54b9a7107b842ee507ea10e8ebba358b080d9b5cd",
+      "bytes": 9864
+    },
+    {
+      "path": "orbit.js",
+      "sha256": "172f83fb54eb7c3542b33ae56deb9b7682a464ecfe9d9126f83c8d1ae09c9333",
+      "bytes": 23145
+    },
+    {
+      "path": "package.json",
+      "sha256": "e7e13b27d7a081ce1ca5ceae9d27e92034fe81aeb0f5c73ce280f4bcf7754a4e",
+      "bytes": 255
+    },
+    {
+      "path": "performance-worker.js",
+      "sha256": "224d8138c9deacdc68652282d6b2cd2c0d1a94500d9801e07f0fb0735fe5c016",
+      "bytes": 2330
+    },
+    {
+      "path": "performance.js",
+      "sha256": "2e35049bf086378fe0ca5563f6601ed12e63aad23c52e42890f81d307894db3c",
+      "bytes": 7946
+    },
+    {
+      "path": "postal-data.js",
+      "sha256": "e5cf563a98d44cfccf7d3813ff3d5ef04a76c7a9a26732db205e5a24a8b6fb59",
+      "bytes": 5381
+    },
+    {
+      "path": "profile-ui.js",
+      "sha256": "21674cd5e3429df59dd394ea6abde556c6c02825be59bc99a474547be29f1edd",
+      "bytes": 14947
+    },
+    {
+      "path": "profile.css",
+      "sha256": "cde94ce23d666cf59ff035c7e7885a8ef3c7515600e764ed5f095c5880f9d749",
+      "bytes": 16995
+    },
+    {
+      "path": "profile.js",
+      "sha256": "9c4b7b5c9595dfbc0e5d276346cc02ae38f3a4f46f36e45c5845996176d5fa4a",
+      "bytes": 13019
+    },
+    {
+      "path": "release-version.js",
+      "sha256": "eaeb6f6b16b482d893951e725cfa6ad1199ab967970b1174785c8e887f55ba22",
+      "bytes": 155
+    },
+    {
+      "path": "song-vocals.js",
+      "sha256": "6fc4d84c94103affed4fce3bc13223ca7d9db86d06f803939c2b9e30f9fc6266",
+      "bytes": 5904
+    },
+    {
+      "path": "speech-text.js",
+      "sha256": "e33fbb82dc23e8d9d1032d576a4c5b22c152340a599914d621cb160d2c455231",
+      "bytes": 9657
+    },
+    {
+      "path": "state.js",
+      "sha256": "9b91919aaf5aa0b4927291142f1ffab932ddcc8839536d1df5c7bf8c71fea4a1",
+      "bytes": 9477
+    },
+    {
+      "path": "style.css",
+      "sha256": "913e26cc614ef1ffc43f2bfadf5ecf705b7b9dc000063c82d718745174928e49",
+      "bytes": 44185
+    },
+    {
+      "path": "sw.js",
+      "sha256": "9929c184b6b5fc81cab7e00c9aaa7e56f1f59c257d53a5a54270468ec6a6700c",
+      "bytes": 8073
+    },
+    {
+      "path": "tools.js",
+      "sha256": "a6d16184f6d55cf458bcf0237fbf7df52e1e736d0d749cf6f051e780a977b523",
+      "bytes": 39463
+    },
+    {
+      "path": "unit-data.js",
+      "sha256": "99576826a85acf8c6000b90d33b9c77345fa1fd5f9d381ac1cf0daecccb9963c",
+      "bytes": 15096
+    },
+    {
+      "path": "units.js",
+      "sha256": "17437e63232a5ee7e4ed840095b6276b91fc18424b9b382f03c3588bd0d7be6b",
+      "bytes": 1625
+    },
+    {
+      "path": "updates.css",
+      "sha256": "40d2b42f8957b616a4485a19eef7dab7c69e153edab4b902183b1ce81c459506",
+      "bytes": 736
+    },
+    {
+      "path": "updates.js",
+      "sha256": "441e2758cf995873704f20a1c6ba6ff0df4c5ab766e616c4592c2cb4883df25f",
+      "bytes": 7999
+    },
+    {
+      "path": "voice-config.js",
+      "sha256": "9c877d2eaea0dcaae914f4e47835bb523883b29aeb56a669eecb8ce25d648d60",
+      "bytes": 5444
+    },
+    {
+      "path": "voice-studio.css",
+      "sha256": "f5eac8e167277c6e1c12129692f9781bf93982dc99e73833e1c91201cf8f71cd",
+      "bytes": 2819
+    },
+    {
+      "path": "voice-studio.js",
+      "sha256": "5f20c81ede4a5dfd0c89db5edba758dfe077cd4133ee5f2a8330c344ea437d35",
+      "bytes": 32405
+    },
+    {
+      "path": "voice-worker.js",
+      "sha256": "5d17c9f45c7f6b1175fcb32edac761efe30b7e2708aa7681507a024aac0d2262",
+      "bytes": 2358
+    },
+    {
+      "path": "voice.js",
+      "sha256": "fd72b4e95374f8b1c5ad25a2dac532b1c1d1e676bd8b36160d7c9c976e6e172d",
+      "bytes": 10598
+    },
+    {
+      "path": "weather-card.css",
+      "sha256": "fbfa4c0fb614bfd247b66d441b22a743fde7bba15c95b9bbc7c004e520d1e8f5",
+      "bytes": 8005
+    },
+    {
+      "path": "weather-card.js",
+      "sha256": "832c751f49be7d099103a612f5743562d42c4761982654a9fd69466f39de815e",
+      "bytes": 12716
+    },
+    {
+      "path": "weather-place.js",
+      "sha256": "b8c5102a78ed0da369546ce0eb3ac89005ad8c4c8aad58d45d3a6e73f8749d1a",
+      "bytes": 10509
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#080e1b">
+  <meta name="description" content="Install MAX-G on your iPhone, iPad, Android device or computer from GoyoneByDesign. One shared MAX-G app, with updates from our website.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="MAX-G">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+  <title>Get MAX-G · iPhone, iPad &amp; more</title>
+  <link rel="canonical" href="https://www.goyonebydesign.com/max-g/install.html">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" type="image/png" href="./icons/icon-192.png">
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="./install.css">
+  <script type="module" src="./install.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#installation">Skip to installation steps</a>
+  <header class="site-header">
+    <a class="brand" href="./" aria-label="MAX-G home"><img src="./icons/icon-192.png" width="44" height="44" alt=""><span>MAX-G<small>Your personal companion</small></span></a>
+    <a class="header-link" href="https://www.goyonebydesign.com/">GoyoneByDesign <span aria-hidden="true">↗</span></a>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="pageTitle">
+      <div class="hero-art"><img src="./icons/icon-512.png" width="160" height="160" alt="MAX-G, a glowing blue globe with white eyes and an orbiting ring"></div>
+      <p class="eyebrow">Your companion. On your Home Screen.</p>
+      <h1 id="pageTitle">Take MAX-G with you.</h1>
+      <p class="hero-copy">Add MAX-G to your iPhone or iPad in a few taps. Open your conversations, weather, voice and tools in a window of their own.</p>
+      <div class="feature-pills" aria-label="App features"><span>Free to install</span><span>iPhone &amp; iPad</span><span>Shared app updates</span></div>
+      <p id="installedStatus" class="installed-notice" role="status" hidden>You’re using the installed MAX-G app. You’re ready to go.</p>
+      <div class="hero-actions">
+        <a class="button primary" href="./" id="openApp">Open MAX-G <span aria-hidden="true">↗</span></a>
+        <button class="button primary" type="button" id="installApp" hidden>Install MAX-G</button>
+        <a class="button secondary" href="#installation" id="showSteps">See installation steps <span aria-hidden="true">↓</span></a>
+      </div>
+      <p id="installStatus" class="status-line" role="status" aria-live="polite"></p>
+    </section>
+
+    <section class="install-card" id="installation" aria-labelledby="stepsTitle">
+      <div class="section-heading"><div><p class="eyebrow">Make yourself at home</p><h2 id="stepsTitle">Add MAX-G to your device</h2></div><span class="step-count" aria-hidden="true">01—04</span></div>
+      <div class="platform-choice" role="group" aria-label="Installation device">
+        <button type="button" data-platform="ios" aria-pressed="true">iPhone / iPad</button>
+        <button type="button" data-platform="android" aria-pressed="false">Android</button>
+        <button type="button" data-platform="desktop" aria-pressed="false">Computer</button>
+      </div>
+      <div id="platform-ios" class="platform-panel">
+        <p class="platform-intro">Use <strong>Safari</strong> on your iPhone or iPad. If this page opened inside another app, copy the MAX-G link below and paste it into Safari.</p>
+        <ol class="steps">
+          <li><span class="step-number" aria-hidden="true">1</span><div><h3>Open MAX-G in Safari</h3><p>Tap <a href="./">Open MAX-G</a> to open the app on this website.</p></div></li>
+          <li><span class="step-number" aria-hidden="true">2</span><div><h3>Open Safari’s Share menu</h3><p>Look for the square with an upward arrow <svg class="share-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 8H4v13h16V8h-4M12 15V2m-4 4 4-4 4 4"/></svg>. Depending on your Safari layout, first tap <strong>More (…)</strong>.</p></div></li>
+          <li><span class="step-number" aria-hidden="true">3</span><div><h3>Choose Add to Home Screen</h3><p>Scroll through the Share options; on iPad, <strong>More</strong> may reveal the option. If shown, turn on <strong>Open as Web App</strong>.</p></div></li>
+          <li><span class="step-number" aria-hidden="true">4</span><div><h3>Tap Add. Say hello.</h3><p>Keep the name <strong>MAX-G</strong>, then tap <strong>Add</strong>. Open MAX-G using its blue icon on your Home Screen.</p></div></li>
+        </ol>
+        <p class="installation-note">Repeat on each iPhone or iPad. Apple asks you to add the app yourself; a website button cannot complete these steps for you.</p>
+      </div>
+      <div id="platform-android" class="platform-panel" hidden>
+        <p class="platform-intro">Open MAX-G in an up-to-date <strong>Chrome</strong> browser on your Android phone or tablet.</p>
+        <ol class="steps">
+          <li><span class="step-number" aria-hidden="true">1</span><div><h3>Open MAX-G</h3><p>Visit <a href="./">MAX-G on this website</a> in Chrome.</p></div></li>
+          <li><span class="step-number" aria-hidden="true">2</span><div><h3>Open the browser menu</h3><p>Tap Chrome’s <strong>three-dot menu (⋮)</strong>.</p></div></li>
+          <li><span class="step-number" aria-hidden="true">3</span><div><h3>Choose Install app</h3><p>Depending on your browser version, the option may be <strong>Add to Home screen</strong>, followed by <strong>Install</strong>.</p></div></li>
+          <li><span class="step-number" aria-hidden="true">4</span><div><h3>Launch MAX-G</h3><p>Confirm the browser’s installation prompt, then open the MAX-G icon on your device.</p></div></li>
+        </ol>
+        <p class="installation-note">If installation isn’t offered, MAX-G remains available in your browser. Your browser controls installation availability.</p>
+      </div>
+      <div id="platform-desktop" class="platform-panel" hidden>
+        <p class="platform-intro">Use MAX-G on your computer, or copy the link below to open it on your phone.</p>
+        <ol class="steps">
+          <li><span class="step-number" aria-hidden="true">1</span><div><h3>Open MAX-G</h3><p>Visit <a href="./">MAX-G on this website</a> in your preferred browser.</p></div></li>
+          <li><span class="step-number" aria-hidden="true">2</span><div><h3>Mac with Safari</h3><p>On supported macOS versions, choose <strong>File → Add to Dock</strong>, then <strong>Add</strong>.</p></div></li>
+          <li><span class="step-number" aria-hidden="true">3</span><div><h3>Chrome or Edge</h3><p>Use the browser’s app-install icon or its menu’s <strong>Install this site as an app</strong> option, when offered.</p></div></li>
+          <li><span class="step-number" aria-hidden="true">4</span><div><h3>Already have the MAX-G Mac app?</h3><p>Keep using that app for your Mac’s local AI and desktop tools. You don’t need a second Mac copy to install MAX-G on your iPhone.</p></div></li>
+        </ol>
+      </div>
+      <div class="copy-link"><label for="appAddress">MAX-G’s website address</label><div class="copy-row"><input id="appAddress" type="url" readonly value="https://www.goyonebydesign.com/max-g/" spellcheck="false" aria-describedby="copyStatus"><button type="button" id="copyLink" class="button secondary">Copy link</button><button type="button" id="shareLink" class="button secondary" hidden>Share link</button></div><p id="copyStatus" role="status" aria-live="polite">Open this address on any of your devices.</p></div>
+    </section>
+
+    <section class="details-grid" aria-label="Using MAX-G across devices">
+      <article class="detail-card"><span class="detail-symbol" aria-hidden="true">↻</span><h2>One MAX-G. Shared improvements.</h2><p>Your installed iPhone and iPad app uses the same MAX-G web release. Updates arrive from this website when you’re online. Open MAX-G to check for a new release and apply it when you’re ready.</p><p>The Mac companion uses the shared interface too; Mac-specific software updates can require an app restart.</p></article>
+      <article class="detail-card"><span class="detail-symbol" aria-hidden="true">◈</span><h2>Your device. Your preferences.</h2><p>Choose your voice, enable sound and allow microphone or location access when you want those features. Each device has its own permissions, saved chats, settings and downloads.</p><p>App updates keep features aligned. They don’t automatically sync your personal data between devices.</p></article>
+    </section>
+
+    <section class="faq" aria-labelledby="helpTitle">
+      <h2 id="helpTitle">A little help getting settled</h2>
+      <details><summary>Will MAX-G work without internet?</summary><p>After a successful online visit, the app interface can reopen from its offline cache. Local AI and local voices need their own completed downloads and compatible hardware. Live weather, search and online services need an internet connection. Your device may clear cached downloads when storage is low.</p></details>
+      <details><summary>Can I use every Mac feature on my iPhone?</summary><p>Chat, supported voice features, weather, places, animations and browser tools share the same app. Availability depends on your device and permissions; local AI also needs a compatible GPU and enough memory. Voice cloning, connected-account automation and direct computer controls currently require the Mac companion on that Mac. Your phone does not automatically connect to your Mac’s local services.</p><p>In MAX-G, open <strong>Settings → This device</strong> for a capability check.</p></details>
+      <details><summary>How do I hear MAX-G?</summary><p>Open MAX-G and use its sound controls to enable and test voice on this device. Turn up media volume and check whether audio is going to headphones or Bluetooth. Some voices require a separate download. If browser dictation isn’t available, use the microphone on your iPhone keyboard to dictate into the text box.</p></details>
+      <details><summary>Is this an App Store download?</summary><p>This is MAX-G’s free website-installed app. It opens from your Home Screen in its own app window. No App Store account, configuration profile or unsigned installation file is needed.</p></details>
+    </section>
+  </main>
+
+  <footer><a class="maker" href="https://www.goyonebydesign.com/"><img src="./assets/goyonebydesign-logo.png" width="38" height="38" alt="GoyoneByDesign logo"><span><small>Created by</small><strong>GoyoneByDesign</strong></span></a><p>MAX-G · Your personal companion</p><a href="./">Open MAX-G <span aria-hidden="true">↗</span></a></footer>
+</body>
+</html>

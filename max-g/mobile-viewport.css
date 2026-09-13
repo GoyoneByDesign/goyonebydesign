@@ -1,0 +1,33 @@
+/* Safe areas also apply to iPad standalone and landscape phone layouts. */
+@media (display-mode:standalone){
+ .app-shell{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
+ .sidebar{padding-top:max(30px,env(safe-area-inset-top));padding-bottom:max(16px,env(safe-area-inset-bottom))}
+}
+@media (display-mode:standalone) and (min-width:701px){
+ .topbar{height:calc(77px + env(safe-area-inset-top));padding-top:env(safe-area-inset-top)}
+}
+/* VisualViewport is narrower than the layout viewport when Safari opens its
+   keyboard. Apply only during text input at normal zoom, including iPad. */
+html[data-maxg-keyboard=open] .app-shell{position:fixed;top:var(--maxg-visible-top);left:0;right:0;height:var(--maxg-visible-height);min-height:0}
+html[data-maxg-keyboard=open] .main-content{height:var(--maxg-visible-height);min-height:0}
+html[data-maxg-keyboard=open] .engine-bar{display:none}
+html[data-maxg-keyboard=open] .compatibility-notice{max-height:54px;overflow:auto}
+html[data-maxg-keyboard=open] .live-orb-dock.companion-header{height:54px;flex-basis:54px}
+html[data-maxg-keyboard=open] .companion-header .orb-stage{width:68px;height:54px}
+html[data-maxg-keyboard=open] .chat-view .composer-area{max-height:min(185px,calc(var(--maxg-visible-height)*.45));min-height:0;overflow-y:auto;padding-bottom:6px}
+html[data-maxg-keyboard=open] .chat-view .composer textarea{min-height:52px;height:52px;max-height:90px}
+html[data-maxg-keyboard=open] .settings-dialog{max-height:calc(var(--maxg-visible-height) - 12px);top:var(--maxg-visible-top);bottom:auto;margin-top:6px}
+html[data-maxg-keyboard=open] .settings-layout{max-height:calc(var(--maxg-visible-height) - 110px);min-height:0}
+html[data-maxg-keyboard=open] .settings-content{max-height:calc(var(--maxg-visible-height) - 160px)}
+/* Safari has no native install prompt. Keep its visible Install control and the
+   browser task button within the header, including at larger text sizes. */
+@media(max-width:700px){
+ .topbar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 10px;height:auto;min-height:calc(59px + env(safe-area-inset-top));padding:calc(env(safe-area-inset-top) + 8px) 16px 8px;align-items:center}
+ .topbar-title{grid-column:1;grid-row:1;min-width:0}
+ .mobile-brand{white-space:nowrap}
+ html[data-mg-display=ready] .topbar-actions{display:contents}
+ html[data-mg-display=ready] #networkStatus{grid-column:2;grid-row:1;max-width:155px;text-align:right;justify-content:flex-end}
+ #browserTaskBtn{grid-column:1;grid-row:2;justify-self:start}
+ #installBtn{grid-column:2;grid-row:2;justify-self:end}
+ #updateNoticeBtn{grid-column:1 / -1;grid-row:3;justify-self:end}
+}

@@ -10,11 +10,13 @@
   <meta name="apple-mobile-web-app-title" content="MAX-G">
   <meta name="mobile-web-app-capable" content="yes">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://esm.run 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data: blob:; connect-src 'self' https: http://localhost:* http://127.0.0.1:*; worker-src 'self' https://cdn.jsdelivr.net blob:; media-src 'self' blob:; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+  <meta name="format-detection" content="telephone=no">
   <title>MAX-G · Your personal companion</title>
   <link rel="manifest" href="./manifest.json">
   <link rel="icon" type="image/png" href="./icons/icon-192.png">
   <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
   <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./updates.css">
   <link rel="stylesheet" href="./connectors.css">
   <link rel="stylesheet" href="./browser-panel.css">
   <link rel="stylesheet" href="./extensions.css">
@@ -26,6 +28,7 @@
   <link rel="stylesheet" href="./voice-studio.css">
   <link rel="stylesheet" href="./weather-card.css">
   <script src="./launch-context.js" defer></script>
+  <link rel="stylesheet" href="./mobile-viewport.css">
 </head>
 <body data-view="chat">
   <svg class="icon-definitions" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
@@ -80,7 +83,7 @@
     <main class="main-content">
       <header class="topbar">
         <div class="topbar-title"><button id="sidebarToggle" class="icon-button mobile-menu" aria-label="Toggle navigation" aria-controls="sidebar" aria-expanded="false"><svg class="icon"><use href="#i-menu"/></svg></button><span class="mobile-brand">MAX-G</span><span class="desktop-title">Personal companion</span><span class="edition-badge">WEB EDITION</span></div>
-        <div class="topbar-actions"><span id="networkStatus" class="status-pill"><span class="status-dot"></span>Checking connection</span><button id="installBtn" class="button button-small" hidden><svg class="icon"><use href="#i-download"/></svg>Install</button></div>
+        <div class="topbar-actions"><span id="networkStatus" class="status-pill"><span class="status-dot"></span>Checking connection</span><button id="updateNoticeBtn" class="button button-small" hidden>Update available</button><button id="installBtn" class="button button-small" hidden><svg class="icon"><use href="#i-download"/></svg>Install</button></div>
       </header>
 
       <div class="engine-bar" role="region" aria-label="Local AI status"><span class="engine-symbol"><svg class="icon"><use href="#i-chip"/></svg></span><span id="modelStatus">Local model not loaded</span><button id="loadModelBtn" class="text-button">Load local AI <span aria-hidden="true">↗</span></button><progress id="modelProgress" max="1" value="0" hidden aria-label="Model download progress"></progress><span id="modelProgressLabel" class="model-progress-label" aria-live="polite"></span><button id="stopTaskBtn" class="button button-small" type="button" hidden>Stop task</button></div>
@@ -153,7 +156,7 @@
     </main>
   </div>
 
-  <dialog id="settingsDialog" class="settings-dialog" aria-labelledby="settingsTitle"><header class="dialog-header"><div><p class="eyebrow">MAKE YOURSELF AT HOME</p><h2 id="settingsTitle">MAX-G settings</h2></div><button id="closeSettingsBtn" class="icon-button" aria-label="Close settings"><svg class="icon"><use href="#i-close"/></svg></button></header><div class="settings-layout"><nav class="settings-tabs" aria-label="Settings categories"><button class="settings-tab" data-tab="profile">Profile</button><button class="settings-tab" data-tab="display">Display &amp; animation</button><button class="settings-tab active" data-tab="general">General</button><button class="settings-tab" data-tab="extensions">Extensions</button><button class="settings-tab" data-tab="device">This device</button><button class="settings-tab" data-tab="connection">Connection</button><button class="settings-tab" data-tab="locations">Location &amp; maps</button><button class="settings-tab" data-tab="voice">Voice Studio</button><button class="settings-tab" data-tab="permissions">Permissions</button><button class="settings-tab" data-tab="memory">Memory &amp; data</button></nav><div id="settingsContent" class="settings-content"></div></div></dialog>
+  <dialog id="settingsDialog" class="settings-dialog" aria-labelledby="settingsTitle"><header class="dialog-header"><div><p class="eyebrow">MAKE YOURSELF AT HOME</p><h2 id="settingsTitle">MAX-G settings</h2></div><button id="closeSettingsBtn" class="icon-button" aria-label="Close settings"><svg class="icon"><use href="#i-close"/></svg></button></header><div class="settings-layout"><nav class="settings-tabs" aria-label="Settings categories"><button class="settings-tab" data-tab="profile">Profile</button><button class="settings-tab" data-tab="display">Display &amp; animation</button><button class="settings-tab active" data-tab="general">General</button><button class="settings-tab" data-tab="extensions">Extensions</button><button class="settings-tab" data-tab="device">This device</button><button class="settings-tab" data-tab="updates">Install &amp; updates</button><button class="settings-tab" data-tab="connection">Connection</button><button class="settings-tab" data-tab="locations">Location &amp; maps</button><button class="settings-tab" data-tab="voice">Voice Studio</button><button class="settings-tab" data-tab="permissions">Permissions</button><button class="settings-tab" data-tab="memory">Memory &amp; data</button></nav><div id="settingsContent" class="settings-content"></div></div></dialog>
   <dialog id="geminiDialog" class="settings-dialog gemini-dialog" aria-labelledby="geminiTitle" aria-describedby="geminiDisclosure">
     <header class="dialog-header"><div><p class="eyebrow">OPTIONAL CLOUD SUPPORT</p><h2 id="geminiTitle">Ask Gemini</h2></div><button id="geminiCloseBtn" type="button" class="icon-button" aria-label="Close Gemini support">✕</button></header>
     <form id="geminiForm" class="gemini-body">

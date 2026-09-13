@@ -1,0 +1,8 @@
+.release-version{font-weight:650;color:var(--cyan,#8be7ff)}
+.update-status{padding:16px;border:1px solid var(--line,#284354);border-radius:16px;background:var(--panel-soft,#101d2f);line-height:1.6}
+.update-actions{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}
+.update-actions .button{min-height:44px}
+.update-settings{line-height:1.65}
+#updateNoticeBtn{min-height:36px;border-color:#65c9ed;color:var(--text);white-space:normal}
+@media(max-width:700px){.topbar-actions{flex-wrap:wrap;justify-content:flex-end;gap:6px}#installBtn{min-height:36px}.update-actions .button{flex:1 1 150px}}
+@media(display-mode:standalone){.topbar{padding-top:max(12px,env(safe-area-inset-top))}.sidebar{padding-top:max(16px,env(safe-area-inset-top))}}
