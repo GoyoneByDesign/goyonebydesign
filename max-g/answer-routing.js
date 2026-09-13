@@ -1,5 +1,5 @@
 /** Shared web/Mac response policy. A failed service must never mean silence. */
-import {weatherRequest,quickAnswer} from './tools.js';
+import {weatherRequest,quickAnswer,postalReply} from './tools.js';
 import {looksLikePostalCode,normalizePlaceText} from './postal-data.js';
 export function needsLiveEvidence(value){
   const q=String(value||'').toLowerCase();
@@ -39,10 +39,12 @@ export function userFacingFailure(error,{online=true,desktop=false}={}){
 }
 export function weatherFollowup(text,pending){
   if(!pending||Date.now()-pending.time>5*60*1000)return null;
-  const q=normalizePlaceText(text);
+  let q=normalizePlaceText(text);
   if(/^(?:cancel|never mind|nevermind|stop)$/i.test(q))return {cancel:true};
   if(/^(?:(?:use )?(?:my )?(?:current location|location|gps)|here|near me)$/i.test(q))return {useDevice:true,place:'',country:''};
   if(pending.clarification?.kind==='choice'&&/^(?:option |number )?[1-6]$/i.test(q))return {choice:Number(q.match(/[1-6]/)[0])};
+  const postal=postalReply(q);if(postal)return {...postal,country:postal.country||pending.intent?.country||''};
+  q=q.replace(/^(?:(?:i(?:'m| am)|we(?:'re| are))(?: located)?\s+(?:in|at)|my location is|i live in)\s+/i,'');
   if(/^\d{1,2}\s*-\s*\d{1,2}$/.test(q))return null;
   if(/^(?:postal codes?|postcodes?|zip codes?|locate|find|navigate|directions|route|take me)\b/i.test(q))return null;
   if(weatherRequest(q)||(!looksLikePostalCode(q)&&quickAnswer(q))||basicDeviceAnswer(q)||/^(?:open|close|launch|play|sing|dance|stop|turn|send|call)\b/i.test(q))return null;

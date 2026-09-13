@@ -1,8 +1,18 @@
+# MAX-G 1.9.7 automatic local weather
+
+Ask **“weather”**, **“weather update”**, or **“weather tomorrow”**. Automatic weather location is on by default. MAX-G requests one location from the device you are using; select **Allow** in its first browser or operating-system location prompt. On the installed Mac app, MAX-G uses native macOS Location Services. Browsers use their own geolocation permission. Permission remains under your control and may need to be granted again after changing device settings or clearing browser permissions.
+
+Explicit cities and postal codes take priority. If current location is unavailable, MAX-G uses your saved place, then your last successfully resolved explicit weather place, and says which fallback it used. Only that one coarse place and country are remembered; GPS coordinates are never saved. **Settings → Location & maps → Automatic weather location** turns automatic detection off or on. **Forget location** clears the remembered weather place; closing MAX-G keeps it for next time. [Location controls, country hints and recovery](LOCATIONS.md)
+
+For an unqualified postal code, MAX-G can use your saved country, the country of your last weather place, or your device's configured region. The answer identifies this hint. A device region is a locale setting, not GPS or proof of your present country. Include the country when searching elsewhere. If no reliable country context is available, MAX-G asks instead of guessing.
+
+Open the installed **MAX-G.app** or [hosted MAX-G](https://www.goyonebydesign.com/max-g/). Opening a downloaded `index.html` directly now checks the hosted app and redirects there when reachable; an offline screen offers the installed-app and website options. A raw `file://` page cannot provide the normal module, storage, PWA and location environment. The local HTTP server below remains available for development.
+
 # MAX-G 1.9.6 readable chat, fast weather and browser tasks
 
 MAX-G stays pinned above the conversation, replies default to 22 pixels, and long chats scroll independently. A new **Browser task** side panel shows the Mac companion's current page, progress, observed controls and reviewed attachments. Start from the button or ask MAX-G to open a website or help fill a form. Browser planning uses the installed local model with constrained JSON on the Mac; passwords and verification pause for you. The public website exposes the same UI, with Mac automation available only through a paired companion. [Browser task guide](BROWSER-TASKS.md)
 
-Weather goes directly through bounded city/postal and forecast lookups, with recent-location reuse and a small one-minute memory cache. A live Tokyo test returned in 1.04 seconds. Text no longer waits for voice preparation; availability and latency still depend on the internet and weather provider. Existing customized display preferences, voices, account connections, personal notes and the native icon remain intact.
+Weather goes directly through bounded city/postal and forecast lookups, with recent-location reuse and a small one-minute memory cache, without loading the chat model. A live Tokyo test returned in 1.04 seconds. Text no longer waits for voice preparation; availability and latency still depend on the internet and weather provider. Existing customized display preferences, voices, account connections, personal notes and the native icon remain intact.
 
 # MAX-G 1.8.4 optional Gemini support
 
@@ -139,7 +149,8 @@ npm test
 npm run serve
 ```
 
-Open `http://127.0.0.1:8765/`. Use **Load local AI**, then type a message and press
+Open `http://127.0.0.1:8765/`. Weather and calculations are ready without loading
+a chat model. For general conversation, use **Load local AI**, then type a message and press
 Enter. Shift+Enter adds a line. The first model load downloads weights; streaming
 begins after loading and prompt processing. On this local address, choose **Paired Mac companion** in **Settings → Connection**
 for public searches, or open the hosted website for the included Cloudflare
@@ -162,7 +173,7 @@ accuracy. [WebLLM usage](https://webllm.mlc.ai/docs/user/basic_usage.html)
 | `app.js` | Conversation, routing, settings, permissions, files, memory, skills and schedules |
 | `engine.js`, `inference-worker.js` | Pinned WebLLM, WebGPU checks, streaming, stop/unload/cache management |
 | `state.js` | Bounded personal IndexedDB state and exact reset-code recognition |
-| `locations.js`, `locations-ui.js`, `locations.css` | International place/postal lookup, optional device location, nearby results and maps handoffs |
+| `locations.js`, `locations-ui.js`, `locations.css` | International place/postal lookup, automatic one-shot weather location, coarse recent-place fallback, nearby results and maps handoffs |
 | `tools.js`, `unit-data.js` | Search/weather retrieval, safe arithmetic and existing unit tables |
 | `voice.js` | Local installed speech voices and strictly on-device dictation detection |
 | `files.js` | Text/source import, editing, ZIP, Word, Excel, slides and print-to-PDF exports |

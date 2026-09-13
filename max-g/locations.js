@@ -5,9 +5,9 @@
  * Nearby: wiki.openstreetmap.org/wiki/Overpass_API#Public_Overpass_API_instances.
  * Overpass needs app identification: its referrer reveals only this app's origin.
  */
-import {weatherRequest} from './tools.js';
+import {weatherRequest,postalReply} from './tools.js';
 import {normalizePlaceText,looksLikePostalCode,normalizePostalCode,postalComparisonKey} from './postal-data.js';
-export const LOCATION_DEFAULTS=Object.freeze({country:'',place:'',radius:1500,mode:'driving',mapProvider:'google'});
+export const LOCATION_DEFAULTS=Object.freeze({country:'',place:'',radius:1500,mode:'driving',mapProvider:'google',autoLocate:true,recentWeather:null});
 export const CATEGORY_LABELS=Object.freeze({restaurant:'Restaurants',fuel:'Fuel stations',mall:'Shopping malls',supermarket:'Supermarkets',pharmacy:'Pharmacies',cafe:'Cafés',evcharging:'EV charging'});
 const FILTERS=Object.freeze({restaurant:'["amenity"~"^(restaurant|fast_food)$"]',fuel:'["amenity"="fuel"]',mall:'["shop"="mall"]',supermarket:'["shop"="supermarket"]',pharmacy:'["amenity"="pharmacy"]',cafe:'["amenity"="cafe"]',evcharging:'["amenity"="charging_station"]'});
 import {COUNTRY_OPTIONS,normalizeCountry,countryName} from './country-data.js';
@@ -17,9 +17,11 @@ const clean=(value,max=180)=>typeof value==='string'?value.replace(/[\u0000-\u00
 const MODES=new Set(['driving','walking','bicycling','transit']);
 export function normalizeLocationSettings(value={}){
   const data=value&&typeof value==='object'?value:{};
+  const recent=data.recentWeather&&typeof data.recentWeather==='object'?data.recentWeather:null;
+  const recentPlace=clean(recent?.place,160),recentCountry=normalizeCountry(recent?.country);
   return {country:normalizeCountry(data.country),place:clean(data.place,160),
     radius:typeof data.radius==='number'&&Number.isFinite(data.radius)?Math.round(Math.max(100,Math.min(5000,data.radius))):1500,
-    mode:MODES.has(data.mode)?data.mode:'driving',mapProvider:['google','apple','waze'].includes(data.mapProvider)?data.mapProvider:'google'};
+    mode:MODES.has(data.mode)?data.mode:'driving',mapProvider:['google','apple','waze'].includes(data.mapProvider)?data.mapProvider:'google',autoLocate:data.autoLocate!==false,recentWeather:recentPlace&&recentCountry?{place:recentPlace,country:recentCountry}:null};
 }
 export class LocationError extends Error{constructor(code,message){super(message);this.name='LocationError';this.code=code;}}
 const abortError=()=>new DOMException('Location request stopped.','AbortError');
@@ -65,6 +67,13 @@ function queryParts(value,country=''){
 }
 // Local validation is available before asking for permission to use the internet.
 export const describePlaceQuery=(value,country='')=>queryParts(value,country);
+/** Country context for postal-only weather requests; never infers a city/GPS fix. */
+export function postalCountryHint({savedCountry='',recentCountry='',locale=globalThis.navigator?.language||''}={}){
+  let country=normalizeCountry(savedCountry),source='saved country';
+  if(!country){country=normalizeCountry(recentCountry);source='last weather location';}
+  if(!country){try{country=normalizeCountry(new Intl.Locale(locale).region);}catch{}source='device region';}
+  return country?{country,source,notice:`Using ${countryName(country)} for this postal code, based on your ${source}.`}:{country:'',source:'',notice:''};
+}
 const CATEGORY_MATCHES=[
   ['evcharging',/\b(?:ev charging|electric vehicle charg(?:e|er|ing)|charging stations?)\b/i],
   ['fuel',/\b(?:gas|petrol|fuel)\s*(?:stations?|pumps?)?\b/i],
@@ -81,23 +90,25 @@ export function parseLocationIntent(value){
   const mode=/\b(?:walk|walking|on foot)\b/i.test(query)?'walking':/\b(?:cycle|cycling|bike|bicycle|bicycling)\b/i.test(query)?'bicycling':/\b(?:transit|public transport|by bus|by train)\b/i.test(query)?'transit':'driving';
   const category=CATEGORY_MATCHES.find(([,pattern])=>pattern.test(query))?.[0];
   let kind,place='',postalLookup=false;
-  const postalQuestion=query.match(/^(?:(?:what(?: is| are|'s)|tell me|show me|find|look up)\s+)?(?:the\s+)?(?:postal codes?|postcodes?|zip codes?)(?:\s+(?:of|for|in))?\s+(.+)$/i);
+  const postalQuestion=query.match(/^(?:(?:what(?: is| are|'s)|tell me|show me|find|look up)\s+)?(?:the\s+)?(?:postal codes?|postcodes?|zip\s*codes?)(?:\s+(?:of|for|in))?\s+(.+)$/i);
   const requestedWeather=weatherRequest(query);
+  const postalDescription=postalReply(query.replace(/^what(?: is| are|'s)?\s+/i,''));
   if(requestedWeather){
     kind='weather';place=requestedWeather.city||'';
     if(/^(?:today|tomorrow|now|currently|right now|this week|next week|the week)$/i.test(place))place='';
   }
+  else if(postalDescription&&!/^(?:of|for|in)\s+/i.test(postalDescription.place)){kind='location';place=postalDescription.place;postalLookup=true;}
   else if(postalQuestion){kind='location';place=postalQuestion[1];postalLookup=true;}
   else if(/^(?:(?:please|can you|could you)\s+)?(?:give me |show me )?(?:directions? to|navigate to|take me to|route to|how (?:do i|to) get to)\s+/i.test(query)){kind='directions';place=query.replace(/^.*?\b(?:to)\s+/i,'').replace(/\s+(?:by car|by bike|by bus|by train|on foot|walking|driving)$/i,'');}
   else if(category&&(useDevice||/\b(?:near|in|around|find|show|closest|nearest|looking for)\b/i.test(query))){kind='nearby';place=query.match(/\b(?:near|in|around)\s+(.+)$/i)?.[1]||'';}
   else if(/^(?:where am i|what(?: is|'s) my (?:current )?location|my location)$/i.test(query)){kind='location';}
   else if(/^(?:locate|find (?:location|postal code|postcode|zip code)|where is|postal code|postcode|zip code)\b/i.test(query)){kind='location';place=query.replace(/^(?:locate|find (?:location|postal code|postcode|zip code)|where is|postal code|postcode|zip code)\s*/i,'');}
-  else {try{const parts=queryParts(query);if(!parts.postal||!parts.country)return null;kind='location';place=query;postalLookup=true;}catch{return null;}}
+  else {try{const parts=queryParts(query);if(!parts.postal||!parts.country&&!/^\d{4,10}(?:-\d{4})?$/.test(parts.query))return null;kind='location';place=query;postalLookup=true;}catch{return null;}}
   if(kind==='location'&&/^(?:postal code|postcode|zip code)\s+/i.test(place)){place=place.replace(/^(?:postal code|postcode|zip code)\s+/i,'');postalLookup=true;}
   if(/^(?:me|here|nearby|my (?:current )?location)$/i.test(place))place='';
   place=place.replace(/\s+(?:please|today|tomorrow|right now)$/i,'').trim();
-  let country='';
-  if(place){try{const parts=queryParts(place);place=parts.query;country=parts.country;}catch{}}
+  let country=requestedWeather?.country||postalDescription?.country||'';
+  if(place){try{const parts=queryParts(place,country);place=parts.query;country=parts.country||country;}catch{}}
   return {kind,query,place,country,useDevice:useDevice&&!place,mode,modeExplicit:/\b(?:walk|walking|on foot|cycle|cycling|bike|bicycle|bicycling|transit|public transport|by bus|by train|driving|by car|drive)\b/i.test(query),...(category?{category}:{}),...(postalLookup?{postalLookup:true}:{})};
 }
 const PHOTON_ATTR=Object.freeze({text:'© OpenStreetMap contributors · Photon',url:'https://www.openstreetmap.org/copyright'});
@@ -318,27 +329,58 @@ export const nearbyPlaces=(place,options)=>defaultClient.nearbyPlaces(place,opti
 export const clearLocationCache=()=>defaultClient.clearCache();
 globalThis.addEventListener?.('pagehide',clearLocationCache);
 
+/** The native bridge is available only in the installed local desktop window. */
+function nativeLocationBridge(){
+  try{const address=new URL(globalThis.location?.href||'');
+    if(address.protocol!=='http:'||!['localhost','127.0.0.1','[::1]'].includes(address.hostname)||address.searchParams.get('desktop')!=='1')return null;
+    const bridge=globalThis.MAXGNativeLocation||globalThis.window?.MAXGNativeLocation;
+    return typeof bridge?.getCurrentPosition==='function'?bridge:null;
+  }catch{return null;}
+}
+/** A non-prompting permission check before reusing a recent device fix. */
+export async function getLocationPermission({signal}={}){
+  checkAbort(signal);const native=nativeLocationBridge();let timer,abort;
+  const pending=Promise.resolve().then(async()=>{
+    if(native&&typeof native.status==='function'){
+      const status=await native.status();
+      if(status?.servicesEnabled===false||['denied','restricted'].includes(status?.authorization))return 'denied';
+      return status?.authorization==='authorized'?'granted':status?.authorization==='notDetermined'?'prompt':'unknown';
+    }
+    const result=await globalThis.navigator?.permissions?.query?.({name:'geolocation'});
+    return ['granted','denied','prompt'].includes(result?.state)?result.state:'unknown';
+  }).catch(()=> 'unknown');
+  try{return await Promise.race([pending,new Promise(resolve=>{timer=setTimeout(()=>resolve('unknown'),500);}),new Promise((_,reject)=>{abort=()=>reject(abortError());signal?.addEventListener('abort',abort,{once:true});if(signal?.aborted)abort();})]);}
+  finally{clearTimeout(timer);signal?.removeEventListener('abort',abort);}
+}
 /** One position request. Abort rejects immediately and ignores any later fix. */
-export function getDeviceLocation({signal}={}){
+export function getDeviceLocation({signal,timeout=12000,maximumAge=30000}={}){
   if(signal?.aborted)return Promise.reject(abortError());
-  const geolocation=globalThis.navigator?.geolocation;
-  if(!geolocation)return Promise.reject(new LocationError('LOCATION_UNSUPPORTED','This browser cannot read device location. Enter a place or postal code instead.'));
+  timeout=Number.isFinite(timeout)?Math.max(500,Math.min(12000,timeout)):12000;
+  maximumAge=Number.isFinite(maximumAge)?Math.max(0,Math.min(60000,maximumAge)):30000;
+  const native=nativeLocationBridge(),geolocation=globalThis.navigator?.geolocation;
+  if(!native&&!geolocation)return Promise.reject(new LocationError('LOCATION_UNSUPPORTED','This browser cannot read device location. Enter a place or postal code instead.'));
   if(globalThis.isSecureContext===false)return Promise.reject(new LocationError('LOCATION_SECURE_CONTEXT','Device location needs HTTPS or a local MAX-G window. Enter a place instead.'));
   return new Promise((resolve,reject)=>{
     let done=false,timer;
-    const finish=(error,value)=>{if(done)return;done=true;clearTimeout(timer);signal?.removeEventListener('abort',abort);globalThis.removeEventListener?.('pagehide',abort);error?reject(error):resolve(value);};
+    const nativeController=new AbortController();
+    const finish=(error,value)=>{if(done)return;done=true;clearTimeout(timer);signal?.removeEventListener('abort',abort);globalThis.removeEventListener?.('pagehide',abort);if(error)nativeController.abort();error?reject(error):resolve(value);};
     const abort=()=>finish(abortError());signal?.addEventListener('abort',abort,{once:true});globalThis.addEventListener?.('pagehide',abort,{once:true});
-    timer=setTimeout(()=>finish(new LocationError('LOCATION_TIMEOUT','Your device did not provide a location in time. Try again or enter a place.')),14000);
-    try{geolocation.getCurrentPosition(position=>{
+    timer=setTimeout(()=>finish(new LocationError('LOCATION_TIMEOUT','Your device did not provide a location in time. Try again or enter a place.')),timeout+250);
+    const success=position=>{
       if(done)return;
       try{const point=coordinates({lat:position.coords.latitude,lon:position.coords.longitude}),accuracy=position.coords.accuracy;
         if(typeof accuracy!=='number'||!Number.isFinite(accuracy)||accuracy<0)throw new Error();
         finish(null,{...point,accuracyMeters:accuracy,timestamp:Number.isFinite(position.timestamp)?position.timestamp:Date.now(),source:'device'});
       }catch{finish(new LocationError('LOCATION_UNAVAILABLE','The device returned an invalid location. Enter a place or try again.'));}
-    },error=>{
-      const message=error?.code===1?'Location permission was denied. Allow location in browser settings, or enter a place or postal code.':error?.code===3?'Your device could not locate you in time. Try again or enter a place.':'Your device could not determine its location. Check location services or enter a place.';
+    };
+    const failure=error=>{
+      if(error?.name==='AbortError'){finish(abortError());return;}
+      const message=error?.code===1?'Location permission was denied. Allow location in device settings, or use your saved place.':error?.code===3?'Your device could not locate you in time. Try again or use your saved place.':'Your device could not determine its location. Check location services or use your saved place.';
       finish(new LocationError(error?.code===1?'LOCATION_DENIED':error?.code===3?'LOCATION_TIMEOUT':'LOCATION_UNAVAILABLE',message));
-    },{enableHighAccuracy:false,timeout:12000,maximumAge:30000});}catch{finish(new LocationError('LOCATION_UNAVAILABLE','Location services are unavailable. Enter a place or postal code instead.'));}
+    };
+    const options={enableHighAccuracy:false,timeout,maximumAge};
+    try{if(native)Promise.resolve(native.getCurrentPosition({...options,signal:nativeController.signal})).then(success,failure);else geolocation.getCurrentPosition(success,failure,options);}
+    catch{finish(new LocationError('LOCATION_UNAVAILABLE','Location services are unavailable. Enter a place or postal code instead.'));}
   });
 }
 

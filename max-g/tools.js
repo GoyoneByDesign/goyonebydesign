@@ -1,5 +1,6 @@
 /** Bounded public retrieval and deterministic calculation. No eval, model calls, or storage. */
 import {symbols,aliases,ambiguous} from './unit-data.js';
+import {normalizePlaceText} from './postal-data.js';
 // Release configuration: set this to the deployed public Worker base URL (no /search).
 // Keep it empty in distributions that only use a paired Mac companion.
 export const BUILTIN_SEARCH_URL='https://max-g-search.michael-goyone.workers.dev';
@@ -120,6 +121,17 @@ export function quickAnswer(query){
   if(!/^[\d\s.eE+*/()%\-sqrt]+$/.test(text)||!/[+*/%\-]|sqrt/.test(text))return null;
   try{return {text:`${text} = ${fmt(calculate(text))}.`,type:'calculation'};}catch(error){return {text:error.message,type:'clarification'};}
 }
+/** A ZIP label supplies a US hint only for an otherwise unqualified US-shaped
+ * code. Explicit countries remain in the place text for the location resolver. */
+export function postalReply(value){
+  if(typeof value!=='string'||value.length>180)return null;
+  const text=normalizePlaceText(value).replace(/[?!.]+$/,'');
+  const match=text.match(/^(?:(?:my|the)\s+)?(zip\s*codes?|zip|postal\s*codes?|postcodes?)\s*(?:(?:is|are|:|=)\s*)?(.+)$/i);
+  if(!match)return null;
+  const place=match[2].trim();if(!place)return null;
+  const country=/^zip/i.test(match[1])&&/^\d{5}(?:-\d{4})?$/.test(place)?'US':'';
+  return {place,country};
+}
 export function weatherRequest(query,city=''){
   if(typeof query!=='string'||query.length>500)return null;
   const text=query.trim().replace(/[’‘]/g,"'");
@@ -137,10 +149,14 @@ export function weatherRequest(query,city=''){
   const stripped=text.replace(/\b(?:for\s+)?(?:the\s+)?(?:next|this)\s+week\b|\b(?:for\s+)?(?:the\s+)?(?:next\s+)?(?:7|seven)[ -]days?\b|\b(?:right now|today|tomorrow|currently|now|please|weekly|week)\b/gi,' ').replace(/[?!.]+$/,'').replace(/\s+/g,' ').trim();
   const prepositions=[...stripped.matchAll(/\b(?:in|for|at)\s+/gi)],last=prepositions.at(-1);
   let place=last?stripped.slice(last.index+last[0].length):stripped.match(/^(?:weather|forecast|temperature)\s+(.+)$/i)?.[1]||'';
+  // Request nouns are not cities: “weather update” must use current location.
+  // Explicit “weather in Update” is left intact because the user named a place.
+  if(!last)place=place.replace(/^(?:(?:latest|current|local|a|an|the)\s+)*(?:(?:updates?|reports?|conditions?|check)\b\s*)+/i,'').trim();
   place=place.replace(/^(?:like|forecast)\s*/i,'').replace(/\s+(?:like|forecast)$/i,'').replace(/^[,\s]+|[,\s]+$/g,'').trim();
   if(/^(?:here|outside|near me|nearby|my area|my location|my current location|like|the|is it|it|for|in|at)$/i.test(place))place='';
+  const postal=postalReply(place);if(postal)place=postal.place;
   const fallback=typeof city==='string'?city.trim():'';
-  return {city:(place||fallback).slice(0,150),mode,...(nextWeek?{period:'next-week'}:{})};
+  return {city:(place||fallback).slice(0,150),mode,...(postal?.country?{country:postal.country}:{}),...(nextWeek?{period:'next-week'}:{})};
 }
 export class WeatherError extends Error{constructor(code,message){super(message);this.name='WeatherError';this.code=code;}}
 const weatherCodes={0:'clear sky',1:'mainly clear',2:'partly cloudy',3:'overcast',45:'fog',48:'rime fog',51:'light drizzle',53:'drizzle',55:'dense drizzle',56:'light freezing drizzle',57:'dense freezing drizzle',61:'light rain',63:'rain',65:'heavy rain',66:'light freezing rain',67:'heavy freezing rain',71:'light snow',73:'snow',75:'heavy snow',77:'snow grains',80:'rain showers',81:'rain showers',82:'heavy showers',85:'light snow showers',86:'heavy snow showers',95:'thunderstorm',96:'thunderstorm with hail',99:'thunderstorm with hail'};

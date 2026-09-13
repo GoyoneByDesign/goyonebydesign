@@ -1,4 +1,4 @@
-# MAX-G places and directions
+# MAX-G 1.9.7 places, weather and directions
 
 Open [MAX-G](https://www.goyonebydesign.com/max-g/), then **Places & directions**.
 Your personal profile is **Michael**. GoyoneByDesign and the company logo appear
@@ -6,6 +6,8 @@ separately as the creator credit. Existing personal settings and notes are retai
 
 ## Try it
 
+- “Weather” or “weather update” — use this device’s location
+- “Weather tomorrow” — forecast for the current device location
 - “Find restaurants near 10001, US”
 - “Weather in SW1A 1AA, United Kingdom”
 - “Find groceries near K1A 0B1, Canada”
@@ -13,8 +15,15 @@ separately as the creator credit. Existing personal settings and notes are retai
 - “Find gas stations near me”
 - “Directions to Tokyo Station, Japan”
 
-Enter a city, street address or postal code, and select its country. Postal codes
-can overlap between countries; MAX-G asks for the country instead of assuming one.
+Enter a city, street address or postal code, and select its country. Explicit
+countries take priority. For an unqualified postal code, MAX-G checks your saved
+country, then the country of your last explicit weather place, then the region in
+this device's locale setting, such as `en-US` or `de-DE`. The response identifies
+this country hint. A locale region is not GPS and does not establish where you
+are physically located. Language alone, such as `en`, supplies no country hint.
+Postal codes overlap between countries; if no country context is available,
+MAX-G asks. Include the country when searching a different country's postal code.
+City queries do not inherit a device-region country hint.
 Use full country names when a region abbreviation could be mistaken for a country.
 For example, use **Portland, Oregon, United States**. Choose among multiple matches.
 Keep leading zeros in codes such as **02108**. Places without postal codes can use
@@ -27,6 +36,45 @@ such as the first three Canadian characters or the first five ZIP+4 digits. MAX-
 labels these as approximate area matches. A postal centre is not a building or
 your precise location. If lookup fails, check the country, enter a city, or use
 the offered map search links.
+
+## Automatic weather location
+
+**Settings → Location & maps → Automatic weather location** is on by default.
+Ask “weather”, “weather update”, or another local forecast question. MAX-G asks
+the current device for one location; it does not start a background watcher.
+Choose **Allow** in the first system/browser location prompt. That permission
+normally remains available until it expires or you change it in device settings.
+MAX-G cannot override browser or operating-system denial.
+
+The installed Mac app uses native macOS Location Services. If access is denied,
+check **System Settings → Privacy & Security → Location Services → MAX-G**.
+On other devices, allow location for the browser/site or installed PWA. The
+location can come from GPS, Wi-Fi or network estimates; its accuracy depends on
+the device. MAX-G requests a fresh fix for explicit current-location requests.
+For a repeated bare weather question, it can reuse a fix less than one minute old
+after rechecking authorization. Revoked permission prevents reuse, and an older
+fix is refreshed so weather can follow you when you travel.
+
+A city or postal code in your question takes priority over automatic location.
+When device location fails or is denied, MAX-G uses your saved place first, then
+your last successfully resolved explicit weather place. The answer says
+**Using your saved location** or **Using your last weather location** so you can
+tell which place the forecast describes. That recent record contains only the
+place text and country, never device coordinates. If neither location nor a
+fallback is available, MAX-G asks for a city or postal code once and can remember
+that successfully resolved weather request for next time.
+
+Turning automatic location off uses saved or recent place context without
+requesting GPS. An explicit “weather here” request still asks for a one-time
+fix. Saving the toggle preserves the coarse fallback; it clears the old device
+fix. **Forget location** removes the recent weather place as well as transient
+location data. It does not erase a separately saved default; clear that default
+in Settings if you want to remove it too.
+
+Weather uses direct public data without loading the local chat model or waiting
+for voice preparation. Small forecast responses are cached in memory for one
+minute. New lookups have bounded deadlines; latency depends on device location
+services, permission prompts, network conditions and public API availability.
 
 ## Current location and nearby places
 
@@ -49,9 +97,9 @@ turn-by-turn navigation, using its own permissions and network access. MAX-G
 does not run turn-by-turn guidance, detect road hazards, or promise traffic ETAs.
 Links open only when selected; MAX-G does not automatically launch a maps app.
 
-Weather can use the selected postal area or a one-time current location. A direct
-weather request uses current/today/tomorrow model data and the existing animated
-weather effects. Forecasts remain estimates.
+Weather can use a selected postal area or a one-time current location. Current,
+today, tomorrow, this-week and next-week requests retain their requested period
+and the existing animated weather effects. Forecasts remain estimates.
 
 ## Settings and data
 
@@ -70,10 +118,12 @@ GPS fix. **Find this place** searches without saving a new default. Your preferr
 maps app is retained. To remove a saved default, clear the default place under
 **Settings → Location & maps** and save the preferences there.
 
-**Settings → Location & maps** saves a default country, optional typed place,
-travel mode, radius and preferred maps app. **Settings → Permissions → Location**
+**Settings → Location & maps** saves automatic-weather-location preference, a
+default country, optional typed place, travel mode, radius and preferred maps app. **Settings → Permissions → Location**
 offers Ask / Allow / Deny; browser and OS permission are still required. A clear
-request such as “near me” counts as asking for a one-time fix.
+request such as “near me”, or local weather with automatic location enabled,
+counts as asking for a one-time fix. Denying location clears the device fix while
+retaining the coarse weather fallback.
 
 Device coordinates remain in the current tab's memory. They are not added to
 profile settings, notes, backups or chat source URLs. If chat saving is enabled,
@@ -81,7 +131,11 @@ your typed place requests and human-readable results can be saved as conversatio
 text. Location responses use no-store requests and are excluded from the app's
 service-worker disk cache. Small in-memory lookup caches expire after two minutes.
 **Forget location**, factory reset and closing the page clear those caches and
-cancel pending lookups. Leaving the view or hiding the page cancels active work.
+cancel pending lookups. The one coarse `recentWeather` record survives closing
+the page and is replaced by the next successfully resolved explicit weather
+place. **Forget location** or factory reset removes that record. It does not sync
+automatically between devices. Leaving the view or hiding the page cancels active
+work.
 
 The browser sends submitted place/country text to a geocoder. A nearby or weather
 request sends the selected coordinates to that provider. Opening a map link
@@ -113,8 +167,9 @@ a Cloudflare search Worker URL or a paid model API.
 
 Requests are submitted explicitly, with no autocomplete traffic, no hourly
 location research and no retry loops. Each host is limited in this tab to one
-request per second and 12 per minute. Lookup uses at most a primary and one
-fallback request. Limits are local to this tab, not an app-wide quota manager.
+request per second and 12 per minute. Place lookup uses at most three providers. Weather prioritizes the lightweight
+postal/city endpoint and has one short total location-lookup deadline; ordinary
+place and street searches retain their map-oriented provider order. Limits are local to this tab, not an app-wide quota manager.
 Busy services show an error or map handoff instead of invented results. For a
 commercial or high-traffic deployment, configure suitable licensed/self-hosted
 geocoding and weather services; these shared free endpoints are for this personal
@@ -124,6 +179,14 @@ Official navigation references: [Google Maps URLs](https://developers.google.com
 [Apple map links](https://developer.apple.com/library/archive/featuredarticles/iPhoneURLScheme_Reference/MapLinks/MapLinks.html),
 [Waze links](https://developers.google.com/waze/deeplinks),
 [browser geolocation](https://www.w3.org/TR/geolocation/).
+
+## Open the right app
+
+Use the installed **MAX-G.app**, [hosted MAX-G](https://www.goyonebydesign.com/max-g/),
+or a local HTTP development server. A directly opened `index.html` (`file://`)
+checks whether the hosted app is reachable and redirects there if it is. If the
+site is unavailable, the page shows the installed-app/website recovery options.
+The raw file itself does not run the normal location, module or PWA environment.
 
 ## Updating
 
