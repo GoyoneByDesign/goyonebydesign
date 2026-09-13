@@ -7,7 +7,7 @@
  */
 import {weatherRequest,postalReply} from './tools.js';
 import {normalizePlaceText,looksLikePostalCode,normalizePostalCode,postalComparisonKey} from './postal-data.js';
-export const LOCATION_DEFAULTS=Object.freeze({country:'',place:'',radius:1500,mode:'driving',mapProvider:'google',autoLocate:true,recentWeather:null});
+export const LOCATION_DEFAULTS=Object.freeze({country:'US',place:'',radius:1500,mode:'driving',mapProvider:'google',autoLocate:true,recentWeather:null});
 export const CATEGORY_LABELS=Object.freeze({restaurant:'Restaurants',fuel:'Fuel stations',mall:'Shopping malls',supermarket:'Supermarkets',pharmacy:'Pharmacies',cafe:'Cafés',evcharging:'EV charging'});
 const FILTERS=Object.freeze({restaurant:'["amenity"~"^(restaurant|fast_food)$"]',fuel:'["amenity"="fuel"]',mall:'["shop"="mall"]',supermarket:'["shop"="supermarket"]',pharmacy:'["amenity"="pharmacy"]',cafe:'["amenity"="cafe"]',evcharging:'["amenity"="charging_station"]'});
 import {COUNTRY_OPTIONS,normalizeCountry,countryName} from './country-data.js';
@@ -19,7 +19,7 @@ export function normalizeLocationSettings(value={}){
   const data=value&&typeof value==='object'?value:{};
   const recent=data.recentWeather&&typeof data.recentWeather==='object'?data.recentWeather:null;
   const recentPlace=clean(recent?.place,160),recentCountry=normalizeCountry(recent?.country);
-  return {country:normalizeCountry(data.country),place:clean(data.place,160),
+  return {country:normalizeCountry(data.country)||'US',place:clean(data.place,160),
     radius:typeof data.radius==='number'&&Number.isFinite(data.radius)?Math.round(Math.max(100,Math.min(5000,data.radius))):1500,
     mode:MODES.has(data.mode)?data.mode:'driving',mapProvider:['google','apple','waze'].includes(data.mapProvider)?data.mapProvider:'google',autoLocate:data.autoLocate!==false,recentWeather:recentPlace&&recentCountry?{place:recentPlace,country:recentCountry}:null};
 }
@@ -68,11 +68,26 @@ function queryParts(value,country=''){
 // Local validation is available before asking for permission to use the internet.
 export const describePlaceQuery=(value,country='')=>queryParts(value,country);
 /** Country context for postal-only weather requests; never infers a city/GPS fix. */
-export function postalCountryHint({savedCountry='',recentCountry='',locale=globalThis.navigator?.language||''}={}){
+export function postalCountryHint({query='',savedCountry='',recentCountry=''}={}){
   let country=normalizeCountry(savedCountry),source='saved country';
   if(!country){country=normalizeCountry(recentCountry);source='last weather location';}
-  if(!country){try{country=normalizeCountry(new Intl.Locale(locale).region);}catch{}source='device region';}
-  return country?{country,source,notice:`Using ${countryName(country)} for this postal code, based on your ${source}.`}:{country:'',source:'',notice:''};
+  // Michael's preference is US. Device language/region cannot silently replace
+  // it; a previously selected non-US country remains authoritative.
+  if(!country){country='US';source='US default';}
+  if(query&&country==='US'){
+    const inferred=postalFormatCountry(query);
+    if(inferred&&inferred!=='US'){country=inferred;source='postal-code format';}
+    else if(!inferred)return {country:'',source:'',notice:''};
+  }
+  return country?{country,source,notice:`Using ${countryName(country)} for this postal code (${source}).`}:{country:'',source:'',notice:''};
+}
+/** Distinctive full shapes are routing hints, not proof a code is assigned. */
+function postalFormatCountry(value){
+  const key=postalComparisonKey(value);
+  if(/^\d{5}(?:\d{4})?$/.test(key))return 'US';
+  if(/^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTVWXYZ]\d[ABCEGHJ-NPRSTVWXYZ]\d$/.test(key))return 'CA';
+  if(/^(?:GIR0AA|(?:[A-PR-UWYZ]\d(?:\d|[A-HJKPSTUW])?|[A-PR-UWYZ][A-HK-Y]\d(?:\d|[ABEHMNPRVWXY])?)\d[ABD-HJLNP-UW-Z]{2})$/.test(key))return 'GB';
+  return '';
 }
 const CATEGORY_MATCHES=[
   ['evcharging',/\b(?:ev charging|electric vehicle charg(?:e|er|ing)|charging stations?)\b/i],
@@ -103,7 +118,7 @@ export function parseLocationIntent(value){
   else if(category&&(useDevice||/\b(?:near|in|around|find|show|closest|nearest|looking for)\b/i.test(query))){kind='nearby';place=query.match(/\b(?:near|in|around)\s+(.+)$/i)?.[1]||'';}
   else if(/^(?:where am i|what(?: is|'s) my (?:current )?location|my location)$/i.test(query)){kind='location';}
   else if(/^(?:locate|find (?:location|postal code|postcode|zip code)|where is|postal code|postcode|zip code)\b/i.test(query)){kind='location';place=query.replace(/^(?:locate|find (?:location|postal code|postcode|zip code)|where is|postal code|postcode|zip code)\s*/i,'');}
-  else {try{const parts=queryParts(query);if(!parts.postal||!parts.country&&!/^\d{4,10}(?:-\d{4})?$/.test(parts.query))return null;kind='location';place=query;postalLookup=true;}catch{return null;}}
+  else {try{const parts=queryParts(query);if(!parts.postal||!parts.country&&!/^\d{4,10}(?:-\d{4})?$/.test(parts.query)&&!postalFormatCountry(parts.query))return null;kind='location';place=query;postalLookup=true;}catch{return null;}}
   if(kind==='location'&&/^(?:postal code|postcode|zip code)\s+/i.test(place)){place=place.replace(/^(?:postal code|postcode|zip code)\s+/i,'');postalLookup=true;}
   if(/^(?:me|here|nearby|my (?:current )?location)$/i.test(place))place='';
   place=place.replace(/\s+(?:please|today|tomorrow|right now)$/i,'').trim();
@@ -117,12 +132,23 @@ const METEO_ATTR=Object.freeze({text:'Open-Meteo · GeoNames',url:'https://open-
 const OVERPASS_ATTR=Object.freeze({text:'© OpenStreetMap contributors · Overpass',url:'https://www.openstreetmap.org/copyright'});
 function postalKey(value){return postalComparisonKey(clean(value,20));}
 function postalArea(postal,country){
-  if(country==='US')return postal.slice(0,5);
+  if(['US','PR','VI','GU','AS','MP'].includes(country))return postal.slice(0,5);
   if(country==='CA')return postal.replace(/\s/g,'').slice(0,3);
   if(country==='GB'&&postal.includes(' '))return postal.split(' ')[0];
   if(country==='NL'&&/^\d{4}/.test(postal))return postal.slice(0,4);
   if(country==='IE')return postal.replace(/\s/g,'').slice(0,3);
   return postal;
+}
+function postalProviderParts(parts){
+  if(!parts.postal||parts.country!=='US')return parts;
+  const zip=parts.query.slice(0,5);
+  // USPS postal regions are separate ISO areas in the geocoding providers.
+  // Routing only: the live service must still confirm the actual code.
+  // Sources: pe.usps.com/text/dmm300/608.htm (Pacific territories);
+  // about.usps.com/newsroom/local-releases/pr/2019/0828-postal-service-in-caribbean-braces-for-dorian.htm
+  const country=/^00[679]/.test(zip)?'PR':/^008/.test(zip)?'VI':zip==='96799'?'AS':
+    /^969(?:10|12|13|15|16|17|19|21|23|28|29|31|32)$/.test(zip)?'GU':/^9695[012]$/.test(zip)?'MP':'';
+  return country?{...parts,country}:parts;
 }
 const joinLabel=values=>[...new Set(values.map(value=>clean(value,100)).filter(Boolean))].join(', ').slice(0,320);
 function safeSite(value){
@@ -276,7 +302,9 @@ export function createLocationClient({fetch:fetchImpl=(...args)=>globalThis.fetc
     return {query:parts.query,country:parts.country,needsCountry:false,results:[],message:'I could not find that place in the available sources. Please include the city, region and country.',cached:false};
   }
   async function resolvePlace(value,{country='',signal,purpose='place'}={}){
-    checkAbort(signal);const parts=queryParts(value,country),epoch=generation;
+    checkAbort(signal);let parts=queryParts(value,country);const epoch=generation;
+    if(parts.postal&&!parts.country&&!country){const hint=postalCountryHint({query:parts.query});if(hint.country)parts=queryParts(value,hint.country);}
+    parts=postalProviderParts(parts);
     const base={query:parts.query,country:parts.country,needsCountry:parts.needsCountry};
     if(parts.needsCountry)return {...base,results:[],message:parts.ambiguousCountry?'That abbreviation can identify a region or a country. Select the intended country, or write its full name.':'Choose the country for this postal code; the same digits can identify different places worldwide.',cached:false};
     // Weather needs a city/area point, not street-level map search. Use the
@@ -312,7 +340,7 @@ export function createLocationClient({fetch:fetchImpl=(...args)=>globalThis.fetc
   async function nearbyPlaces({lat,lon,category,radius=1500}={}, {signal}={}){
     checkAbort(signal);const origin=coordinates({lat,lon}),epoch=generation;
     if(!Object.hasOwn(FILTERS,category))throw new LocationError('INVALID_CATEGORY','Choose one of the supported nearby-place categories.');
-    if(typeof radius!=='number'||!Number.isFinite(radius)||radius<100||radius>5000)throw new LocationError('INVALID_RADIUS','Choose a search radius between 100 metres and 5 kilometres.');
+    if(typeof radius!=='number'||!Number.isFinite(radius)||radius<100||radius>5000)throw new LocationError('INVALID_RADIUS','Choose one of the available nearby search radii in Places & directions.');
     radius=Math.round(radius);const key=JSON.stringify(['nearby',lat,lon,category,radius]),hit=cached(key);if(hit)return hit;
     const query='[out:json][timeout:10][maxsize:8388608];nwr(around:'+radius+','+lat+','+lon+')'+FILTERS[category]+';out center tags 60;';
     const endpoint=new URL('https://overpass-api.de/api/interpreter');endpoint.search=new URLSearchParams({data:query});

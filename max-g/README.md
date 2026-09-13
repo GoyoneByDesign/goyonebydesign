@@ -1,3 +1,11 @@
+# MAX-G 1.9.8 U.S. units and compact hourly weather
+
+MAX-G defaults to U.S. customary measurements: **°F, mph, miles/feet, pounds/ounces and U.S. cooking volumes**. Existing profiles receive this preference without clearing personal data. Change it under **Michael → General → Measurements**. Explicit conversion requests keep their requested units.
+
+Weather answers now lead with a compact conditions card, feels-like temperature, wind, high/low, precipitation chance and the next six hourly temperatures. Expand the remaining hours when needed. Forecast times use the selected place’s timezone; U.S. presentation uses AM/PM. Forecast values come directly from the weather service, without loading the chat model. The card’s subtle sun, cloud, rain, snow, wind and chilly effects follow actual returned conditions and respect animation controls and Reduce Motion. The companion remains pinned, while a shorter composer gives the answer more room.
+
+The default country is United States. Enter a ZIP or ZIP+4, including leading zeros, to look up its area. Distinctive international postal formats and explicit country names remain supported. Public postal databases have coverage gaps; a missing lookup is reported, never invented. [Weather, units and postal guide](WEATHER-GUIDE.md)
+
 # MAX-G 1.9.7 automatic local weather
 
 Ask **“weather”**, **“weather update”**, or **“weather tomorrow”**. Automatic weather location is on by default. MAX-G requests one location from the device you are using; select **Allow** in its first browser or operating-system location prompt. On the installed Mac app, MAX-G uses native macOS Location Services. Browsers use their own geolocation permission. Permission remains under your control and may need to be granted again after changing device settings or clearing browser permissions.

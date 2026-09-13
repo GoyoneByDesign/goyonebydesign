@@ -67,3 +67,27 @@ body[data-theme=light] .companion-header{background:radial-gradient(ellipse at 4
   .companion-header .orb-stage{width:85px;height:68px}
   .companion-header .live-orb-caption{gap:3px}
 }
+
+/* Once a conversation starts, reserve the screen for the answer. The primary
+   input and Send stay first; secondary voice/play controls remain scrollable. */
+html[data-mg-display=ready] body.has-conversation .chat-view .composer-area{max-height:min(210px,27dvh);min-height:0;overflow-y:auto;overscroll-behavior:contain;padding-top:6px;padding-bottom:10px;scrollbar-gutter:stable}
+html[data-mg-display=ready] body.has-conversation .chat-view .composer{padding-top:10px;padding-bottom:8px}
+html[data-mg-display=ready] body.has-conversation .chat-view .composer textarea{height:58px;min-height:58px;max-height:16dvh}
+body.has-conversation .chat-view .messages{gap:18px;padding-top:16px;padding-bottom:18px}
+body.has-conversation .message-weather .message-actions{gap:14px;margin-top:7px}
+body.has-conversation .message-weather .message-actions button{min-height:30px}
+@media(max-height:800px){
+ html[data-mg-display=ready] body.has-conversation .chat-view .composer-area{max-height:min(144px,25dvh)}
+ body.has-conversation .live-orb-dock.companion-header{flex-basis:88px;height:88px}
+ body.has-conversation .companion-header .orb-stage{width:110px;height:88px}
+}
+@media(max-height:680px) and (min-width:701px){
+ html[data-mg-display=ready] body.has-conversation .chat-view .composer-area{max-height:136px}
+ body.has-conversation .live-orb-dock.companion-header{flex-basis:76px;height:76px}
+ body.has-conversation .companion-header .orb-stage{width:95px;height:76px}
+}
+@media(max-height:540px){
+ html[data-mg-display=ready] body.has-conversation .chat-view .composer-area{max-height:38dvh}
+ body.has-conversation .live-orb-dock.companion-header{flex-basis:54px;height:54px}
+ body.has-conversation .companion-header .orb-stage{width:68px;height:54px}
+}

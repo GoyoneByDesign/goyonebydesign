@@ -15,15 +15,14 @@ separately as the creator credit. Existing personal settings and notes are retai
 - “Find gas stations near me”
 - “Directions to Tokyo Station, Japan”
 
-Enter a city, street address or postal code, and select its country. Explicit
-countries take priority. For an unqualified postal code, MAX-G checks your saved
-country, then the country of your last explicit weather place, then the region in
-this device's locale setting, such as `en-US` or `de-DE`. The response identifies
-this country hint. A locale region is not GPS and does not establish where you
-are physically located. Language alone, such as `en`, supplies no country hint.
-Postal codes overlap between countries; if no country context is available,
-MAX-G asks. Include the country when searching a different country's postal code.
-City queries do not inherit a device-region country hint.
+Enter a city, street address or postal code. **United States is the default
+country** when no preference has been saved. Bare five-digit ZIP codes and ZIP+4
+use the selected/default country; leading zeros are retained. Explicit country
+names take priority. Distinctive full UK and Canadian formats can identify their
+country when they do not fit a U.S. ZIP. A saved non-U.S. country remains useful
+for overlapping numeric formats. Include the country when searching elsewhere
+or when the format alone is ambiguous. MAX-G identifies country hints rather
+than presenting them as a GPS fix. [Weather and U.S. units](WEATHER-GUIDE.md)
 Use full country names when a region abbreviation could be mistaken for a country.
 For example, use **Portland, Oregon, United States**. Choose among multiple matches.
 Keep leading zeros in codes such as **02108**. Places without postal codes can use
@@ -85,7 +84,7 @@ required. Denied, unavailable and timed-out location requests offer a typed-plac
 alternative. There is no continuous tracking or background location watcher.
 
 Select Restaurants, Fuel stations, Shopping malls, Supermarkets, Pharmacies,
-Cafés or EV charging. Choose a radius from 750 m to 5 km. The list contains at
+Cafés or EV charging. Choose a radius from about 0.5 to 3.1 miles (750 m to 5 km internally). Distances and device accuracy use your U.S. or Metric measurement preference. The list contains at
 most 12 returned map entries sorted by approximate straight-line distance. It is
 not a complete business directory; the closest returned entry may not be the
 closest business in reality. Listed hours are not a live open/closed check.

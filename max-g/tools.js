@@ -108,13 +108,14 @@ export function calculate(expression){
   function sum(){let value=product();while(['+','-'].includes(tokens[i])){const op=tokens[i++],right=product();value=bounded(op==='+'?value+right:value-right);}return value;}
   const value=sum();if(i!==tokens.length)throw new Error('Please check the equation.');return value;
 }
-const unit=name=>symbols[name.trim()]||aliases[name.trim().toLowerCase()];
-export function quickAnswer(query){
+const customaryUnits={gallon:'US gallon',gallons:'US gallon',gal:'US gallon',quart:'US quart',quarts:'US quart',pint:'US pint',pints:'US pint',cup:'US cup',cups:'US cup','fluid ounce':'US fl oz','fluid ounces':'US fl oz','fl oz':'US fl oz',ton:'US short ton',tons:'US short ton',tablespoon:'US tbsp',tablespoons:'US tbsp',tbsp:'US tbsp',teaspoon:'US tsp',teaspoons:'US tsp',tsp:'US tsp'};
+const unit=(name,units)=>symbols[name.trim()]||aliases[name.trim().toLowerCase()]||(units==='us'?symbols[customaryUnits[name.trim().toLowerCase()]]:undefined);
+export function quickAnswer(query,{units='us'}={}){
   let text=query.trim().replace(/[?!.]+$/,'').replace(/^(?:please\s+)?(?:what(?:'s| is)|calculate|compute|evaluate|solve|convert)\s+/i,'');
   let conversion=text.match(/^([-+]?\d*\.?\d+(?:e[-+]?\d+)?)\s*(.+?)\s+(?:to|in|into|as|=)\s+(.+)$/i);
   const natural=text.match(/^how many (.+?) (?:are (?:there )?in|in|is)\s+(?:an? |one |([-+]?\d*\.?\d+)\s*)(.+)$/i);
   if(natural)conversion=[null,natural[2]||'1',natural[3],natural[1]];
-  if(conversion){const [,n,from,to]=conversion,src=unit(from),dst=unit(to);if(src||dst){if(ambiguous.includes(from.toLowerCase())||ambiguous.includes(to.toLowerCase()))return {text:'Please specify the unit variant, such as US gallon, imperial gallon, or metric cup.',type:'clarification'};if(!src||!dst||src[0]!==dst[0])return {text:'Please choose supported units of the same kind.',type:'clarification'};let value=bounded(Number(n)),answer;if(src[0]==='temperature'){const k=src[1]==='°C'?value+273.15:src[1]==='°F'?(value-32)*5/9+273.15:value;if(k<0)return {text:'That temperature is below absolute zero.',type:'clarification'};answer=dst[1]==='°C'?k-273.15:dst[1]==='°F'?(k-273.15)*9/5+32:k;}else answer=value*Number(src[2])/Number(dst[2]);return {text:`${fmt(value)} ${src[1]} = ${fmt(answer)} ${dst[1]}.`,type:'calculation'};}}
+  if(conversion){const [,n,from,to]=conversion,src=unit(from,units),dst=unit(to,units);if(src||dst){if([from,to].some(name=>ambiguous.includes(name.trim().toLowerCase())&&!(units==='us'&&customaryUnits[name.trim().toLowerCase()])))return {text:'Please specify the unit variant, such as US gallon, imperial gallon, or metric cup.',type:'clarification'};if(!src||!dst||src[0]!==dst[0])return {text:'Please choose supported units of the same kind.',type:'clarification'};let value=bounded(Number(n)),answer;if(src[0]==='temperature'){const k=src[1]==='°C'?value+273.15:src[1]==='°F'?(value-32)*5/9+273.15:value;if(k<0)return {text:'That temperature is below absolute zero.',type:'clarification'};answer=dst[1]==='°C'?k-273.15:dst[1]==='°F'?(k-273.15)*9/5+32:k;}else answer=value*Number(src[2])/Number(dst[2]);return {text:`${fmt(value)} ${src[1]} = ${fmt(answer)} ${dst[1]}.`,type:'calculation'};}}
   for(const [word,op]of [['multiplied by','*'],['divided by','/'],['to the power of','**'],['plus','+'],['minus','-'],['times','*']])text=text.replace(new RegExp(`\\b${word}\\b`,'gi'),op);
   text=text.replace(/[×x](?=\s*\d)/g,'*').replace(/÷/g,'/').replace(/−/g,'-').replace(/\^/g,'**').replace(/\s*(?:equals?|=)$/i,'');
   text=text.replace(/^(?:the )?square root of ([-+]?\d*\.?\d+)$/i,'sqrt($1)').replace(/^([-+]?\d*\.?\d+)\s*(?:%|percent) of ([-+]?\d*\.?\d+)$/i,'($1)/100*($2)');
@@ -143,10 +144,13 @@ export function weatherRequest(query,city=''){
     /^(?:how|what)\b.*\b(?:work|works|measure|measured|affect|affects|change|changes)\b/i.test(text)||
     /\b(?:sales|revenue|stock|stocks|market|demand|budget|body|fever|oven|cpu|boiling|freezing point|water temperature)\b/i.test(text))return null;
   // Avoid answering an unsupported date with current conditions.
-  if(/\b(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday|weekend)\b/i.test(text)||/\bnext\b(?!\s+(?:week|7\s+days|seven\s+days))/i.test(text))return null;
-  const nextWeek=/\bnext\s+week\b/i.test(text);
-  const mode=/\b(?:week|weekly|7[ -]day|seven[ -]day|next (?:7|seven) days)\b/i.test(text)?'week':/\btomorrow\b/i.test(text)?'tomorrow':/\btoday\b/i.test(text)?'today':'current';
-  const stripped=text.replace(/\b(?:for\s+)?(?:the\s+)?(?:next|this)\s+week\b|\b(?:for\s+)?(?:the\s+)?(?:next\s+)?(?:7|seven)[ -]days?\b|\b(?:right now|today|tomorrow|currently|now|please|weekly|week)\b/gi,' ').replace(/[?!.]+$/,'').replace(/\s+/g,' ').trim();
+  if(/\b(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday|weekend)\b/i.test(text)||/\bnext\b(?!\s+(?:week|7\s+days|seven\s+days|(?:(?:6|12|24)|six|twelve|twenty[- ]four|few)\s+hours))/i.test(text))return null;
+  const requestedUnits=text.match(/\b(?:in\s+)?(celsius|fahrenheit|metric|u\.?s\.? units)\b/i)?.[1]?.toLowerCase();
+  const hourCount=text.match(/\bnext\s+(6|12|24|six|twelve|twenty[- ]four)\s+hours\b/i)?.[1]?.toLowerCase();
+  const hours=hourCount?({six:6,twelve:12,'twenty four':24,'twenty-four':24}[hourCount]||Number(hourCount)):undefined;
+  const nextWeek=/\bnext\s+week\b/i.test(text),hourly=/\b(?:hourly|hour[ -]by[ -]hour|next\s+(?:(?:6|12|24)|six|twelve|twenty[- ]four|few)\s+hours)\b/i.test(text);
+  const mode=/\b(?:week|weekly|7[ -]day|seven[ -]day|next (?:7|seven) days)\b/i.test(text)?'week':/\btomorrow\b/i.test(text)?'tomorrow':/\btoday\b/i.test(text)?'today':hourly?'hourly':'current';
+  const stripped=text.replace(/\b(?:in\s+)?(?:celsius|fahrenheit|metric|u\.?s\.? units)\b/gi,' ').replace(/\b(?:for\s+)?(?:the\s+)?next\s+(?:(?:6|12|24)|six|twelve|twenty[- ]four|few)\s+hours\b|\b(?:hourly|hour[ -]by[ -]hour)\b/gi,' ').replace(/\b(?:for\s+)?(?:the\s+)?(?:next|this)\s+week\b|\b(?:for\s+)?(?:the\s+)?(?:next\s+)?(?:7|seven)[ -]days?\b|\b(?:right now|today|tomorrow|currently|now|please|weekly|week)\b/gi,' ').replace(/[?!.]+$/,'').replace(/\s+/g,' ').trim();
   const prepositions=[...stripped.matchAll(/\b(?:in|for|at)\s+/gi)],last=prepositions.at(-1);
   let place=last?stripped.slice(last.index+last[0].length):stripped.match(/^(?:weather|forecast|temperature)\s+(.+)$/i)?.[1]||'';
   // Request nouns are not cities: “weather update” must use current location.
@@ -156,7 +160,7 @@ export function weatherRequest(query,city=''){
   if(/^(?:here|outside|near me|nearby|my area|my location|my current location|like|the|is it|it|for|in|at)$/i.test(place))place='';
   const postal=postalReply(place);if(postal)place=postal.place;
   const fallback=typeof city==='string'?city.trim():'';
-  return {city:(place||fallback).slice(0,150),mode,...(postal?.country?{country:postal.country}:{}),...(nextWeek?{period:'next-week'}:{})};
+  return {city:(place||fallback).slice(0,150),mode,...(mode==='hourly'&&hours?{hours}:{}),...(requestedUnits?{units:/celsius|metric/.test(requestedUnits)?'metric':'us'}:{}),...(postal?.country?{country:postal.country}:{}),...(nextWeek?{period:'next-week'}:{})};
 }
 export class WeatherError extends Error{constructor(code,message){super(message);this.name='WeatherError';this.code=code;}}
 const weatherCodes={0:'clear sky',1:'mainly clear',2:'partly cloudy',3:'overcast',45:'fog',48:'rime fog',51:'light drizzle',53:'drizzle',55:'dense drizzle',56:'light freezing drizzle',57:'dense freezing drizzle',61:'light rain',63:'rain',65:'heavy rain',66:'light freezing rain',67:'heavy freezing rain',71:'light snow',73:'snow',75:'heavy snow',77:'snow grains',80:'rain showers',81:'rain showers',82:'heavy showers',85:'light snow showers',86:'heavy snow showers',95:'thunderstorm',96:'thunderstorm with hail',99:'thunderstorm with hail'};
@@ -192,8 +196,8 @@ export function createWeatherClient({retrieve=weather,now=()=>Date.now(),ttl=600
   async function get(request,signal){
     if(signal?.aborted)throw signal.reason||stopped();
     // Unresolved/invalid requests retain the normal validation and clarification path.
-    if(!request||!validWeatherCoordinate(request.location)||request.city!==undefined&&(typeof request.city!=='string'||request.city.length>200||/[\u0000-\u001f\u007f]/.test(request.city))||!['current','today','tomorrow','week'].includes(request.mode||'current')||request.period&&(request.period!=='next-week'||request.mode!=='week'))return retrieve(request,signal);
-    const key=JSON.stringify([request.mode||'current',request.period||'',request.location.latitude,request.location.longitude,weatherName(request.location),Boolean(request.location.privateOrigin)]);
+    if(!request||!validWeatherCoordinate(request.location)||request.city!==undefined&&(typeof request.city!=='string'||request.city.length>200||/[\u0000-\u001f\u007f]/.test(request.city))||!['current','today','tomorrow','week','hourly'].includes(request.mode||'current')||request.units!==undefined&&!['us','metric'].includes(request.units)||request.hours!==undefined&&(![6,12,24].includes(request.hours)||request.mode!=='hourly')||request.period&&(request.period!=='next-week'||request.mode!=='week'))return retrieve(request,signal);
+    const key=JSON.stringify([request.mode||'current',request.period||'',request.units||'us',request.hours||12,request.location.latitude,request.location.longitude,weatherName(request.location),Boolean(request.location.privateOrigin)]);
     const hit=cache.get(key),time=now();
     if(hit&&time>=hit.time&&time-hit.time<ttl)return {...structuredClone(hit.value),cached:true,fetchedAt:hit.time};
     remove(key);
@@ -237,11 +241,92 @@ function weatherPlaceParts(value){
   const postal=parts[0]&&/\d/.test(parts[0])&&/^[A-Za-z\d -]{2,16}$/.test(parts[0]);
   return {parts,country,postal};
 }
+const incompleteWeather=()=>new WeatherError('WEATHER_DATA_INCOMPLETE','The weather service returned incomplete data. Please try again in a moment.');
+const weatherCode=value=>Number.isInteger(value)&&Object.hasOwn(weatherCodes,value)?value:null;
+const boundedWeatherNumber=(value,min,max)=>{const number=weatherNumber(value);return number!==null&&number>=min&&number<=max?number:null;};
+function weatherTimezone(value){
+  if(typeof value!=='string'||value.length>80||!value)throw incompleteWeather();
+  try{new Intl.DateTimeFormat('en-US',{timeZone:value}).format(0);return value;}catch{throw incompleteWeather();}
+}
+function localWeatherTime(timezone){
+  const fields=Object.fromEntries(new Intl.DateTimeFormat('en-CA',{timeZone:timezone,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date()).map(part=>[part.type,part.value]));
+  return `${fields.year}-${fields.month}-${fields.day}T${fields.hour}:${fields.minute}`;
+}
+/** Trust the provider's unit metadata before displaying a value. Temperature
+ * absence stays unavailable; a conflicting unit never gets relabelled. */
+function weatherDataCard(data,{mode,units,period,location,hours=12}){
+  if(!data||typeof data!=='object'||Array.isArray(data)||data.error)throw incompleteWeather();
+  const timezone=weatherTimezone(data.timezone),temperatureUnit=units==='us'?'°F':'°C',windSpeedUnit=units==='us'?'mph':'km/h';
+  const tempMin=units==='us'?-148:-100,tempMax=units==='us'?176:80;
+  const temperature=(value,metadata,key)=>{
+    if(value===null||value===undefined)return null;
+    if(metadata?.[key]!==temperatureUnit)throw incompleteWeather();
+    return boundedWeatherNumber(value,tempMin,tempMax);
+  };
+  const wind=(value,metadata)=>{
+    if(value===null||value===undefined)return null;
+    if(!(units==='us'?['mp/h','mph']:['km/h','kmh']).includes(metadata?.wind_speed_10m))throw incompleteWeather();
+    return boundedWeatherNumber(value,0,units==='us'?310:500);
+  };
+  const probability=(value,metadata,key)=>{
+    if(value===null||value===undefined)return null;
+    if(metadata?.[key]!=='%')throw incompleteWeather();
+    return boundedWeatherNumber(value,0,100);
+  };
+  for(const metadata of [data.current_units,data.daily_units,data.hourly_units])if(metadata?.time!==undefined&&metadata.time!=='iso8601')throw incompleteWeather();
+  let current=null;
+  if(data.current!==null&&data.current!==undefined){
+    if(typeof data.current!=='object'||Array.isArray(data.current)||!validWeatherTime(data.current.time))throw incompleteWeather();
+    const temperatureValue=temperature(data.current.temperature_2m,data.current_units,'temperature_2m');
+    if(temperatureValue!==null)current={temperature:temperatureValue,feelsLike:temperature(data.current.apparent_temperature,data.current_units,'apparent_temperature'),windSpeed:wind(data.current.wind_speed_10m,data.current_units),code:weatherCode(data.current.weather_code),isDay:data.current.is_day===1?true:data.current.is_day===0?false:null};
+  }
+  if(mode==='current'&&!current)throw incompleteWeather();
+  const updatedAt=validWeatherTime(data.current?.time)?data.current.time:localWeatherTime(timezone),today=updatedAt.slice(0,10);
+  const dayData=data.daily,allDays=[];
+  if(dayData!==null&&dayData!==undefined){
+    if(!Array.isArray(dayData.time)||dayData.time.length>16||!Array.isArray(dayData.temperature_2m_max)||!Array.isArray(dayData.temperature_2m_min)||dayData.temperature_2m_max.length!==dayData.time.length||dayData.temperature_2m_min.length!==dayData.time.length)throw incompleteWeather();
+    let previous='';
+    for(let index=0;index<dayData.time.length;index++){
+      const date=dayData.time[index];if(!validWeatherDate(date)||date<=previous||previous&&Date.parse(date+'T00:00:00Z')-Date.parse(previous+'T00:00:00Z')!==86400000)throw incompleteWeather();previous=date;
+      const high=temperature(dayData.temperature_2m_max[index],data.daily_units,'temperature_2m_max'),low=temperature(dayData.temperature_2m_min[index],data.daily_units,'temperature_2m_min');
+      if(high!==null&&low!==null&&high<low)throw incompleteWeather();
+      allDays.push(high===null||low===null?null:{date,high,low,code:weatherCode(dayData.weather_code?.[index]),precipitationProbability:probability(dayData.precipitation_probability_max?.[index],data.daily_units,'precipitation_probability_max')});
+    }
+  }
+  // The provider's daily array starts on today in its timezone. Validate dates
+  // against that reference, then select tomorrow or the next calendar week.
+  const reference=dayData?.time?.[0]||today;
+  if(data.current&&reference!==today)throw incompleteWeather();
+  let start=mode==='tomorrow'?1:0;
+  if(mode==='week'&&period==='next-week'){
+    const weekday=new Date(reference+'T00:00:00Z').getUTCDay();start=weekday===1?7:(8-weekday)%7;
+  }
+  const count=mode==='week'?7:1;
+  const selectedDays=allDays.slice(start,start+count);
+  if(['today','tomorrow','week'].includes(mode)&&(selectedDays.length!==count||selectedDays.some(day=>day===null)))throw incompleteWeather();
+  const daily=selectedDays.filter(Boolean);
+  const hourData=data.hourly,allHours=[];
+  if(hourData!==null&&hourData!==undefined){
+    if(!Array.isArray(hourData.time)||hourData.time.length>72||!Array.isArray(hourData.temperature_2m)||hourData.temperature_2m.length!==hourData.time.length)throw incompleteWeather();
+    let previous='';
+    for(let index=0;index<hourData.time.length;index++){
+      const time=hourData.time[index];if(!validWeatherTime(time)||time<=previous)throw incompleteWeather();previous=time;
+      const value=temperature(hourData.temperature_2m[index],data.hourly_units,'temperature_2m');
+      allHours.push({time,temperature:value,code:weatherCode(hourData.weather_code?.[index]),precipitationProbability:probability(hourData.precipitation_probability?.[index],data.hourly_units,'precipitation_probability'),windSpeed:wind(hourData.wind_speed_10m?.[index],data.hourly_units),isDay:hourData.is_day?.[index]===1?true:hourData.is_day?.[index]===0?false:null});
+    }
+  }
+  const currentHour=updatedAt.slice(0,13)+':00',targetDay=daily[0]?.date||today;
+  const hourly=mode==='week'?[]:allHours.filter(hour=>hour.time>=currentHour&&(!['today','tomorrow'].includes(mode)||hour.time.slice(0,10)===targetDay)).slice(0,mode==='hourly'?hours:12);
+  if(mode==='hourly'&&!hourly.some(hour=>hour.temperature!==null))throw incompleteWeather();
+  return {version:1,units,temperatureUnit,windSpeedUnit,precipitationUnit:units==='us'?'inch':'mm',location,mode,timezone,updatedAt,current,daily,hourly};
+}
 export async function weather(request,signal){
   if(signal?.aborted)throw signal.reason||new DOMException('Weather request stopped.','AbortError');
   if(!request||typeof request!=='object'||Array.isArray(request))throw new WeatherError('WEATHER_REQUEST_INVALID','Ask for weather in a city or postal code, for example “weather in Tokyo, Japan”.');
-  const mode=request.mode||'current';
-  if(!['current','today','tomorrow','week'].includes(mode)||request.period&&(request.period!=='next-week'||mode!=='week'))throw new WeatherError('WEATHER_REQUEST_INVALID','Ask for current weather, today, tomorrow, this week, or next week.');
+  const mode=request.mode||'current',units=request.units===undefined?'us':request.units;
+  if(request.hours!==undefined&&(![6,12,24].includes(request.hours)||mode!=='hourly'))throw new WeatherError('WEATHER_REQUEST_INVALID','Ask for the next 6, 12 or 24 hours.');
+  if(!['us','metric'].includes(units))throw new WeatherError('WEATHER_REQUEST_INVALID','Choose U.S. or metric weather units.');
+  if(!['current','today','tomorrow','week','hourly'].includes(mode)||request.period&&(request.period!=='next-week'||mode!=='week'))throw new WeatherError('WEATHER_REQUEST_INVALID','Ask for current weather, an hourly forecast, today, tomorrow, this week, or next week.');
   if(request.city!==undefined&&typeof request.city!=='string')throw new WeatherError('WEATHER_LOCATION_INVALID','Choose a valid city, postal code, or current location before requesting weather.');
   const city=request.city?.trim()||'';
   if(!city&&!request.location)return weatherClarification('WEATHER_LOCATION_REQUIRED','Which city or postal code should I check? Include the country, for example “19104, US” or “Tokyo, Japan”. You can also use your current location in Places & directions.');
@@ -270,41 +355,34 @@ export async function weather(request,signal){
     row=rows[0];
   }
   const url=new URL('https://api.open-meteo.com/v1/forecast');
-  url.search=new URLSearchParams({latitude:row.latitude,longitude:row.longitude,current:'temperature_2m,apparent_temperature,weather_code,wind_speed_10m,is_day',daily:'weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max',temperature_unit:'celsius',wind_speed_unit:'kmh',timezone:'auto',forecast_days:mode==='week'?(request.period==='next-week'?14:7):2});
+  url.search=new URLSearchParams({latitude:row.latitude,longitude:row.longitude,current:'temperature_2m,apparent_temperature,weather_code,wind_speed_10m,is_day',daily:'weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max',hourly:'temperature_2m,weather_code,precipitation_probability,wind_speed_10m,is_day',temperature_unit:units==='us'?'fahrenheit':'celsius',wind_speed_unit:units==='us'?'mph':'kmh',precipitation_unit:units==='us'?'inch':'mm',timezone:'auto',forecast_days:mode==='week'?(request.period==='next-week'?14:7):2,forecast_hours:48});
   const data=await readWeatherJSON(url,signal);
-  if(!data||typeof data!=='object'||data.error)throw new WeatherError('WEATHER_DATA_INCOMPLETE','The weather service returned incomplete data. Please try again in a moment.');
+  const weatherCard=weatherDataCard(data,{mode,units,period:request.period,location:weatherName(row),hours:request.hours});
+  const {current,daily,hourly,temperatureUnit,windSpeedUnit}=weatherCard;
+  const degrees=value=>`${Math.round(value)}${temperatureUnit}`;
+  const range=values=>{const low=Math.min(...values),high=Math.max(...values);return low===high?degrees(low):`${Math.round(low)}–${degrees(high)}`;};
+  const chance=value=>value===null?'':` Chance of precipitation: ${Math.round(value)}%.`;
   let text,condition,appearance={};
-  const missing=()=>new WeatherError('WEATHER_DATA_INCOMPLETE','The weather service returned incomplete data. Please try again in a moment.');
   if(mode==='current'){
-    const current=data.current,temp=weatherNumber(current?.temperature_2m);
-    if(temp===null||!validWeatherTime(current?.time))throw missing();
-    condition=Number.isInteger(current.weather_code)&&Object.hasOwn(weatherCodes,current.weather_code)?current.weather_code:null;
-    const apparent=weatherNumber(current.apparent_temperature),wind=weatherNumber(current.wind_speed_10m);
-    appearance={tempC:temp,...(apparent===null?{}:{apparentC:apparent}),isDay:current.is_day===1?true:current.is_day===0?false:null};
-    const zone=typeof data.timezone==='string'&&data.timezone.length<100?data.timezone:'local time';
-    text=`${weatherName(row)}: ${temp}°C (${weatherNumber(temp*9/5+32)}°F), ${conditionName(condition)}.`;
-    if(apparent!==null)text+=` Feels like ${apparent}°C.`;
-    if(wind!==null&&wind>=0)text+=` Wind ${wind} km/h.`;
-    if(apparent===null||wind===null||condition===null)text+=' Some weather details are temporarily unavailable.';
-    text+=` Model estimate for ${current.time} (${zone}).`;
+    condition=current.code;
+    const toC=value=>weatherNumber(units==='us'?(value-32)*5/9:value);
+    appearance={tempC:toC(current.temperature),...(current.feelsLike===null?{}:{apparentC:toC(current.feelsLike)}),isDay:current.isDay};
+    text=`${weatherName(row)}: ${degrees(current.temperature)}, ${conditionName(condition)}.`;
+    if(current.feelsLike!==null)text+=` Feels like ${degrees(current.feelsLike)}.`;
+    if(current.windSpeed!==null)text+=` Wind ${Math.round(current.windSpeed)} ${windSpeedUnit}.`;
+    if(current.feelsLike===null||current.windSpeed===null||condition===null)text+=' Some weather details are temporarily unavailable.';
+  }else if(mode==='hourly'){
+    condition=hourly[0].code;
+    const probabilities=hourly.map(item=>item.precipitationProbability).filter(value=>value!==null);
+    text=`${weatherName(row)}, hourly outlook: ${range(hourly.map(item=>item.temperature).filter(value=>value!==null))}.`;
+    if(probabilities.length)text+=` Precipitation chances up to ${Math.round(Math.max(...probabilities))}%.`;
+  }else if(mode==='week'){
+    condition=daily[0].code;
+    text=`${weatherName(row)}, ${request.period==='next-week'?'next week':'7-day outlook'}: highs ${range(daily.map(item=>item.high))}, lows ${range(daily.map(item=>item.low))}.`;
   }else{
-    const daily=data.daily;
-    if(!daily||!Array.isArray(daily.time)||!Array.isArray(daily.temperature_2m_max)||!Array.isArray(daily.temperature_2m_min))throw missing();
-    let start=mode==='tomorrow'?1:0;
-    if(mode==='week'&&request.period==='next-week'){
-      if(!validWeatherDate(daily.time[0]))throw missing();
-      const weekday=new Date(daily.time[0]+'T00:00:00Z').getUTCDay();start=weekday===1?7:(8-weekday)%7;
-    }
-    const indexes=Array.from({length:mode==='week'?7:1},(_,index)=>start+index),lines=[];
-    for(const index of indexes){
-      const date=daily.time[index],high=weatherNumber(daily.temperature_2m_max[index]),low=weatherNumber(daily.temperature_2m_min[index]);
-      if(!validWeatherDate(date)||high===null||low===null||high<low)throw missing();
-      const code=Array.isArray(daily.weather_code)&&Number.isInteger(daily.weather_code[index])&&Object.hasOwn(weatherCodes,daily.weather_code[index])?daily.weather_code[index]:null;
-      const chance=Array.isArray(daily.precipitation_probability_max)?weatherNumber(daily.precipitation_probability_max[index]):null;
-      if(index===start)condition=code;
-      lines.push(`${mode==='week'?date:`${weatherName(row)}, ${mode} (${date})`}: ${conditionName(code)}, high ${high}°C (${weatherNumber(high*9/5+32)}°F), low ${low}°C (${weatherNumber(low*9/5+32)}°F). ${chance!==null&&chance>=0&&chance<=100?`Chance of precipitation: ${chance}%.`:'Precipitation chance is unavailable.'}`);
-    }
-    text=(mode==='week'?`${weatherName(row)} — ${request.period==='next-week'?'next week':'7-day outlook'}:\n`:'')+lines.join('\n')+'\nForecasts can change.';
+    const day=daily[0];condition=day.code;
+    text=`${weatherName(row)}, ${mode}: ${conditionName(day.code)}, high ${degrees(day.high)}, low ${degrees(day.low)}.`+chance(day.precipitationProbability);
+    if(day.precipitationProbability===null)text+=' Precipitation chance is unavailable.';
   }
-  return {type:'weather',text,orbitWeather:{code:condition,source:'open-meteo',label:weatherName(row)+' · '+mode,...appearance},sources:[{title:'Open-Meteo weather data',url:request.location?.privateOrigin?'https://open-meteo.com/':url.href},{title:'Weather methodology',url:'https://open-meteo.com/en/docs'}]};
+  return {type:'weather',text,weatherCard,orbitWeather:{code:condition,source:'open-meteo',label:weatherName(row)+' · '+mode,...appearance},sources:[{title:'Open-Meteo weather data',url:request.location?.privateOrigin?'https://open-meteo.com/':url.href},{title:'Weather methodology',url:'https://open-meteo.com/en/docs'}]};
 }
