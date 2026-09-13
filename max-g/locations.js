@@ -5,6 +5,7 @@
  * Nearby: wiki.openstreetmap.org/wiki/Overpass_API#Public_Overpass_API_instances.
  * Overpass needs app identification: its referrer reveals only this app's origin.
  */
+import {weatherRequest} from './tools.js';
 export const LOCATION_DEFAULTS=Object.freeze({country:'',place:'',radius:1500,mode:'driving',mapProvider:'google'});
 export const CATEGORY_LABELS=Object.freeze({restaurant:'Restaurants',fuel:'Fuel stations',mall:'Shopping malls',supermarket:'Supermarkets',pharmacy:'Pharmacies',cafe:'Cafés',evcharging:'EV charging'});
 const FILTERS=Object.freeze({restaurant:'["amenity"~"^(restaurant|fast_food)$"]',fuel:'["amenity"="fuel"]',mall:'["shop"="mall"]',supermarket:'["shop"="supermarket"]',pharmacy:'["amenity"="pharmacy"]',cafe:'["amenity"="cafe"]',evcharging:'["amenity"="charging_station"]'});
@@ -59,13 +60,14 @@ function queryParts(value,country=''){
       else {if(code&&code!==explicit)throw new LocationError('COUNTRY_MISMATCH','The country in your search differs from the selected country. Choose the intended country.');code=explicit;query=prefix;}
     }
   }else{
-    // Country names may precede or follow a postal code in a natural query.
-    // Restrict extraction to postal-shaped text so street suffixes stay intact.
+    // Postal codes may have a country prefix/suffix. City queries may also
+    // end with a full country name; ambiguous two-letter regions stay intact.
     for(const match of query.matchAll(/\s+/g)){
       const left=query.slice(0,match.index),right=query.slice(match.index+match[0].length);
       let explicit='',postalPart='';
       if(postalLike(left)&&normalizeCountry(right)){explicit=normalizeCountry(right);postalPart=left;}
       else if(normalizeCountry(left)&&postalLike(right)){explicit=normalizeCountry(left);postalPart=right;}
+      else if(right.trim().length>2&&normalizeCountry(right)){explicit=normalizeCountry(right);postalPart=left;}
       if(explicit){if(code&&code!==explicit)throw new LocationError('COUNTRY_MISMATCH','Check the country selected for this postal code.');code=explicit;query=postalPart;break;}
     }
   }
@@ -81,6 +83,8 @@ function queryParts(value,country=''){
   }
   return {query,country:code,postal,needsCountry:ambiguousCountry||postal&&!code,ambiguousCountry};
 }
+// Local validation is available before asking for permission to use the internet.
+export const describePlaceQuery=(value,country='')=>queryParts(value,country);
 const CATEGORY_MATCHES=[
   ['evcharging',/\b(?:ev charging|electric vehicle charg(?:e|er|ing)|charging stations?)\b/i],
   ['fuel',/\b(?:gas|petrol|fuel)\s*(?:stations?|pumps?)?\b/i],
@@ -97,11 +101,10 @@ export function parseLocationIntent(value){
   const mode=/\b(?:walk|walking|on foot)\b/i.test(query)?'walking':/\b(?:cycle|cycling|bike|bicycle|bicycling)\b/i.test(query)?'bicycling':/\b(?:transit|public transport|by bus|by train)\b/i.test(query)?'transit':'driving';
   const category=CATEGORY_MATCHES.find(([,pattern])=>pattern.test(query))?.[0];
   let kind,place='';
-  if(/\b(?:weather|forecast|temperature|raining)\b/i.test(query)){
-    // Preserve ordinary explanations, unit conversions and research questions.
-    if(/\b(?:why|define|definition|explain|meaning|climate|yesterday|last|next|week|month|year|monday|tuesday|wednesday|thursday|friday|saturday|sunday|convert|history|historical)\b|\d{4}-\d\d-\d\d/i.test(query)||/^(?:what is|what's|what does) (?:weather|temperature|forecast)(?: mean)?$/i.test(query)||/^(?:how|what)\b.*\b(?:work|works|measure|measured|affect|affects|change|changes)\b/i.test(query))return null;
-    kind='weather';place=query.match(/\b(?:in|at|for)\s+(.+)$/i)?.[1]||query.match(/^(?:weather|forecast|temperature)\s+(.+)$/i)?.[1]||'';
-    if(/^(?:today|tomorrow|now|currently|right now)$/i.test(place))place='';
+  const requestedWeather=weatherRequest(query);
+  if(requestedWeather){
+    kind='weather';place=requestedWeather.city||'';
+    if(/^(?:today|tomorrow|now|currently|right now|this week|next week|the week)$/i.test(place))place='';
   }
   else if(/^(?:(?:please|can you|could you)\s+)?(?:give me |show me )?(?:directions? to|navigate to|take me to|route to|how (?:do i|to) get to)\s+/i.test(query)){kind='directions';place=query.replace(/^.*?\b(?:to)\s+/i,'').replace(/\s+(?:by car|by bike|by bus|by train|on foot|walking|driving)$/i,'');}
   else if(category&&(useDevice||/\b(?:near|in|around|find|show|closest|nearest|looking for)\b/i.test(query))){kind='nearby';place=query.match(/\b(?:near|in|around)\s+(.+)$/i)?.[1]||'';}
@@ -145,7 +148,7 @@ function photonRows(data,parts){
     if(parts.postal&&postalKey(postal)!==postalKey(parts.query))continue; // Never accept a fuzzy wrong postal code.
     const label=joinLabel([props.name,props.housenumber&&props.street?props.housenumber+' '+props.street:props.street,props.city||props.district,props.state,postal,props.country]);
     if(!label)continue;
-    results.push({id:'photon:'+String(props.osm_id||loc.lat+','+loc.lon),label,...loc,country:clean(props.country,90)||countryName(code),countryCode:code,postal,source:'Photon',attribution:{...PHOTON_ATTR},accuracy:'approximate'});
+    results.push({id:'photon:'+String(props.osm_id||loc.lat+','+loc.lon),name:clean(props.name,100),region:clean(props.state,100),label,...loc,country:clean(props.country,90)||countryName(code),countryCode:code,postal,source:'Photon',attribution:{...PHOTON_ATTR},accuracy:'approximate'});
   }
   return results.slice(0,6);
 }
@@ -156,7 +159,7 @@ function postalRows(data,parts,area){
   for(const row of data.places.slice(0,20)){
     let loc;try{loc=coordinates({lat:Number(row.latitude),lon:Number(row.longitude)});}catch{continue;}
     if(typeof row.latitude!=='string'||!row.latitude.trim()||typeof row.longitude!=='string'||!row.longitude.trim())continue;
-    results.push({id:'postal:'+parts.country+':'+area+':'+loc.lat+','+loc.lon,label:joinLabel([row['place name'],row.state,area,data.country]),...loc,
+    results.push({id:'postal:'+parts.country+':'+area+':'+loc.lat+','+loc.lon,name:clean(row['place name'],100),region:clean(row.state,100),label:joinLabel([row['place name'],row.state,area,data.country]),...loc,
       country:clean(data.country,90),countryCode:parts.country,postal:area,requestedPostal:parts.query,source:'Zippopotam.us',attribution:{...GEONAMES_ATTR},accuracy:'postal area'});
   }
   return results.slice(0,6);
@@ -169,7 +172,7 @@ function meteoRows(data,parts){
     const code=normalizeCountry(row.country_code);if(parts.country&&code!==parts.country)continue;
     const matchingPostal=(Array.isArray(row.postcodes)?row.postcodes:[]).find(code=>postalKey(code)===postalKey(parts.query));
     if(parts.postal&&!matchingPostal)continue;
-    results.push({id:'geonames:'+String(row.id),label:joinLabel([row.name,row.admin1,row.country]),...loc,country:clean(row.country,90),countryCode:code,postal:matchingPostal||'',
+    results.push({id:'geonames:'+String(row.id),name:clean(row.name,100),region:clean(row.admin1,100),label:joinLabel([row.name,row.admin1,row.country]),...loc,country:clean(row.country,90),countryCode:code,postal:matchingPostal||'',
       source:'Open-Meteo',attribution:{...METEO_ATTR},accuracy:'city or locality'});
   }
   return results.slice(0,6);

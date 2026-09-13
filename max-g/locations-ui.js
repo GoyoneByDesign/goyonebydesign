@@ -1,20 +1,34 @@
 /** Explicit place searches and one-shot location. Device coordinates stay in this tab's memory. */
-import {LOCATION_DEFAULTS,normalizeLocationSettings,normalizeCountry,COUNTRY_OPTIONS,CATEGORY_LABELS,resolvePlace,nearbyPlaces,getDeviceLocation,directionsLinks,clearLocationCache} from './locations.js';
+import {LOCATION_DEFAULTS,normalizeLocationSettings,normalizeCountry,describePlaceQuery,COUNTRY_OPTIONS,CATEGORY_LABELS,resolvePlace,nearbyPlaces,getDeviceLocation,directionsLinks,clearLocationCache} from './locations.js';
 const el=(tag,text='',className='')=>{const n=document.createElement(tag);n.textContent=text;if(className)n.className=className;return n;};
 const button=(label,fn)=>{const n=el('button',label,'button button-small');n.type='button';n.onclick=()=>Promise.resolve().then(fn).catch(()=>{});return n;};
 const link=(label,url)=>{const n=el('a',label,'button button-small');n.href=url;n.target='_blank';n.rel='noopener noreferrer';return n;};
 const distance=meters=>meters<1000?`${Math.round(meters/10)*10} m`:`${(meters/1000).toFixed(1)} km`;
 const stopped=()=>new DOMException('Location operation stopped.','AbortError');
 const MODES={driving:'Driving',walking:'Walking',bicycling:'Cycling',transit:'Public transport'};
+const placeKey=value=>String(value||'').normalize('NFKD').replace(/\p{M}/gu,'').toLowerCase().replace(/[^\p{L}\p{N}]+/gu,' ').trim();
+function weatherPoint(items,query){
+  if(items.length===1)return items[0];
+  const exact=items.filter(item=>placeKey(item.name)===placeKey(query));
+  const candidates=exact.length?exact:items;
+  if(candidates.length===1)return candidates[0];
+  const first=candidates[0];
+  // Duplicate mapped objects in one small area should not require a choice.
+  // Different towns/countries still need the user's selection.
+  if(first&&candidates.every(item=>item.countryCode&&item.countryCode===first.countryCode&&
+    Math.hypot((item.lat-first.lat)*111_320,(item.lon-first.lon)*111_320*Math.cos(first.lat*Math.PI/180))<1500))return first;
+  return null;
+}
 function field(label,value,{options,placeholder}={}){const wrap=el('label','','location-field');const input=el(options?'select':'input');input.setAttribute('aria-label',label);if(options)for(const [value,title]of Object.entries(options)){const option=el('option',title);option.value=value;input.append(option);}else {input.type='text';input.maxLength=180;input.autocomplete='off';}input.value=String(value||'');if(placeholder)input.placeholder=placeholder;wrap.append(el('span',label),input);if(!options&&/country$/i.test(label)){const list=el('datalist');list.id='maxg-countries-'+crypto.randomUUID();for(const country of COUNTRY_OPTIONS){const option=el('option',country.code);option.value=country.label;list.append(option);}input.setAttribute('list',list.id);wrap.append(list);}return {wrap,input};}
 
-export function createLocationHub({getSettings=()=>LOCATION_DEFAULTS,saveSettings=async()=>{},permission=async()=>{},runTask=async fn=>fn(new AbortController().signal),onCancel=()=>{},onNavigate=()=>{},onReply=async()=>{},toast=()=>{}}={}){
+export function createLocationHub({getSettings=()=>LOCATION_DEFAULTS,saveSettings=async()=>{},permission=async()=>{},runTask=async fn=>fn(new AbortController().signal),onCancel=()=>{},onNavigate=()=>{},onReply=async()=>{},onClarify=()=>{},toast=()=>{},services={resolvePlace,nearbyPlaces,getDeviceLocation}}={}){
   let panel=null,mounted=false,origin=null,originTime=0,originQuery='',controller=null,epoch=0,status='',results=[],choices=[],selection=null,fallback=null,attribution=null,resultRadius=null;
-  let fields={},draft=null,saving=false,saveEpoch=0,saveError='',saveNotice='',saveControl=null,saveStatusNode=null;
+  let fields={},draft=null,saving=false,saveEpoch=0,saveError='',saveNotice='',saveControl=null,saveStatusNode=null,clarification=null;
   const config=()=>normalizeLocationSettings(getSettings());
   function currentOrigin(){if(origin?.source==='device'&&Date.now()-originTime>300000)origin=null;return origin;}
   function cancel(){const wasRunning=Boolean(controller);epoch++;controller?.abort();controller=null;onCancel();if(wasRunning){status='Location search stopped.';render();}}
-  function forget(){saveEpoch++;saving=false;saveError='';saveNotice='';cancel();clearLocationCache();origin=null;originTime=0;originQuery='';draft=null;fields={};results=[];choices=[];selection=null;fallback=null;attribution=null;status='Location and nearby results cleared from this tab.';render();}
+  function retireWeather(){const waiting=selection?.kind==='weather'||clarification?.weather===true;cancel();if(waiting){selection=null;clarification=null;choices=[];status='Weather request canceled.';render();}return {retired:waiting};}
+  function forget(){saveEpoch++;saving=false;saveError='';saveNotice='';cancel();clearLocationCache();origin=null;originTime=0;originQuery='';draft=null;fields={};results=[];choices=[];selection=null;clarification=null;fallback=null;attribution=null;status='Location and nearby results cleared from this tab.';render();}
   function verify(id,signal){if(id!==epoch||signal.aborted)throw stopped();}
   function read(){return {...config(),...(draft||{}),...(fields.place?{place:fields.place.value,country:fields.country.value,mode:fields.mode.value,radius:Number(fields.radius.value)}:{})};}
   const sameDetails=(a,b)=>['place','country','mode','radius'].every(key=>a[key]===b[key]);
@@ -76,11 +90,28 @@ export function createLocationHub({getSettings=()=>LOCATION_DEFAULTS,saveSetting
   async function perform(fn){
     cancel();const id=epoch;controller=new AbortController();const local=controller;status='Looking up your request…';render();
     try{return await runTask(async signal=>{const abort=()=>local.abort();signal.addEventListener('abort',abort,{once:true});if(signal.aborted)abort();try{verify(id,local.signal);return await fn(local.signal,()=>verify(id,local.signal));}finally{signal.removeEventListener('abort',abort);}},{signal:local.signal});}
-    catch(error){if(id===epoch){status=error.name==='AbortError'?'Location search stopped.':error.message;toast(status);}return null;}
+    catch(error){if(id===epoch){status=error.name==='AbortError'?'Location search stopped.':error.message||'I could not finish that location lookup. Please try a city and country.';toast(status);if(error.name!=='AbortError')await onReply(status);}return null;}
     finally{if(id===epoch){controller=null;render();}}
   }
-  async function device(signal,check){await permission('location',{picked:true});check();const fix=await getDeviceLocation({signal});check();origin={...fix,label:'your current location'};originTime=Date.now();originQuery='';return origin;}
-  async function resolve(query,country,signal,check){await permission('internet');check();const found=await resolvePlace(query,{country,signal});check();status=found.message||'';if(found.needsCountry){status=found.message||'Choose a country for this postal code.';return null;}if(found.results.length!==1){choices=found.results;fallback=choices.length?null:[query,country].filter(Boolean).join(', ');return null;}return found.results[0];}
+  async function device(signal,check){await permission('location',{picked:true});check();const fix=await services.getDeviceLocation({signal});check();origin={...fix,label:'your current location'};originTime=Date.now();originQuery='';return origin;}
+  async function ask(kind,message,{query='',country='',choices:options=[]}={}){
+    status=message;clarification={kind,query,country,weather:selection?.kind==='weather',...(options.length?{choices:options.map((item,index)=>({index:index+1,id:item.id,label:item.label}))}:{})};
+    await onClarify(clarification);await onReply(message);return null;
+  }
+  async function resolve(query,country,signal,check){
+    clarification=null;
+    if(typeof query!=='string'||!query.trim())return ask('place',selection?.kind==='weather'?'Which city or postal code should I check for the weather?':'Which city, address or postal code should I look up?',{country});
+    const parts=describePlaceQuery(query,country);
+    if(parts.needsCountry)return ask('country',parts.ambiguousCountry?`Which country is “${query}” in? Please give the full country name.`:`Which country is postal code ${parts.query} in? For example, reply “United States” or “Canada”.`,{query:parts.query,country:''});
+    await permission('internet');check();const found=await services.resolvePlace(query,{country,signal});check();status=found.message||'';
+    if(found.needsCountry)return ask('country',`Which country is “${query}” in? Please give the full country name.`,{query,country:''});
+    const unique=found.results.filter((item,index,list)=>list.findIndex(other=>other.countryCode===item.countryCode&&other.lat===item.lat&&other.lon===item.lon&&other.label===item.label)===index);
+    const selected=selection?.kind==='weather'?weatherPoint(unique,parts.query):unique.length===1?unique[0]:null;
+    if(selected)return selected;
+    choices=unique;fallback=choices.length?null:[query,country].filter(Boolean).join(', ');
+    if(choices.length){if(selection?.kind!=='weather')onNavigate();return ask('choice',`I found more than one matching place. Which one do you mean?\n${choices.map((item,index)=>`${index+1}. ${item.label}`).join('\n')}`,{query,country,choices});}
+    return ask('place',`I could not find “${query}”${country?` in ${country}`:''}. Please try a city and country, or check the postal code.`,{query,country});
+  }
   async function setOriginFromFields(signal,check,{useDevice=false}={}){
     const value=read();
     if(useDevice){origin=null;return device(signal,check);}
@@ -92,13 +123,13 @@ export function createLocationHub({getSettings=()=>LOCATION_DEFAULTS,saveSetting
       try{await permission('location',{picked:true});check();const access=navigator.permissions?.query?await navigator.permissions.query({name:'geolocation'}).catch(()=>null):null;check();if(access?.state==='denied')throw Error('Location access was revoked. Use a city or postal code instead.');if(access?.state!=='granted'){origin=null;return device(signal,check);}return origin;}catch(error){origin=null;throw error;}
     }
     if(currentOrigin())return origin;
-    status='Enter a place and country, or choose Use current location.';return null;
+    return ask('place','Which city or postal code should I search near? You can also choose Use current location.');
   }
   async function locate(){origin=null;originTime=0;originQuery='';draft=read();draft.place='';if(fields.place)fields.place.value='';results=[];choices=[];fallback=null;selection=null;return perform(async(signal,check)=>{await device(signal,check);results=[origin];attribution=null;status=`Location ready${origin.accuracyMeters?` (about ${Math.round(origin.accuracyMeters)} m accuracy)`:''}. Choose a nearby category. Nothing is being tracked in the background.`;await onReply(`I have your device’s approximate location${Number.isFinite(origin.accuracyMeters)?`, with about ${Math.round(origin.accuracyMeters)} metres of reported accuracy`:''}. Open it in a maps app or choose a nearby category in Places & directions.`);});}
-  async function lookup({query,country,after=selection}={}){origin=null;originTime=0;originQuery='';draft={...read(),...(query!==undefined?{place:query}:{}),...(country!==undefined?{country}: {})};fields={};results=[];choices=[];fallback=null;attribution=null;selection=after||null;const requestedPlace=draft.place,requestedCountry=draft.country;return perform(async(signal,check)=>{const selected=await resolve(requestedPlace,requestedCountry,signal,check);if(!selected)return;origin=selected;originTime=Date.now();originQuery=requestedPlace.trim();results=[selected];attribution=selected.attribution||null;status=[status,'Place selected. Choose a nearby category or open directions.'].filter(Boolean).join(' ');selection=null;if(after)await continueSelection(selected,after,signal,check);else await onReply(`I found ${selected.label}. This is an approximate place or postal-area centre. Choose a maps app in Places & directions for the route.`);});}
-  async function continueSelection(item,after,signal,check){if(after?.kind==='nearby')return loadNearby(item,after.category,signal,check);if(after?.kind==='weather')return after.callback(item,signal);if(after?.kind==='directions'){status='Choose a maps app below to start directions. The maps app will ask for your starting location.';return onReply(`I found ${item.label}. Open Google Maps, Apple Maps or an available Waze link in Places & directions to start the route.`);}}
+  async function lookup({query,country,after=selection}={}){origin=null;originTime=0;originQuery='';draft={...read(),...(query!==undefined?{place:query}:{}),...(country!==undefined?{country}: {})};fields={};results=[];choices=[];fallback=null;attribution=null;selection=after||null;const requestedPlace=draft.place,requestedCountry=draft.country;return perform(async(signal,check)=>{const selected=await resolve(requestedPlace,requestedCountry,signal,check);check();if(!selected)return clarification?{pending:clarification}:null;origin=selected;originTime=Date.now();originQuery=requestedPlace.trim();results=[selected];attribution=selected.attribution||null;status=[status,'Place selected. Choose a nearby category or open directions.'].filter(Boolean).join(' ');selection=null;if(after)await continueSelection(selected,after,signal,check);else await onReply(`I found ${selected.label}. This is an approximate place or postal-area centre. Choose a maps app in Places & directions for the route.`);return {place:selected};});}
+  async function continueSelection(item,after,signal,check){if(after?.kind==='nearby')return loadNearby(item,after.category,signal,check);if(after?.kind==='weather'){draft={...read(),country:item.countryCode||read().country};fields={};return after.callback(item,signal);}if(after?.kind==='directions'){status='Choose a maps app below to start directions. The maps app will ask for your starting location.';return onReply(`I found ${item.label}. Open Google Maps, Apple Maps or an available Waze link in Places & directions to start the route.`);}}
   async function choose(item){const after=selection;return perform(async(signal,check)=>{origin=item;originTime=Date.now();originQuery=item.label;draft={...read(),place:item.label,country:item.countryCode||read().country};fields={};choices=[];fallback=null;results=[item];attribution=item.attribution||null;selection=null;status='Place selected. Choose a nearby category or open directions.';if(after)await continueSelection(item,after,signal,check);else await onReply(`I selected ${item.label}. Choose a nearby category or open directions in Places & directions.`);});}
-  async function loadNearby(point,category,signal,check){await permission('internet');check();const settings=normalizeLocationSettings(read());fallback=`${CATEGORY_LABELS[category]||category} near ${point.lat},${point.lon}`;const found=await nearbyPlaces({lat:point.lat,lon:point.lon,category,radius:settings.radius},{signal});check();choices=[];results=found.results;attribution=found.attribution;resultRadius=found.radius;status=`${found.message||'Nearby search complete.'} Search radius: ${distance(resultRadius)}.`;if(results.length)fallback=null;await onReply(results.length?`I found ${results.length} nearby places. The closest returned result is ${results[0].name||results[0].label}, about ${distance(results[0].distanceMeters)} in a straight line. Choose a maps app in Places & directions for the route.`:status);}
+  async function loadNearby(point,category,signal,check){await permission('internet');check();const settings=normalizeLocationSettings(read());fallback=`${CATEGORY_LABELS[category]||category} near ${point.lat},${point.lon}`;const found=await services.nearbyPlaces({lat:point.lat,lon:point.lon,category,radius:settings.radius},{signal});check();choices=[];results=found.results;attribution=found.attribution;resultRadius=found.radius;status=`${found.message||'Nearby search complete.'} Search radius: ${distance(resultRadius)}.`;if(results.length)fallback=null;await onReply(results.length?`I found ${results.length} nearby places. The closest returned result is ${results[0].name||results[0].label}, about ${distance(results[0].distanceMeters)} in a straight line. Choose a maps app in Places & directions for the route.`:status);}
   async function findNearby(category,{useDevice=false}={}){draft=read();results=[];choices=[];fallback=null;selection={kind:'nearby',category};return perform(async(signal,check)=>{const point=await setOriginFromFields(signal,check,{useDevice});if(!point)return;check();return loadNearby(point,category,signal,check);});}
   async function handleIntent(intent){onNavigate();draft={...read(),...(intent.place?{place:intent.place}:{}),...(intent.country?{country:intent.country}:{}),...(intent.modeExplicit?{mode:intent.mode}:{})};if(intent.useDevice)draft.place='';fields={};render();if(intent.kind==='nearby')return findNearby(intent.category||'restaurant',{useDevice:intent.useDevice});if(intent.useDevice)return locate();return lookup({query:intent.place||intent.query||'',country:intent.country||draft.country,after:intent.kind==='directions'?{kind:'directions'}:null});}
   function renderPreferences({signal}={}){
@@ -125,7 +156,30 @@ export function createLocationHub({getSettings=()=>LOCATION_DEFAULTS,saveSetting
     section.append(country.wrap,place.wrap,mode.wrap,provider.wrap,radius.wrap,save,button('Clear current location and results',forget),el('p','GPS access also has an Ask / Allow / Deny control in Permissions. The browser and operating system still control location access.','location-note'));
     return section;
   }
-  return {render:node=>{if(node){panel=node;mounted=true;}render();},unmount(){draft=read();fields={};mounted=false;cancel();},renderPreferences,handleIntent,cancel,forget,get current(){return currentOrigin();},
-    async prepareWeather(intent,callback){onNavigate();origin=null;originTime=0;originQuery='';choices=[];results=[];fallback=null;attribution=null;draft={...read(),place:intent.useDevice?'':intent.place,country:intent.country||read().country};fields={};selection={kind:'weather',callback};if(intent.useDevice){return perform(async(signal,check)=>{const fix=await device(signal,check);check();await callback(fix,signal);});}return lookup({query:draft.place,country:draft.country,after:selection});},
+  return {render:node=>{if(node){panel=node;mounted=true;}render();},unmount(){draft=read();fields={};mounted=false;cancel();},renderPreferences,handleIntent,cancel,retireWeather,forget,get current(){return currentOrigin();},
+    async prepareWeather(intent,callback){
+      const previous=read(),saved=config(),explicitPlace=typeof intent.place==='string'?intent.place.trim():'',selectedOrigin=currentOrigin(),selectedQuery=originQuery;
+      let parsed=null;try{if(explicitPlace)parsed=describePlaceQuery(explicitPlace);}catch{}
+      // A previous lookup's country must not turn "Tokyo" into a US search.
+      // Saved country preferences disambiguate postal codes, not overseas cities.
+      const country=intent.country||parsed?.country||(!explicitPlace?(previous.country||saved.country):(parsed?.postal||parsed?.ambiguousCountry?saved.country:''));
+      const reuse=!explicitPlace&&!intent.useDevice&&selectedOrigin&&selectedOrigin.source!=='device'&&
+        [selectedQuery,selectedOrigin.label].includes(previous.place.trim())&&(!country||normalizeCountry(country)===selectedOrigin.countryCode);
+      origin=null;originTime=0;originQuery='';choices=[];results=[];fallback=null;attribution=null;clarification=null;
+      draft={...previous,place:intent.useDevice?'':explicitPlace||previous.place||saved.place,country};fields={};selection={kind:'weather',callback};
+      if(intent.useDevice)return perform(async(signal,check)=>{const fix=await device(signal,check);check();selection=null;await callback(fix,signal);return {place:fix};});
+      if(reuse)return perform(async(signal,check)=>{check();origin=selectedOrigin;originTime=Date.now();originQuery=selectedQuery;results=[selectedOrigin];attribution=selectedOrigin.attribution||null;selection=null;await continueSelection(selectedOrigin,{kind:'weather',callback},signal,check);check();return {place:selectedOrigin,reused:true};});
+      return lookup({query:draft.place,country:draft.country,after:selection});
+    },
+    async selectChoice(index){
+      if(!Number.isInteger(index)||index<1||index>choices.length){
+        const id=epoch,pending=choices.length&&clarification?.kind==='choice'?{...clarification,choices:choices.map((item,index)=>({index:index+1,id:item.id,label:item.label}))}:null;
+        if(pending)await onClarify(pending);
+        if(id!==epoch)return null;
+        await onReply(choices.length?`Choose a number from 1 to ${choices.length}.`:'Those place choices have expired. Please ask for the weather again.');
+        return pending?{pending}:null;
+      }
+      return choose(choices[index-1]);
+    },
     dispose(){mounted=false;forget();panel=null;}};
 }

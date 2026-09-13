@@ -121,23 +121,127 @@ export function quickAnswer(query){
   try{return {text:`${text} = ${fmt(calculate(text))}.`,type:'calculation'};}catch(error){return {text:error.message,type:'clarification'};}
 }
 export function weatherRequest(query,city=''){
-  if(!/\b(weather|forecast|raining|temperature)\b/i.test(query)||/\b(why|define|definition|climate|yesterday|last|next|week|month|year|monday|tuesday|wednesday|thursday|friday|saturday|sunday|convert)\b|\d{4}-\d\d-\d\d/i.test(query)||/^what is (weather|temperature)\??$/i.test(query.trim()))return null;
-  const mode=/\btomorrow\b/i.test(query)?'tomorrow':/\btoday\b/i.test(query)?'today':'current';const q=query.replace(/\b(right now|today|tomorrow|currently|now|please)\b/gi,'').replace(/[?!]+$/,'').trim();const match=q.match(/\b(?:in|for|at)\s+(.+)$/i)||q.match(/^(?:weather|forecast|temperature)\s+(.+)$/i);let place=match?.[1]?.trim()||city;if(/^(here|outside|my area|my location|like)$/i.test(place))place=city;return {city:place.slice(0,150),mode};
+  if(typeof query!=='string'||query.length>500)return null;
+  const text=query.trim().replace(/[’‘]/g,"'");
+  if(!/\b(?:weather|forecast|raining|temperature)\b/i.test(text))return null;
+  if(/\b(?:under the weather|weather the storm|weather permitting)\b/i.test(text))return null;
+  // Explanations, historical research and non-weather uses belong in normal chat.
+  if(/\b(?:why|define|definition|explain|meaning|climate|yesterday|last|month|year|convert|history|historical)\b|\d{4}-\d\d-\d\d/i.test(text)||
+    /^(?:what is|what does) (?:weather|temperature|forecast)(?: mean)?[?!.]*$/i.test(text)||
+    /^(?:how|what)\b.*\b(?:work|works|measure|measured|affect|affects|change|changes)\b/i.test(text)||
+    /\b(?:sales|revenue|stock|stocks|market|demand|budget|body|fever|oven|cpu|boiling|freezing point|water temperature)\b/i.test(text))return null;
+  // Avoid answering an unsupported date with current conditions.
+  if(/\b(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday|weekend)\b/i.test(text)||/\bnext\b(?!\s+(?:week|7\s+days|seven\s+days))/i.test(text))return null;
+  const nextWeek=/\bnext\s+week\b/i.test(text);
+  const mode=/\b(?:week|weekly|7[ -]day|seven[ -]day|next (?:7|seven) days)\b/i.test(text)?'week':/\btomorrow\b/i.test(text)?'tomorrow':/\btoday\b/i.test(text)?'today':'current';
+  const stripped=text.replace(/\b(?:for\s+)?(?:the\s+)?(?:next|this)\s+week\b|\b(?:for\s+)?(?:the\s+)?(?:next\s+)?(?:7|seven)[ -]days?\b|\b(?:right now|today|tomorrow|currently|now|please|weekly|week)\b/gi,' ').replace(/[?!.]+$/,'').replace(/\s+/g,' ').trim();
+  const prepositions=[...stripped.matchAll(/\b(?:in|for|at)\s+/gi)],last=prepositions.at(-1);
+  let place=last?stripped.slice(last.index+last[0].length):stripped.match(/^(?:weather|forecast|temperature)\s+(.+)$/i)?.[1]||'';
+  place=place.replace(/^(?:like|forecast)\s*/i,'').replace(/\s+(?:like|forecast)$/i,'').replace(/^[,\s]+|[,\s]+$/g,'').trim();
+  if(/^(?:here|outside|near me|nearby|my area|my location|my current location|like|the|is it|it|for|in|at)$/i.test(place))place='';
+  const fallback=typeof city==='string'?city.trim():'';
+  return {city:(place||fallback).slice(0,150),mode,...(nextWeek?{period:'next-week'}:{})};
 }
-const weatherCodes={0:'clear sky',1:'mainly clear',2:'partly cloudy',3:'overcast',45:'fog',48:'rime fog',51:'light drizzle',53:'drizzle',55:'dense drizzle',61:'light rain',63:'rain',65:'heavy rain',71:'light snow',73:'snow',75:'heavy snow',80:'rain showers',81:'rain showers',82:'heavy showers',95:'thunderstorm',96:'thunderstorm with hail',99:'thunderstorm with hail'};
+export class WeatherError extends Error{constructor(code,message){super(message);this.name='WeatherError';this.code=code;}}
+const weatherCodes={0:'clear sky',1:'mainly clear',2:'partly cloudy',3:'overcast',45:'fog',48:'rime fog',51:'light drizzle',53:'drizzle',55:'dense drizzle',56:'light freezing drizzle',57:'dense freezing drizzle',61:'light rain',63:'rain',65:'heavy rain',66:'light freezing rain',67:'heavy freezing rain',71:'light snow',73:'snow',75:'heavy snow',77:'snow grains',80:'rain showers',81:'rain showers',82:'heavy showers',85:'light snow showers',86:'heavy snow showers',95:'thunderstorm',96:'thunderstorm with hail',99:'thunderstorm with hail'};
+const weatherClarification=(code,text,sources=[])=>({type:'clarification',code,text,sources});
+const weatherNumber=value=>typeof value==='number'&&Number.isFinite(value)?Number(value.toFixed(1)):null;
+const weatherName=row=>String(row.label||[...new Set([row.name,row.admin1,row.country].filter(value=>typeof value==='string'&&value.trim()))].join(', ')||'Selected location').slice(0,240);
+const validWeatherCoordinate=row=>row&&Number.isFinite(row.latitude)&&Number.isFinite(row.longitude)&&Math.abs(row.latitude)<=90&&Math.abs(row.longitude)<=180;
+const validWeatherDate=value=>{if(typeof value!=='string'||!/^\d{4}-\d\d-\d\d$/.test(value))return false;const date=new Date(value+'T00:00:00Z');return !Number.isNaN(date.valueOf())&&date.toISOString().slice(0,10)===value;};
+const validWeatherTime=value=>typeof value==='string'&&/^\d{4}-\d\d-\d\dT(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d)?$/.test(value)&&validWeatherDate(value.slice(0,10));
+const conditionName=code=>weatherCodes[code]||'conditions unavailable';
+async function readWeatherJSON(url,signal){
+  try{return await readJSON(url,{signal,timeout:10000,maxBytes:100000});}
+  catch(error){
+    if(signal?.aborted||error?.name==='AbortError')throw error;
+    if(/took too long|timed? ?out/i.test(error?.message||''))throw new WeatherError('WEATHER_TIMEOUT','The weather service took too long to reply. Please try again in a moment.');
+    if(globalThis.navigator?.onLine===false)throw new WeatherError('WEATHER_OFFLINE',"I think I'm offline. Connect this device to the internet, then ask me for the weather again.");
+    throw new WeatherError('WEATHER_UNAVAILABLE',"I couldn't reach the weather service. Check your internet connection and try again in a moment.");
+  }
+}
+function weatherPlaceParts(value){
+  const aliases={us:'US',usa:'US','united states':'US','united states of america':'US',uk:'GB',gb:'GB','united kingdom':'GB',canada:'CA',japan:'JP',philippines:'PH',china:'CN',italy:'IT',spain:'ES',russia:'RU','south korea':'KR',germany:'DE',france:'FR',australia:'AU',india:'IN'};
+  let parts=value.split(',').map(part=>part.trim()).filter(Boolean);
+  if(parts.length===1&&/\d/.test(value)){
+    for(const match of value.matchAll(/\s+/g)){
+      const first=value.slice(0,match.index).trim(),second=value.slice(match.index+match[0].length).trim();
+      if(/^[\w -]+$/.test(first)&&/\d/.test(first)&&(aliases[second.toLowerCase()]||/^[A-Za-z]{2}$/.test(second))){parts=[first,second];break;}
+      if((aliases[first.toLowerCase()]||/^[A-Za-z]{2}$/.test(first))&&/^[\w -]+$/.test(second)&&/\d/.test(second)){parts=[second,first];break;}
+    }
+  }
+  const country=aliases[parts.at(-1)?.toLowerCase()]||(/^[A-Za-z]{2}$/.test(parts.at(-1)||'')?parts.at(-1).toUpperCase():'');
+  const postal=parts[0]&&/\d/.test(parts[0])&&/^[A-Za-z\d -]{2,16}$/.test(parts[0]);
+  return {parts,country,postal};
+}
 export async function weather(request,signal){
-  if(!request.city&&!request.location)return {text:'Which city? Try “weather in Boston, Massachusetts, United States”, or save your city in Settings → Connection.',sources:[]};
-  const name=x=>x.label||[...new Set([x.name,x.admin1,x.country].filter(Boolean))].join(', ');
+  if(signal?.aborted)throw signal.reason||new DOMException('Weather request stopped.','AbortError');
+  if(!request||typeof request!=='object'||Array.isArray(request))throw new WeatherError('WEATHER_REQUEST_INVALID','Ask for weather in a city or postal code, for example “weather in Tokyo, Japan”.');
+  const mode=request.mode||'current';
+  if(!['current','today','tomorrow','week'].includes(mode)||request.period&&(request.period!=='next-week'||mode!=='week'))throw new WeatherError('WEATHER_REQUEST_INVALID','Ask for current weather, today, tomorrow, this week, or next week.');
+  if(request.city!==undefined&&typeof request.city!=='string')throw new WeatherError('WEATHER_LOCATION_INVALID','Choose a valid city, postal code, or current location before requesting weather.');
+  const city=request.city?.trim()||'';
+  if(!city&&!request.location)return weatherClarification('WEATHER_LOCATION_REQUIRED','Which city or postal code should I check? Include the country, for example “19104, US” or “Tokyo, Japan”. You can also use your current location in Places & directions.');
+  if(city.length>200||/[\u0000-\u001f\u007f]/.test(city))throw new WeatherError('WEATHER_LOCATION_INVALID','Choose a valid city or postal code of up to 200 characters.');
   let row;
-  if(request.location){const p=request.location;if(!Number.isFinite(p.latitude)||!Number.isFinite(p.longitude)||Math.abs(p.latitude)>90||Math.abs(p.longitude)>180)throw new Error('Choose a valid location before requesting weather.');row={latitude:p.latitude,longitude:p.longitude,label:String(p.label||'Selected location').slice(0,200)};}
-  else {
-  const parts=request.city.split(',').map(x=>x.trim()).filter(Boolean);const geo=new URL('https://geocoding-api.open-meteo.com/v1/search');geo.search=new URLSearchParams({name:parts[0],count:10,language:'en',format:'json'});const places=await readJSON(geo,{signal});let rows=(places.results||[]).filter(x=>Number.isFinite(x.latitude)&&Number.isFinite(x.longitude)&&Math.abs(x.latitude)<=90&&Math.abs(x.longitude)<=180);
-  for(const p of parts.slice(1)){const aliases={us:'united states',usa:'united states',uk:'united kingdom'};const needle=aliases[p.toLowerCase()]||p.toLowerCase();rows=rows.filter(x=>['country','country_code','admin1','admin2','admin3'].some(k=>String(x[k]||'').toLowerCase()===needle));}
-  const exact=rows.filter(x=>x.name?.toLowerCase()===parts[0].toLowerCase());if(exact.length)rows=exact;rows=[...new Map(rows.map(x=>[`${x.latitude},${x.longitude}`,x])).values()];
-  if(rows.length!==1)return {text:rows.length?`Which place do you mean? ${rows.slice(0,3).map(name).join('; ')}. Include the region and country.`:`I couldn’t find ${request.city}. Please include the city, region and country.`,sources:[{title:'Open-Meteo locations',url:geo.href}]};
-  row=rows[0];}
-  const url=new URL('https://api.open-meteo.com/v1/forecast');url.search=new URLSearchParams({latitude:row.latitude,longitude:row.longitude,current:'temperature_2m,apparent_temperature,weather_code,wind_speed_10m,is_day',daily:'weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max',timezone:'auto',forecast_days:2});const data=await readJSON(url,{signal});const n=x=>{if(!Number.isFinite(x))throw new Error('Weather data is incomplete.');return Number(x.toFixed(1));};let text,condition,appearance={};
-  if(request.mode==='current'){const c=data.current;if(!c||typeof c.time!=='string')throw new Error('Current weather data is incomplete.');condition=c.weather_code;appearance={tempC:n(c.temperature_2m),apparentC:n(c.apparent_temperature),isDay:c.is_day===1?true:c.is_day===0?false:null};text=`${name(row)}: ${n(c.temperature_2m)}°C (${n(c.temperature_2m*9/5+32)}°F), ${weatherCodes[c.weather_code]||'conditions unavailable'}. Feels like ${n(c.apparent_temperature)}°C; wind ${n(c.wind_speed_10m)} km/h. Model estimate for ${c.time} (${data.timezone}).`;}
-  else {const i=request.mode==='tomorrow'?1:0,d=data.daily;if(!d?.time?.[i])throw new Error('Forecast data is incomplete.');condition=d.weather_code[i];text=`${name(row)}, ${request.mode} (${d.time[i]}): ${weatherCodes[d.weather_code[i]]||'conditions unavailable'}, high ${n(d.temperature_2m_max[i])}°C, low ${n(d.temperature_2m_min[i])}°C. Chance of precipitation: ${n(d.precipitation_probability_max[i])}%. Forecasts can change.`;}
-  return {text,orbitWeather:{code:condition,source:'open-meteo',label:name(row)+' · '+request.mode,...appearance},sources:[{title:'Open-Meteo weather data',url:request.location?.privateOrigin?'https://open-meteo.com/':url.href},{title:'Weather methodology',url:'https://open-meteo.com/en/docs'}]};
+  if(request.location){
+    if(!validWeatherCoordinate(request.location))throw new WeatherError('WEATHER_LOCATION_INVALID','Choose a valid location before requesting weather.');
+    row={latitude:request.location.latitude,longitude:request.location.longitude,label:String(request.location.label||'Selected location').slice(0,200)};
+  }else{
+    const {parts,country,postal}=weatherPlaceParts(city);
+    if(!parts.length)return weatherClarification('WEATHER_LOCATION_REQUIRED','Which city or postal code should I check? Please include the country.');
+    if(postal&&parts.length===1)return weatherClarification('WEATHER_COUNTRY_REQUIRED',`Which country is ${parts[0]} in? For example, “${parts[0]}, US”. Postal codes can occur in more than one country.`);
+    const geo=new URL('https://geocoding-api.open-meteo.com/v1/search');
+    geo.search=new URLSearchParams({name:parts[0],count:10,language:'en',format:'json',...(country?{countryCode:country}:{})});
+    const places=await readWeatherJSON(geo,signal);
+    if(!places||typeof places!=='object'||Array.isArray(places)||places.error||places.results!==undefined&&!Array.isArray(places.results))throw new WeatherError('WEATHER_LOCATION_UNAVAILABLE','The location service returned an incomplete answer. Try the city, region and country, or use your current location.');
+    let rows=(places.results||[]).filter(validWeatherCoordinate);
+    for(const part of parts.slice(1)){
+      const aliases={us:'united states',usa:'united states',uk:'united kingdom',gb:'united kingdom'},needle=aliases[part.toLowerCase()]||part.toLowerCase();
+      rows=rows.filter(item=>['country','country_code','admin1','admin2','admin3'].some(key=>String(item[key]||'').toLowerCase()===needle));
+    }
+    if(postal){const key=value=>String(value).toUpperCase().replace(/[\s-]/g,'');rows=rows.filter(item=>Array.isArray(item.postcodes)&&item.postcodes.some(code=>key(code)===key(parts[0])));}
+    else {const exact=rows.filter(item=>typeof item.name==='string'&&item.name.toLowerCase()===parts[0].toLowerCase());if(exact.length)rows=exact;}
+    rows=[...new Map(rows.map(item=>[`${item.latitude},${item.longitude}`,item])).values()];
+    if(rows.length!==1)return weatherClarification(rows.length?'WEATHER_LOCATION_AMBIGUOUS':'WEATHER_LOCATION_NOT_FOUND',rows.length?`Which place do you mean? ${rows.slice(0,3).map(weatherName).join('; ')}. Include the region and country.`:`I couldn’t find ${city}. Please include the city, region and country, or select a place in Places & directions.`,[{title:'Open-Meteo locations',url:geo.href}]);
+    row=rows[0];
+  }
+  const url=new URL('https://api.open-meteo.com/v1/forecast');
+  url.search=new URLSearchParams({latitude:row.latitude,longitude:row.longitude,current:'temperature_2m,apparent_temperature,weather_code,wind_speed_10m,is_day',daily:'weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max',temperature_unit:'celsius',wind_speed_unit:'kmh',timezone:'auto',forecast_days:mode==='week'?(request.period==='next-week'?14:7):2});
+  const data=await readWeatherJSON(url,signal);
+  if(!data||typeof data!=='object'||data.error)throw new WeatherError('WEATHER_DATA_INCOMPLETE','The weather service returned incomplete data. Please try again in a moment.');
+  let text,condition,appearance={};
+  const missing=()=>new WeatherError('WEATHER_DATA_INCOMPLETE','The weather service returned incomplete data. Please try again in a moment.');
+  if(mode==='current'){
+    const current=data.current,temp=weatherNumber(current?.temperature_2m);
+    if(temp===null||!validWeatherTime(current?.time))throw missing();
+    condition=Number.isInteger(current.weather_code)&&Object.hasOwn(weatherCodes,current.weather_code)?current.weather_code:null;
+    const apparent=weatherNumber(current.apparent_temperature),wind=weatherNumber(current.wind_speed_10m);
+    appearance={tempC:temp,...(apparent===null?{}:{apparentC:apparent}),isDay:current.is_day===1?true:current.is_day===0?false:null};
+    const zone=typeof data.timezone==='string'&&data.timezone.length<100?data.timezone:'local time';
+    text=`${weatherName(row)}: ${temp}°C (${weatherNumber(temp*9/5+32)}°F), ${conditionName(condition)}.`;
+    if(apparent!==null)text+=` Feels like ${apparent}°C.`;
+    if(wind!==null&&wind>=0)text+=` Wind ${wind} km/h.`;
+    if(apparent===null||wind===null||condition===null)text+=' Some weather details are temporarily unavailable.';
+    text+=` Model estimate for ${current.time} (${zone}).`;
+  }else{
+    const daily=data.daily;
+    if(!daily||!Array.isArray(daily.time)||!Array.isArray(daily.temperature_2m_max)||!Array.isArray(daily.temperature_2m_min))throw missing();
+    let start=mode==='tomorrow'?1:0;
+    if(mode==='week'&&request.period==='next-week'){
+      if(!validWeatherDate(daily.time[0]))throw missing();
+      const weekday=new Date(daily.time[0]+'T00:00:00Z').getUTCDay();start=weekday===1?7:(8-weekday)%7;
+    }
+    const indexes=Array.from({length:mode==='week'?7:1},(_,index)=>start+index),lines=[];
+    for(const index of indexes){
+      const date=daily.time[index],high=weatherNumber(daily.temperature_2m_max[index]),low=weatherNumber(daily.temperature_2m_min[index]);
+      if(!validWeatherDate(date)||high===null||low===null||high<low)throw missing();
+      const code=Array.isArray(daily.weather_code)&&Number.isInteger(daily.weather_code[index])&&Object.hasOwn(weatherCodes,daily.weather_code[index])?daily.weather_code[index]:null;
+      const chance=Array.isArray(daily.precipitation_probability_max)?weatherNumber(daily.precipitation_probability_max[index]):null;
+      if(index===start)condition=code;
+      lines.push(`${mode==='week'?date:`${weatherName(row)}, ${mode} (${date})`}: ${conditionName(code)}, high ${high}°C (${weatherNumber(high*9/5+32)}°F), low ${low}°C (${weatherNumber(low*9/5+32)}°F). ${chance!==null&&chance>=0&&chance<=100?`Chance of precipitation: ${chance}%.`:'Precipitation chance is unavailable.'}`);
+    }
+    text=(mode==='week'?`${weatherName(row)} — ${request.period==='next-week'?'next week':'7-day outlook'}:\n`:'')+lines.join('\n')+'\nForecasts can change.';
+  }
+  return {type:'weather',text,orbitWeather:{code:condition,source:'open-meteo',label:weatherName(row)+' · '+mode,...appearance},sources:[{title:'Open-Meteo weather data',url:request.location?.privateOrigin?'https://open-meteo.com/':url.href},{title:'Weather methodology',url:'https://open-meteo.com/en/docs'}]};
 }

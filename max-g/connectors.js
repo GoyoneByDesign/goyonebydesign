@@ -304,18 +304,28 @@ export function oauthURL(value) {
 
 export class HelperClient {
   constructor({url=HELPER_DEFAULT,token='',fetchImpl=globalThis.fetch}={}) {this.url=helperURL(url);this.token=token;this.fetch=fetchImpl.bind(globalThis);}
-  async request(path,{method='GET',body,signal}={}) {
+  async request(path,{method='GET',body,signal,onChunk}={}) {
     if (!/^\/api\/[a-z/_-]+$/.test(path)) throw new Error('Invalid helper endpoint.');
     if (!this.token) throw new Error('Pair MAX-G with the local Mac helper first.');
+    if(onChunk&&path!=='/api/local-ai/chat')throw new Error('Streaming is only supported for local AI replies.');
     const requestToken=this.token,requestURL=this.url;
     const controller=new AbortController();
     const abort=()=>controller.abort();
     signal?.addEventListener('abort',abort,{once:true});
     if (signal?.aborted) abort();
-    const timeout=setTimeout(abort,path==='/api/voice/synthesize'?360000:60000);
+    const timeout=setTimeout(abort,path==='/api/voice/synthesize'||['/api/local-ai/chat','/api/local-ai/load'].includes(path)?360000:60000);
     try {
       const response=await this.fetch(requestURL+path,{method,headers:{Authorization:`Bearer ${requestToken}`,...(body===undefined?{}:{'Content-Type':'application/json'})},
         ...(body===undefined?{}:{body:JSON.stringify(body)}),credentials:'omit',cache:'no-store',mode:'cors',redirect:'error',signal:controller.signal});
+      if(onChunk&&response.ok){
+        if(!response.body?.getReader)throw new Error('The Mac helper did not return a reply stream.');
+        const reader=response.body.getReader(),decoder=new TextDecoder();let buffer='',total=0,completed=false;
+        const deliver=line=>{if(!line.trim())return;let chunk;try{chunk=JSON.parse(line);}catch{throw new Error('The Mac helper returned an unreadable reply stream.');}if(controller.signal.aborted)throw ABORT();onChunk(chunk);};
+        try{for(;;){const {done,value}=await reader.read();if(controller.signal.aborted)throw ABORT();if(done){buffer+=decoder.decode();if(buffer.trim())deliver(buffer);completed=true;return;}
+          total+=value.byteLength;if(total>300000)throw new Error('The Mac helper reply exceeded its safe size limit.');buffer+=decoder.decode(value,{stream:true});
+          let newline;while((newline=buffer.indexOf('\n'))!==-1){deliver(buffer.slice(0,newline));buffer=buffer.slice(newline+1);}
+        }}finally{if(!completed){controller.abort();try{await reader.cancel();}catch{}}reader.releaseLock();}
+      }
       let data;
       try {data=await response.json();} catch {throw new Error(`The Mac helper returned an unreadable response (${response.status}).`);}
       if (!response.ok) throw new Error(data?.error?.message || data?.message || data?.error || `Mac helper request failed (${response.status}).`);
@@ -650,7 +660,24 @@ export function initializeConnectors({toast=()=>{},generateText,findMusic,onRepl
   function render(panel){container=panel;panel.replaceChildren();const shell=node('div','','mg-connectors');shell.dataset.busy=String(busy);const header=node('header','','mg-hub-header');header.append(node('div'));header.firstChild.append(node('span','MAX-G CONNECTIONS','mg-eyebrow'),node('h2','Your world, within reach'),node('p','Accounts, apps and devices — with access you control.','mg-muted'));const statusLabel=node('span',status?`${status.platform==='Darwin'?'Mac':status.platform||'Mac'} companion connected`:client.token?'Paired · refresh to check':'Mac helper not paired',`mg-connection-pill${status?' mg-online':''}`);header.append(statusLabel);shell.append(header);const nav=node('nav','','mg-tabs');nav.setAttribute('aria-label','Connector categories');for(const [id,label]of TABS){const control=button(label,()=>{tab=id;renderCurrent();},{secondary:true});control.classList.toggle('mg-active',tab===id);control.setAttribute('aria-current',tab===id?'page':'false');nav.append(control);}shell.append(nav);const content=node('div','','mg-hub-content');({connect:renderConnections,device:renderDevice,mail:renderMail,files:renderFiles,mac:renderMac,browser:renderBrowser,shopping:renderShopping,permissions:renderPermissions})[tab](content);shell.append(content);const activity=node('details','','mg-activity');activity.open=Boolean(lastOutput);activity.append(node('summary','Last helper result'),node('pre',lastOutput||'Actions and results will appear here.','mg-output'));shell.append(activity);shell.append(button('Cancel current operation',cancelOperation,{secondary:true}));panel.append(shell);panel.dataset.busy=String(busy);}
 
   async function disconnect(){cancelOperation();clearComposeAttachments();client.token='';status=null;accountMessages=[];selectedMessage=null;mailAccounts=[];cloudFiles=[];apps=[];musicChoices=[];browserObservation=null;desktopObservation=null;lastOutput='';for(const key of Object.keys(draft))draft[key]='';for(const key of Object.keys(clientIds))clientIds[key]='';for(const key of Object.keys(handoffForm))handoffForm[key]='';mailSender='';mailAccount='';deviceForm.body='';deviceForm.recipient='';for(const key of ['url','request','budget','phone','target'])shoppingForm[key]='';shoppingForm.newPurchaseReviewed=false;shoppingAttempted=false;try{sessionStorage?.removeItem(PAIR_SESSION_KEY);}catch{}renderCurrent();return 'This browser is disconnected. Saved account connections remain in the Mac helper until you disconnect them or reset connector data.';}
-  async function reset(){cancelOperation();clearComposeAttachments();let message='This browser’s pairing was cleared. Pair with the Mac helper to reset any account connections stored there.';if(client.token){try{await client.request('/api/reset',{method:'POST',body:{code:'1435254'}});message='Connector credentials, the helper-owned browser profile and helper access settings were reset.';}catch(error){message=`Pairing was cleared here, but the helper reset could not be confirmed: ${error.message}`;}}await disconnect();return message;}
+  async function reset({preservePairing=false}={}){
+    cancelOperation();clearComposeAttachments();
+    let keep=false;
+    if(preservePairing){const address=new URL(globalThis.location?.href||'https://invalid.example/');keep=['127.0.0.1','localhost','[::1]'].includes(address.hostname)&&address.searchParams.get('desktop')==='1'&&client.url===address.origin;}
+    let message='This browser’s pairing was cleared. Pair with the Mac helper to reset any account connections stored there.';
+    const transportToken=keep?client.token:'';
+    if(keep&&!transportToken)throw new Error('Reopen the installed MAX-G app to finish resetting its local data.');
+    if(client.token){
+      const result=await client.request('/api/reset',{method:'POST',body:{code:'1435254'}});
+      if(result?.reset!==true)throw new Error('The helper did not confirm the reset. Local account and extension data may remain.');
+      message='Connector credentials, local extension knowledge, the helper-owned browser profile and helper access settings were reset.';
+    }
+    await disconnect();
+    // This is the native window’s temporary transport pairing, not an account credential.
+    if(keep){client.token=transportToken;rememberPair();message+=' The installed app remains connected to its local helper.';}
+    return message;
+  }
+
   function handleCommand(text){const command=parseDirectCommand(text);if(!command)return false;return guarded(async signal=>{
     if(command.kind==='shopping'){shoppingForm.merchant=command.merchant;shoppingForm.request=command.request;shoppingForm.url='';shoppingForm.budget='';shoppingForm.fulfillment='unspecified';shoppingForm.newPurchaseReviewed=false;browserObservation=null;tab='shopping';if(onNavigate)onNavigate();renderCurrent();return {handled:true,text:client.token?'Shopping & food is open. Choose your store or restaurant, check the list and budget, then open the shopping website. MAX-G will help prepare the cart and pause for your separate final order review.':'Shopping & food is open. Tap Open store on this device to browse and order yourself. Your list stays here; Mac-companion cart automation requires pairing.'};}
     if(command.kind==='hub'){tab=command.tab||'connect';if(onNavigate)onNavigate();renderCurrent();return {handled:true,text:({connect:'Open Connections to manage accounts, apps and devices.',device:'This device is open. Prepare a phone, message, email or Spotify link, then tap it to continue in your device’s app.',mail:'Mail is open. Choose your connected mail service and select Load messages when you are ready.',files:'Cloud files is open. Choose your connected storage service, then list files or select a file to upload.',browser:'Browser controls are open. Enter a website URL, then select Open website to begin. Mac-companion automation requires pairing.',mac:'Mac & devices is open. These controls need a paired Mac companion. This device has separate links for calls, messages, email and Spotify.'})[tab]};}
@@ -703,5 +730,26 @@ export function initializeConnectors({toast=()=>{},generateText,findMusic,onRepl
     catch(error){verify();if(/Unknown companion endpoint|Not found/i.test(error.message))throw new Error('Restart the updated MAX-G Companion to enable Voice Studio.');throw error;}
     finally{searchControllers.delete(controller);signal?.removeEventListener('abort',abort);}
   }
-  return {render,handleCommand,disconnect,reset,publicSearch,voiceRequest,cancel:cancelOperation,refresh:()=>guarded(refresh),get paired(){return Boolean(client.token);},get deviceStatus(){return {paired:Boolean(client.token),connected:Boolean(client.token&&status),platform:typeof status?.platform==='string'?status.platform.slice(0,32):null};}};
+  async function localAIRequest(operation,body={}, {signal,onChunk}={}){
+    if(!['status','load','chat','cancel','unload'].includes(operation))throw new Error('Unknown local AI operation.');
+    const address=new URL(globalThis.location?.href||'https://invalid.example/');
+    if(!['http:','https:'].includes(address.protocol)||!['127.0.0.1','localhost','[::1]'].includes(address.hostname)||address.searchParams.get('desktop')!=='1'||client.url!==address.origin)throw new Error('Installed Mac inference requires this app’s same-device pairing. Reopen MAX-G.');
+    const target=client,token=client.token,controller=new AbortController(),abort=()=>controller.abort();
+    signal?.addEventListener('abort',abort,{once:true});if(signal?.aborted)abort();
+    if(operation!=='cancel')searchControllers.add(controller);
+    const verify=()=>{if(controller.signal.aborted||client!==target||client.token!==token)throw ABORT();};
+    try{verify();const result=await target.request('/api/local-ai/'+operation,{method:'POST',body,signal:controller.signal,...(onChunk?{onChunk:chunk=>{verify();onChunk(chunk);}}:{})});verify();return result;}
+    finally{searchControllers.delete(controller);signal?.removeEventListener('abort',abort);}
+  }
+  async function extensionRequest(operation,body={}, {signal}={}){
+    if(!['status','configure','math','document','memory/list','memory/save','memory/search','memory/delete','memory/clear','code','github'].includes(operation))throw new Error('Unknown extension operation.');
+    const address=new URL(globalThis.location?.href||'https://invalid.example/');
+    if(!['http:','https:'].includes(address.protocol)||!['127.0.0.1','localhost','[::1]'].includes(address.hostname)||address.searchParams.get('desktop')!=='1'||client.url!==address.origin)throw new Error('Use Extensions from the installed MAX-G app on this Mac.');
+    const target=client,token=client.token,controller=new AbortController(),abort=()=>controller.abort();
+    signal?.addEventListener('abort',abort,{once:true});if(signal?.aborted)abort();searchControllers.add(controller);
+    const verify=()=>{if(controller.signal.aborted||client!==target||client.token!==token)throw ABORT();};
+    try{verify();const result=await target.request('/api/extensions/'+operation,{method:'POST',body,signal:controller.signal});verify();return result;}
+    finally{searchControllers.delete(controller);signal?.removeEventListener('abort',abort);}
+  }
+  return {render,handleCommand,disconnect,reset,publicSearch,voiceRequest,localAIRequest,extensionRequest,cancel:cancelOperation,refresh:()=>guarded(refresh),get paired(){return Boolean(client.token);},get deviceStatus(){return {paired:Boolean(client.token),connected:Boolean(client.token&&status),platform:typeof status?.platform==='string'?status.platform.slice(0,32):null};}};
 }
