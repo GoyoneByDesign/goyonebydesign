@@ -6,21 +6,14 @@
  * Overpass needs app identification: its referrer reveals only this app's origin.
  */
 import {weatherRequest} from './tools.js';
+import {normalizePlaceText,looksLikePostalCode,normalizePostalCode,postalComparisonKey} from './postal-data.js';
 export const LOCATION_DEFAULTS=Object.freeze({country:'',place:'',radius:1500,mode:'driving',mapProvider:'google'});
 export const CATEGORY_LABELS=Object.freeze({restaurant:'Restaurants',fuel:'Fuel stations',mall:'Shopping malls',supermarket:'Supermarkets',pharmacy:'Pharmacies',cafe:'Cafés',evcharging:'EV charging'});
 const FILTERS=Object.freeze({restaurant:'["amenity"~"^(restaurant|fast_food)$"]',fuel:'["amenity"="fuel"]',mall:'["shop"="mall"]',supermarket:'["shop"="supermarket"]',pharmacy:'["amenity"="pharmacy"]',cafe:'["amenity"="cafe"]',evcharging:'["amenity"="charging_station"]'});
-const COUNTRIES=new Set(('AD AE AF AG AI AL AM AO AQ AR AS AT AU AW AX AZ BA BB BD BE BF BG BH BI BJ BL BM BN BO BQ BR BS BT BV BW BY BZ CA CC CD CF CG CH CI CK CL CM CN CO CR CU CV CW CX CY CZ DE DJ DK DM DO DZ EC EE EG EH ER ES ET FI FJ FK FM FO FR GA GB GD GE GF GG GH GI GL GM GN GP GQ GR GS GT GU GW GY HK HM HN HR HT HU ID IE IL IM IN IO IQ IR IS IT JE JM JO JP KE KG KH KI KM KN KP KR KW KY KZ LA LB LC LI LK LR LS LT LU LV LY MA MC MD ME MF MG MH MK ML MM MN MO MP MQ MR MS MT MU MV MW MX MY MZ NA NC NE NF NG NI NL NO NP NR NU NZ OM PA PE PF PG PH PK PL PM PN PR PS PT PW PY QA RE RO RS RU RW SA SB SC SD SE SG SH SI SJ SK SL SM SN SO SR SS ST SV SX SY SZ TC TD TF TG TH TJ TK TL TM TN TO TR TT TV TW TZ UA UG UM US UY UZ VA VC VE VG VI VN VU WF WS YE YT ZA ZM ZW').split(' '));
+import {COUNTRY_OPTIONS,normalizeCountry,countryName} from './country-data.js';
+export {COUNTRY_OPTIONS,normalizeCountry} from './country-data.js';
 const ZIP_COUNTRIES=new Set(('AD AR AS AT AU AX BD BE BG BR CA CH CL CZ DE DK DO ES FI FO FR GB GF GG GL GP GT GU GY HR HU IM IN IS IT JE JP LI LK LT LU MC MD MH MK MP MQ MT MX MY NL NO NZ PH PK PL PM PR PT RE RU SE SI SJ SK SM TH TR US VA VI WF YT ZA').split(' '));
-const countryKey=value=>String(value).normalize('NFKD').replace(/\p{M}/gu,'').toLowerCase().replace(/[^a-z0-9]/g,'');
-const countryAliases=new Map();
-let displayNames;
-try{displayNames=new Intl.DisplayNames(['en'],{type:'region'});}catch{}
-for(const code of COUNTRIES){countryAliases.set(code.toLowerCase(),code);if(displayNames)countryAliases.set(countryKey(displayNames.of(code)),code);}
-for(const [name,code] of Object.entries({uk:'GB',greatbritain:'GB',britain:'GB',england:'GB',scotland:'GB',wales:'GB',northernireland:'GB',usa:'US',unitedstatesofamerica:'US',southkorea:'KR',republicofkorea:'KR',northkorea:'KP',russia:'RU',russianfederation:'RU',vietnam:'VN',czechrepublic:'CZ',ivorycoast:'CI',philippines:'PH'}))countryAliases.set(name,code);
-export function normalizeCountry(value){return typeof value==='string'?countryAliases.get(countryKey(value.trim()))||'':'';}
-export const COUNTRY_OPTIONS=Object.freeze([...COUNTRIES].map(code=>Object.freeze({code,label:displayNames?.of(code)||code})).sort((a,b)=>a.label.localeCompare(b.label)));
 const clean=(value,max=180)=>typeof value==='string'?value.replace(/[\u0000-\u001f\u007f-\u009f]/g,' ').replace(/\s+/g,' ').trim().slice(0,max):'';
-const countryName=code=>code?(displayNames?.of(code)||code):'';
 const MODES=new Set(['driving','walking','bicycling','transit']);
 export function normalizeLocationSettings(value={}){
   const data=value&&typeof value==='object'?value:{};
@@ -36,18 +29,10 @@ function coordinates(value){
   if(typeof lat!=='number'||typeof lon!=='number'||!Number.isFinite(lat)||!Number.isFinite(lon)||Math.abs(lat)>90||Math.abs(lon)>180)throw new LocationError('INVALID_COORDINATES','Choose a valid location before searching nearby.');
   return {lat,lon};
 }
-function postalLike(query){
-  const compact=query.toUpperCase().replace(/\s/g,'');
-  return /^(?:GIR0AA|[A-Z]{1,2}\d[A-Z\d]?\d[A-Z]{2})$/.test(compact)||
-    /^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z]\d[ABCEGHJ-NPRSTV-Z]\d$/.test(compact)||
-    /^\d[\d -]{1,11}$/.test(query)||
-    /^[A-Za-z0-9-]{3,10}$/.test(query)&&(query.match(/\d/g)||[]).length>=2||
-    /^\d{4} [A-Za-z]{2}$/.test(query)||
-    /^[A-Za-z]\d[A-Za-z0-9] [A-Za-z0-9]{4}$/.test(query);
-}
+const postalLike=looksLikePostalCode;
 function queryParts(value,country=''){
   if(typeof value!=='string'||!value.trim()||value.length>200||/[\u0000-\u001f\u007f-\u009f]/.test(value))throw new LocationError('INVALID_PLACE','Enter a place or postal code of up to 200 characters.');
-  let query=value.trim(),code=normalizeCountry(country),ambiguousCountry=false;
+  let query=normalizePlaceText(value),code=normalizeCountry(country),ambiguousCountry=false;
   if(country&&!code)throw new LocationError('INVALID_COUNTRY','Choose a country name or a valid two-letter country code.');
   const pieces=query.split(',');
   if(pieces.length>1){
@@ -67,19 +52,14 @@ function queryParts(value,country=''){
       let explicit='',postalPart='';
       if(postalLike(left)&&normalizeCountry(right)){explicit=normalizeCountry(right);postalPart=left;}
       else if(normalizeCountry(left)&&postalLike(right)){explicit=normalizeCountry(left);postalPart=right;}
-      else if(right.trim().length>2&&normalizeCountry(right)){explicit=normalizeCountry(right);postalPart=left;}
+      else if(!/^[A-Za-z]{2}$/.test(right.trim())&&normalizeCountry(right)){explicit=normalizeCountry(right);postalPart=left;}
       if(explicit){if(code&&code!==explicit)throw new LocationError('COUNTRY_MISMATCH','Check the country selected for this postal code.');code=explicit;query=postalPart;break;}
     }
   }
-  const compact=query.toUpperCase().replace(/\s/g,'');
-  const uk=/^(?:GIR0AA|[A-Z]{1,2}\d[A-Z\d]?\d[A-Z]{2})$/.test(compact);
-  const canada=/^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z]\d[ABCEGHJ-NPRSTV-Z]\d$/.test(compact);
   const postal=postalLike(query);
   if(postal){
-    if(code==='US'&&!/^\d{5}(?:-\d{4})?$/.test(compact))throw new LocationError('INVALID_POSTAL','US ZIP codes use five digits or ZIP+4. Check the code and country.');
-    if(code==='GB'&&uk)query=compact.slice(0,-3)+' '+compact.slice(-3);
-    else if(code==='CA'&&canada)query=compact.slice(0,3)+' '+compact.slice(3);
-    else query=query.toUpperCase().replace(/\s+/g,' ');
+    query=normalizePostalCode(query,code);
+    if(code==='US'&&!/^\d{5}(?:-\d{4})?$/.test(query))throw new LocationError('INVALID_POSTAL','US ZIP codes use five digits or ZIP+4. Check the code and country.');
   }
   return {query,country:code,postal,needsCountry:ambiguousCountry||postal&&!code,ambiguousCountry};
 }
@@ -96,32 +76,35 @@ const CATEGORY_MATCHES=[
 ];
 export function parseLocationIntent(value){
   if(typeof value!=='string'||value.length>500)return null;
-  const query=value.trim().replace(/[?!]+$/,'');
+  const query=normalizePlaceText(value).replace(/[’‘]/g,"'").replace(/[?!]+$/,'');
   const useDevice=/\b(?:near me|nearby|around me|my (?:current )?location|where am i|here)\b/i.test(query);
   const mode=/\b(?:walk|walking|on foot)\b/i.test(query)?'walking':/\b(?:cycle|cycling|bike|bicycle|bicycling)\b/i.test(query)?'bicycling':/\b(?:transit|public transport|by bus|by train)\b/i.test(query)?'transit':'driving';
   const category=CATEGORY_MATCHES.find(([,pattern])=>pattern.test(query))?.[0];
-  let kind,place='';
+  let kind,place='',postalLookup=false;
+  const postalQuestion=query.match(/^(?:(?:what(?: is| are|'s)|tell me|show me|find|look up)\s+)?(?:the\s+)?(?:postal codes?|postcodes?|zip codes?)(?:\s+(?:of|for|in))?\s+(.+)$/i);
   const requestedWeather=weatherRequest(query);
   if(requestedWeather){
     kind='weather';place=requestedWeather.city||'';
     if(/^(?:today|tomorrow|now|currently|right now|this week|next week|the week)$/i.test(place))place='';
   }
+  else if(postalQuestion){kind='location';place=postalQuestion[1];postalLookup=true;}
   else if(/^(?:(?:please|can you|could you)\s+)?(?:give me |show me )?(?:directions? to|navigate to|take me to|route to|how (?:do i|to) get to)\s+/i.test(query)){kind='directions';place=query.replace(/^.*?\b(?:to)\s+/i,'').replace(/\s+(?:by car|by bike|by bus|by train|on foot|walking|driving)$/i,'');}
   else if(category&&(useDevice||/\b(?:near|in|around|find|show|closest|nearest|looking for)\b/i.test(query))){kind='nearby';place=query.match(/\b(?:near|in|around)\s+(.+)$/i)?.[1]||'';}
   else if(/^(?:where am i|what(?: is|'s) my (?:current )?location|my location)$/i.test(query)){kind='location';}
   else if(/^(?:locate|find (?:location|postal code|postcode|zip code)|where is|postal code|postcode|zip code)\b/i.test(query)){kind='location';place=query.replace(/^(?:locate|find (?:location|postal code|postcode|zip code)|where is|postal code|postcode|zip code)\s*/i,'');}
-  else return null;
+  else {try{const parts=queryParts(query);if(!parts.postal||!parts.country)return null;kind='location';place=query;postalLookup=true;}catch{return null;}}
+  if(kind==='location'&&/^(?:postal code|postcode|zip code)\s+/i.test(place)){place=place.replace(/^(?:postal code|postcode|zip code)\s+/i,'');postalLookup=true;}
   if(/^(?:me|here|nearby|my (?:current )?location)$/i.test(place))place='';
   place=place.replace(/\s+(?:please|today|tomorrow|right now)$/i,'').trim();
   let country='';
   if(place){try{const parts=queryParts(place);place=parts.query;country=parts.country;}catch{}}
-  return {kind,query,place,country,useDevice:useDevice&&!place,mode,modeExplicit:/\b(?:walk|walking|on foot|cycle|cycling|bike|bicycle|bicycling|transit|public transport|by bus|by train|driving|by car|drive)\b/i.test(query),...(category?{category}:{})};
+  return {kind,query,place,country,useDevice:useDevice&&!place,mode,modeExplicit:/\b(?:walk|walking|on foot|cycle|cycling|bike|bicycle|bicycling|transit|public transport|by bus|by train|driving|by car|drive)\b/i.test(query),...(category?{category}:{}),...(postalLookup?{postalLookup:true}:{})};
 }
 const PHOTON_ATTR=Object.freeze({text:'© OpenStreetMap contributors · Photon',url:'https://www.openstreetmap.org/copyright'});
 const GEONAMES_ATTR=Object.freeze({text:'GeoNames · Zippopotam.us',url:'https://www.geonames.org/'});
 const METEO_ATTR=Object.freeze({text:'Open-Meteo · GeoNames',url:'https://open-meteo.com/en/docs/geocoding-api'});
 const OVERPASS_ATTR=Object.freeze({text:'© OpenStreetMap contributors · Overpass',url:'https://www.openstreetmap.org/copyright'});
-function postalKey(value){return clean(value,20).toUpperCase().replace(/[\s-]/g,'');}
+function postalKey(value){return postalComparisonKey(clean(value,20));}
 function postalArea(postal,country){
   if(country==='US')return postal.slice(0,5);
   if(country==='CA')return postal.replace(/\s/g,'').slice(0,3);
@@ -143,7 +126,7 @@ function photonRows(data,parts){
     if(!props||point?.type!=='Point'||!Array.isArray(point.coordinates))continue;
     let loc;try{loc=coordinates({lat:point.coordinates[1],lon:point.coordinates[0]});}catch{continue;}
     const code=normalizeCountry(props.countrycode);
-    if(parts.country&&code!==parts.country)continue;
+    if(!code||parts.country&&code!==parts.country)continue;
     const postal=clean(props.postcode||(props.osm_value==='postcode'?props.name:''),20);
     if(parts.postal&&postalKey(postal)!==postalKey(parts.query))continue; // Never accept a fuzzy wrong postal code.
     const label=joinLabel([props.name,props.housenumber&&props.street?props.housenumber+' '+props.street:props.street,props.city||props.district,props.state,postal,props.country]);
@@ -169,11 +152,11 @@ function meteoRows(data,parts){
   const results=[];
   for(const row of (data?.results||[]).slice(0,20)){
     let loc;try{loc=coordinates({lat:row.latitude,lon:row.longitude});}catch{continue;}
-    const code=normalizeCountry(row.country_code);if(parts.country&&code!==parts.country)continue;
+    const code=normalizeCountry(row.country_code);if(!code||parts.country&&code!==parts.country)continue;
     const matchingPostal=(Array.isArray(row.postcodes)?row.postcodes:[]).find(code=>postalKey(code)===postalKey(parts.query));
     if(parts.postal&&!matchingPostal)continue;
     results.push({id:'geonames:'+String(row.id),name:clean(row.name,100),region:clean(row.admin1,100),label:joinLabel([row.name,row.admin1,row.country]),...loc,country:clean(row.country,90),countryCode:code,postal:matchingPostal||'',
-      source:'Open-Meteo',attribution:{...METEO_ATTR},accuracy:'city or locality'});
+      postcodes:(Array.isArray(row.postcodes)?row.postcodes:[]).filter(value=>typeof value==='string'&&value.length<=20).slice(0,40),source:'Open-Meteo',attribution:{...METEO_ATTR},accuracy:'city or locality'});
   }
   return results.slice(0,6);
 }
@@ -257,24 +240,27 @@ export function createLocationClient({fetch:fetchImpl=(...args)=>globalThis.fetc
     const url=new URL('https://photon.komoot.io/api/');url.search=new URLSearchParams({q:parts.query,limit:'6',lang:'en',...(parts.country?{countrycode:parts.country}:{})});
     let results=[],firstError;
     try{results=photonRows(await request(url.href,{signal}),parts);}catch(error){if(error.name==='AbortError'||error.code==='LOCATION_RATE_LIMIT')throw error;firstError=error;}
-    let fallbackMessage='';
+    let fallbackMessage='',fallbackError;
+    if(!results.length&&parts.postal&&ZIP_COUNTRIES.has(parts.country)){
+      checkAbort(signal);
+      try{
+        const area=postalArea(parts.query,parts.country);
+        const endpoint='https://api.zippopotam.us/'+parts.country.toLowerCase()+'/'+encodeURIComponent(area);
+        const data=await request(endpoint,{signal,missingOK:true});results=postalRows(data,parts,area);
+        if(results.length)fallbackMessage=postalKey(area)!==postalKey(parts.query)?'Only the '+area+' postal area was found for '+parts.query+'. This is an approximate area location, not the exact address.':'These are approximate postal-area locations, not exact street addresses.';
+      }catch(error){if(error.name==='AbortError'||error.code==='LOCATION_RATE_LIMIT')throw error;fallbackError=error;}
+    }
     if(!results.length){
       checkAbort(signal);
       try{
-        if(parts.postal&&ZIP_COUNTRIES.has(parts.country)){
-          const area=postalArea(parts.query,parts.country);
-          const endpoint='https://api.zippopotam.us/'+parts.country.toLowerCase()+'/'+encodeURIComponent(area);
-          const data=await request(endpoint,{signal,missingOK:true});results=postalRows(data,parts,area);
-          fallbackMessage=postalKey(area)!==postalKey(parts.query)?'Only the '+area+' postal area was found for '+parts.query+'. This is an approximate area location, not the exact address.':'These are approximate postal-area locations, not exact street addresses.';
-        }else{
-          const endpoint=new URL('https://geocoding-api.open-meteo.com/v1/search');
-          endpoint.search=new URLSearchParams({name:parts.query,count:'6',language:'en',format:'json',...(parts.country?{countryCode:parts.country}:{})});
-          results=meteoRows(await request(endpoint.href,{signal}),parts);fallbackMessage='These are approximate city/locality coordinates, not an exact street address.';
-        }
-      }catch(error){if(error.name==='AbortError'||error.code==='LOCATION_RATE_LIMIT')throw error;throw firstError||error;}
+        const endpoint=new URL('https://geocoding-api.open-meteo.com/v1/search');
+        endpoint.search=new URLSearchParams({name:parts.query,count:'6',language:'en',format:'json',...(parts.country?{countryCode:parts.country}:{})});
+        results=meteoRows(await request(endpoint.href,{signal}),parts);
+        if(results.length)fallbackMessage='These are approximate city/locality coordinates, not an exact street address.';
+      }catch(error){if(error.name==='AbortError'||error.code==='LOCATION_RATE_LIMIT')throw error;throw firstError||fallbackError||error;}
     }
     checkAbort(signal);
-    const message=results.length?(fallbackMessage||'Choose the matching place. Map coordinates and postal coverage are approximate.'):'I could not find a matching location. Check the country and postal code, or enter the city and street instead.';
+    const message=results.length?(fallbackMessage||'Choose the matching place. Map coordinates and postal coverage are approximate.'):'I could not find a matching location in the available sources. Coverage varies by country; this does not prove the place or code is invalid. Check the country, or try a city, district or street.';
     return remember(key,{...base,results,message},epoch);
   }
   async function nearbyPlaces({lat,lon,category,radius=1500}={}, {signal}={}){

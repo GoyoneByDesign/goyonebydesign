@@ -29,7 +29,7 @@ const EMOTIONS=['neutral','happy','joyful','sad','embarrassed','curious','surpri
 const STUDY_TOPICS=['site:developer.mozilla.org JavaScript web APIs','site:webllm.mlc.ai local model inference','site:www.w3.org/WAI accessible web interfaces','site:docs.ollama.com structured outputs','site:docs.python.org tutorial errors','site:playwright.dev docs locators'];
 const PERSONA=COMPANION_PERSONA;
 let state=freshState(),session={id:crypto.randomUUID(),title:'New conversation',messages:[]},attachments=[],workspace=[],folderHandle=null;
-let weatherPending=null,weatherContext=null;
+let locationPending=null,locationContext=null;
 let active=null,taskEpoch=0,queued=null,voiceMode=false,dictationText='',voiceMisses=0,view='chat',settingsTab='general',selectedSkill='',deferredInstall=null,lastAnswer='',saveChain=Promise.resolve(),toastTimer;
 let evaluationProgress='',settingsController=null,performanceEpoch=0,playing=false,playTimer=null;
 let audioAttempt=0,soundController=null;
@@ -91,8 +91,8 @@ let locationTask=null;
 const locationHub=createLocationHub({getSettings:()=>state.settings.locations,permission,toast,
   saveSettings:async value=>{if(active?.kind==='reset')throw Error('Wait for the reset to finish before saving a location.');state.settings.locations=normalizeLocationSettings(value);if(!await persist())throw Error('Location applies in this tab but could not be saved on this device. Your typed details are still available; please try saving again.');},
   onCancel:()=>{if(active?.kind==='locations')active.controller.abort();},onNavigate:()=>setView('places'),
-  onClarify:info=>{if(info.weather&&weatherContext)weatherPending={...weatherContext,clarification:info,time:Date.now()};},
-  onReply:text=>locationReply(text),runTask:async (fn,{signal:requestSignal}={})=>{
+  onClarify:info=>{if(locationContext)locationPending={...locationContext,clarification:info,time:Date.now()};},
+  onReply:(text,sources=[])=>locationReply(text,sources),runTask:async (fn,{signal:requestSignal}={})=>{
     if(requestSignal?.aborted)throw new DOMException('Location request superseded.','AbortError');
     if(active&&active.kind!=='locations')throw Error('Stop the current task before looking up a location.');
     if(locationTask){active?.controller.abort();try{await locationTask;}catch{}}
@@ -111,10 +111,16 @@ async function handleLocationRequest(intent,text,requestOverride=null){
     setView('chat');
     const request=requestOverride||weatherRequest(text,state.settings.weatherCity)||{mode:'current'};
     const target={...intent,place:intent.place||(state.settings.locations.place?'':request.city)||'',country:intent.country||''};
-    weatherPending=null;weatherContext={request,intent:target};$('modelStatus').textContent='Checking weather location…';
-    return locationHub.prepareWeather(target,async(point,signal)=>{await permission('internet');if(signal.aborted)throw new DOMException('Stopped','AbortError');const result=await weather({...request,location:{latitude:point.lat,longitude:point.lon,label:point.label||'Your current location',privateOrigin:point.source==='device'}},signal);if(signal.aborted)throw new DOMException('Stopped','AbortError');weatherPending=null;weatherContext=null;orbit.setWeather(result.orbitWeather);await locationReply(result.text,result.sources,signal);$('modelStatus').textContent='Weather ready · live weather tool';toast('Weather is ready in your conversation.');});
+    locationPending=null;locationContext={request,intent:target};$('modelStatus').textContent='Checking weather location…';
+    const result=await locationHub.prepareWeather(target,async(point,signal)=>{await permission('internet');if(signal.aborted)throw new DOMException('Stopped','AbortError');const result=await weather({...request,location:{latitude:point.lat,longitude:point.lon,label:point.label||'Your current location',privateOrigin:point.source==='device'}},signal);if(signal.aborted)throw new DOMException('Stopped','AbortError');locationPending=null;locationContext=null;orbit.setWeather(result.orbitWeather);await locationReply(result.text,result.sources,signal);$('modelStatus').textContent='Weather ready · live weather tool';toast('Weather is ready in your conversation.');});
+    if(!result?.pending){locationPending=null;locationContext=null;}
+    return result;
   }
-  return locationHub.handleIntent(intent);
+  locationPending=null;locationContext={request:null,intent};
+  if(intent.kind==='location')setView('chat');
+  const result=await locationHub.handleIntent({...intent,fromChat:intent.kind==='location'});
+  if(!result?.pending){locationPending=null;locationContext=null;}
+  return result;
 }
 function connectorReply(text,userText){
   if(userText)session.messages.push({role:'user',content:userText,sources:[]});
@@ -152,7 +158,7 @@ async function permission(capability,{background=false,picked=false}={}){const c
 function updateBusy(){const busy=Boolean(active);$('stopBtn').hidden=!busy;if($('stopTaskBtn'))$('stopTaskBtn').hidden=!busy;$('sendBtn').hidden=busy;$('loadModelBtn').disabled=busy;if($('askGeminiBtn'))$('askGeminiBtn').disabled=busy;$('composerHint').textContent=queued?'One message queued · Stop restores it':'Enter to send · Shift + Enter for a new line';}
 function checkRun(run){if(active!==run||run.signal.aborted)throw new DOMException('Operation stopped.','AbortError');}
 function begin(kind){idleModel.touch();stopPlay();if(active)throw new Error('Finish or stop the current operation first.');const controller=new AbortController();active={id:++taskEpoch,kind,controller,signal:controller.signal};updateBusy();return active;}
-function stop({preserveQueue=false}={}){audioAttempt++;stopPlay();weatherPending=null;weatherContext=null;locationHub.retireWeather();connectorHub?.cancel();active?.controller.abort();engine.stop();voice.stop();voiceMode=false;$('voiceModeBtn').setAttribute('aria-pressed','false');$('micBtn').setAttribute('aria-pressed','false');if(queued&&!preserveQueue){$('messageInput').value=queued.text+($('messageInput').value?'\n'+$('messageInput').value:'');attachments=[...queued.attachments,...attachments].slice(0,6);queued=null;renderAttachments();}updateBusy();setOrb('idle');if(!$('voiceFeedback').hidden)audioFeedback('Voice stopped.');}
+function stop({preserveQueue=false}={}){audioAttempt++;stopPlay();locationPending=null;locationContext=null;locationHub.retireSelection();connectorHub?.cancel();active?.controller.abort();engine.stop();voice.stop();voiceMode=false;$('voiceModeBtn').setAttribute('aria-pressed','false');$('micBtn').setAttribute('aria-pressed','false');if(queued&&!preserveQueue){$('messageInput').value=queued.text+($('messageInput').value?'\n'+$('messageInput').value:'');attachments=[...queued.attachments,...attachments].slice(0,6);queued=null;renderAttachments();}updateBusy();setOrb('idle');if(!$('voiceFeedback').hidden)audioFeedback('Voice stopped.');}
 function finish(run){if(active!==run)return;idleModel.touch();active=null;setOrb('idle');updateBusy();if(queued){const next=queued;queued=null;updateBusy();setTimeout(()=>submit(next.text,next.attachments),0);}else if(voiceMode)scheduleVoiceListen(500);}
 function sourceNodes(sources){const row=element('div','','sources');for(const [i,source]of sources.entries()){const url=safePublicURL(source.url);if(!url)continue;const a=element('a',`[${i+1}] ${source.title||new URL(url).hostname}`,'source-link');a.href=url;a.target='_blank';a.rel='noopener noreferrer';row.append(a);}return row;}
 // Ordinary links keep mobile browser user activation. Permission checks are
@@ -304,16 +310,17 @@ async function submit(text=$('messageInput').value,selected=attachments){
   if(playCommand==='stop'){stop();$('messageInput').value='';return;}
   if(playCommand&&!active){$('messageInput').value='';return runPlay(playCommand,{userText:text});}
   if(active){if(queued)return toast('One message is already queued. Your new draft is still in the box.');queued={text,attachments:[...selected]};$('messageInput').value='';attachments=[];renderAttachments();if(['study','schedule','evaluation'].includes(active.kind))stop({preserveQueue:true});updateBusy();return;}
-  if(weatherPending&&!selected.length){
-    const pending=weatherPending,follow=weatherFollowup(text,pending);weatherPending=null;
-    if(follow?.cancel){weatherContext=null;locationHub.retireWeather();$('messageInput').value='';connectorReply('Weather lookup cancelled.',text);return;}
-    if(follow?.choice!==undefined){$('messageInput').value='';session.messages.push({role:'user',content:text,sources:[]});record();renderChat();return locationHub.selectChoice(follow.choice);}
+  if(locationPending&&!selected.length){
+    const pending=locationPending,follow=weatherFollowup(text,pending);locationPending=null;
+    if(follow?.cancel){locationContext=null;locationHub.retireSelection();$('messageInput').value='';connectorReply(pending.intent.kind==='weather'?'Weather lookup cancelled.':'Location lookup cancelled.',text);return;}
+    if(follow?.choice!==undefined){$('messageInput').value='';session.messages.push({role:'user',content:text,sources:[]});record();renderChat();const result=await locationHub.selectChoice(follow.choice);if(!result?.pending){locationPending=null;locationContext=null;}return result;}
     if(follow){
       const country=normalizeCountry(text);
-      const target=follow.useDevice?{kind:'weather',place:'',country:'',useDevice:true}:pending.clarification.kind==='country'&&country?{kind:'weather',place:pending.clarification.query||pending.intent.place,country,useDevice:false}:{kind:'weather',place:follow.place,country:follow.country,useDevice:false};
+      const base={...pending.intent};
+      const target=follow.useDevice?{...base,place:'',country:'',useDevice:true}:pending.clarification.kind==='country'&&country?{...base,place:pending.clarification.query||pending.intent.place,country,useDevice:false}:{...base,place:follow.place,country:follow.country,useDevice:false};
       return handleLocationRequest(target,text,pending.request);
     }
-    weatherContext=null;locationHub.retireWeather();
+    locationContext=null;locationHub.retireSelection();
   }
   const extension=desktopMode&&!selected.length?extensionCommand(text):null;
   if(extension){
@@ -370,7 +377,7 @@ async function startDictation(continuous=false){
   if(active)return toast('Stop the current response before opening the microphone.');
   if(voice.recognition){voice.stop();return;}await permission('microphone');voiceMode=continuous;$('voiceModeBtn').setAttribute('aria-pressed',String(continuous));$('micBtn').setAttribute('aria-pressed','true');dictationText='';
   try{await voice.listen({language:languageCode(),onText:text=>{dictationText=text;voiceMisses=0;if(isResetCode(text)){factoryReset().catch(showError);return;}if(continuous)submit(text,[]).catch(showError);else{$('messageInput').value+=($('messageInput').value?' ':'')+text;$('messageInput').focus();}},onError:message=>{voiceMisses++;toast(message);if(voiceMisses>=2){voiceMode=false;$('voiceModeBtn').setAttribute('aria-pressed','false');}},onEnd:()=>{$('micBtn').setAttribute('aria-pressed','false');if(!dictationText&&!active&&voiceMode){if(++voiceMisses>=2){voiceMode=false;toast('Sorry, can you say that again? Voice mode is paused.');}else speak('Sorry, can you say that again?').catch(showError).finally(()=>{if(voiceMode)scheduleVoiceListen(600);});}}});}catch(error){voiceMode=false;$('micBtn').setAttribute('aria-pressed','false');$('voiceModeBtn').setAttribute('aria-pressed','false');throw error;}}
-function newConversation(){if(active)return toast('Stop the active operation first.');weatherPending=null;weatherContext=null;locationHub.retireWeather();stopPlay();session={id:crypto.randomUUID(),title:'New conversation',messages:[]};lastAnswer='';attachments=[];renderAttachments();setView('chat');renderChat();$('messageInput').focus();}
+function newConversation(){if(active)return toast('Stop the active operation first.');locationPending=null;locationContext=null;locationHub.retireSelection();stopPlay();session={id:crypto.randomUUID(),title:'New conversation',messages:[]};lastAnswer='';attachments=[];renderAttachments();setView('chat');renderChat();$('messageInput').focus();}
 function setView(next){if(view==='places'&&next!=='places')locationHub.unmount();if(next!=='chat')stopPlay();view=next;document.body.dataset.view=next;$('chatView').hidden=next!=='chat';$('workspaceView').hidden=next==='chat';document.body.classList.remove('sidebar-open');for(const b of document.querySelectorAll('.nav-button')){b.classList.toggle('active',b.dataset.view===next);b.setAttribute('aria-current',b.dataset.view===next?'page':'false');}if(next==='places'){$('viewTitle').textContent='Places & directions';$('viewSubtitle').textContent='Postal codes, nearby places and routes in your preferred maps app.';locationHub.render($('viewPanel'));}if(next==='work')renderWork();if(next==='memory')renderMemory();if(next==='learn')renderLearn();if(next==='connectors'){$('viewTitle').textContent='Connectors & devices';$('viewSubtitle').textContent='Your accounts and Mac tools, with access you control.';connectorHub.render($('viewPanel'));}}
 function field(label,value,{type='text',options,rows=4,id}={}){const wrap=element('label','','field');wrap.append(element('span',label));const input=element(options?'select':type==='textarea'?'textarea':'input');if(id)input.id=id;if(options)for(const option of options){const record=typeof option==='string'?{value:option,label:option}:option;const node=element('option',record.label);node.value=record.value;input.append(node);}else if(type==='textarea')input.rows=rows;else input.type=type;input.value=value;wrap.append(input);return {wrap,input};}
 function toggle(label,value,onChange){const wrap=element('label','','toggle-row');const input=element('input');input.type='checkbox';input.checked=value;wrap.append(input,element('span',label));input.addEventListener('change',()=>onChange(input.checked));return wrap;}
@@ -461,7 +468,7 @@ function renderSettings(tab=settingsTab){pauseVoiceOutput();stopPlay();locationH
  panel.append(button('Save settings',async()=>{stop();const oldModel=state.settings.model;const candidate=structuredClone(state.settings);for(const [key,input]of Object.entries(pending)){if(key.startsWith('permission:'))candidate.permissions[key.split(':')[1]]=input.value;else candidate[key]=key==='rate'?Math.max(.65,Math.min(1.5,Number(input.value)||1)):input.value.slice(0,key==='instructions'?1200:300);}if(candidate.proxyURL)proxyBase(candidate.proxyURL);state.settings=candidate;if(candidate.permissions.location==='deny')locationHub.forget();if(oldModel!==state.settings.model)await engine.unload();folderHandle=null;const saved=await persist();applySettings();if(!saved)throw new Error('Settings apply in this tab, but could not be saved. Keep this window open and export your notes.');$('settingsDialog').close();toast('Settings saved. Active work stopped; temporary access cleared.');}));}
 async function factoryReset(){
   if(active?.kind==='reset')return toast('The reset is already in progress.');
-  weatherPending=null;weatherContext=null;settingsController?.abort();stop();forgetGeminiToken();geminiDialogRun=null;$('geminiDialog').close();voice.unload();orbit.clearWeather();active=null;taskEpoch++;queued=null;const run=begin('reset');
+  locationPending=null;locationContext=null;settingsController?.abort();stop();forgetGeminiToken();geminiDialogRun=null;$('geminiDialog').close();voice.unload();orbit.clearWeather();active=null;taskEpoch++;queued=null;const run=begin('reset');
   try{
     await engine.unload();const connectorReset=await connectorHub.reset({preservePairing:desktopMode});await saveChain;
     state=freshState();if(desktopMode)state.settings=desktopDefaults(state.settings);locationHub.forget();session={id:crypto.randomUUID(),title:'New conversation',messages:[]};attachments=[];workspace=[];folderHandle=null;selectedSkill='';lastAnswer='';evaluationProgress='';

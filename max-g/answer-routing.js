@@ -1,5 +1,6 @@
 /** Shared web/Mac response policy. A failed service must never mean silence. */
 import {weatherRequest,quickAnswer} from './tools.js';
+import {looksLikePostalCode,normalizePlaceText} from './postal-data.js';
 export function needsLiveEvidence(value){
   const q=String(value||'').toLowerCase();
   if(/^(?:(?:what (?:is|are)|define|explain) (?:the )?(?:weather|climate|temperature|weather forecasting)|how (?:does|do) (?:weather forecasting|weather forecasts) work)[?.!]*$/.test(q.trim()))return false;
@@ -38,12 +39,14 @@ export function userFacingFailure(error,{online=true,desktop=false}={}){
 }
 export function weatherFollowup(text,pending){
   if(!pending||Date.now()-pending.time>5*60*1000)return null;
-  const q=String(text).trim();
+  const q=normalizePlaceText(text);
   if(/^(?:cancel|never mind|nevermind|stop)$/i.test(q))return {cancel:true};
   if(/^(?:(?:use )?(?:my )?(?:current location|location|gps)|here|near me)$/i.test(q))return {useDevice:true,place:'',country:''};
   if(pending.clarification?.kind==='choice'&&/^(?:option |number )?[1-6]$/i.test(q))return {choice:Number(q.match(/[1-6]/)[0])};
-  if(weatherRequest(q)||(!/^\d{5}-\d{4}$/.test(q)&&quickAnswer(q))||basicDeviceAnswer(q)||/^(?:open|close|launch|play|sing|dance|stop|turn|send|call)\b/i.test(q))return null;
+  if(/^\d{1,2}\s*-\s*\d{1,2}$/.test(q))return null;
+  if(/^(?:postal codes?|postcodes?|zip codes?|locate|find|navigate|directions|route|take me)\b/i.test(q))return null;
+  if(weatherRequest(q)||(!looksLikePostalCode(q)&&quickAnswer(q))||basicDeviceAnswer(q)||/^(?:open|close|launch|play|sing|dance|stop|turn|send|call)\b/i.test(q))return null;
   // A follow-up place is short. A new question/topic exits this pending lookup.
-  if(!q||q.length>160||/[?\n]/.test(q)||/^(?:what|why|how|who|when|can|could|would|please|tell|explain|write|create|build|calculate|solve|remember|search|research|hi|hello|thanks)\b/i.test(q)||/^\//.test(q))return null;
+  if(!q||q.length>160||/[?\n]/.test(q)||/^(?:what|why|how|who|when|where|can|could|would|please|tell|explain|write|create|build|calculate|solve|remember|search|research|hi|hello|thanks)\b/i.test(q)||/^\//.test(q))return null;
   return {place:q,country:pending.intent?.country||''};
 }
