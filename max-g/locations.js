@@ -7,6 +7,7 @@
  */
 import {weatherRequest,postalReply} from './tools.js';
 import {normalizePlaceText,looksLikePostalCode,normalizePostalCode,postalComparisonKey} from './postal-data.js';
+import {parseWeatherPlaceSpec,matchesWeatherPlace,isBroadWeatherPlace,weatherLocalityPrompt} from './weather-place.js';
 export const LOCATION_DEFAULTS=Object.freeze({country:'US',place:'',radius:1500,mode:'driving',mapProvider:'google',autoLocate:true,recentWeather:null});
 export const CATEGORY_LABELS=Object.freeze({restaurant:'Restaurants',fuel:'Fuel stations',mall:'Shopping malls',supermarket:'Supermarkets',pharmacy:'Pharmacies',cafe:'Cafés',evcharging:'EV charging'});
 const FILTERS=Object.freeze({restaurant:'["amenity"~"^(restaurant|fast_food)$"]',fuel:'["amenity"="fuel"]',mall:'["shop"="mall"]',supermarket:'["shop"="supermarket"]',pharmacy:'["amenity"="pharmacy"]',cafe:'["amenity"="cafe"]',evcharging:'["amenity"="charging_station"]'});
@@ -123,7 +124,7 @@ export function parseLocationIntent(value){
   if(/^(?:me|here|nearby|my (?:current )?location)$/i.test(place))place='';
   place=place.replace(/\s+(?:please|today|tomorrow|right now)$/i,'').trim();
   let country=requestedWeather?.country||postalDescription?.country||'';
-  if(place){try{const parts=queryParts(place,country);place=parts.query;country=parts.country||country;}catch{}}
+  if(place){try{const parts=kind==='weather'?parseWeatherPlaceSpec(place,{country}):queryParts(place,country);place=parts.query;country=parts.country||country;}catch{}}
   return {kind,query,place,country,useDevice:useDevice&&!place,mode,modeExplicit:/\b(?:walk|walking|on foot|cycle|cycling|bike|bicycle|bicycling|transit|public transport|by bus|by train|driving|by car|drive)\b/i.test(query),...(category?{category}:{}),...(postalLookup?{postalLookup:true}:{})};
 }
 const PHOTON_ATTR=Object.freeze({text:'© OpenStreetMap contributors · Photon',url:'https://www.openstreetmap.org/copyright'});
@@ -168,9 +169,9 @@ function photonRows(data,parts){
     if(parts.postal&&postalKey(postal)!==postalKey(parts.query))continue; // Never accept a fuzzy wrong postal code.
     const label=joinLabel([props.name,props.housenumber&&props.street?props.housenumber+' '+props.street:props.street,props.city||props.district,props.state,postal,props.country]);
     if(!label)continue;
-    results.push({id:'photon:'+String(props.osm_id||loc.lat+','+loc.lon),name:clean(props.name,100),region:clean(props.state,100),label,...loc,country:clean(props.country,90)||countryName(code),countryCode:code,postal,source:'Photon',attribution:{...PHOTON_ATTR},accuracy:'approximate'});
+    results.push({id:'photon:'+String(props.osm_id||loc.lat+','+loc.lon),name:clean(props.name,100),city:clean(props.city,100),region:clean(props.state,100),type:clean(props.type||props.osm_value,40),label,...loc,country:clean(props.country,90)||countryName(code),countryCode:code,postal,source:'Photon',attribution:{...PHOTON_ATTR},accuracy:'approximate'});
   }
-  return results.slice(0,6);
+  return results.slice(0,parts.weather?20:6);
 }
 function postalRows(data,parts,area){
   if(!data||typeof data!=='object'||!Array.isArray(data.places))return [];
@@ -192,10 +193,10 @@ function meteoRows(data,parts){
     const code=normalizeCountry(row.country_code);if(!code||parts.country&&code!==parts.country)continue;
     const matchingPostal=(Array.isArray(row.postcodes)?row.postcodes:[]).find(code=>postalKey(code)===postalKey(parts.query));
     if(parts.postal&&!matchingPostal)continue;
-    results.push({id:'geonames:'+String(row.id),name:clean(row.name,100),region:clean(row.admin1,100),label:joinLabel([row.name,row.admin1,row.country]),...loc,country:clean(row.country,90),countryCode:code,postal:matchingPostal||'',
+    results.push({id:'geonames:'+String(row.id),name:clean(row.name,100),region:clean(row.admin1,100),admin2:clean(row.admin2,100),admin3:clean(row.admin3,100),admin4:clean(row.admin4,100),feature_code:clean(row.feature_code,20),label:joinLabel([row.name,row.admin1,row.country||countryName(code)]),...loc,country:clean(row.country,90)||countryName(code),countryCode:code,postal:matchingPostal||'',
       postcodes:(Array.isArray(row.postcodes)?row.postcodes:[]).filter(value=>typeof value==='string'&&value.length<=20).slice(0,40),source:'Open-Meteo',attribution:{...METEO_ATTR},accuracy:'city or locality'});
   }
-  return results.slice(0,6);
+  return results.slice(0,parts.weather?20:6);
 }
 function distance(a,b){
   const rad=Math.PI/180,x=(b.lat-a.lat)*rad,y=(b.lon-a.lon)*rad;
@@ -275,12 +276,17 @@ export function createLocationClient({fetch:fetchImpl=(...args)=>globalThis.fetc
     }finally{clearTimeout(timer);signal?.removeEventListener('abort',abort);controller.signal.removeEventListener('abort',interruptedAbort);controller.abort();controllers.delete(controller);try{Promise.resolve(reader?.cancel()).catch(()=>{});}catch{}}
   }
   async function resolveWeatherPlace(parts,{signal}={}){
+    const spec=parseWeatherPlaceSpec(parts.query,{country:parts.country});
+    const cityRequired=row=>{const areaSpec=row?{...spec,country:row.countryCode||spec.country,region:normalizeCountry(row.name)?'':row.name}:spec;return {query:parts.query,country:areaSpec.country,needsCountry:false,needsCity:true,region:areaSpec.region,area:areaSpec.name,results:[],message:weatherLocalityPrompt(areaSpec),cached:false};};
+    if(spec.broad)return cityRequired();
+    if(spec.needsCountry)return {query:parts.query,country:'',needsCountry:true,results:[],message:'Please give the full country name so I can distinguish the country from a state abbreviation.',cached:false};
+    parts={...parts,country:spec.country,weather:true};
     const started=now(),epoch=generation,key=JSON.stringify(['weather-place',parts.query,parts.country]);
     const hit=cached(key);if(hit)return hit;
     const meteo=new URL('https://geocoding-api.open-meteo.com/v1/search');
-    meteo.search=new URLSearchParams({name:parts.query,count:'6',language:'en',format:'json',...(parts.country?{countryCode:parts.country}:{})});
+    meteo.search=new URLSearchParams({name:spec.query,count:'20',language:'en',format:'json',...(parts.country?{countryCode:parts.country}:{})});
     const photon=new URL('https://photon.komoot.io/api/');
-    photon.search=new URLSearchParams({q:parts.query,limit:'6',lang:'en',...(parts.country?{countrycode:parts.country}:{})});
+    photon.search=new URLSearchParams({q:spec.query,limit:'6',lang:'en',...(parts.country?{countrycode:parts.country}:{})});
     const providers=[];
     if(parts.postal&&ZIP_COUNTRIES.has(parts.country)){
       const area=postalArea(parts.query,parts.country);
@@ -289,20 +295,25 @@ export function createLocationClient({fetch:fetchImpl=(...args)=>globalThis.fetc
     }
     providers.push({url:meteo.href,rows:data=>meteoRows(data,parts),message:'Weather uses approximate city or locality coordinates.'},
       {url:photon.href,rows:data=>photonRows(data,parts),message:'Weather uses an approximate mapped place or postal-area centre.'});
-    let firstError,completed=false;
+    let firstError,completed=false,broadResult=null;
     for(const provider of providers){
       checkAbort(signal);const remaining=4800-(now()-started);
       if(remaining<=0)throw new LocationError('LOCATION_TIMEOUT','The location lookup is taking too long. Please try the city and country again, or use your current location.');
       try{
-        const data=await request(provider.url,{signal,missingOK:provider.missingOK,timeout:Math.min(2000,remaining)}),results=provider.rows(data);completed=true;
+        const data=await request(provider.url,{signal,missingOK:provider.missingOK,timeout:Math.min(2000,remaining)}),rows=provider.rows(data);completed=true;
+        broadResult||=rows.find(row=>isBroadWeatherPlace(row)&&normalizePlaceText(row.name).toLowerCase()===normalizePlaceText(spec.name).toLowerCase());
+        const results=rows.filter(row=>matchesWeatherPlace(row,spec)).slice(0,6);
         if(results.length)return remember(key,{query:parts.query,country:parts.country,needsCountry:false,results,message:provider.message},epoch);
       }catch(error){if(error.name==='AbortError'||error.code==='LOCATION_RATE_LIMIT')throw error;firstError||=error;}
     }
     if(!completed&&firstError)throw firstError;
+    if(broadResult)return cityRequired(broadResult);
     return {query:parts.query,country:parts.country,needsCountry:false,results:[],message:'I could not find that place in the available sources. Please include the city, region and country.',cached:false};
   }
   async function resolvePlace(value,{country='',signal,purpose='place'}={}){
-    checkAbort(signal);let parts=queryParts(value,country);const epoch=generation;
+    checkAbort(signal);const weatherSpec=purpose==='weather'?parseWeatherPlaceSpec(value,{country}):null;
+    let parts=queryParts(weatherSpec?.name||value,weatherSpec?.country||country);const epoch=generation;
+    if(weatherSpec)parts={...parts,query:weatherSpec.query,country:weatherSpec.country||parts.country,needsCountry:parts.needsCountry||weatherSpec.needsCountry,ambiguousCountry:weatherSpec.needsCountry||parts.ambiguousCountry};
     if(parts.postal&&!parts.country&&!country){const hint=postalCountryHint({query:parts.query});if(hint.country)parts=queryParts(value,hint.country);}
     parts=postalProviderParts(parts);
     const base={query:parts.query,country:parts.country,needsCountry:parts.needsCountry};

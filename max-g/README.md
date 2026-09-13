@@ -1,3 +1,9 @@
+# MAX-G 1.9.11 daily forecasts and temperature speech
+
+English voices now speak **78°F** as **78 degrees Fahrenheit**, including negative temperatures, ranges and Celsius. The visible forecast keeps compact °F/°C labels. Postal and year pronunciation remains supported.
+
+Seven-day weather requests show seven dated daily rows and read each day’s conditions, high, low and precipitation chance. Explicit cities, state names/abbreviations and countries are resolved before requesting the forecast. Ambiguous places require a choice; a whole state or country needs a city for a local forecast. [Weather guide](WEATHER-GUIDE.md)
+
 # MAX-G 1.9.10 postal and year pronunciation
 
 English speech now reads ZIP and postal identifiers one character at a time: **20171 → “two zero one seven one.”** Leading zeros are preserved; ZIP+4 separators are silent. International postal letters are spoken individually. Contextual years use natural year readings: **2026 → “twenty twenty six,” 1905 → “nineteen oh five,” 2005 → “two thousand five.”**

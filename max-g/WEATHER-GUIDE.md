@@ -8,6 +8,14 @@ The current conditions card puts temperature, feels-like temperature, wind, high
 
 Forecasts are estimates and can change. Missing hourly values are shown as unavailable; MAX-G does not generate substitute temperatures. A one-minute memory cache makes repeated checks faster. New coordinates, forecast periods or unit preferences use separate cache entries.
 
+## Seven days and other destinations
+
+Ask **weather for 7 days in 20171**, **seven-day weather in Paris, Texas**, or **7-day weather in Tokyo, Japan**. The card shows each day’s date, conditions, high and low, and precipitation chance. Read aloud speaks the daily forecast rather than only an overall weekly range. “Next week” means the following Monday through Sunday; a seven-day request starts with the destination’s current local date.
+
+A named destination takes priority over GPS and your saved home location. Check the full place heading before using the forecast. If you name only a state or country, MAX-G asks for a city; if several towns match, it asks you to choose. The requested forecast period is retained while you clarify the place.
+
+English voice output expands °F to **degrees Fahrenheit** and °C to **degrees Celsius**, including negative temperatures and ranges. Written temperatures remain compact. The same pronunciation applies to automatic speech, Read aloud and saved weather messages in the web and Mac apps.
+
 ## U.S. units
 
 **Michael → General → Measurements** selects United States or Metric. U.S. is the default for new and older profiles that have no unit preference. This sets °F, mph, feet/miles, pounds/ounces and U.S. customary volume preferences. Nearby searches still pass distances to map services in their required internal units and convert them for display. Explicitly requested conversions remain available, including metric and Imperial variants. U.S. gallons and Imperial gallons are different units.

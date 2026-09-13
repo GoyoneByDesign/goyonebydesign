@@ -5,6 +5,8 @@
 English speech reads a ZIP or resolved postal identifier character by character:
 **20171** sounds like **two zero one seven one**, and **02108** keeps its leading
 zero. ZIP+4 and other postal separators are silent. Letters are spoken by name.
+Temperatures are spoken as full units: **78°F → 78 degrees Fahrenheit**, **−5°C → minus 5 degrees Celsius**. Written answers retain their compact units.
+
 Contextual years use year readings: **2026** sounds like **twenty twenty six**.
 The displayed text remains numeric; this change applies only to speech. Prices,
 measurements and calculations are not treated as postal codes or years. A bare

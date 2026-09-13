@@ -1,6 +1,7 @@
 /** Bounded public retrieval and deterministic calculation. No eval, model calls, or storage. */
 import {symbols,aliases,ambiguous} from './unit-data.js';
 import {normalizePlaceText} from './postal-data.js';
+import {parseWeatherPlaceSpec,matchesWeatherPlace,weatherLocalityPrompt} from './weather-place.js';
 // Release configuration: set this to the deployed public Worker base URL (no /search).
 // Keep it empty in distributions that only use a paired Mac companion.
 export const BUILTIN_SEARCH_URL='https://max-g-search.michael-goyone.workers.dev';
@@ -135,7 +136,7 @@ export function postalReply(value){
 }
 export function weatherRequest(query,city=''){
   if(typeof query!=='string'||query.length>500)return null;
-  const text=query.trim().replace(/[’‘]/g,"'");
+  const text=query.trim().replace(/[’‘]/g,"'").replace(/(7|seven)[‐‑–—](?=days?\b)/gi,'$1-');
   if(!/\b(?:weather|forecast|raining|temperature)\b/i.test(text))return null;
   if(/\b(?:under the weather|weather the storm|weather permitting)\b/i.test(text))return null;
   // Explanations, historical research and non-weather uses belong in normal chat.
@@ -144,13 +145,13 @@ export function weatherRequest(query,city=''){
     /^(?:how|what)\b.*\b(?:work|works|measure|measured|affect|affects|change|changes)\b/i.test(text)||
     /\b(?:sales|revenue|stock|stocks|market|demand|budget|body|fever|oven|cpu|boiling|freezing point|water temperature)\b/i.test(text))return null;
   // Avoid answering an unsupported date with current conditions.
-  if(/\b(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday|weekend)\b/i.test(text)||/\bnext\b(?!\s+(?:week|7\s+days|seven\s+days|(?:(?:6|12|24)|six|twelve|twenty[- ]four|few)\s+hours))/i.test(text))return null;
+  if(/\b(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday|weekend)\b/i.test(text)||/\bnext\b(?!\s+(?:week|(?:7|seven)[ -]days?\b|(?:(?:6|12|24)|six|twelve|twenty[- ]four|few)\s+hours))/i.test(text))return null;
   const requestedUnits=text.match(/\b(?:in\s+)?(celsius|fahrenheit|metric|u\.?s\.? units)\b/i)?.[1]?.toLowerCase();
   const hourCount=text.match(/\bnext\s+(6|12|24|six|twelve|twenty[- ]four)\s+hours\b/i)?.[1]?.toLowerCase();
   const hours=hourCount?({six:6,twelve:12,'twenty four':24,'twenty-four':24}[hourCount]||Number(hourCount)):undefined;
   const nextWeek=/\bnext\s+week\b/i.test(text),hourly=/\b(?:hourly|hour[ -]by[ -]hour|next\s+(?:(?:6|12|24)|six|twelve|twenty[- ]four|few)\s+hours)\b/i.test(text);
-  const mode=/\b(?:week|weekly|7[ -]day|seven[ -]day|next (?:7|seven) days)\b/i.test(text)?'week':/\btomorrow\b/i.test(text)?'tomorrow':/\btoday\b/i.test(text)?'today':hourly?'hourly':'current';
-  const stripped=text.replace(/\b(?:in\s+)?(?:celsius|fahrenheit|metric|u\.?s\.? units)\b/gi,' ').replace(/\b(?:for\s+)?(?:the\s+)?next\s+(?:(?:6|12|24)|six|twelve|twenty[- ]four|few)\s+hours\b|\b(?:hourly|hour[ -]by[ -]hour)\b/gi,' ').replace(/\b(?:for\s+)?(?:the\s+)?(?:next|this)\s+week\b|\b(?:for\s+)?(?:the\s+)?(?:next\s+)?(?:7|seven)[ -]days?\b|\b(?:right now|today|tomorrow|currently|now|please|weekly|week)\b/gi,' ').replace(/[?!.]+$/,'').replace(/\s+/g,' ').trim();
+  const mode=/\b(?:week|weekly|(?:7|seven)[ -]days?)\b/i.test(text)?'week':/\btomorrow\b/i.test(text)?'tomorrow':/\btoday\b/i.test(text)?'today':hourly?'hourly':'current';
+  const stripped=text.replace(/\b(?:in\s+)?(?:celsius|fahrenheit|metric|u\.?s\.? units)\b/gi,' ').replace(/\b(?:for\s+)?(?:the\s+)?next\s+(?:(?:6|12|24)|six|twelve|twenty[- ]four|few)\s+hours\b|\b(?:hourly|hour[ -]by[ -]hour)\b/gi,' ').replace(/\b(?:for\s+)?(?:the\s+)?(?:next|this)\s+week\b|\b(?:for\s+)?(?:the\s+)?(?:(?:next|coming|upcoming)\s+)?(?:7|seven)[ -]days?\b|\b(?:right now|today|tomorrow|currently|now|please|weekly|week)\b/gi,' ').replace(/[?!.]+$/,'').replace(/\s+/g,' ').trim();
   const prepositions=[...stripped.matchAll(/\b(?:in|for|at)\s+/gi)],last=prepositions.at(-1);
   let place=last?stripped.slice(last.index+last[0].length):stripped.match(/^(?:weather|forecast|temperature)\s+(.+)$/i)?.[1]||'';
   // Request nouns are not cities: “weather update” must use current location.
@@ -226,20 +227,6 @@ export function createWeatherClient({retrieve=weather,now=()=>Date.now(),ttl=600
     });
   }
   return {weather:get,clear};
-}
-function weatherPlaceParts(value){
-  const aliases={us:'US',usa:'US','united states':'US','united states of america':'US',uk:'GB',gb:'GB','united kingdom':'GB',canada:'CA',japan:'JP',philippines:'PH',china:'CN',italy:'IT',spain:'ES',russia:'RU','south korea':'KR',germany:'DE',france:'FR',australia:'AU',india:'IN'};
-  let parts=value.split(',').map(part=>part.trim()).filter(Boolean);
-  if(parts.length===1&&/\d/.test(value)){
-    for(const match of value.matchAll(/\s+/g)){
-      const first=value.slice(0,match.index).trim(),second=value.slice(match.index+match[0].length).trim();
-      if(/^[\w -]+$/.test(first)&&/\d/.test(first)&&(aliases[second.toLowerCase()]||/^[A-Za-z]{2}$/.test(second))){parts=[first,second];break;}
-      if((aliases[first.toLowerCase()]||/^[A-Za-z]{2}$/.test(first))&&/^[\w -]+$/.test(second)&&/\d/.test(second)){parts=[second,first];break;}
-    }
-  }
-  const country=aliases[parts.at(-1)?.toLowerCase()]||(/^[A-Za-z]{2}$/.test(parts.at(-1)||'')?parts.at(-1).toUpperCase():'');
-  const postal=parts[0]&&/\d/.test(parts[0])&&/^[A-Za-z\d -]{2,16}$/.test(parts[0]);
-  return {parts,country,postal};
 }
 const incompleteWeather=()=>new WeatherError('WEATHER_DATA_INCOMPLETE','The weather service returned incomplete data. Please try again in a moment.');
 const weatherCode=value=>Number.isInteger(value)&&Object.hasOwn(weatherCodes,value)?value:null;
@@ -336,20 +323,17 @@ export async function weather(request,signal){
     if(!validWeatherCoordinate(request.location))throw new WeatherError('WEATHER_LOCATION_INVALID','Choose a valid location before requesting weather.');
     row={latitude:request.location.latitude,longitude:request.location.longitude,label:String(request.location.label||'Selected location').slice(0,200)};
   }else{
-    const {parts,country,postal}=weatherPlaceParts(city);
-    if(!parts.length)return weatherClarification('WEATHER_LOCATION_REQUIRED','Which city or postal code should I check? Please include the country.');
-    if(postal&&parts.length===1)return weatherClarification('WEATHER_COUNTRY_REQUIRED',`Which country is ${parts[0]} in? For example, “${parts[0]}, US”. Postal codes can occur in more than one country.`);
+    const spec=parseWeatherPlaceSpec(city,{country:request.country||''});
+    if(!spec.name)return weatherClarification('WEATHER_LOCATION_REQUIRED','Which city or postal code should I check? Please include the country.');
+    if(spec.broad)return weatherClarification('WEATHER_LOCALITY_REQUIRED',weatherLocalityPrompt(spec));
+    if(spec.needsCountry)return weatherClarification('WEATHER_COUNTRY_REQUIRED',`Which country do you mean for ${city}? Please spell out the state or province and include the country.`);
+    if(spec.postal&&!spec.country)return weatherClarification('WEATHER_COUNTRY_REQUIRED',`Which country is ${spec.name} in? For example, “${spec.name}, US”. Postal codes can occur in more than one country.`);
     const geo=new URL('https://geocoding-api.open-meteo.com/v1/search');
-    geo.search=new URLSearchParams({name:parts[0],count:10,language:'en',format:'json',...(country?{countryCode:country}:{})});
+    geo.search=new URLSearchParams({name:spec.query,count:10,language:'en',format:'json',...(spec.country?{countryCode:spec.country}:{})});
     const places=await readWeatherJSON(geo,signal);
     if(!places||typeof places!=='object'||Array.isArray(places)||places.error||places.results!==undefined&&!Array.isArray(places.results))throw new WeatherError('WEATHER_LOCATION_UNAVAILABLE','The location service returned an incomplete answer. Try the city, region and country, or use your current location.');
-    let rows=(places.results||[]).filter(validWeatherCoordinate);
-    for(const part of parts.slice(1)){
-      const aliases={us:'united states',usa:'united states',uk:'united kingdom',gb:'united kingdom'},needle=aliases[part.toLowerCase()]||part.toLowerCase();
-      rows=rows.filter(item=>['country','country_code','admin1','admin2','admin3'].some(key=>String(item[key]||'').toLowerCase()===needle));
-    }
-    if(postal){const key=value=>String(value).toUpperCase().replace(/[\s-]/g,'');rows=rows.filter(item=>Array.isArray(item.postcodes)&&item.postcodes.some(code=>key(code)===key(parts[0])));}
-    else {const exact=rows.filter(item=>typeof item.name==='string'&&item.name.toLowerCase()===parts[0].toLowerCase());if(exact.length)rows=exact;}
+    let rows=(places.results||[]).filter(item=>validWeatherCoordinate(item)&&matchesWeatherPlace(item,spec));
+    if(spec.postal){const key=value=>String(value).toUpperCase().replace(/[\s-]/g,'');rows=rows.filter(item=>Array.isArray(item.postcodes)&&item.postcodes.some(code=>key(code)===key(spec.name)));}
     rows=[...new Map(rows.map(item=>[`${item.latitude},${item.longitude}`,item])).values()];
     if(rows.length!==1)return weatherClarification(rows.length?'WEATHER_LOCATION_AMBIGUOUS':'WEATHER_LOCATION_NOT_FOUND',rows.length?`Which place do you mean? ${rows.slice(0,3).map(weatherName).join('; ')}. Include the region and country.`:`I couldn’t find ${city}. Please include the city, region and country, or select a place in Places & directions.`,[{title:'Open-Meteo locations',url:geo.href}]);
     row=rows[0];
@@ -378,7 +362,11 @@ export async function weather(request,signal){
     if(probabilities.length)text+=` Precipitation chances up to ${Math.round(Math.max(...probabilities))}%.`;
   }else if(mode==='week'){
     condition=daily[0].code;
-    text=`${weatherName(row)}, ${request.period==='next-week'?'next week':'7-day outlook'}: highs ${range(daily.map(item=>item.high))}, lows ${range(daily.map(item=>item.low))}.`;
+    const dateLabel=new Intl.DateTimeFormat('en-US',{weekday:'long',month:'long',day:'numeric',timeZone:'UTC'});
+    text=`${weatherName(row)}, ${request.period==='next-week'?'next week':'7-day outlook'}:\n`+daily.map(day=>{
+      const date=dateLabel.format(new Date(day.date+'T12:00:00Z'));
+      return `${date}: ${conditionName(day.code)}, high ${degrees(day.high)}, low ${degrees(day.low)}.`+chance(day.precipitationProbability);
+    }).join('\n');
   }else{
     const day=daily[0];condition=day.code;
     text=`${weatherName(row)}, ${mode}: ${conditionName(day.code)}, high ${degrees(day.high)}, low ${degrees(day.low)}.`+chance(day.precipitationProbability);

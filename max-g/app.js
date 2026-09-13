@@ -27,6 +27,7 @@ import {COMPANION_PERSONA,performanceCommand,isLocalConversation,socialReply} fr
 import {performSong,stop as stopSong} from './performance.js';
 import {createLocationHub,postalSpeechContext} from './locations-ui.js';
 import {parseLocationIntent,normalizeLocationSettings,normalizeCountry} from './locations.js';
+import {weatherLocalityFollowup} from './weather-place.js';
 import {initializeConnectors,parseDirectCommand} from './connectors.js';
 import {parseBrowserTask} from './browser-task.js';
 import {createBrowserPanel} from './browser-panel.js';
@@ -352,7 +353,8 @@ async function submit(text=$('messageInput').value,selected=attachments){
     if(follow){
       const country=normalizeCountry(text);
       const base={...pending.intent};
-      const target=follow.useDevice?{...base,place:'',country:'',useDevice:true}:pending.clarification.kind==='country'&&country?{...base,place:pending.clarification.query||pending.intent.place,country,useDevice:false}:{...base,place:follow.place,country:follow.country,useDevice:false};
+      const locality=pending.clarification.kind==='locality'?weatherLocalityFollowup(follow.place,pending.clarification):null;
+      const target=follow.useDevice?{...base,place:'',country:'',useDevice:true}:pending.clarification.kind==='country'&&country?{...base,place:pending.clarification.query||pending.intent.place,country,useDevice:false}:{...base,place:locality?.place||follow.place,country:locality?.country||follow.country,useDevice:false};
       return handleLocationRequest(target,text,pending.request);
     }
     locationContext=null;locationHub.retireSelection();

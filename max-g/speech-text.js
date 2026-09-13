@@ -24,6 +24,14 @@ const YEAR_AFTER = /^\s*(?:AD\b|CE\b|BCE\b|BC\b|(?:is|was)\s+(?:the|a)\s+year\b|
 const key = value => String(value).toUpperCase().replace(/[\s\u2010-\u2015-]/g,'');
 const boundedHints = values => Array.isArray(values) ? values.slice(0,16).filter(x=>typeof x==='string'&&x.length<=20&&/^[A-Za-z0-9\s\u2010-\u2015-]+$/.test(x)&&/\d/.test(x)).map(key) : [];
 const small = n => n<20?SMALL[n]:TENS[Math.floor(n/10)]+(n%10?' '+SMALL[n%10]:'');
+const TEMPERATURE_NUMBER = '[+−-]?(?:\\d+(?:\\.\\d+)?|\\.\\d+)';
+const TEMPERATURE_UNIT = '(?:°\\s*(?:[FfCc]|Fahrenheit|Celsius)|℉|℃|(?:degrees?\\s+)?(?:Fahrenheit|Celsius|F|C))';
+const TEMPERATURE = new RegExp(`(?<![\\w.])(${TEMPERATURE_NUMBER})\\s*(${TEMPERATURE_UNIT})(?![\\w])`,'g');
+const TEMPERATURE_RANGE = new RegExp(`(?<![\\w.])(${TEMPERATURE_NUMBER})\\s*(${TEMPERATURE_UNIT})?\\s*(?:to|[-–—])\\s*(${TEMPERATURE_NUMBER})\\s*(${TEMPERATURE_UNIT})(?![\\w])`,'g');
+const temperatureScale = unit => /F|℉/i.test(unit)?'Fahrenheit':'Celsius';
+const temperatureNumber = value => value.replace(/^[−-]/,'minus ').replace(/^\+/,'plus ');
+const temperatureWords = (number,unit) => `${temperatureNumber(number)} ${Math.abs(Number(number.replace('−','-')))===1?'degree':'degrees'} ${temperatureScale(unit)}`;
+const electricalUnit = (source,start,unit) => /^[FC]$/.test(unit)&&/\b(?:capacitance|capacitor|farads?|(?:electric(?:al)?\s+)?charge|coulombs?)\b[^.!?;\n]*$/i.test(source.slice(Math.max(0,start-100),start));
 
 export function pronouncePostalCode(value) {
   return [...key(value)].map(c=>/\d/.test(c)?DIGITS[Number(c)]:LETTERS[c.charCodeAt(0)-65]||'').filter(Boolean).join(' ');
@@ -54,9 +62,23 @@ export function normalizePronunciation(text,{language='en-US',postalCodes=[],yea
   const add=(start,end,value,type)=>{if(!spans.some(x=>start<x.end&&end>x.start))spans.push({start,end,value,type});};
   // Paired emphasis has no spoken meaning and otherwise hides immediate labels.
   const source=original.replace(/\*\*([^*]+)\*\*/g,'$1').replace(/`([^`\n]+)`/g,'$1');
+  // Claim explicit temperatures before identifiers so postal/year hints cannot
+  // turn 2026 F into a postal code or calendar year. Expand speech only.
+  for(const match of source.matchAll(TEMPERATURE_RANGE)) {
+    const [,first,firstUnit,last,lastUnit]=match;
+    if(/^\s*=/.test(source.slice(match.index+match[0].length))||electricalUnit(source,match.index,lastUnit)||firstUnit&&electricalUnit(source,match.index,firstUnit))continue;
+    const value=firstUnit&&temperatureScale(firstUnit)!==temperatureScale(lastUnit)
+      ?`${temperatureWords(first,firstUnit)} to ${temperatureWords(last,lastUnit)}`
+      :`${temperatureNumber(first)} to ${temperatureNumber(last)} degrees ${temperatureScale(lastUnit)}`;
+    add(match.index,match.index+match[0].length,value,'temperature');
+  }
+  for(const match of source.matchAll(TEMPERATURE)){
+    if(!electricalUnit(source,match.index,match[2]))add(match.index,match.index+match[0].length,temperatureWords(match[1],match[2]),'temperature');
+  }
   let previousPostal=null;
   for(const match of source.matchAll(POSTAL)) {
     const token=match[0],start=match.index,end=start+token.length;
+    if(spans.some(x=>start<x.end&&end>x.start)){previousPostal=null;continue;}
     const before=source.slice(Math.max(0,start-100),start),after=source.slice(end,end+70);
     const explicit=POSTAL_BEFORE.test(before)||POSTAL_PLACE_BEFORE.test(before)||POSTAL_AFTER.test(after);
     const numeric=/^\d/.test(token)&&!/[A-Za-z]/.test(token);

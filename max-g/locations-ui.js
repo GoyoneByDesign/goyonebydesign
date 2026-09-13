@@ -5,6 +5,7 @@ const button=(label,fn)=>{const n=el('button',label,'button button-small');n.typ
 const link=(label,url)=>{const n=el('a',label,'button button-small');n.href=url;n.target='_blank';n.rel='noopener noreferrer';return n;};
 import {formatDistance} from './units.js';
 import {looksLikePostalCode,normalizePostalCode} from './postal-data.js';
+import {parseWeatherPlaceSpec,weatherLocalityPrompt} from './weather-place.js';
 export function postalSpeechContext(point={}){
   const values=[point?.postal,point?.requestedPostal,...(Array.isArray(point?.postcodes)?point.postcodes.slice(0,16):[])];
   const postalCodes=[...new Set(values.filter(value=>typeof value==='string'&&value.length<=32&&looksLikePostalCode(value)).map(value=>normalizePostalCode(value)))].slice(0,16);
@@ -121,20 +122,27 @@ export function createLocationHub({getSettings=()=>LOCATION_DEFAULTS,getUnits=()
     try{await saveSettings({...config(),recentWeather});}catch(error){if(signal.aborted)throw error;toast('Weather is available, but this device could not remember the place for next time.');}
     check();
   }
-  async function ask(kind,message,{query='',country='',choices:options=[]}={}){
-    status=message;clarification={kind,query,country,weather:selection?.kind==='weather',...(options.length?{choices:options.map((item,index)=>({index:index+1,id:item.id,label:item.label}))}:{})};
+  async function ask(kind,message,{query='',country='',region='',choices:options=[]}={}){
+    status=message;clarification={kind,query,country,...(region?{region}:{}),weather:selection?.kind==='weather',...(options.length?{choices:options.map((item,index)=>({index:index+1,id:item.id,label:item.label}))}:{})};
     await onClarify(clarification);await onReply(message,[],postalSpeechContext({postal:query}));return null;
   }
   async function resolve(query,country,signal,check){
     clarification=null;
     if(typeof query!=='string'||!query.trim())return ask('place',selection?.kind==='weather'?'Which city or postal code should I check for the weather?':'Which city, address or postal code should I look up?',{country});
-    const stated=describePlaceQuery(query);
+    const weatherSpec=selection?.kind==='weather'?parseWeatherPlaceSpec(query,{country}):null;
+    const stated=weatherSpec||describePlaceQuery(query);
     if(stated.country)country=stated.country;
     else if(stated.postal&&!selection?.countryExplicit)country=postalCountryHint({query:stated.query,savedCountry:country}).country;
-    const parts=describePlaceQuery(query,country);
+    const parts=describePlaceQuery(weatherSpec?.name||query,country);
+    if(weatherSpec?.needsCountry){parts.needsCountry=true;parts.ambiguousCountry=true;parts.query=weatherSpec.query;}
     if(parts.needsCountry)return ask('country',parts.ambiguousCountry?`Which country is “${query}” in? Please give the full country name.`:`Which country is postal code ${parts.query} in? For example, reply “United States” or “Canada”.`,{query:parts.query,country:''});
+    if(selection?.kind==='weather'){
+      const spec=parseWeatherPlaceSpec(query,{country});
+      if(spec.broad)return ask('locality',weatherLocalityPrompt(spec),{query:spec.name,country:spec.country,region:spec.region});
+    }
     await permission('internet');check();internetApproved=true;const found=await services.resolvePlace(query,{country,signal,...(selection?.kind==='weather'?{purpose:'weather'}:{})});check();status=found.message||'';
     if(found.needsCountry)return ask('country',`Which country is “${query}” in? Please give the full country name.`,{query,country:''});
+    if(found.needsCity&&selection?.kind==='weather')return ask('locality',found.message,{query:found.area||query,country:found.country||country,region:found.region||''});
     const unique=found.results.filter((item,index,list)=>list.findIndex(other=>other.countryCode===item.countryCode&&other.lat===item.lat&&other.lon===item.lon&&other.label===item.label)===index);
     const selected=selection?.kind==='weather'?weatherPoint(unique,parts.query):unique.length===1?unique[0]:null;
     if(selected)return selected;
@@ -189,9 +197,10 @@ export function createLocationHub({getSettings=()=>LOCATION_DEFAULTS,getUnits=()
   return {render:node=>{if(node){panel=node;mounted=true;}render();},unmount(){draft=read();fields={};mounted=false;cancel();},renderPreferences,handleIntent,cancel,retireWeather,retireSelection,forget,get current(){return currentOrigin();},
     async prepareWeather(intent,callback){
       const previous=read(),saved=config(),explicitPlace=typeof intent.place==='string'?intent.place.trim():'',selectedOrigin=currentOrigin(),selectedQuery=originQuery,selectedTime=originTime;
-      let parsed=null;try{if(explicitPlace)parsed=describePlaceQuery(explicitPlace);}catch{}
+      let parsed=null;try{if(explicitPlace)parsed=parseWeatherPlaceSpec(explicitPlace,{country:intent.country||''});}catch{}
       const hint=parsed?.postal&&!intent.country&&!parsed?.country?postalCountryHint({query:explicitPlace,savedCountry:saved.country,recentCountry:saved.recentWeather?.country,locale:getDeviceLocale()}):{country:'',notice:''};
-      const country=intent.country||parsed?.country||hint.country||(!explicitPlace?(previous.country||saved.country):'');
+      const stateCountryHint=explicitPlace&&saved.country==='US'&&parsed?.needsCountry&&/^[A-Za-z]{2}$/.test(parsed.region)?'US':'';
+      const country=intent.country||parsed?.country||hint.country||stateCountryHint||(!explicitPlace?(previous.country||saved.country):'');
       const automatic=!explicitPlace&&(intent.useDevice||saved.autoLocate);
       const savedFallback=saved.place?{place:saved.place,country:saved.country,locationSource:'saved'}:saved.recentWeather?{...saved.recentWeather,locationSource:'recent'}:null;
       const after={kind:'weather',callback,countryExplicit:Boolean(intent.country||parsed?.country),explicitQuery:explicitPlace,explicitCountry:country,locationSource:explicitPlace?'explicit':!previous.place&&savedFallback?savedFallback.locationSource:'saved',postalCountryNotice:hint.notice};
@@ -199,7 +208,7 @@ export function createLocationHub({getSettings=()=>LOCATION_DEFAULTS,getUnits=()
       const reuse=!automatic&&selectedOrigin&&selectedOrigin.source!=='device'&&
         [selectedQuery,selectedOrigin.label].some(value=>placeKey(value)===placeKey(requestedPlace))&&(!country||normalizeCountry(country)===selectedOrigin.countryCode);
       origin=null;originTime=0;originQuery='';choices=[];results=[];fallback=null;attribution=null;clarification=null;
-      draft={...previous,place:explicitPlace||previous.place||savedFallback?.place||'',country:country||savedFallback?.country||''};fields={};selection=after;
+      draft={...previous,place:explicitPlace||previous.place||savedFallback?.place||'',country:country||(!explicitPlace?savedFallback?.country:'')||''};fields={};selection=after;
       if(automatic)return perform(async(signal,check)=>{
         let fix;
         try{fix=await device(signal,check,{automatic:true,recent:selectedOrigin,recentTime:selectedTime,forceFresh:Boolean(intent.useDevice)});}
