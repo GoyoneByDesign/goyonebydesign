@@ -1,8 +1,9 @@
 /** Browser speech and the optional paired voice clone stay on the user's devices. */
 import {NeuralVoice} from './neural-voice.js';
 import {normalizeVoice,sentenceChunks,NEURAL_VOICES,deliveryControls} from './voice-config.js';
+import {normalizePronunciation} from './speech-text.js';
 export const PROFILES={Warm:{pitch:1,rate:.98},Bright:{pitch:1.06,rate:1.03},Calm:{pitch:.95,rate:.94},Storyteller:{pitch:1.02,rate:.96},Focused:{pitch:.98,rate:1.02},Playful:{pitch:1.08,rate:1.04}};
-export function spokenText(text){return String(text).replace(/\n\s*Sources?:[\s\S]*$/i,'').replace(/```[\s\S]*?```/g,' Code is available in the message. ').replace(/\[([^\]]+)\]\(https?:\/\/[^)]+\)/g,'$1').replace(/https?:\/\/\S+/g,'').replace(/\[\d+\]/g,'').replace(/^#{1,6}\s*/gm,'').slice(0,1800);}
+export function spokenText(text,options={}){const clean=String(text).replace(/\n\s*Sources?:[\s\S]*$/i,'').replace(/```[\s\S]*?```/g,' Code is available in the message. ').replace(/\[([^\]]+)\]\(https?:\/\/[^)]+\)/g,'$1').replace(/https?:\/\/\S+/g,'').replace(/\[\d+\]/g,'').replace(/^#{1,6}\s*/gm,'').slice(0,1800);return normalizePronunciation(clean,options).slice(0,6000);}
 export class LocalVoice{
   constructor({onState=()=>{},onProgress=()=>{},onLevel=()=>{},helper=null,permission=async()=>{},preferCompanionNeural=false}={}){this.onState=onState;this.recognition=null;this.utterance=null;this.generation=0;this.helper=helper;this.permission=permission;this.preferCompanionNeural=preferCompanionNeural;this.neural=new NeuralVoice({onState,onProgress,onLevel});this.cloning=false;}
   async load(options){
@@ -17,9 +18,9 @@ export class LocalVoice{
   voices(){return globalThis.speechSynthesis?.getVoices().filter(v=>v.localService) || [];}
   async readyVoices(){if(this.voices().length)return this.voices();await new Promise(resolve=>{const timer=setTimeout(done,1500);const synth=globalThis.speechSynthesis;function done(){clearTimeout(timer);synth?.removeEventListener('voiceschanged',done);resolve();}synth?.addEventListener('voiceschanged',done,{once:true});});return this.voices();}
   stop(){this.generation++;this.neural.stop();if(this.cloning){this.cloning=false;this.helper?.('unload').catch(()=>{});}this.finishSpeech?.();this.finishSpeech=null;const recognition=this.recognition;this.recognition=null;try{recognition?.abort();}catch{}globalThis.speechSynthesis?.cancel();this.utterance=null;this.onState('idle');}
-  async speak(text,{engine='system',neuralVoice='am_fenrir',cloneId='',pitch=0,depth=0,expression=.35,language='en-US',profile='Warm',voiceURI='',rate=1,emotion='neutral',signal}={}){
+  async speak(text,{engine='system',neuralVoice='am_fenrir',cloneId='',pitch=0,depth=0,expression=.35,language='en-US',profile='Warm',voiceURI='',rate=1,emotion='neutral',signal,speechContext={}}={}){
     if(signal?.aborted)throw new DOMException('Voice stopped.','AbortError');
-    const clean=spokenText(text).trim();if(!clean){this.stop();return;}
+    const clean=spokenText(text,{...speechContext,language}).trim();if(!clean){this.stop();return;}
     if(engine!=='system'){
       this.stop();const generation=this.generation;
       if(!language.startsWith('en'))throw new Error('These natural voices currently speak English. Select Installed system voice for this language in Voice Studio.');

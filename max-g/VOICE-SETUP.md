@@ -1,5 +1,17 @@
 # MAX-G Voice Studio
 
+## ZIP codes, postal codes and years
+
+English speech reads a ZIP or resolved postal identifier character by character:
+**20171** sounds like **two zero one seven one**, and **02108** keeps its leading
+zero. ZIP+4 and other postal separators are silent. Letters are spoken by name.
+Contextual years use year readings: **2026** sounds like **twenty twenty six**.
+The displayed text remains numeric; this change applies only to speech. Prices,
+measurements and calculations are not treated as postal codes or years. A bare
+ambiguous number keeps its normal reading unless a resolved identifier or year
+context identifies it. Other conversation languages retain their existing voices
+and pronunciation. These rules run locally and add no network/model latency.
+
 ## Male voice styles
 
 Open **Settings → Voice Studio**. MAX-G now defaults to the male **Adult** voice.

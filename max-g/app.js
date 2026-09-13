@@ -10,7 +10,7 @@ import {renderExtensions,extensionCommand,extensionReply,knowledgeContext,docume
 import {createActivityFrame} from './activity-frame.js';
 import {deviceHints,devicePolicy,IdleModelPolicy,normalizeDeviceMode} from './device.js';
 import {renderDeviceSettings} from './device-ui.js';
-import {freshState,loadState,saveState,LANGUAGES,memoryContext,isResetCode} from './state.js';
+import {freshState,loadState,saveState,LANGUAGES,memoryContext,isResetCode,normalizeSpeechContext,yearQuestionSpeechContext} from './state.js';
 import {quickAnswer,weatherRequest,weather,createWeatherClient,search,safePublicURL,proxyBase,searchRoute,BUILTIN_SEARCH_URL} from './tools.js';
 import {askGemini,geminiHealth,validateSupportToken,validateSupportQuestion} from './gemini.js';
 import {addFeedback,stageLesson,relevantLessons,evaluationCases,scoreEvaluation,summarizeRun,validateImprovement} from './improvement.js';
@@ -25,7 +25,7 @@ import {normalizeUnitSystem,UNIT_SYSTEMS,unitsPrompt} from './units.js';
 import {renderWeatherCard,validateWeatherCard} from './weather-card.js';
 import {COMPANION_PERSONA,performanceCommand,isLocalConversation,socialReply} from './companion-interactions.js';
 import {performSong,stop as stopSong} from './performance.js';
-import {createLocationHub} from './locations-ui.js';
+import {createLocationHub,postalSpeechContext} from './locations-ui.js';
 import {parseLocationIntent,normalizeLocationSettings,normalizeCountry} from './locations.js';
 import {initializeConnectors,parseDirectCommand} from './connectors.js';
 import {parseBrowserTask} from './browser-task.js';
@@ -105,7 +105,7 @@ const locationHub=createLocationHub({getSettings:()=>state.settings.locations,ge
   saveSettings:async value=>{if(active?.kind==='reset')throw Error('Wait for the reset to finish before saving a location.');state.settings.locations=normalizeLocationSettings(value);if(!await persist())throw Error('Location applies in this tab but could not be saved on this device. Your typed details are still available; please try saving again.');},
   onCancel:()=>{if(active?.kind==='locations')active.controller.abort();},onNavigate:()=>setView('places'),
   onClarify:info=>{if(locationContext)locationPending={...locationContext,clarification:info,time:Date.now()};},
-  onReply:(text,sources=[])=>{if(locationContext?.request)$('modelStatus').textContent='Weather needs a location or another try';return locationReply(text,sources);},runTask:async (fn,{signal:requestSignal}={})=>{
+  onReply:(text,sources=[],speechContext=null)=>{if(locationContext?.request)$('modelStatus').textContent='Weather needs a location or another try';return locationReply(text,sources,active?.signal,null,[],speechContext);},runTask:async (fn,{signal:requestSignal}={})=>{
     if(requestSignal?.aborted)throw new DOMException('Location request superseded.','AbortError');
     if(active&&active.kind!=='locations')throw Error('Stop the current task before looking up a location.');
     if(locationTask){active?.controller.abort();try{await locationTask;}catch{}}
@@ -113,13 +113,14 @@ const locationHub=createLocationHub({getSettings:()=>state.settings.locations,ge
     const run=begin('locations');const pending=(async()=>{try{return await fn(run.signal);}finally{finish(run);}})();locationTask=pending;
     try{return await pending;}finally{if(locationTask===pending)locationTask=null;}
   }});
-async function locationReply(text,sources=[],signal=active?.signal,weatherCard=null,weatherNotices=[]){
+async function locationReply(text,sources=[],signal=active?.signal,weatherCard=null,weatherNotices=[],speechContext=null){
   if(signal?.aborted)throw new DOMException('Location reply stopped.','AbortError');
-  session.messages.push({role:'assistant',content:String(text),sources,model:weatherCard?'Weather tool':'Location tool',...(weatherCard?{weatherCard,weatherNotices}:{} )});lastAnswer=String(text);record();renderChat();
+  const pronunciation=normalizeSpeechContext(speechContext),message={role:'assistant',content:String(text),sources,model:weatherCard?'Weather tool':'Location tool',...(weatherCard?{weatherCard,weatherNotices}:{}),...(pronunciation?{speechContext:pronunciation}:{})};
+  session.messages.push(message);lastAnswer=String(text);record();renderChat();
   // Render and release the task immediately. Preparing a local voice/model can
   // be slow, and must not block the next typed question or a place clarification.
   if(canSpeakReply()){
-    const pending=speak(String(text),signal).catch(showError);locationSpeech=pending;
+    const pending=speakMessage(message,signal).catch(showError);locationSpeech=pending;
     pending.finally(()=>{if(locationSpeech!==pending)return;locationSpeech=null;if(!active&&voiceMode)scheduleVoiceListen(500);});
   }
 }
@@ -140,7 +141,7 @@ async function handleLocationRequest(intent,text,requestOverride=null){
       locationPending=null;locationContext=null;orbit.setWeather(result.orbitWeather);
       $('modelStatus').textContent=result.cached?'Weather ready · checked less than a minute ago':'Weather ready · live weather tool';
       const notices=[fallbackNotice,postalCountryNotice].filter(Boolean);
-      await locationReply([result.text,...notices].join('\n\n'),result.sources,signal,result.weatherCard,notices);toast('Weather is ready in your conversation.');
+      await locationReply([result.text,...notices].join('\n\n'),result.sources,signal,result.weatherCard,notices,postalSpeechContext(point));toast('Weather is ready in your conversation.');
     });
     if(!result?.pending){locationPending=null;locationContext=null;}
     return result;
@@ -218,7 +219,7 @@ function renderMessage(message){
   if(message.sources?.length){if(card){const details=element('details','','weather-sources');details.append(element('summary','Weather sources'),sourceNodes(message.sources));article.append(details);}else article.append(sourceNodes(message.sources));}
   if(message.role==='assistant'&&message.content){
     const actions=element('div','','message-actions');
-    actions.append(button('Read aloud',()=>speak(message.content),'text-button'),button('Copy',()=>navigator.clipboard.writeText(message.content).then(()=>toast('Copied.')),'text-button'),button('Save note',()=>saveNote(message.content,message.sources),'text-button'));
+    actions.append(button('Read aloud',()=>speakMessage(message),'text-button'),button('Copy',()=>navigator.clipboard.writeText(message.content).then(()=>toast('Copied.')),'text-button'),button('Save note',()=>saveNote(message.content,message.sources),'text-button'));
     const index=session.messages.indexOf(message);
     const question=index<0?'':session.messages.slice(0,index).findLast(m=>m.role==='user')?.content||'';
     const rated=state.improvement.feedback.find(item=>item.id===message.id);
@@ -249,7 +250,8 @@ async function importSelectedFiles(selected,verify){
   }else out.push(...await importTextFiles([file]));}verify();return out;
 }
 async function saveNote(text,sources=[]){await permission('files');state.notes.push({id:crypto.randomUUID(),title:text.slice(0,80),text:text.slice(0,2000),source:sources.map(s=>s.url).join('\n').slice(0,2000)||state.profile.displayName+' · direct note',enabled:true,kind:'manual',time:Date.now()});state.notes=state.notes.slice(-60);if(await persist())toast('Saved locally. Manage or unload it in Memory.');if(view==='memory')renderMemory();}
-async function speak(text,signal){stopPlay();const attempt=++audioAttempt;audioFeedback('Preparing voice on this device. The first download may take a few minutes…','preparing',true);const pending=voice.speak(text,{...normalizeVoice(state.settings.voice),language:languageCode(),profile:state.settings.voiceProfile,voiceURI:state.settings.voiceURI,rate:state.settings.rate,emotion:$('orb').dataset.emotion,signal}),generation=voice.generation;$('stopSpeechBtn').hidden=false;try{await pending;if(attempt===audioAttempt&&generation===voice.generation&&!signal?.aborted)audioFeedback('Playback finished. If you heard nothing, open Sound help.');}catch(error){if(attempt!==audioAttempt||generation!==voice.generation||error.name==='AbortError'||signal?.aborted)return;audioFeedback(error.message+' Open Sound help to test the speaker or retry.','error');throw error;}}
+function speakMessage(message,signal){return speak(message?.content||'',signal,message?.speechContext);}
+async function speak(text,signal,speechContext=null){stopPlay();const attempt=++audioAttempt;audioFeedback('Preparing voice on this device. The first download may take a few minutes…','preparing',true);const pending=voice.speak(text,{...normalizeVoice(state.settings.voice),language:languageCode(),profile:state.settings.voiceProfile,voiceURI:state.settings.voiceURI,rate:state.settings.rate,emotion:$('orb').dataset.emotion,speechContext:normalizeSpeechContext(speechContext)||{},signal}),generation=voice.generation;$('stopSpeechBtn').hidden=false;try{await pending;if(attempt===audioAttempt&&generation===voice.generation&&!signal?.aborted)audioFeedback('Playback finished. If you heard nothing, open Sound help.');}catch(error){if(attempt!==audioAttempt||generation!==voice.generation||error.name==='AbortError'||signal?.aborted)return;audioFeedback(error.message+' Open Sound help to test the speaker or retry.','error');throw error;}}
 async function ensureModel(run){if(engine.readyFor(state.settings.model))return;if(!desktopMode)await permission('internet',{background:run.kind==='study'||run.kind==='schedule'});checkRun(run);$('modelProgress').hidden=false;await engine.load(state.settings.model,{signal:run.signal,onProgress:p=>{if(active!==run)return;$('modelProgress').value=Number(p.progress)||0;$('modelProgressLabel').textContent=String(p.text||'Preparing local model…').slice(0,220);}});checkRun(run);}
 function promptMessages(query,sources,files,task='chat',maxTokens=256,knowledge=''){
   const language=state.settings.language==='Auto-detect'?'Follow the user’s language.':`Reply in ${state.settings.language}.`;
@@ -410,8 +412,8 @@ async function submit(text=$('messageInput').value,selected=attachments){
       answerModel=engine.modelId||state.settings.model;
       if(answer==='[SEARCH]'||!answer)throw new Error('I couldn’t verify an answer from the available information. Please try a more specific question.');
     }
-    checkRun(run);rendering.article.remove();session.messages.push({role:'assistant',content:answer,sources,model:answerModel});renderMessage(session.messages.at(-1));lastAnswer=answer;record();scrollBottom();
-    if(canSpeakReply()){try{await speak(answer,run.signal);}catch(error){showError(error);voiceMode=false;}}
+    checkRun(run);rendering.article.remove();const speechContext=yearQuestionSpeechContext(text,answer);session.messages.push({role:'assistant',content:answer,sources,model:answerModel,...(speechContext?{speechContext}:{})});renderMessage(session.messages.at(-1));lastAnswer=answer;record();scrollBottom();
+    if(canSpeakReply()){try{await speakMessage(session.messages.at(-1),run.signal);}catch(error){showError(error);voiceMode=false;}}
   }catch(error){if(active!==run)return;if(error.name==='AbortError'){rendering.content.textContent=rendering.content.textContent?rendering.content.textContent+'\n[Stopped; incomplete.]':'Stopped.';}else{const message=userFacingFailure(error,{online:navigator.onLine,desktop:desktopMode});rendering.content.textContent=message;session.messages.push({role:'assistant',content:message,sources:[],model:'Request status'});lastAnswer=message;if(publicQuery&&!files.length)appendSearchRecovery(rendering,publicQuery,sources);record();toast(message);if(canSpeakReply())try{await speak(message,run.signal);}catch{} }}finally{finish(run);}
 }
 async function loadModel(){if(active)return;const run=begin('load');try{await ensureModel(run);toast(desktopMode?'Installed CPU model ready. Conversation works offline; web research still needs internet.':'Local AI is ready. After downloads are cached, this model can work offline.');}catch(error){showError(error);}finally{finish(run);}}
@@ -528,7 +530,7 @@ function bind(){
  $('stopBtn').onclick=()=>stop();if($('stopTaskBtn'))$('stopTaskBtn').onclick=()=>stop();$('newChatBtn').onclick=newConversation;$('loadModelBtn').onclick=()=>loadModel().catch(showError);$('sidebarToggle').onclick=()=>document.body.classList.toggle('sidebar-open');$('sidebarBackdrop').onclick=()=>document.body.classList.remove('sidebar-open');
  for(const b of document.querySelectorAll('.nav-button'))b.onclick=()=>setView(b.dataset.view);for(const b of document.querySelectorAll('.suggestion'))b.onclick=()=>{$('messageInput').value=b.dataset.prompt;$('messageInput').focus();};
  $('settingsBtn').onclick=()=>{renderSettings();$('settingsDialog').showModal();};$('closeSettingsBtn').onclick=()=>$('settingsDialog').close();$('settingsDialog').addEventListener('close',()=>{settingsController?.abort();document.querySelectorAll('[data-gemini-token]').forEach(input=>{input.value='';});stopPlay();stopVoiceOutput();});$('settingsDialog').addEventListener('cancel',()=>{settingsController?.abort();stopPlay();stopVoiceOutput();});for(const b of document.querySelectorAll('.settings-tab'))b.onclick=()=>renderSettings(b.dataset.tab);
- $('speakReplies').onchange=()=>{state.settings.speak=$('speakReplies').checked;if(state.settings.speak)primeAudioFromGesture();else stopVoiceOutput();persist();};$('hearBtn').onclick=()=>speak(lastAnswer||`Hello ${state.profile.displayName}! I’m MAX-G. I’m here, and ready to help.`).catch(showError);$('micBtn').onclick=()=>startDictation(false).catch(showError);$('voiceModeBtn').onclick=()=>{if(voiceMode)stop();else startDictation(true).catch(showError);};
+ $('speakReplies').onchange=()=>{state.settings.speak=$('speakReplies').checked;if(state.settings.speak)primeAudioFromGesture();else stopVoiceOutput();persist();};$('hearBtn').onclick=()=>{const message=session.messages.findLast(item=>item.role==='assistant');(message?speakMessage(message):speak(`Hello ${state.profile.displayName}! I’m MAX-G. I’m here, and ready to help.`)).catch(showError);};$('micBtn').onclick=()=>startDictation(false).catch(showError);$('voiceModeBtn').onclick=()=>{if(voiceMode)stop();else startDictation(true).catch(showError);};
  $('soundHelpBtn').onclick=openSoundHelp;$('soundCloseBtn').onclick=()=>$('soundDialog').close();$('soundDialog').addEventListener('close',()=>{soundController?.abort();soundController=null;stopVoiceOutput();});$('soundDialog').addEventListener('cancel',()=>{soundController?.abort();stopVoiceOutput();});$('testSpeakerBtn').onclick=testSpeaker;$('soundStopBtn').onclick=stopVoiceOutput;$('stopSpeechBtn').onclick=stopVoiceOutput;$('soundRetryBtn').onclick=()=>{pauseVoiceOutput();speak(`Hello ${state.profile.displayName}. I’m MAX-G. This is my voice on this device.`,soundController?.signal).catch(showError);};$('soundVoiceSettingsBtn').onclick=()=>{$('soundDialog').close();renderSettings('voice');$('settingsDialog').showModal();};
  $('attachBtn').onclick=()=>{ $('fileInput').dataset.destination='chat';$('fileInput').accept='.txt,.md,.csv,.json,.html,.css,.js,.ts,.py,.swift,.kt,.java,.rs,.go';$('fileInput').click();};
  $('fileInput').onchange=async()=>{const epoch=taskEpoch;const verify=()=>{if(epoch!==taskEpoch||state.settings.permissions.files==='deny')throw new DOMException('File operation stopped.','AbortError');};try{await permission('files',{picked:true});const target=$('fileInput').dataset.destination;if(target==='notes'){const file=$('fileInput').files[0];if(!file||file.size>500000)throw new Error('Choose a notes JSON file smaller than 500 KB.');const doc=JSON.parse(await file.text());verify();const notes=Array.isArray(doc.notes)?doc.notes:[];for(const note of notes.slice(0,60))if(note&&typeof note.text==='string')state.notes.push({id:crypto.randomUUID(),title:String(note.title||'Imported note').slice(0,150),text:note.text.slice(0,2000),source:String(note.source||'Imported by owner').slice(0,2000),kind:'manual',enabled:note.enabled!==false,time:Date.now()});state.notes=state.notes.slice(-60);await persist();renderMemory();}else{const files=await importSelectedFiles($('fileInput').files,verify);verify();if(target==='work'){for(const file of files){const found=workspace.find(x=>x.name===file.name);if(found)found.text=file.text;else workspace.push(file);}workspace=workspace.slice(-20);renderWork();}else{attachments=[...attachments,...files].slice(0,6);renderAttachments();}}}catch(error){showError(error);}finally{$('fileInput').value='';}};

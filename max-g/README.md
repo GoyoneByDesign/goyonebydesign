@@ -1,3 +1,9 @@
+# MAX-G 1.9.10 postal and year pronunciation
+
+English speech now reads ZIP and postal identifiers one character at a time: **20171 → “two zero one seven one.”** Leading zeros are preserved; ZIP+4 separators are silent. International postal letters are spoken individually. Contextual years use natural year readings: **2026 → “twenty twenty six,” 1905 → “nineteen oh five,” 2005 → “two thousand five.”**
+
+Formatting happens only at the speech boundary, so the written answer stays unchanged. Resolved postal identifiers travel with weather/location replies for automatic speech, Read aloud and Hear MAX-G, including saved conversations. Prices, quantities, arithmetic and other languages retain their existing handling. No model download or internet call is needed for pronunciation. Browser, local neural, cloned and installed English voices share these rules; the advanced Mac speech window has matching handling.
+
 # MAX-G 1.9.9 voice recorder recovery
 
 Voice Studio now switches out of playback-only audio mode before requesting the microphone, fixing the Safari/WebKit conflict after MAX-G has spoken. It keeps recording status beside the Record button, shows elapsed time and a live input meter, and provides actionable microphone-permission errors. Waiting and canceled requests release their microphone tracks; closing the studio discards unsaved audio. Browser audio formats are selected by actual support. The Mac app explicitly handles microphone authorization for its local main window.

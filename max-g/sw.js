@@ -2,7 +2,7 @@
  * Model tensors/config/tokenizers/WASM belong to WebLLM's IndexedDB cache.
  * This worker never caches searches, conversations, uploads or arbitrary pages.
  */
-const VERSION = '2026-09-13.9';
+const VERSION = '2026-09-13.10';
 const SCOPE = new URL(self.registration.scope);
 const PREFIX = `maxg-pwa:${encodeURIComponent(SCOPE.pathname)}:`;
 const SHELL_CACHE = `${PREFIX}shell:${VERSION}`;
@@ -12,7 +12,7 @@ const SHELL_FILES = [
   './', './index.html', './launch-context.js', './style.css', './app.js', './activity-frame.js', './state.js', './tools.js', './units.js', './weather-card.js', './weather-card.css', './gemini.js', './answer-routing.js', './browser-task.js', './browser-panel.js', './browser-panel.css',
   './improvement.js', './improvement-ui.js', './improvement.css', './connectors.js', './connectors.css', './unit-data.js', './voice.js', './files.js', './engine.js', './local-ai.js', './extensions.js', './extensions.css', './inference-worker.js',
   './device.js', './device-ui.js', './device.css', './country-data.js', './postal-data.js', './locations.js', './locations-ui.js', './locations.css', './companion-interactions.js', './performance.js', './performance-worker.js', './music-composer.js', './song-vocals.js', './assets/song/male-syllables-v1.json', './profile.js', './profile-ui.js', './profile.css', './orbit.js', './orbit.css',
-  './voice-config.js', './neural-voice.js', './voice-worker.js', './voice-studio.js', './voice-studio.css', './assets/goyonebydesign-logo.png',
+  './speech-text.js', './voice-config.js', './neural-voice.js', './voice-worker.js', './voice-studio.js', './voice-studio.css', './assets/goyonebydesign-logo.png',
   './manifest.json', './assets/icon.svg', './icons/icon-192.png', './icons/icon-512.png',
   './icons/maskable-512.png', './icons/apple-touch-icon.png',
 ];
