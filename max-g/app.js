@@ -2,6 +2,8 @@
 import {MaxGEngine,MODELS as WEB_MODELS,DEFAULT_MODEL as WEB_DEFAULT_MODEL,checkWebGPU,boundedMessages} from './engine.js';
 import {MaxGLocalEngine,LOCAL_MODELS,LOCAL_DEFAULT_MODEL,isDesktopMode,desktopDefaults} from './local-ai.js';
 const desktopMode=isDesktopMode();
+document.body.dataset.edition=desktopMode?'mac':'web';
+const editionBadge=document.querySelector('.edition-badge');if(editionBadge)editionBadge.textContent=desktopMode?'MAC EDITION':'WEB EDITION';
 const MODELS=desktopMode?LOCAL_MODELS:WEB_MODELS,DEFAULT_MODEL=desktopMode?LOCAL_DEFAULT_MODEL:WEB_DEFAULT_MODEL;
 import {basicDeviceAnswer,needsLiveEvidence,searchBeforeReply,allowLocalSearchFallback,answerLimit,userFacingFailure,weatherFollowup} from './answer-routing.js';
 import {renderExtensions,extensionCommand,extensionReply,knowledgeContext,documentPayload} from './extensions.js';
@@ -229,7 +231,7 @@ function renderMessage(message){
 }
 function dockOrb(){const compact=session.messages.length>0;$('welcome').hidden=compact;$('liveOrbDock').hidden=false;}
 function renderChat(){dockOrb();$('messages').replaceChildren();for(const message of session.messages)renderMessage(message);$('welcome').classList.toggle('compact',session.messages.length>0);$('welcome').classList.toggle('has-messages',session.messages.length>0);scrollBottom();}
-function scrollBottom(){requestAnimationFrame(()=>{$('conversationScroll').scrollTop=$('conversationScroll').scrollHeight;});}
+function scrollBottom(){requestAnimationFrame(()=>{$('conversationScroll').scrollTop=session.messages.length?$('conversationScroll').scrollHeight:0;});}
 function record(){session.messages=session.messages.slice(-40);for(const message of session.messages)message.id ||= crypto.randomUUID();session.title=session.messages.find(m=>m.role==='user')?.content.slice(0,60)||'Conversation';const found=state.chats.findIndex(c=>c.id===session.id);if(found>=0)state.chats.splice(found,1);state.chats.unshift(structuredClone(session));state.chats=state.chats.slice(0,12);persist();renderChats();}
 function renderChats(){$('chatList').replaceChildren();for(const chat of state.chats){const node=button(chat.title,()=>{if(active)return toast('Stop the current task before switching chats.');session=structuredClone(chat);lastAnswer=session.messages.findLast(m=>m.role==='assistant')?.content||'';setView('chat');renderChat();},'chat-list-item');node.classList.toggle('active',chat.id===session.id);$('chatList').append(node);}}
 function renderAttachments(){$('attachmentList').replaceChildren();for(const [i,file]of attachments.entries())$('attachmentList').append(button(`${file.name} ×`,()=>{attachments.splice(i,1);renderAttachments();},'attachment-chip'));}
