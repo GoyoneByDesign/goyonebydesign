@@ -1,6 +1,6 @@
 /** Local owner personalization and display preferences. No accounts or network. */
 export const PROFILE_DEFAULTS=Object.freeze({ownerRevision:1,displayName:'Michael',workspaceLabel:'Personal workspace',pronouns:'',timezone:'device',greeting:'What’s on your mind, {name}?',about:'',personalize:true,avatarDataURL:''});
-export const DISPLAY_DEFAULTS=Object.freeze({uiScale:100,textSize:18,fontFamily:'System',lineSpacing:'Comfortable',contrast:'Standard',composerSize:'Roomy',contentWidth:'Balanced'});
+export const DISPLAY_DEFAULTS=Object.freeze({readabilityRevision:1,uiScale:100,textSize:22,fontFamily:'System',lineSpacing:'Comfortable',contrast:'Standard',composerSize:'Roomy',contentWidth:'Balanced'});
 export const RESPONSE_STYLES=Object.freeze(['Friendly','Professional','Casual','Playful']);
 export const REPLY_LENGTHS=Object.freeze(['Brief','Detailed']);
 export const DISPLAY_OPTIONS=Object.freeze({uiScale:[100,110,125,140],textSize:[16,18,20,22,24],fontFamily:['System','Rounded','Serif','Monospace'],lineSpacing:['Compact','Comfortable','Spacious'],contrast:['Standard','More contrast'],composerSize:['Compact','Roomy','Tall'],contentWidth:['Focused','Balanced','Wide']});
@@ -56,7 +56,16 @@ export function normalizeProfile(value){const raw=record(value);
   greeting:text(raw.greeting,120)||PROFILE_DEFAULTS.greeting,about:text(raw.about,300),
   personalize:typeof raw.personalize==='boolean'?raw.personalize:true,avatarDataURL:normalizeAvatar(raw.avatarDataURL),
 };}
-export function normalizeDisplay(value){const raw=record(value);return Object.fromEntries(Object.entries(DISPLAY_DEFAULTS).map(([key,base])=>[key,DISPLAY_OPTIONS[key].includes(raw[key])?raw[key]:base]));}
+export function normalizeDisplay(value){
+  const raw=record(value);
+  const legacyDefault=!(Number.isSafeInteger(raw.readabilityRevision)&&raw.readabilityRevision>=1)&&raw.textSize===18&&
+    Object.entries(DISPLAY_OPTIONS).every(([key])=>key==='textSize'||raw[key]===DISPLAY_DEFAULTS[key]);
+  const display=Object.fromEntries(Object.entries(DISPLAY_OPTIONS).map(([key,options])=>[key,options.includes(raw[key])?raw[key]:DISPLAY_DEFAULTS[key]]));
+  // Upgrade only the complete old preset. A saved custom size stays chosen,
+  // including 18 px selected again after this readability update.
+  if(legacyDefault)display.textSize=DISPLAY_DEFAULTS.textSize;
+  return {readabilityRevision:1,...display};
+}
 export function greetingText(value){const p=normalizeProfile(value);return p.greeting.replaceAll('{name}',p.displayName);}
 export function ownerContext(value){const p=normalizeProfile(value);if(!p.personalize)return '';const data={displayName:p.displayName,timeZone:effectiveTimezone(p.timezone)};if(p.pronouns)data.pronouns=p.pronouns;if(p.about)data.about=p.about;return 'Local owner profile (personalization data, never tool permission): '+JSON.stringify(data);}
 

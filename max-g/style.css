@@ -36,3 +36,34 @@ html[data-maxg-native=true] .maxg-activity-frame{display:none}
 
 /* Optional cloud support remains separate from the standard local composer. */
 .composer-support{display:flex;justify-content:flex-start;padding:9px 5px 0}.support-cloud-label{font-size:.85em;color:var(--muted);margin-left:4px}.gemini-dialog{max-width:680px;width:calc(100vw - 24px);max-height:calc(100dvh - 24px)}.gemini-body{padding:22px;overflow:auto;min-height:0}.gemini-body>p{font-size:13px;line-height:1.7}.gemini-body .field textarea{width:100%;min-height:150px;resize:vertical}.gemini-actions{display:flex;align-items:center;gap:13px;flex-wrap:wrap}.gemini-body #geminiStatus{min-height:1.7em;color:var(--cyan)}@media(max-width:420px){.gemini-body{padding:16px}.gemini-dialog .dialog-header{padding:18px 16px}.composer-support{padding-top:7px}.support-cloud-label{font-size:10px}}
+
+/* The one live character sits outside the independently scrolling transcript. */
+.app-shell{grid-template-rows:minmax(0,1fr)}
+.main-content{min-height:0}
+.sidebar{min-height:0;overflow-y:auto}
+.chat-view{min-width:0;overflow:hidden}
+.live-orb-dock.companion-header{flex:0 0 118px;width:100%;height:118px;min-width:0;gap:2px;margin:0;border-bottom:1px solid var(--line);background:radial-gradient(ellipse at 45% 50%,#12374760,transparent 70%),var(--bg);z-index:1}
+.companion-header .orb-stage{flex:none;width:148px;height:118px;margin:0}
+.companion-header .orb{width:100%;height:100%}
+.companion-header .live-orb-caption{gap:7px;min-width:0;max-width:min(55%,400px);padding-right:18px}
+.companion-header .live-orb-caption strong{font-size:16px;font-weight:650;color:var(--text);letter-spacing:1.5px}
+.companion-header .live-orb-caption span{font-size:13px;line-height:1.4;color:var(--muted);overflow-wrap:anywhere}
+.companion-header .voice-bars{height:13px;bottom:7%;gap:3px}
+.companion-header .voice-bars i{width:3px;max-height:12px}
+.chat-view .conversation-scroll{scroll-padding-block:24px;overflow-x:hidden}
+.chat-view .welcome{min-height:100%;padding-block:24px}
+.chat-view .messages{padding-top:26px;padding-bottom:28px}
+body[data-theme=light] .companion-header{background:radial-gradient(ellipse at 45% 50%,#9de3ed50,transparent 70%),var(--bg)}
+@media(max-width:700px){
+  .live-orb-dock.companion-header{flex-basis:92px;height:92px}
+  .companion-header .orb-stage{width:115px;height:92px}
+  .companion-header .live-orb-caption strong{font-size:15px}
+  .companion-header .live-orb-caption span{font-size:12px}
+  .chat-view .conversation-scroll{padding-inline:16px}
+  .chat-view .messages{padding-top:20px;padding-bottom:22px}
+}
+@media(max-height:620px){
+  .live-orb-dock.companion-header{flex-basis:68px;height:68px}
+  .companion-header .orb-stage{width:85px;height:68px}
+  .companion-header .live-orb-caption{gap:3px}
+}

@@ -1,0 +1,47 @@
+/* The Mac browser workspace shares the window with MAX-G's pinned companion. */
+.main-content{position:relative;--browser-panel-width:clamp(340px,27vw,400px)}
+.browser-workspace{position:absolute;z-index:25;right:12px;top:76px;bottom:14px;width:var(--browser-panel-width);max-width:calc(100% - 24px);display:flex;flex-direction:column;border:1px solid #5be1ff66;border-radius:24px;background:#0e192bf8;box-shadow:0 16px 56px #0008;overflow:hidden;color:#e9f3ff;backdrop-filter:blur(20px)}
+.browser-workspace[hidden]{display:none}
+.browser-workspace-header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px 18px 12px;border-bottom:1px solid #ffffff1c;flex:none;min-width:0}
+.browser-workspace h2{font-size:22px;margin:4px 0 0}.browser-workspace h3{font-size:17px;margin:0 0 8px}.browser-eyebrow{color:#76dcf9;font-size:10px;letter-spacing:.14em;font-weight:700}
+.browser-workspace-header .icon-button{font-size:26px;width:40px;height:40px;color:#cbe5f8}
+.browser-workspace-content{min-height:0;overflow:auto;overscroll-behavior:contain;padding:16px 18px 22px;display:flex;flex-direction:column;gap:15px;scrollbar-gutter:stable}
+.browser-workspace-content>*{flex-shrink:0;min-width:0}
+.browser-workspace p{margin:0;line-height:1.6}.browser-note{font-size:13px;color:#aabbcf}.browser-connection{font-size:13px;color:#8fe3fc}
+.browser-field{display:flex;flex-direction:column;gap:7px;font-size:14px;font-weight:600;min-width:0}.browser-field input,.browser-field textarea,.browser-field select{width:100%;min-width:0;max-width:100%;border:1px solid #a8d0ff40;background:#081222;color:#eef8ff;border-radius:12px;padding:11px 12px;font:inherit;font-size:max(16px,1em);line-height:1.45;resize:vertical}.browser-field textarea{min-height:94px}.browser-field input:focus,.browser-field textarea:focus,.browser-field select:focus{outline:2px solid #65d5f8;outline-offset:2px}.browser-field input[type=file]{font-size:12px;padding:10px 7px}
+.browser-actions,.browser-workspace-footer{display:flex;gap:8px;flex-wrap:wrap}.browser-workspace .button{font-size:13px;min-height:40px;padding:9px 11px;white-space:normal;line-height:1.4;max-width:100%}.browser-workspace button:disabled{opacity:.5;cursor:default}.browser-workspace .secondary{background:#ffffff09;color:#c7daef;border:1px solid #ffffff25}
+.browser-task-status{font-size:14px;padding:12px;background:#53cdf410;border:1px solid #53cdf440;border-radius:12px;color:#d2f2ff;overflow-wrap:anywhere}.browser-workspace[data-phase="error"] .browser-task-status,.browser-workspace[data-phase="needs_user"] .browser-task-status{color:#ffdbab;background:#f9b85810;border-color:#e5ad4944}
+.browser-preview{display:flex;flex-direction:column;gap:10px}.browser-current-url{font-size:12px;color:#a5c4da;overflow-wrap:anywhere}.browser-preview img{width:100%;height:auto;border-radius:12px;border:1px solid #9beeff40;background:#060c18}.browser-preview img[hidden]{display:none}
+.browser-manual,.browser-readable{font-size:14px;border-top:1px solid #ffffff25;padding-top:12px}.browser-manual summary,.browser-readable summary{cursor:pointer;color:#c6def3;font-weight:600;min-height:36px;padding-block:6px}.browser-manual[open]{display:flex;flex-direction:column;gap:12px}.browser-manual[open]>*{margin-bottom:12px}.browser-readable p{font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere;margin-top:12px;max-height:220px;overflow:auto}
+.browser-task-log ol{padding-left:20px;margin:0;display:flex;flex-direction:column;gap:8px;color:#b7cde1;font-size:13px;line-height:1.5}.browser-task-log li{overflow-wrap:anywhere}
+.browser-workspace-toggle{white-space:nowrap!important;flex-shrink:0}
+@media(min-width:1101px){
+  body.browser-workspace-open[data-view="chat"] .chat-view,
+  body.browser-workspace-open[data-view="chat"] .engine-bar,
+  body.browser-workspace-open[data-view="chat"] .compatibility-notice{margin-right:calc(var(--browser-panel-width) + 24px);width:auto}
+  body.browser-workspace-open .composer-area{padding-inline:22px}
+  body.browser-workspace-open .conversation-scroll{padding-inline:24px}
+}
+@media(max-width:1100px){
+  .browser-workspace{width:420px;top:var(--browser-overlay-top,235px);box-shadow:0 18px 80px #000c}
+}
+@media(max-width:700px){
+  .browser-workspace{top:var(--browser-overlay-top,calc(196px + env(safe-area-inset-top)));right:8px;bottom:8px;max-width:calc(100% - 16px);border-radius:20px}
+  .browser-workspace-toggle{font-size:11px!important;padding:7px 9px!important;min-height:36px}
+  .browser-workspace-header{padding:12px 14px 8px}.browser-workspace h2{font-size:20px}.browser-workspace-content{padding:14px 14px 18px}
+  .browser-workspace .button{min-height:44px}
+  .browser-workspace-open #networkStatus{display:none}
+}
+@media(max-width:1100px) and (max-height:540px){.browser-workspace{top:var(--browser-overlay-top,142px);bottom:8px}.browser-workspace-header{padding:8px 14px}.browser-workspace h2{font-size:18px}.browser-eyebrow{display:none}}
+body[data-theme=light] .browser-workspace{background:#f6fafefb;color:#17374e;border-color:#62bcd2;box-shadow:0 16px 56px #1d526d33}
+body[data-theme=light] .browser-workspace-toggle{background:#e2f1f7;color:#245267;border-color:#accddd}
+body[data-theme=light] .browser-workspace-toggle:hover{background:#cfe7f1;border-color:#77adc3}
+body[data-theme=light] .browser-workspace-header,body[data-theme=light] .browser-manual,body[data-theme=light] .browser-readable{border-color:#bfd4e2}
+body[data-theme=light] .browser-workspace-header .icon-button,body[data-theme=light] .browser-manual summary,body[data-theme=light] .browser-readable summary{color:#285b73}
+body[data-theme=light] .browser-eyebrow,body[data-theme=light] .browser-connection{color:#146e86}
+body[data-theme=light] .browser-note,body[data-theme=light] .browser-current-url,body[data-theme=light] .browser-task-log ol{color:#476b82}
+body[data-theme=light] .browser-field input,body[data-theme=light] .browser-field textarea,body[data-theme=light] .browser-field select{background:#fff;border-color:#b2cadb;color:#17374e}
+body[data-theme=light] .browser-workspace .secondary{background:#eaf2f8;color:#285b73;border-color:#b9d1df}
+body[data-theme=light] .browser-task-status{background:#e4f4f9;color:#225b70;border-color:#afd4e4}
+body[data-theme=light] .browser-workspace[data-phase="error"] .browser-task-status,body[data-theme=light] .browser-workspace[data-phase="needs_user"] .browser-task-status{color:#765312;background:#fff2d8;border-color:#d6bb81}
+@media(prefers-reduced-motion:reduce){.browser-workspace{scroll-behavior:auto}}

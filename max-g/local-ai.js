@@ -67,7 +67,8 @@ export class MaxGLocalEngine{
     }catch(error){if(epoch===this._epoch){this._ready=false;this._modelId=null;this._loading=false;this._state(error.name==='AbortError'?'unloaded':'error',{message:error.message});}throw error;}
     finally{signal?.removeEventListener('abort',cancel);if(epoch===this._epoch)this._controller=null;}
   }
-  async stream(input,{onToken=()=>{},onUsage=()=>{},signal,maxTokens=OUTPUT_TOKENS}={}){
+  async stream(input,{onToken=()=>{},onUsage=()=>{},signal,maxTokens=OUTPUT_TOKENS,responseFormat}={}){
+    if(responseFormat!==undefined&&responseFormat!=='json')throw Error('Choose the supported JSON response format or leave it unset.');
     if(signal?.aborted)throw abortError();
     if(!this.ready)throw Error('Load an installed CPU model first.');
     if(this.busy)throw Error('MAX-G is already answering. Stop or wait before sending another request.');
@@ -83,7 +84,7 @@ export class MaxGLocalEngine{
     const current=()=>{if(controller.signal.aborted||epoch!==this._epoch)throw abortError();};
     try{
       this._state('generating',{contextTrimmed:bounded.truncated});
-      await this._call('chat',{model:this._modelId,messages:bounded.messages,max_tokens:limit,request_id:requestId},{signal:controller.signal,onChunk:chunk=>{
+      await this._call('chat',{model:this._modelId,messages:bounded.messages,max_tokens:limit,request_id:requestId,...(responseFormat?{response_format:responseFormat}:{})},{signal:controller.signal,onChunk:chunk=>{
         current();if(chunk.error)throw Error(chunk.message||chunk.error?.message||String(chunk.error));
         if(final)throw Error('The local model returned data after its completion receipt.');
         if(typeof chunk.token==='string'){text+=chunk.token;onToken(chunk.token,text);}

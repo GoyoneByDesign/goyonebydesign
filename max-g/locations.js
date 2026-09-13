@@ -201,26 +201,31 @@ export function createLocationClient({fetch:fetchImpl=(...args)=>globalThis.fetc
     const previous=cache.get(key);if(previous)clearTimeout(previous.timer);
     const entry={value:structuredClone(value),time:now(),timer:setTimeout(()=>cache.delete(key),cacheTTL)};entry.timer?.unref?.();cache.set(key,entry);return {...value,cached:false};
   }
-  async function request(url,{signal,method='GET',body,missingOK=false}={}){
+  async function request(url,{signal,method='GET',body,missingOK=false,timeout=15000}={}){
     checkAbort(signal);
     const host=new URL(url).hostname,time=now(),history=(requests.get(host)||[]).filter(value=>time-value<60000);
     if(time<(cooldowns.get(host)||0))throw new LocationError('LOCATION_RATE_LIMIT','This map service needs a pause. Wait at least 30 seconds before trying again.');
     if(history.length>=12||history.length&&time-history.at(-1)<1000)throw new LocationError('LOCATION_RATE_LIMIT','Please wait a moment before another location search. Public map services have limited capacity.');
     history.push(time);requests.set(host,history);
     const controller=new AbortController();controllers.add(controller);let timedOut=false;
-    const timer=setTimeout(()=>{timedOut=true;controller.abort();},15000);
+    let rejectInterrupted;
+    const interrupted=new Promise((_,reject)=>{rejectInterrupted=reject;});
+    const interruptedAbort=()=>rejectInterrupted(abortError());
+    controller.signal.addEventListener('abort',interruptedAbort,{once:true});
+    const wait=pending=>Promise.race([pending,interrupted]);
+    const timer=setTimeout(()=>{timedOut=true;controller.abort();},timeout);
     const abort=()=>controller.abort();signal?.addEventListener('abort',abort,{once:true});
     let reader;
     try{
-      const response=await fetchImpl(url,{method,body,signal:controller.signal,mode:'cors',credentials:'omit',cache:'no-store',redirect:'error',referrerPolicy:host==='overpass-api.de'?'origin':'no-referrer',
-        headers:{Accept:'application/json',...(method==='POST'?{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'}:{})}});
+      const response=await wait(fetchImpl(url,{method,body,signal:controller.signal,mode:'cors',credentials:'omit',cache:'no-store',redirect:'error',referrerPolicy:host==='overpass-api.de'?'origin':'no-referrer',
+        headers:{Accept:'application/json',...(method==='POST'?{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'}:{})}}));
       if(missingOK&&response.status===404)return null;
       if(response.status===429||response.status===406){cooldowns.set(host,now()+30000);throw new LocationError('LOCATION_RATE_LIMIT','The public map service is busy or declined this request. Wait at least 30 seconds before trying again.');}
       if(!response.ok)throw new LocationError('LOCATION_SERVICE','The public map service is unavailable. Try again later or open your preferred Maps app.');
       if(Number(response.headers.get('content-length'))>1024*1024)throw new LocationError('LOCATION_TOO_LARGE','The map response was too large. Try a smaller search.');
       reader=response.body?.getReader();if(!reader)throw new LocationError('LOCATION_BROWSER','This browser cannot read bounded map responses. Update the browser or open a Maps link.');
       const chunks=[];let bytes=0;
-      for(;;){const {done,value}=await reader.read();if(done)break;bytes+=value.byteLength;if(bytes>1024*1024)throw new LocationError('LOCATION_TOO_LARGE','The map response was too large. Try a smaller search.');chunks.push(value);}
+      for(;;){const {done,value}=await wait(reader.read());if(done)break;bytes+=value.byteLength;if(bytes>1024*1024)throw new LocationError('LOCATION_TOO_LARGE','The map response was too large. Try a smaller search.');chunks.push(value);}
       const combined=new Uint8Array(bytes);let position=0;for(const chunk of chunks){combined.set(chunk,position);position+=chunk.length;}
       checkAbort(signal);if(controller.signal.aborted)throw abortError();
       try{return JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(combined));}catch{throw new LocationError('LOCATION_FORMAT','The map service returned unreadable data. Try again later.');}
@@ -230,12 +235,42 @@ export function createLocationClient({fetch:fetchImpl=(...args)=>globalThis.fetc
       if(timedOut)throw new LocationError('LOCATION_TIMEOUT','The map service took too long. Try again later or use your Maps app.');
       if(error instanceof LocationError)throw error;
       throw new LocationError('LOCATION_NETWORK','I could not reach the map service. Check the connection or open your Maps app.');
-    }finally{clearTimeout(timer);signal?.removeEventListener('abort',abort);controller.abort();controllers.delete(controller);try{await reader?.cancel();}catch{}}
+    }finally{clearTimeout(timer);signal?.removeEventListener('abort',abort);controller.signal.removeEventListener('abort',interruptedAbort);controller.abort();controllers.delete(controller);try{Promise.resolve(reader?.cancel()).catch(()=>{});}catch{}}
   }
-  async function resolvePlace(value,{country='',signal}={}){
+  async function resolveWeatherPlace(parts,{signal}={}){
+    const started=now(),epoch=generation,key=JSON.stringify(['weather-place',parts.query,parts.country]);
+    const hit=cached(key);if(hit)return hit;
+    const meteo=new URL('https://geocoding-api.open-meteo.com/v1/search');
+    meteo.search=new URLSearchParams({name:parts.query,count:'6',language:'en',format:'json',...(parts.country?{countryCode:parts.country}:{})});
+    const photon=new URL('https://photon.komoot.io/api/');
+    photon.search=new URLSearchParams({q:parts.query,limit:'6',lang:'en',...(parts.country?{countrycode:parts.country}:{})});
+    const providers=[];
+    if(parts.postal&&ZIP_COUNTRIES.has(parts.country)){
+      const area=postalArea(parts.query,parts.country);
+      providers.push({url:'https://api.zippopotam.us/'+parts.country.toLowerCase()+'/'+encodeURIComponent(area),missingOK:true,
+        rows:data=>postalRows(data,parts,area),message:postalKey(area)!==postalKey(parts.query)?'Only the '+area+' postal area was found for '+parts.query+'. Weather uses this approximate area, not the exact address.':'Weather uses the approximate postal-area centre.'});
+    }
+    providers.push({url:meteo.href,rows:data=>meteoRows(data,parts),message:'Weather uses approximate city or locality coordinates.'},
+      {url:photon.href,rows:data=>photonRows(data,parts),message:'Weather uses an approximate mapped place or postal-area centre.'});
+    let firstError,completed=false;
+    for(const provider of providers){
+      checkAbort(signal);const remaining=4800-(now()-started);
+      if(remaining<=0)throw new LocationError('LOCATION_TIMEOUT','The location lookup is taking too long. Please try the city and country again, or use your current location.');
+      try{
+        const data=await request(provider.url,{signal,missingOK:provider.missingOK,timeout:Math.min(2000,remaining)}),results=provider.rows(data);completed=true;
+        if(results.length)return remember(key,{query:parts.query,country:parts.country,needsCountry:false,results,message:provider.message},epoch);
+      }catch(error){if(error.name==='AbortError'||error.code==='LOCATION_RATE_LIMIT')throw error;firstError||=error;}
+    }
+    if(!completed&&firstError)throw firstError;
+    return {query:parts.query,country:parts.country,needsCountry:false,results:[],message:'I could not find that place in the available sources. Please include the city, region and country.',cached:false};
+  }
+  async function resolvePlace(value,{country='',signal,purpose='place'}={}){
     checkAbort(signal);const parts=queryParts(value,country),epoch=generation;
     const base={query:parts.query,country:parts.country,needsCountry:parts.needsCountry};
     if(parts.needsCountry)return {...base,results:[],message:parts.ambiguousCountry?'That abbreviation can identify a region or a country. Select the intended country, or write its full name.':'Choose the country for this postal code; the same digits can identify different places worldwide.',cached:false};
+    // Weather needs a city/area point, not street-level map search. Use the
+    // lightweight city/postal endpoint first, inside one short lookup budget.
+    if(purpose==='weather')return resolveWeatherPlace(parts,{signal});
     const key=JSON.stringify(['place',value,parts.country]);const hit=cached(key);if(hit)return hit;
     const url=new URL('https://photon.komoot.io/api/');url.search=new URLSearchParams({q:parts.query,limit:'6',lang:'en',...(parts.country?{countrycode:parts.country}:{})});
     let results=[],firstError;

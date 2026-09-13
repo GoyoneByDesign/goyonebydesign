@@ -1,3 +1,9 @@
+# MAX-G 1.9.6 readable chat, fast weather and browser tasks
+
+MAX-G stays pinned above the conversation, replies default to 22 pixels, and long chats scroll independently. A new **Browser task** side panel shows the Mac companion's current page, progress, observed controls and reviewed attachments. Start from the button or ask MAX-G to open a website or help fill a form. Browser planning uses the installed local model with constrained JSON on the Mac; passwords and verification pause for you. The public website exposes the same UI, with Mac automation available only through a paired companion. [Browser task guide](BROWSER-TASKS.md)
+
+Weather goes directly through bounded city/postal and forecast lookups, with recent-location reuse and a small one-minute memory cache. A live Tokyo test returned in 1.04 seconds. Text no longer waits for voice preparation; availability and latency still depend on the internet and weather provider. Existing customized display preferences, voices, account connections, personal notes and the native icon remain intact.
+
 # MAX-G 1.8.4 optional Gemini support
 
 MAX-G’s regular conversations use a downloaded local model through WebLLM. **Ask Gemini** adds optional cloud support for a question you review and send explicitly. The Cloudflare server needs a Gemini API key from a project marked Free, a separate MAX-G support access token, and free-tier confirmation before it can answer. The Google API key stays on the server. No automatic provider switch occurs; ChatGPT and Claude are not connected. [Gemini setup, privacy and limits](GEMINI-SUPPORT.md) Optional hourly learning uses public MDN, WebLLM, W3C, Ollama, Python and Playwright documentation excerpts; notes remain reviewable and do not retrain the model. Existing personal notes are preserved. Model capability and accuracy still depend on the selected model and device; this release makes no claim of outperforming other assistants.

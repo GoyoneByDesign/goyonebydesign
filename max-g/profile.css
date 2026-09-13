@@ -36,6 +36,14 @@ html[data-mg-display=ready] .button-small,html[data-mg-display=ready] .text-butt
 html[data-mg-display=ready] .field,html[data-mg-display=ready] .settings-content,html[data-mg-display=ready] .view-panel{font-size:var(--mg-ui-font)}
 html[data-mg-display=ready] .settings-content input,html[data-mg-display=ready] .settings-content select,html[data-mg-display=ready] .settings-content textarea{font-size:max(16px,var(--mg-ui-font));max-width:100%;min-width:0}
 html[data-mg-display=ready] .message,html[data-mg-display=ready] .message-content{font-family:var(--mg-font-stack);font-size:var(--mg-chat-font);line-height:var(--mg-chat-leading);overflow-wrap:anywhere}
+.message,.message-content{font-size:var(--mg-chat-font,22px);line-height:var(--mg-chat-leading,1.75)}
+.message-content pre{font-size:.85em;line-height:1.6}
+.message-content code{overflow-wrap:anywhere}
+.message-feedback{font-size:calc(var(--mg-ui-font,14px)*.9);min-width:0}
+.message-feedback>summary{cursor:pointer;color:var(--muted);line-height:1.5;padding:3px 0}
+.message-feedback>summary:hover{color:var(--cyan)}
+.message-feedback[open]{flex-basis:100%}
+.message-feedback .mg-feedback-controls{margin-top:8px}
 html[data-mg-display=ready] .messages{max-width:var(--mg-content-width);width:100%;margin-inline:auto}
 html[data-mg-display=ready] .composer-area{width:100%;max-width:calc(var(--mg-content-width) + 96px);margin-inline:auto}
 html[data-mg-display=ready] .composer textarea{font-family:var(--mg-font-stack);font-size:max(16px,var(--mg-chat-font));line-height:1.6;min-height:min(var(--mg-composer-height),25dvh);max-height:35dvh;resize:vertical}
@@ -107,3 +115,20 @@ html[data-mg-contrast=more] input::placeholder,html[data-mg-contrast=more] texta
   .mg-maker-sidebar{padding-top:2px;padding-bottom:10px}.mg-maker-profile{padding:11px 12px}
 }
 .voice-feedback{margin:6px 0 0;min-width:0}.voice-feedback p{margin:6px 0;color:var(--muted);font-size:12px;line-height:1.55;overflow-wrap:anywhere}.voice-feedback p[data-kind=error]{color:var(--text)}.voice-help-actions{display:flex;gap:14px;align-items:center;flex-wrap:wrap}.voice-help-actions .text-button{min-height:32px;font-size:12px}.sound-dialog{width:min(640px,calc(100vw - 24px));max-height:calc(100dvh - 24px)}.sound-body{padding:22px 26px;overflow:auto;min-height:0;line-height:1.7;font-size:14px}.sound-status{padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--panel-soft);overflow-wrap:anywhere}.sound-actions{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}.sound-actions .button{min-height:44px}.sound-body ol{padding-left:20px}.sound-body li{margin:12px 0}.sound-body .muted{font-size:12px}@media(max-width:700px){.sound-body{padding:18px}.sound-actions .button{flex:1 1 140px}.voice-help-actions .text-button{min-height:38px}.sound-dialog .dialog-header h2{font-size:22px}}
+
+/* Small windows keep a readable transcript and the primary send controls visible.
+   Additional composer tools remain available by scrolling this bounded region. */
+@media(max-height:720px){
+  html[data-mg-display=ready] .composer-area{max-height:45dvh;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;padding-top:8px}
+  html[data-mg-display=ready] .composer textarea{height:min(var(--mg-composer-height),15dvh);min-height:70px;max-height:18dvh}
+  html[data-mg-display=ready] .composer-area:focus-within{scroll-behavior:smooth}
+}
+@media(max-height:540px){
+  html[data-mg-display=ready] .topbar{height:48px}
+  html[data-mg-display=ready] .engine-bar{min-height:32px;padding-block:4px}
+  html[data-mg-display=ready] .live-orb-dock.companion-header{flex-basis:54px;height:54px}
+  html[data-mg-display=ready] .companion-header .orb-stage{width:68px;height:54px}
+  html[data-mg-display=ready] .composer-area{max-height:40dvh;padding-top:4px}
+  html[data-mg-display=ready] .composer{padding-top:10px;padding-bottom:8px}
+  html[data-mg-display=ready] .composer textarea{height:56px;min-height:56px;max-height:18dvh}
+}

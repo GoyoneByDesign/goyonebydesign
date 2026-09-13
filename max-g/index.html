@@ -16,6 +16,7 @@
   <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
   <link rel="stylesheet" href="./style.css">
   <link rel="stylesheet" href="./connectors.css">
+  <link rel="stylesheet" href="./browser-panel.css">
   <link rel="stylesheet" href="./extensions.css">
   <link rel="stylesheet" href="./improvement.css">
   <link rel="stylesheet" href="./profile.css">
@@ -85,8 +86,7 @@
       <div id="compatibilityNotice" class="compatibility-notice" role="status" hidden></div>
 
       <section id="chatView" class="chat-view" aria-label="Conversation with MAX-G">
-        <div id="conversationScroll" class="conversation-scroll">
-          <div id="welcome" class="welcome">
+        <div id="liveOrbDock" class="live-orb-dock companion-header" aria-label="MAX-G companion">
             <div class="orb-stage">
               <div id="orb" class="orb" data-state="idle" data-emotion="neutral" role="img" aria-label="MAX-G, a glowing blue globe with expressive white eyes and an orbiting hoop">
                 <svg class="orb-art" viewBox="0 0 400 320" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -117,6 +117,10 @@
                 <span class="voice-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
               </div>
             </div>
+          <div class="live-orb-caption"><strong>MAX-G</strong><span id="orbStatus">Here with you</span></div>
+        </div>
+        <div id="conversationScroll" class="conversation-scroll">
+          <div id="welcome" class="welcome">
             <div class="welcome-eyebrow"><span></span> HERE FOR YOUR NEXT IDEA</div>
             <h1 data-owner-greeting>What’s on your mind, Michael?</h1>
             <p class="welcome-description">A question, a little inspiration, or something to create.<br>Let’s figure it out together.</p>
@@ -129,14 +133,13 @@
           <div id="messages" class="messages" role="log" aria-live="polite" aria-relevant="additions" aria-label="Messages"></div>
         </div>
         <div class="composer-area">
-          <div id="liveOrbDock" class="live-orb-dock" hidden aria-label="MAX-G companion"><div class="live-orb-caption"><strong>MAX-G</strong><span id="orbStatus">Here with you</span></div></div>
           <div id="attachmentList" class="attachment-list" aria-label="Attached files"></div>
-          <div class="companion-play" role="group" aria-label="Play with MAX-G"><button id="singBtn" type="button" class="text-button">♫ Sing a new song</button><button id="danceBtn" type="button" class="text-button">Dance</button><button id="playStopBtn" type="button" class="text-button" hidden>Stop play</button><span>Try “sing and dance”</span></div>
           <form id="composerForm" class="composer" autocomplete="off">
             <label for="messageInput" class="sr-only">Message MAX-G</label>
             <textarea id="messageInput" rows="4" placeholder="Message MAX-G…" maxlength="24000" enterkeyhint="send" aria-describedby="composerHint"></textarea>
             <div class="composer-toolbar"><div class="composer-left"><button id="attachBtn" class="icon-button" type="button" title="Attach text or source files" aria-label="Attach files"><svg class="icon"><use href="#i-clip"/></svg></button><input id="fileInput" type="file" multiple hidden><span class="composer-divider"></span><button id="voiceModeBtn" class="voice-button" type="button" aria-pressed="false"><svg class="icon"><use href="#i-wave"/></svg><span>Voice mode</span></button></div><div class="composer-right"><button id="micBtn" class="icon-button mic-button" type="button" title="Talk to MAX-G" aria-label="Start microphone" aria-pressed="false"><svg class="icon"><use href="#i-mic"/></svg></button><button id="stopBtn" class="send-button stop-button" type="button" aria-label="Stop response" title="Stop response" hidden><svg class="icon"><use href="#i-stop"/></svg></button><button id="sendBtn" class="send-button" type="submit" aria-label="Send message" title="Send message"><svg class="icon"><use href="#i-arrow"/></svg></button></div></div>
           </form>
+          <div class="companion-play" role="group" aria-label="Play with MAX-G"><button id="singBtn" type="button" class="text-button">♫ Sing a new song</button><button id="danceBtn" type="button" class="text-button">Dance</button><button id="playStopBtn" type="button" class="text-button" hidden>Stop play</button><span>Try “sing and dance”</span></div>
           <div class="composer-support"><button id="askGeminiBtn" type="button" class="text-button" aria-haspopup="dialog">Ask Gemini <span class="support-cloud-label">optional cloud support</span></button></div>
           <div class="composer-footer"><span id="composerHint">Enter to send · Shift + Enter for a new line</span><div class="voice-options"><label class="speak-toggle"><input id="speakReplies" type="checkbox"><span>Speak replies</span></label><button id="hearBtn" class="text-button" type="button"><svg class="icon"><use href="#i-volume"/></svg>Hear MAX-G</button></div></div>
           <div class="voice-feedback"><p id="voiceFeedback" role="status" aria-live="polite" hidden></p><div class="voice-help-actions"><button id="soundHelpBtn" type="button" class="text-button">Sound help</button><button id="stopSpeechBtn" type="button" class="text-button" hidden>Stop voice</button></div></div>

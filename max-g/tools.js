@@ -151,14 +151,61 @@ const validWeatherCoordinate=row=>row&&Number.isFinite(row.latitude)&&Number.isF
 const validWeatherDate=value=>{if(typeof value!=='string'||!/^\d{4}-\d\d-\d\d$/.test(value))return false;const date=new Date(value+'T00:00:00Z');return !Number.isNaN(date.valueOf())&&date.toISOString().slice(0,10)===value;};
 const validWeatherTime=value=>typeof value==='string'&&/^\d{4}-\d\d-\d\dT(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d)?$/.test(value)&&validWeatherDate(value.slice(0,10));
 const conditionName=code=>weatherCodes[code]||'conditions unavailable';
+export const WEATHER_TIMEOUT_MS=6000;
 async function readWeatherJSON(url,signal){
-  try{return await readJSON(url,{signal,timeout:10000,maxBytes:100000});}
+  if(globalThis.navigator?.onLine===false)throw new WeatherError('WEATHER_OFFLINE',"I think I'm offline. Connect this device to the internet, then ask me for the weather again.");
+  try{return await readJSON(url,{signal,timeout:WEATHER_TIMEOUT_MS,maxBytes:100000});}
   catch(error){
     if(signal?.aborted||error?.name==='AbortError')throw error;
     if(/took too long|timed? ?out/i.test(error?.message||''))throw new WeatherError('WEATHER_TIMEOUT','The weather service took too long to reply. Please try again in a moment.');
     if(globalThis.navigator?.onLine===false)throw new WeatherError('WEATHER_OFFLINE',"I think I'm offline. Connect this device to the internet, then ask me for the weather again.");
     throw new WeatherError('WEATHER_UNAVAILABLE',"I couldn't reach the weather service. Check your internet connection and try again in a moment.");
   }
+}
+
+/** A few validated answers in tab memory only. Repeated requests share retrieval;
+ * every subscriber can stop independently, and the last stop cancels the HTTP work.
+ * Caller permission checks still run before this client, even for a cache hit.
+ */
+export function createWeatherClient({retrieve=weather,now=()=>Date.now(),ttl=60000,limit=6}={}){
+  if(!Number.isFinite(ttl)||ttl<=0||ttl>60000||!Number.isInteger(limit)||limit<1||limit>12)throw new TypeError('Use a weather cache of 1–12 answers for at most one minute.');
+  const cache=new Map(),pending=new Map();let epoch=0;
+  const stopped=()=>new DOMException('Weather request stopped.','AbortError');
+  function remove(key){clearTimeout(cache.get(key)?.timer);cache.delete(key);}
+  function clear(){epoch++;for(const key of cache.keys())remove(key);for(const entry of pending.values())entry.controller.abort(stopped());pending.clear();}
+  async function get(request,signal){
+    if(signal?.aborted)throw signal.reason||stopped();
+    // Unresolved/invalid requests retain the normal validation and clarification path.
+    if(!request||!validWeatherCoordinate(request.location)||request.city!==undefined&&(typeof request.city!=='string'||request.city.length>200||/[\u0000-\u001f\u007f]/.test(request.city))||!['current','today','tomorrow','week'].includes(request.mode||'current')||request.period&&(request.period!=='next-week'||request.mode!=='week'))return retrieve(request,signal);
+    const key=JSON.stringify([request.mode||'current',request.period||'',request.location.latitude,request.location.longitude,weatherName(request.location),Boolean(request.location.privateOrigin)]);
+    const hit=cache.get(key),time=now();
+    if(hit&&time>=hit.time&&time-hit.time<ttl)return {...structuredClone(hit.value),cached:true,fetchedAt:hit.time};
+    remove(key);
+    let entry=pending.get(key);
+    if(!entry){
+      const controller=new AbortController(),generation=epoch;
+      entry={controller,users:0,promise:null};pending.set(key,entry);
+      entry.promise=Promise.resolve().then(()=>retrieve(structuredClone(request),controller.signal)).then(value=>{
+        if(controller.signal.aborted||generation!==epoch)throw stopped();
+        const fetchedAt=now();
+        if(value?.type==='weather'){
+          while(cache.size>=limit)remove(cache.keys().next().value);
+          const saved={value:structuredClone(value),time:fetchedAt,timer:null};
+          saved.timer=setTimeout(()=>{if(cache.get(key)===saved)cache.delete(key);},ttl);saved.timer?.unref?.();cache.set(key,saved);
+        }
+        return {...value,cached:false,fetchedAt};
+      }).finally(()=>{if(pending.get(key)===entry)pending.delete(key);});
+    }
+    entry.users++;
+    return new Promise((resolve,reject)=>{
+      let done=false;
+      const finish=(error,value)=>{if(done)return;done=true;signal?.removeEventListener('abort',abort);entry.users--;if(!entry.users&&pending.get(key)===entry){pending.delete(key);entry.controller.abort(stopped());}error?reject(error):resolve(structuredClone(value));};
+      const abort=()=>finish(signal.reason||stopped());signal?.addEventListener('abort',abort,{once:true});
+      if(signal?.aborted){abort();return;}
+      entry.promise.then(value=>finish(null,value),error=>finish(error));
+    });
+  }
+  return {weather:get,clear};
 }
 function weatherPlaceParts(value){
   const aliases={us:'US',usa:'US','united states':'US','united states of america':'US',uk:'GB',gb:'GB','united kingdom':'GB',canada:'CA',japan:'JP',philippines:'PH',china:'CN',italy:'IT',spain:'ES',russia:'RU','south korea':'KR',germany:'DE',france:'FR',australia:'AU',india:'IN'};
