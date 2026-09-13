@@ -1,7 +1,7 @@
 /** Bounded public retrieval and deterministic calculation. No eval, model calls, or storage. */
 import {symbols,aliases,ambiguous} from './unit-data.js';
 import {normalizePlaceText} from './postal-data.js';
-import {parseWeatherPlaceSpec,matchesWeatherPlace,weatherLocalityPrompt} from './weather-place.js';
+import {parseWeatherPlaceSpec,matchesWeatherPlace,weatherLocalityPrompt,weatherCountySearch,weatherCountyIds,countyWeatherPoint,countyWeatherNotice} from './weather-place.js';
 // Release configuration: set this to the deployed public Worker base URL (no /search).
 // Keep it empty in distributions that only use a paired Mac companion.
 export const BUILTIN_SEARCH_URL='https://max-g-search.michael-goyone.workers.dev';
@@ -198,7 +198,7 @@ export function createWeatherClient({retrieve=weather,now=()=>Date.now(),ttl=600
     if(signal?.aborted)throw signal.reason||stopped();
     // Unresolved/invalid requests retain the normal validation and clarification path.
     if(!request||!validWeatherCoordinate(request.location)||request.city!==undefined&&(typeof request.city!=='string'||request.city.length>200||/[\u0000-\u001f\u007f]/.test(request.city))||!['current','today','tomorrow','week','hourly'].includes(request.mode||'current')||request.units!==undefined&&!['us','metric'].includes(request.units)||request.hours!==undefined&&(![6,12,24].includes(request.hours)||request.mode!=='hourly')||request.period&&(request.period!=='next-week'||request.mode!=='week'))return retrieve(request,signal);
-    const key=JSON.stringify([request.mode||'current',request.period||'',request.units||'us',request.hours||12,request.location.latitude,request.location.longitude,weatherName(request.location),Boolean(request.location.privateOrigin)]);
+    const key=JSON.stringify([request.mode||'current',request.period||'',request.units||'us',request.hours||12,request.location.latitude,request.location.longitude,weatherName(request.location),Boolean(request.location.privateOrigin),request.location.weatherScope==='county'?'county':'']);
     const hit=cache.get(key),time=now();
     if(hit&&time>=hit.time&&time-hit.time<ttl)return {...structuredClone(hit.value),cached:true,fetchedAt:hit.time};
     remove(key);
@@ -321,7 +321,7 @@ export async function weather(request,signal){
   let row;
   if(request.location){
     if(!validWeatherCoordinate(request.location))throw new WeatherError('WEATHER_LOCATION_INVALID','Choose a valid location before requesting weather.');
-    row={latitude:request.location.latitude,longitude:request.location.longitude,label:String(request.location.label||'Selected location').slice(0,200)};
+    row={latitude:request.location.latitude,longitude:request.location.longitude,label:String(request.location.label||'Selected location').slice(0,200),...(request.location.weatherScope==='county'?{weatherScope:'county'}:{})};
   }else{
     const spec=parseWeatherPlaceSpec(city,{country:request.country||''});
     if(!spec.name)return weatherClarification('WEATHER_LOCATION_REQUIRED','Which city or postal code should I check? Please include the country.');
@@ -329,14 +329,22 @@ export async function weather(request,signal){
     if(spec.needsCountry)return weatherClarification('WEATHER_COUNTRY_REQUIRED',`Which country do you mean for ${city}? Please spell out the state or province and include the country.`);
     if(spec.postal&&!spec.country)return weatherClarification('WEATHER_COUNTRY_REQUIRED',`Which country is ${spec.name} in? For example, “${spec.name}, US”. Postal codes can occur in more than one country.`);
     const geo=new URL('https://geocoding-api.open-meteo.com/v1/search');
-    geo.search=new URLSearchParams({name:spec.query,count:10,language:'en',format:'json',...(spec.country?{countryCode:spec.country}:{})});
+    geo.search=new URLSearchParams({name:weatherCountySearch(spec),count:spec.scope==='county'?20:10,language:'en',format:'json',...(spec.country?{countryCode:spec.country}:{})});
     const places=await readWeatherJSON(geo,signal);
     if(!places||typeof places!=='object'||Array.isArray(places)||places.error||places.results!==undefined&&!Array.isArray(places.results))throw new WeatherError('WEATHER_LOCATION_UNAVAILABLE','The location service returned an incomplete answer. Try the city, region and country, or use your current location.');
     let rows=(places.results||[]).filter(item=>validWeatherCoordinate(item)&&matchesWeatherPlace(item,spec));
+    if(spec.scope==='county'&&!rows.length){
+      const ids=weatherCountyIds(places.results,spec);
+      if(ids.length>1)return weatherClarification('WEATHER_LOCATION_AMBIGUOUS',`Which state or country is ${spec.name} in? More than one county matches that name.`);
+      if(ids.length===1){
+        const county=await readWeatherJSON('https://geocoding-api.open-meteo.com/v1/get?id='+ids[0],signal);
+        if(county?.id===ids[0]&&validWeatherCoordinate(county)&&matchesWeatherPlace(county,spec))rows=[county];
+      }
+    }
     if(spec.postal){const key=value=>String(value).toUpperCase().replace(/[\s-]/g,'');rows=rows.filter(item=>Array.isArray(item.postcodes)&&item.postcodes.some(code=>key(code)===key(spec.name)));}
     rows=[...new Map(rows.map(item=>[`${item.latitude},${item.longitude}`,item])).values()];
     if(rows.length!==1)return weatherClarification(rows.length?'WEATHER_LOCATION_AMBIGUOUS':'WEATHER_LOCATION_NOT_FOUND',rows.length?`Which place do you mean? ${rows.slice(0,3).map(weatherName).join('; ')}. Include the region and country.`:`I couldn’t find ${city}. Please include the city, region and country, or select a place in Places & directions.`,[{title:'Open-Meteo locations',url:geo.href}]);
-    row=rows[0];
+    row=countyWeatherPoint(rows[0],spec);
   }
   const url=new URL('https://api.open-meteo.com/v1/forecast');
   url.search=new URLSearchParams({latitude:row.latitude,longitude:row.longitude,current:'temperature_2m,apparent_temperature,weather_code,wind_speed_10m,is_day',daily:'weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max',hourly:'temperature_2m,weather_code,precipitation_probability,wind_speed_10m,is_day',temperature_unit:units==='us'?'fahrenheit':'celsius',wind_speed_unit:units==='us'?'mph':'kmh',precipitation_unit:units==='us'?'inch':'mm',timezone:'auto',forecast_days:mode==='week'?(request.period==='next-week'?14:7):2,forecast_hours:48});
@@ -372,5 +380,7 @@ export async function weather(request,signal){
     text=`${weatherName(row)}, ${mode}: ${conditionName(day.code)}, high ${degrees(day.high)}, low ${degrees(day.low)}.`+chance(day.precipitationProbability);
     if(day.precipitationProbability===null)text+=' Precipitation chance is unavailable.';
   }
-  return {type:'weather',text,weatherCard,orbitWeather:{code:condition,source:'open-meteo',label:weatherName(row)+' · '+mode,...appearance},sources:[{title:'Open-Meteo weather data',url:request.location?.privateOrigin?'https://open-meteo.com/':url.href},{title:'Weather methodology',url:'https://open-meteo.com/en/docs'}]};
+  const areaNotice=countyWeatherNotice(row);
+  if(areaNotice)text+='\n\n'+areaNotice;
+  return {type:'weather',text,weatherCard,...(areaNotice?{areaNotice}:{}),orbitWeather:{code:condition,source:'open-meteo',label:weatherName(row)+' · '+mode,...appearance},sources:[{title:'Open-Meteo weather data',url:request.location?.privateOrigin?'https://open-meteo.com/':url.href},{title:'Weather methodology',url:'https://open-meteo.com/en/docs'}]};
 }

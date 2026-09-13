@@ -1,3 +1,9 @@
+# MAX-G 1.9.12 county weather and address speech
+
+County weather now resolves the named county separately from neighboring towns or independent cities. Fairfax County and Fairfax City stay distinct. A Virginia-qualified “Loudon” spelling resolves Loudoun County, while Loudon County, Tennessee retains its name. County forecasts identify the mapped county center and explain that conditions vary across the county. Named town/ZIP forecasts remain more local, with seven-day, hourly and U.S. units unchanged.
+
+English speech reads house numbers individually and expands common street, direction, unit and contextual state abbreviations: **2603 Main St, Herndon, VA → two six zero three Main Street, Herndon, Virginia**. Written addresses remain unchanged. ZIP/year/temperature pronunciation is retained; context protects quantities, programming terms, professional initials and room identifiers. [Weather guide](WEATHER-GUIDE.md) · [Voice guide](VOICE-SETUP.md)
+
 # MAX-G 1.9.11 daily forecasts and temperature speech
 
 English voices now speak **78°F** as **78 degrees Fahrenheit**, including negative temperatures, ranges and Celsius. The visible forecast keeps compact °F/°C labels. Postal and year pronunciation remains supported.

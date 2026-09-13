@@ -1,5 +1,6 @@
 /** English pronunciation only. Never changes a transcript or asks a model to
  * guess whether a number is an address, a year, or a quantity. */
+import {addressSpeechSpans} from './address-speech.js';
 const DIGITS = ['zero','one','two','three','four','five','six','seven','eight','nine'];
 const LETTERS = ['ay','bee','see','dee','ee','ef','gee','aitch','eye','jay','kay','el','em','en','oh','pee','cue','ar','ess','tee','you','vee','double you','ex','why','zee'];
 const SMALL = [...DIGITS,'ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen'];
@@ -62,6 +63,8 @@ export function normalizePronunciation(text,{language='en-US',postalCodes=[],yea
   const add=(start,end,value,type)=>{if(!spans.some(x=>start<x.end&&end>x.start))spans.push({start,end,value,type});};
   // Paired emphasis has no spoken meaning and otherwise hides immediate labels.
   const source=original.replace(/\*\*([^*]+)\*\*/g,'$1').replace(/`([^`\n]+)`/g,'$1');
+  const addressSpans=addressSpeechSpans(source,pronouncePostalCode);
+  for(const span of addressSpans.filter(span=>span.type==='streetHouse'||['unit','streetName'].includes(span.type)&&!/^\s*(?:°|degrees?\b|℉|℃)/i.test(source.slice(span.end))))add(span.start,span.end,span.value,span.type);
   // Claim explicit temperatures before identifiers so postal/year hints cannot
   // turn 2026 F into a postal code or calendar year. Expand speech only.
   for(const match of source.matchAll(TEMPERATURE_RANGE)) {
@@ -75,6 +78,7 @@ export function normalizePronunciation(text,{language='en-US',postalCodes=[],yea
   for(const match of source.matchAll(TEMPERATURE)){
     if(!electricalUnit(source,match.index,match[2]))add(match.index,match.index+match[0].length,temperatureWords(match[1],match[2]),'temperature');
   }
+  for(const span of addressSpans)add(span.start,span.end,span.value,span.type);
   let previousPostal=null;
   for(const match of source.matchAll(POSTAL)) {
     const token=match[0],start=match.index,end=start+token.length;

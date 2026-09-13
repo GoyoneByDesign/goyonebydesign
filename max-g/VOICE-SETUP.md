@@ -204,3 +204,9 @@ documents local WASM/WebGPU inference and the voice model.
 [research paper](https://arxiv.org/abs/2312.01479) explain short-reference voice
 cloning and tone-color conversion. MAX-G keeps these local implementations separate
 from proprietary hosted voice products.
+
+## Street addresses and place abbreviations
+
+English speech follows Michael’s preference for individual house-number digits: **2603 → two six zero three** when it is part of an address or explicitly labeled as a house/address number. Common street suffixes, directions and unit labels expand in address context: St → Street, Rd → Road, Ave → Avenue, NW → Northwest, Apt → Apartment. Contextual place names expand VA → Virginia, NY → New York and other USPS state/postal-area codes. St. Louis, Mt. Vernon and Ft. Myers use Saint, Mount and Fort.
+
+Written text is preserved. Ordinary quantities, calendar years, temperature units, programming expressions and professional initials are handled separately. The digit-by-digit house-number rule is a personal speaking preference; [USPS Publication 28](https://pe.usps.com/text/pub28/pub28apb.htm) supplies the abbreviation names, not a universal pronunciation rule. Speech recognition and uncommon or ambiguous address formats may still need a fully spelled-out place name.

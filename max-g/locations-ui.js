@@ -142,6 +142,7 @@ export function createLocationHub({getSettings=()=>LOCATION_DEFAULTS,getUnits=()
     }
     await permission('internet');check();internetApproved=true;const found=await services.resolvePlace(query,{country,signal,...(selection?.kind==='weather'?{purpose:'weather'}:{})});check();status=found.message||'';
     if(found.needsCountry)return ask('country',`Which country is “${query}” in? Please give the full country name.`,{query,country:''});
+    if(found.needsRegion&&selection?.kind==='weather')return ask('county-region',found.message,{query,country:found.country||country});
     if(found.needsCity&&selection?.kind==='weather')return ask('locality',found.message,{query:found.area||query,country:found.country||country,region:found.region||''});
     const unique=found.results.filter((item,index,list)=>list.findIndex(other=>other.countryCode===item.countryCode&&other.lat===item.lat&&other.lon===item.lon&&other.label===item.label)===index);
     const selected=selection?.kind==='weather'?weatherPoint(unique,parts.query):unique.length===1?unique[0]:null;

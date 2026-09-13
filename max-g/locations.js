@@ -7,7 +7,7 @@
  */
 import {weatherRequest,postalReply} from './tools.js';
 import {normalizePlaceText,looksLikePostalCode,normalizePostalCode,postalComparisonKey} from './postal-data.js';
-import {parseWeatherPlaceSpec,matchesWeatherPlace,isBroadWeatherPlace,weatherLocalityPrompt} from './weather-place.js';
+import {parseWeatherPlaceSpec,matchesWeatherPlace,isBroadWeatherPlace,weatherLocalityPrompt,weatherCountySearch,weatherCountyIds,countyWeatherPoint,countyWeatherNotice} from './weather-place.js';
 export const LOCATION_DEFAULTS=Object.freeze({country:'US',place:'',radius:1500,mode:'driving',mapProvider:'google',autoLocate:true,recentWeather:null});
 export const CATEGORY_LABELS=Object.freeze({restaurant:'Restaurants',fuel:'Fuel stations',mall:'Shopping malls',supermarket:'Supermarkets',pharmacy:'Pharmacies',cafe:'Cafés',evcharging:'EV charging'});
 const FILTERS=Object.freeze({restaurant:'["amenity"~"^(restaurant|fast_food)$"]',fuel:'["amenity"="fuel"]',mall:'["shop"="mall"]',supermarket:'["shop"="supermarket"]',pharmacy:'["amenity"="pharmacy"]',cafe:'["amenity"="cafe"]',evcharging:'["amenity"="charging_station"]'});
@@ -169,7 +169,7 @@ function photonRows(data,parts){
     if(parts.postal&&postalKey(postal)!==postalKey(parts.query))continue; // Never accept a fuzzy wrong postal code.
     const label=joinLabel([props.name,props.housenumber&&props.street?props.housenumber+' '+props.street:props.street,props.city||props.district,props.state,postal,props.country]);
     if(!label)continue;
-    results.push({id:'photon:'+String(props.osm_id||loc.lat+','+loc.lon),name:clean(props.name,100),city:clean(props.city,100),region:clean(props.state,100),type:clean(props.type||props.osm_value,40),label,...loc,country:clean(props.country,90)||countryName(code),countryCode:code,postal,source:'Photon',attribution:{...PHOTON_ATTR},accuracy:'approximate'});
+    results.push({id:'photon:'+String(props.osm_id||loc.lat+','+loc.lon),name:clean(props.name,100),city:clean(props.city,100),region:clean(props.state,100),admin2:clean(props.county,100),type:clean(props.type||props.osm_value,40),label,...loc,country:clean(props.country,90)||countryName(code),countryCode:code,postal,source:'Photon',attribution:{...PHOTON_ATTR},accuracy:'approximate'});
   }
   return results.slice(0,parts.weather?20:6);
 }
@@ -239,10 +239,21 @@ export function createLocationClient({fetch:fetchImpl=(...args)=>globalThis.fetc
     const previous=cache.get(key);if(previous)clearTimeout(previous.timer);
     const entry={value:structuredClone(value),time:now(),timer:setTimeout(()=>cache.delete(key),cacheTTL)};entry.timer?.unref?.();cache.set(key,entry);return {...value,cached:false};
   }
-  async function request(url,{signal,method='GET',body,missingOK=false,timeout=15000}={}){
+  async function request(url,{signal,method='GET',body,missingOK=false,timeout=15000,waitForSlot=false}={}){
     checkAbort(signal);
     const host=new URL(url).hostname,time=now(),history=(requests.get(host)||[]).filter(value=>time-value<60000);
     if(time<(cooldowns.get(host)||0))throw new LocationError('LOCATION_RATE_LIMIT','This map service needs a pause. Wait at least 30 seconds before trying again.');
+    // One county lookup needs search → administrative ID. Keep the public
+    // service's one-second spacing and count both requests in the minute limit.
+    if(waitForSlot&&history.length<12&&history.length&&time-history.at(-1)<1000){
+      const delay=Math.ceil(1000-(time-history.at(-1)));
+      if(delay>=timeout)throw new LocationError('LOCATION_TIMEOUT','The county lookup is taking too long. Please try again.');
+      const waiting=new AbortController();controllers.add(waiting);
+      let timer;const abort=()=>waiting.abort();signal?.addEventListener('abort',abort,{once:true});
+      try{await new Promise((resolve,reject)=>{waiting.signal.addEventListener('abort',()=>reject(abortError()),{once:true});timer=setTimeout(resolve,delay);});checkAbort(signal);}
+      finally{clearTimeout(timer);signal?.removeEventListener('abort',abort);controllers.delete(waiting);}
+      return request(url,{signal,method,body,missingOK,timeout:timeout-delay});
+    }
     if(history.length>=12||history.length&&time-history.at(-1)<1000)throw new LocationError('LOCATION_RATE_LIMIT','Please wait a moment before another location search. Public map services have limited capacity.');
     history.push(time);requests.set(host,history);
     const controller=new AbortController();controllers.add(controller);let timedOut=false;
@@ -284,7 +295,7 @@ export function createLocationClient({fetch:fetchImpl=(...args)=>globalThis.fetc
     const started=now(),epoch=generation,key=JSON.stringify(['weather-place',parts.query,parts.country]);
     const hit=cached(key);if(hit)return hit;
     const meteo=new URL('https://geocoding-api.open-meteo.com/v1/search');
-    meteo.search=new URLSearchParams({name:spec.query,count:'20',language:'en',format:'json',...(parts.country?{countryCode:parts.country}:{})});
+    meteo.search=new URLSearchParams({name:weatherCountySearch(spec),count:'20',language:'en',format:'json',...(parts.country?{countryCode:parts.country}:{})});
     const photon=new URL('https://photon.komoot.io/api/');
     photon.search=new URLSearchParams({q:spec.query,limit:'6',lang:'en',...(parts.country?{countrycode:parts.country}:{})});
     const providers=[];
@@ -293,17 +304,26 @@ export function createLocationClient({fetch:fetchImpl=(...args)=>globalThis.fetc
       providers.push({url:'https://api.zippopotam.us/'+parts.country.toLowerCase()+'/'+encodeURIComponent(area),missingOK:true,
         rows:data=>postalRows(data,parts,area),message:postalKey(area)!==postalKey(parts.query)?'Only the '+area+' postal area was found for '+parts.query+'. Weather uses this approximate area, not the exact address.':'Weather uses the approximate postal-area centre.'});
     }
-    providers.push({url:meteo.href,rows:data=>meteoRows(data,parts),message:'Weather uses approximate city or locality coordinates.'},
+    providers.push({url:meteo.href,countyIds:true,rows:data=>meteoRows(data,parts),message:'Weather uses approximate city or locality coordinates.'},
       {url:photon.href,rows:data=>photonRows(data,parts),message:'Weather uses an approximate mapped place or postal-area centre.'});
     let firstError,completed=false,broadResult=null;
     for(const provider of providers){
       checkAbort(signal);const remaining=4800-(now()-started);
       if(remaining<=0)throw new LocationError('LOCATION_TIMEOUT','The location lookup is taking too long. Please try the city and country again, or use your current location.');
       try{
-        const data=await request(provider.url,{signal,missingOK:provider.missingOK,timeout:Math.min(2000,remaining)}),rows=provider.rows(data);completed=true;
+        const data=await request(provider.url,{signal,missingOK:provider.missingOK,timeout:Math.min(2000,remaining)});let rows=provider.rows(data);completed=true;
+        if(provider.countyIds&&spec.scope==='county'&&!rows.some(row=>matchesWeatherPlace(row,spec))){
+          const ids=weatherCountyIds(data?.results,spec);
+          if(ids.length>1)return {query:parts.query,country:parts.country,needsRegion:true,results:[],message:'Which state or country is '+spec.name+' in? More than one county matches that name.',cached:false};
+          if(ids.length===1){
+            const budget=4800-(now()-started);if(budget<=0)throw new LocationError('LOCATION_TIMEOUT','The county lookup is taking too long. Please try again.');
+            const county=await request('https://geocoding-api.open-meteo.com/v1/get?id='+ids[0],{signal,timeout:Math.min(3000,budget),waitForSlot:true});
+            rows=county?.id===ids[0]?meteoRows({results:[county]},parts):[];
+          }
+        }
         broadResult||=rows.find(row=>isBroadWeatherPlace(row)&&normalizePlaceText(row.name).toLowerCase()===normalizePlaceText(spec.name).toLowerCase());
-        const results=rows.filter(row=>matchesWeatherPlace(row,spec)).slice(0,6);
-        if(results.length)return remember(key,{query:parts.query,country:parts.country,needsCountry:false,results,message:provider.message},epoch);
+        const results=rows.filter(row=>matchesWeatherPlace(row,spec)).slice(0,6).map(row=>countyWeatherPoint(row,spec));
+        if(results.length)return remember(key,{query:parts.query,country:parts.country,needsCountry:false,results,message:countyWeatherNotice(results[0])||provider.message},epoch);
       }catch(error){if(error.name==='AbortError'||error.code==='LOCATION_RATE_LIMIT')throw error;firstError||=error;}
     }
     if(!completed&&firstError)throw firstError;

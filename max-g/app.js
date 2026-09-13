@@ -137,12 +137,12 @@ async function handleLocationRequest(intent,text,requestOverride=null){
       if(!internetApproved)await permission('internet');
       if(signal.aborted)throw new DOMException('Stopped','AbortError');
       $('modelStatus').textContent='Getting the latest weather…';
-      const result=await fastWeather.weather({...request,units:normalizeUnitSystem(request.units||state.settings.unitSystem),location:{latitude:point.lat,longitude:point.lon,label:point.label||'Your current location',privateOrigin:point.source==='device'}},signal);
+      const result=await fastWeather.weather({...request,units:normalizeUnitSystem(request.units||state.settings.unitSystem),location:{latitude:point.lat,longitude:point.lon,label:point.label||'Your current location',privateOrigin:point.source==='device',...(point.weatherScope==='county'?{weatherScope:'county'}:{})}},signal);
       if(signal.aborted)throw new DOMException('Stopped','AbortError');
       locationPending=null;locationContext=null;orbit.setWeather(result.orbitWeather);
       $('modelStatus').textContent=result.cached?'Weather ready · checked less than a minute ago':'Weather ready · live weather tool';
-      const notices=[fallbackNotice,postalCountryNotice].filter(Boolean);
-      await locationReply([result.text,...notices].join('\n\n'),result.sources,signal,result.weatherCard,notices,postalSpeechContext(point));toast('Weather is ready in your conversation.');
+      const notices=[result.areaNotice,fallbackNotice,postalCountryNotice].filter(Boolean);
+      await locationReply([result.text,fallbackNotice,postalCountryNotice].filter(Boolean).join('\n\n'),result.sources,signal,result.weatherCard,notices,postalSpeechContext(point));toast('Weather is ready in your conversation.');
     });
     if(!result?.pending){locationPending=null;locationContext=null;}
     return result;
@@ -353,7 +353,7 @@ async function submit(text=$('messageInput').value,selected=attachments){
     if(follow){
       const country=normalizeCountry(text);
       const base={...pending.intent};
-      const locality=pending.clarification.kind==='locality'?weatherLocalityFollowup(follow.place,pending.clarification):null;
+      const locality=['locality','county-region'].includes(pending.clarification.kind)?weatherLocalityFollowup(follow.place,pending.clarification):null;
       const target=follow.useDevice?{...base,place:'',country:'',useDevice:true}:pending.clarification.kind==='country'&&country?{...base,place:pending.clarification.query||pending.intent.place,country,useDevice:false}:{...base,place:locality?.place||follow.place,country:locality?.country||follow.country,useDevice:false};
       return handleLocationRequest(target,text,pending.request);
     }

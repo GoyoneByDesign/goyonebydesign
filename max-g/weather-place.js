@@ -12,6 +12,7 @@ const cityKey=value=>key(value).replace(/^st\s/,'saint ').replace(/^nyc$/,'new y
 const regionKey=value=>key(value).replace(/\s+(?:region|province|state|prefecture)$/,'');
 const countryOf=row=>normalizeCountry(row.country_code||row.countryCode||row.country);
 const cityAliases=value=>new Set([cityKey(value),...(cityKey(value)==='new york'?['new york city']:[])]);
+const countyKey=value=>key(value).replace(/^county of\s+/,'').replace(/\s+county$/,'');
 
 export function parseWeatherPlaceSpec(value,{country=''}={}){
   const input=typeof value==='string'?normalizePlaceText(value).trim():'';
@@ -72,6 +73,12 @@ export function parseWeatherPlaceSpec(value,{country=''}={}){
   if(!spec.postal&&!spec.region&&namedState&&(!spec.country||spec.country==='US')){
     spec.broad=true;spec.region=namedState;spec.country='US';
   }
+  // Loudon is a real Tennessee county/town. Correct this common spelling only
+  // with explicit Virginia context: https://www.loudoun.gov/173/Facts-Figures.
+  if(spec.country==='US'&&spec.region==='Virginia'&&/^loudou?n(?: county)?$/i.test(spec.name))spec.name='Loudoun County';
+  if(/(?:\s+county$|^county of\s+)/i.test(spec.name)){
+    spec.scope='county';spec.name=spec.name.replace(/^county of\s+/i,'').replace(/\s+county$/i,'')+' County';
+  }
   spec.query=[spec.name,spec.region].filter(Boolean).join(', ');
   if(spec.broad)spec.query=spec.name;
   return spec;
@@ -83,7 +90,10 @@ export function isBroadWeatherPlace(row){
 }
 
 export function matchesWeatherPlace(row,spec){
-  if(!row||!spec||spec.broad||spec.needsCountry||isBroadWeatherPlace(row))return false;
+  if(!row||!spec||spec.broad||spec.needsCountry)return false;
+  if(spec.scope==='county'){
+    if(!(/^ADM2$/i.test(String(row.feature_code||''))||String(row.type||'').toLowerCase()==='county'))return false;
+  }else if(isBroadWeatherPlace(row))return false;
   const code=countryOf(row);
   if(spec.country&&code!==spec.country)return false;
   if(spec.region){
@@ -92,8 +102,33 @@ export function matchesWeatherPlace(row,spec){
     if(!regions.every(region=>available.includes(region)))return false;
   }
   if(spec.postal)return true; // Exact postal matching remains the provider's job.
+  if(spec.scope==='county')return countyKey(row.name)===countyKey(spec.name);
   const names=[row.name,row.city,row.locality].filter(Boolean).flatMap(value=>[...cityAliases(value)]);
   return [...cityAliases(spec.name)].some(name=>names.includes(name));
+}
+
+/** The search index contains localities, while /get also exposes ADM2 records.
+ * Discover county IDs from exact admin2 metadata, then verify the returned ADM2
+ * object again. A similarly named city, school or road is never the forecast.
+ * https://open-meteo.com/en/docs/geocoding-api#json-return-object */
+export function weatherCountySearch(spec){
+  return spec?.scope==='county'?[spec.name.replace(/\s+county$/i,''),spec.region].filter(Boolean).join(', '):spec?.query||'';
+}
+export function weatherCountyIds(rows,spec){
+  if(spec?.scope!=='county'||!Array.isArray(rows))return [];
+  const ids=rows.filter(row=>countyKey(row?.admin2)===countyKey(spec.name)&&matchesWeatherPlace({...row,name:spec.name,feature_code:'ADM2'},spec))
+    .map(row=>row.admin2_id).filter(id=>Number.isSafeInteger(id)&&id>0);
+  return [...new Set(ids)].slice(0,6);
+}
+export function countyWeatherPoint(row,spec){
+  if(spec?.scope!=='county')return row;
+  const name=spec.name,region=row.admin1||row.region||spec.region,code=countryOf(row)||spec.country;
+  const area=[name,region,countryName(code)].filter(Boolean).join(', ');
+  return {...row,name,label:area,weatherScope:'county',accuracy:'approximate county center'};
+}
+export function countyWeatherNotice(point){
+  if(point?.weatherScope!=='county')return '';
+  return 'This is a forecast for the mapped county center. Conditions can vary across the county; ask for a town or ZIP code for a more local forecast.';
 }
 
 export function weatherLocalityPrompt(spec){
@@ -105,6 +140,17 @@ export function weatherLocalityPrompt(spec){
  * country/region replace it. This context contains no device coordinates. */
 export function weatherLocalityFollowup(value,clarification={}){
   let spec=parseWeatherPlaceSpec(value);
+  if(clarification.kind==='county-region'){
+    const county=parseWeatherPlaceSpec(clarification.query,{country:clarification.country});
+    // A state-only answer qualifies the pending county. A new county, postal
+    // code or explicitly qualified city instead replaces the pending place.
+    const replacement=spec.scope==='county'||spec.postal||!spec.broad&&Boolean(spec.country||spec.region);
+    if(county.scope==='county'&&!replacement){
+      const qualifier=spec.broad?(spec.region||spec.name):value;
+      const combined=parseWeatherPlaceSpec(county.name+', '+qualifier,{country:spec.broad&&spec.country||clarification.country});
+      return {place:combined.query,country:combined.country};
+    }
+  }
   if(spec.needsCountry&&clarification.country)spec=parseWeatherPlaceSpec(value,{country:clarification.country});
   const country=spec.country||normalizeCountry(clarification.country);
   const region=spec.region||(!spec.postal&&!spec.broad&&(!spec.country||spec.country===normalizeCountry(clarification.country))?clarification.region:'')||'';
