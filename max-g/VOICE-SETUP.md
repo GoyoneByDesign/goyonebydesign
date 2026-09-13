@@ -77,14 +77,20 @@ Cloning uses the paired Mac companion and an optional local voice installation.
 There is no cloud upload or paid inference API. Your Mac must be running the
 companion; a website on another device cannot use that Mac’s loopback service.
 
-1. Double-click **Setup MAX-G Voice.command** in the source folder. It installs
+1. Open the installed **MAX-G** Mac app and select **Settings → Voice Studio →
+   Check voice setup & recordings**. Michael’s Mac already has the local models
+   installed; a new device needs the optional setup below.
+   On a new installation, double-click **Setup MAX-G Voice.command** in the source folder. It installs
    about 252 MB of models plus isolated Python packages; reserve a few GB of disk
    space. A supported Python 3.10–3.12 is required, and the launcher explains how
    to install Python 3.12 if needed. This is separate from the browser voice model.
 2. Start the updated companion and use the paired window it opens.
 3. In **Voice Studio**, select **Check voice setup & recordings**.
 4. Read one of the displayed practice phrases naturally in a quiet room. Click
-   **Record my voice**, then **Stop recording**. It stops automatically after
+   **Record my voice** and approve microphone access. Watch the status beside the
+   button: it changes from waiting for permission to recording, with a timer and
+   an input level meter. Speak at your normal volume for 15–25 seconds, then press
+   **Stop recording**. It stops automatically after
    29 seconds. Microphone capture begins only when you press Record and approve
    the browser’s microphone access.
 5. Alternatively, select **Upload my voice recording**. Use a supported audio file
@@ -92,8 +98,51 @@ companion; a website on another device cannot use that Mac’s loopback service.
    speech. About 15–25 seconds is a useful starting point.
 6. Listen to the recording using its audio player. Give it a name and confirm it
    is your own voice, then select **Save my voice recording**.
-7. Choose **My cloned voice**, select the saved recording, and use **Hear this
-   voice**. Adjust lightly and save your settings.
+7. Select the saved recording and use **Hear my cloned voice**. The nearby
+   **Stop cloned-voice preview** button cancels it. Select **Use this cloned voice**
+   to save it as MAX-G’s speaking voice on this device.
+8. With the cloned engine selected, **Use natural recording tone** stages speed
+   **1×**, pitch **0**, depth **0** and expression **0** for a neutral comparison.
+   Use a short preview sentence first. Adjust lightly and select **Save voice
+   settings** to keep tone changes after listening.
+
+### If recording does not start
+
+Version 1.9.9 switches the audio session from playback into a recording-compatible
+mode before opening the microphone, then restores its previous mode after capture.
+This addresses the [documented WebKit playback-session conflict](https://github.com/w3c/audio-session/issues/46)
+that can otherwise reject recording after MAX-G has spoken, before a microphone
+prompt appears. Refresh or reopen MAX-G so the updated recorder is active.
+
+- Use the installed **MAX-G** app for this Mac’s cloning runtime. A source-file
+  preview (`file://…/index.html`) is not the running app. The secure website can
+  record when the browser allows it, but saving and generating a clone still
+  require the paired local companion.
+- In **MAX-G → Settings → Permissions**, microphone access must be **ask** or
+  **allow**. “Allow” here does not override macOS or your browser’s permission.
+- On the Mac, open **System Settings → Privacy & Security → Microphone** and
+  enable **MAX-G**, then quit and reopen MAX-G. For the website, enable the
+  microphone for your browser there and allow it in the website’s permissions.
+  MAX-G appears in this list after it has requested microphone access.
+- If a permission prompt is pending, approve it or use the recorder’s cancel
+  control. If permission was denied, fix the setting and press Record again.
+- If the input meter stays flat, check **System Settings → Sound → Input** and
+  select the intended microphone. Move closer and verify it is not muted.
+  Close another recording app if the microphone is busy.
+- Recording, stopping and preparing audio now show their progress and errors
+  near the controls. The microphone is released after Stop, Cancel, failure,
+  timeout or closing Voice Studio; late permission results are released too.
+
+### Getting a closer voice match
+
+Use your normal speaking voice, one speaker, a quiet room, and a consistent
+distance from the microphone. Avoid music, echo, whispering and shouting. Listen
+to the source recording before saving: if it sounds muffled or distorted, record
+another take. Very quiet audio is rejected, and clipping produces a warning.
+Compare a few separate clean takes using the same preview sentence. Each take is
+a selectable reference, not an additional training session. This system can
+approximate vocal identity; it cannot guarantee an exact copy, every emotion,
+or your accent and rhythm in every language.
 
 The local OpenVoice converter extracts a speaker representation from your reference
 and applies it to synthesized speech. This is reference-based tone-color cloning,

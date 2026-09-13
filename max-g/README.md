@@ -1,3 +1,9 @@
+# MAX-G 1.9.9 voice recorder recovery
+
+Voice Studio now switches out of playback-only audio mode before requesting the microphone, fixing the Safari/WebKit conflict after MAX-G has spoken. It keeps recording status beside the Record button, shows elapsed time and a live input meter, and provides actionable microphone-permission errors. Waiting and canceled requests release their microphone tracks; closing the studio discards unsaved audio. Browser audio formats are selected by actual support. The Mac app explicitly handles microphone authorization for its local main window.
+
+Open the installed **MAX-G** app for local voice cloning, then **Settings → Voice Studio → Clone my own voice**. Allow microphone access when asked, record 15–25 seconds in a quiet room, stop and listen, confirm that it is your own voice, then save the recording and select **My cloned voice**. The local cloning models are separate from the recorder. Reference-based cloning can approximate your voice; a clean sample and listening comparisons are needed to judge its similarity. [Recording and microphone recovery guide](VOICE-SETUP.md#record-or-upload-your-own-voice)
+
 # MAX-G 1.9.8 U.S. units and compact hourly weather
 
 MAX-G defaults to U.S. customary measurements: **°F, mph, miles/feet, pounds/ounces and U.S. cooking volumes**. Existing profiles receive this preference without clearing personal data. Change it under **Michael → General → Measurements**. Explicit conversion requests keep their requested units.
