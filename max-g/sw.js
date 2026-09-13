@@ -2,15 +2,16 @@
  * Model tensors/config/tokenizers/WASM belong to WebLLM's IndexedDB cache.
  * This worker never caches searches, conversations, uploads or arbitrary pages.
  */
-const VERSION = '2026-09-13.13';
-const RELEASE_VERSION = '1.10.0';
-const RELEASE_BUILD = 205;
+const VERSION = '2026-09-13.14';
+const RELEASE_VERSION = '1.11.0';
+const RELEASE_BUILD = 206;
 const SCOPE = new URL(self.registration.scope);
 const PREFIX = `maxg-pwa:${encodeURIComponent(SCOPE.pathname)}:`;
 const SHELL_CACHE = `${PREFIX}shell:${VERSION}`;
 const LIBRARY_CACHE = `${PREFIX}libraries:0.2.85`;
 const WEBLLM_URL = 'https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@0.2.85/+esm';
 const SHELL_FILES = [
+  './request-understanding.js', './research.js', './research-routing.js', './research-cards.js', './research-cards.css',
   './mobile-viewport.js', './mobile-viewport.css', './IOS-INSTALL.md', './release-version.js', './updates.js', './updates.css', './install.html', './install.css', './install.js',
   './', './index.html', './launch-context.js', './style.css', './app.js', './activity-frame.js', './state.js', './tools.js', './units.js', './weather-card.js', './weather-place.js', './weather-card.css', './gemini.js', './answer-routing.js', './browser-task.js', './browser-panel.js', './browser-panel.css',
   './improvement.js', './improvement-ui.js', './improvement.css', './connectors.js', './connectors.css', './unit-data.js', './voice.js', './files.js', './engine.js', './local-ai.js', './extensions.js', './extensions.css', './inference-worker.js',

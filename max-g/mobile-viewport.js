@@ -12,9 +12,25 @@ export function isTextEntry(element){
  if(element.tagName==='TEXTAREA')return !element.disabled&&!element.readOnly;
  return element.tagName==='INPUT'&&!element.disabled&&!element.readOnly&&!['button','submit','reset','checkbox','radio','range','file','color','hidden'].includes(element.type);
 }
+/** iPad can identify as a desktop Mac; touch capability disambiguates it.
+ * The fallback is only for installed Apple web apps, never ordinary desktops.
+ */
+export function appleInstalledDevice(nav={},match=()=>({matches:false})){
+ let installed=Boolean(nav.standalone);try{installed ||= Boolean(match('(display-mode: standalone)').matches);}catch{}
+ if(!installed)return '';
+ const agent=String(nav.userAgent||'');
+ if(/iPhone|iPod/.test(agent))return 'phone';
+ if(/iPad/.test(agent)||nav.platform==='MacIntel'&&Number(nav.maxTouchPoints)>1)return 'tablet';
+ return '';
+}
 export function installMobileViewport({scope=globalThis,document=globalThis.document}={}){
  const viewport=scope.visualViewport,root=document?.documentElement;
- if(!viewport||!root||!scope.requestAnimationFrame)return()=>{};
+ if(!root)return()=>{};
+ const display=scope.matchMedia?.('(display-mode: standalone)');
+ const identify=()=>{const device=appleInstalledDevice(scope.navigator,scope.matchMedia?.bind(scope));if(device)root.dataset.maxgIosApp=device;else delete root.dataset.maxgIosApp;};
+ identify();display?.addEventListener?.('change',identify);
+ const forget=()=>{display?.removeEventListener?.('change',identify);delete root.dataset.maxgIosApp;};
+ if(!viewport||!scope.requestAnimationFrame)return forget;
  let frame=null,closed=false;
  const clear=()=>{delete root.dataset.maxgKeyboard;root.style.removeProperty('--maxg-visible-height');root.style.removeProperty('--maxg-visible-top');};
  const update=()=>{
@@ -27,5 +43,5 @@ export function installMobileViewport({scope=globalThis,document=globalThis.docu
  viewport.addEventListener('resize',schedule);viewport.addEventListener('scroll',schedule);
  scope.addEventListener('resize',schedule);document.addEventListener('focusin',schedule);document.addEventListener('focusout',schedule);
  schedule();
- return()=>{closed=true;if(frame!==null)scope.cancelAnimationFrame(frame);viewport.removeEventListener('resize',schedule);viewport.removeEventListener('scroll',schedule);scope.removeEventListener('resize',schedule);document.removeEventListener('focusin',schedule);document.removeEventListener('focusout',schedule);clear();};
+ return()=>{closed=true;if(frame!==null)scope.cancelAnimationFrame(frame);viewport.removeEventListener('resize',schedule);viewport.removeEventListener('scroll',schedule);scope.removeEventListener('resize',schedule);document.removeEventListener('focusin',schedule);document.removeEventListener('focusout',schedule);clear();forget();};
 }

@@ -163,7 +163,7 @@ export async function handleGemini(request, env = {}, { origins = PUBLIC_ORIGINS
       if (!allowance?.success) throw new SupportError('SUPPORT_RATE_LIMITED', 'Gemini support is busy. Wait a minute before trying again.', 429);
       if (signal.aborted) throw signal.reason;
       const response = await fetcher(GEMINI_ENDPOINT, {
-        method: 'POST', redirect: 'error', signal,
+        method: 'POST', redirect: 'manual', signal,
         headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'x-goog-api-key': env.GEMINI_API_KEY },
         body: JSON.stringify({
           systemInstruction: { parts: [{ text: SYSTEM }] },
@@ -171,7 +171,7 @@ export async function handleGemini(request, env = {}, { origins = PUBLIC_ORIGINS
           generationConfig: { temperature: 0, candidateCount: 1, maxOutputTokens: 512 },
         }),
       });
-      if (!response.ok) {
+      if (!response.ok || response.redirected) {
         // Do not surface upstream errors: they may contain keys or request data.
         response.body?.cancel().catch(() => {});
         if (response.status === 429) throw new SupportError('SUPPORT_QUOTA_EXHAUSTED', 'Gemini’s free quota is currently unavailable. MAX-G will not retry or upgrade to a paid plan.', 429);

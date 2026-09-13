@@ -1,28 +1,68 @@
-/* Safe areas also apply to iPad standalone and landscape phone layouts. */
-@media (display-mode:standalone){
- .app-shell{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
- .sidebar{padding-top:max(30px,env(safe-area-inset-top));padding-bottom:max(16px,env(safe-area-inset-bottom))}
+/* One safe rectangle for the whole app, including its separately mounted SVG
+   frame. Status bars and the home indicator are outside this rectangle. */
+:root{
+ --maxg-safe-top:env(safe-area-inset-top,0px);
+ --maxg-safe-right:env(safe-area-inset-right,0px);
+ --maxg-safe-bottom:env(safe-area-inset-bottom,0px);
+ --maxg-safe-left:env(safe-area-inset-left,0px);
+ --maxg-app-top:var(--maxg-safe-top);
+ --maxg-app-height:calc(100dvh - var(--maxg-safe-top) - var(--maxg-safe-bottom));
+ --maxg-app-width:calc(100vw - var(--maxg-safe-left) - var(--maxg-safe-right));
 }
-@media (display-mode:standalone) and (min-width:701px){
- .topbar{height:calc(77px + env(safe-area-inset-top));padding-top:env(safe-area-inset-top)}
-}
-/* VisualViewport is narrower than the layout viewport when Safari opens its
-   keyboard. Apply only during text input at normal zoom, including iPad. */
-html[data-maxg-keyboard=open] .app-shell{position:fixed;top:var(--maxg-visible-top);left:0;right:0;height:var(--maxg-visible-height);min-height:0}
-html[data-maxg-keyboard=open] .main-content{height:var(--maxg-visible-height);min-height:0}
+/* Some installed iPad versions report a zero top inset while overlaying their
+   status bar. Reserve its normal area; larger real device insets take priority. */
+html[data-maxg-ios-app=tablet]{--maxg-safe-top:max(env(safe-area-inset-top,0px),24px);--maxg-safe-bottom:max(env(safe-area-inset-bottom,0px),20px)}
+html[data-maxg-ios-app=phone]{--maxg-safe-top:max(env(safe-area-inset-top,0px),44px);--maxg-safe-bottom:max(env(safe-area-inset-bottom,0px),34px)}
+@media(orientation:landscape){html[data-maxg-ios-app=phone]{--maxg-safe-top:env(safe-area-inset-top,0px);--maxg-safe-bottom:max(env(safe-area-inset-bottom,0px),21px)}}
+html:not([data-maxg-native=true]) body:not([data-edition=mac]) .app-shell{position:fixed;top:var(--maxg-app-top);left:var(--maxg-safe-left);right:var(--maxg-safe-right);bottom:auto;width:auto;height:var(--maxg-app-height);min-height:0;padding:0}
+html:not([data-maxg-native=true]) body:not([data-edition=mac]) .main-content{height:100%;min-height:0}
+html:not([data-maxg-native=true]) body:not([data-edition=mac]) .maxg-activity-frame{top:calc(var(--maxg-app-top) + 2px);left:calc(var(--maxg-safe-left) + 2px);right:auto;bottom:auto;width:calc(var(--maxg-app-width) - 4px);height:calc(var(--maxg-app-height) - 4px)}
+/* Interior controls already live inside the safe rectangle; do not inset twice. */
+html:not([data-maxg-native=true]) body:not([data-edition=mac]) .sidebar{padding-top:24px;padding-bottom:16px}
+html:not([data-maxg-native=true]) body:not([data-edition=mac]) .composer-area{padding-bottom:16px}
+/* Include the whole voice footer in the layout. The older transcript-height
+   cap clipped these controls below the app edge at larger display font sizes. */
+html:not([data-maxg-native=true]) body:not([data-edition=mac]) .chat-view .composer-area{max-height:none;overflow:visible;scrollbar-gutter:auto}
+html:not([data-maxg-native=true]) body:not([data-edition=mac]) .composer-footer{flex-wrap:wrap;row-gap:6px}
+html:not([data-maxg-native=true]) body:not([data-edition=mac]) .voice-options{flex-shrink:0;max-width:100%}
+html:not([data-maxg-native=true]) body:not([data-edition=mac]) .speak-toggle,
+html:not([data-maxg-native=true]) body:not([data-edition=mac]) #hearBtn{white-space:nowrap}
+@media(min-width:701px){html:not([data-maxg-native=true]) body:not([data-edition=mac]) .topbar{padding-top:0}}
+html:not([data-maxg-native=true]) body:not([data-edition=mac]) .toast{bottom:calc(100dvh - var(--maxg-app-top) - var(--maxg-app-height) + 12px)}
+html:not([data-maxg-native=true]) body:not([data-edition=mac]) .settings-dialog{top:calc(var(--maxg-app-top) + 12px);bottom:auto;left:var(--maxg-safe-left);right:var(--maxg-safe-right);margin:0 auto;max-height:calc(var(--maxg-app-height) - 24px);max-width:calc(var(--maxg-app-width) - 28px)}
+html[data-mg-display=ready]:not([data-maxg-native=true]) body:not([data-edition=mac]) .settings-dialog[open]{height:min(860px,calc(var(--maxg-app-height) - 24px));max-height:calc(var(--maxg-app-height) - 24px);margin:0 auto}
+
+/* Safari's keyboard changes the visual viewport. The same rectangle moves both
+   the app and its frame above the keyboard, without disabling pinch zoom. */
+html[data-maxg-keyboard=open]{--maxg-app-top:max(var(--maxg-safe-top),var(--maxg-visible-top));--maxg-app-height:calc(var(--maxg-visible-height) - max(0px,calc(var(--maxg-safe-top) - var(--maxg-visible-top))))}
 html[data-maxg-keyboard=open] .engine-bar{display:none}
 html[data-maxg-keyboard=open] .compatibility-notice{max-height:54px;overflow:auto}
 html[data-maxg-keyboard=open] .live-orb-dock.companion-header{height:54px;flex-basis:54px}
 html[data-maxg-keyboard=open] .companion-header .orb-stage{width:68px;height:54px}
-html[data-maxg-keyboard=open] .chat-view .composer-area{max-height:min(185px,calc(var(--maxg-visible-height)*.45));min-height:0;overflow-y:auto;padding-bottom:6px}
+html[data-maxg-keyboard=open] .chat-view .composer-area{max-height:min(185px,calc(var(--maxg-app-height)*.45));min-height:0;overflow-y:auto;padding-bottom:6px}
 html[data-maxg-keyboard=open] .chat-view .composer textarea{min-height:52px;height:52px;max-height:90px}
-html[data-maxg-keyboard=open] .settings-dialog{max-height:calc(var(--maxg-visible-height) - 12px);top:var(--maxg-visible-top);bottom:auto;margin-top:6px}
-html[data-maxg-keyboard=open] .settings-layout{max-height:calc(var(--maxg-visible-height) - 110px);min-height:0}
-html[data-maxg-keyboard=open] .settings-content{max-height:calc(var(--maxg-visible-height) - 160px)}
-/* Safari has no native install prompt. Keep its visible Install control and the
-   browser task button within the header, including at larger text sizes. */
+html[data-maxg-keyboard=open] .settings-layout{max-height:calc(var(--maxg-app-height) - 110px);min-height:0}
+html[data-maxg-keyboard=open] .settings-content{max-height:calc(var(--maxg-app-height) - 160px)}
+/* During typing, reserve space for the input, Send, microphone and voice footer.
+   Play, support and help return as soon as the keyboard closes. */
+html[data-maxg-keyboard=open]:not([data-maxg-native=true]) body:not([data-edition=mac]) .chat-view .composer-area{max-height:none;overflow:visible;padding-top:4px;padding-bottom:12px}
+html[data-maxg-keyboard=open]:not([data-maxg-native=true]) body:not([data-edition=mac]) .chat-view .composer textarea{height:52px;min-height:52px;max-height:52px}
+html[data-maxg-keyboard=open]:not([data-maxg-native=true]) body:not([data-edition=mac]) .composer-area :is(.companion-play,.composer-support,.voice-help-actions,.accuracy-note,.mg-maker-mobile,#composerHint){display:none}
+html[data-maxg-keyboard=open]:not([data-maxg-native=true]) body:not([data-edition=mac]) .voice-feedback p{max-height:48px;overflow:auto}
+
+/* Short landscape windows retain all tools in a scrollable region. The speech
+   footer stays on its visible lower edge instead of behind the cyan frame. */
+@media(max-height:540px){
+ html:not([data-maxg-native=true]) body:not([data-edition=mac]) .engine-bar{display:none}
+ html:not([data-maxg-native=true]) body:not([data-edition=mac]) .compatibility-notice{max-height:40px;overflow:auto}
+ html:not([data-maxg-native=true]):not([data-maxg-keyboard=open]) body:not([data-edition=mac]) .chat-view .composer-area{max-height:190px;overflow-y:auto;padding-bottom:12px}
+ html:not([data-maxg-native=true]):not([data-maxg-keyboard=open]) body:not([data-edition=mac]) .composer-footer{position:sticky;bottom:0;z-index:2;background:var(--bg);box-shadow:0 12px 0 var(--bg);padding-block:7px}
+ html:not([data-maxg-native=true]):not([data-maxg-keyboard=open]) body:not([data-edition=mac]) #composerHint{display:none}
+}
+
+/* Keep Safari's Install control and browser task button inside the header. */
 @media(max-width:700px){
- .topbar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 10px;height:auto;min-height:calc(59px + env(safe-area-inset-top));padding:calc(env(safe-area-inset-top) + 8px) 16px 8px;align-items:center}
+ .topbar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 10px;height:auto;min-height:59px;padding:8px 16px;align-items:center}
  .topbar-title{grid-column:1;grid-row:1;min-width:0}
  .mobile-brand{white-space:nowrap}
  html[data-mg-display=ready] .topbar-actions{display:contents}
@@ -30,4 +70,43 @@ html[data-maxg-keyboard=open] .settings-content{max-height:calc(var(--maxg-visib
  #browserTaskBtn{grid-column:1;grid-row:2;justify-self:start}
  #installBtn{grid-column:2;grid-row:2;justify-self:end}
  #updateNoticeBtn{grid-column:1 / -1;grid-row:3;justify-self:end}
+ html:not([data-maxg-native=true]) body:not([data-edition=mac]) .sidebar{top:var(--maxg-app-top);bottom:auto;left:var(--maxg-safe-left);height:var(--maxg-app-height);padding-top:25px}
+ html:not([data-maxg-native=true]) body:not([data-edition=mac]) .composer-area{padding-bottom:13px}
+}
+
+/* Secondary tools open on request. The input and speaking controls remain in
+   the normal layout, so expanding this panel cannot push them off screen. */
+.composer-more{position:relative;margin-top:4px;font-size:calc(var(--mg-ui-font,14px)*.9)}
+.composer-more>summary{display:flex;align-items:center;gap:8px;min-height:40px;width:max-content;max-width:100%;padding:6px 4px;color:var(--cyan);cursor:pointer;list-style:none}
+.composer-more>summary::-webkit-details-marker{display:none}
+.composer-more>summary::after{content:'+';font-size:1.2em;line-height:1}
+.composer-more[open]>summary::after{content:'−'}
+.composer-more>summary:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;border-radius:8px}
+.composer-more-panel{position:absolute;bottom:calc(100% + 6px);left:0;right:0;z-index:8;max-height:min(330px,calc(var(--maxg-app-height,100dvh)*.45));overflow-y:auto;overscroll-behavior:contain;padding:12px 16px;border:1px solid var(--line);border-radius:18px;background:var(--panel);box-shadow:0 8px 30px #0008}
+.composer-more-panel .companion-play{margin:0;padding:0;flex-wrap:wrap}
+.composer-more-panel .composer-support{padding:8px 0}
+.composer-more-panel .voice-help-actions{padding-block:3px}
+.composer-more-panel .accuracy-note{margin-block:8px}
+html[data-maxg-keyboard=open] .composer-more{display:none}
+/* The installed Mac shell uses the same disclosure. Its older scroll cap must
+   not clip the floating panel or the speaking controls below the summary. */
+html[data-mg-display=ready] body[data-edition=mac] .chat-view .composer-area{max-height:none;overflow:visible;scrollbar-gutter:auto}
+body[data-edition=mac] .composer-footer{flex-wrap:wrap;row-gap:6px}
+body[data-edition=mac] .voice-options{flex-shrink:0;max-width:100%}
+body[data-edition=mac] :is(.speak-toggle,#hearBtn){white-space:nowrap}
+
+/* Keep a useful answer area on phone screens, including browsers without
+   WebGPU. Compatibility details can be scrolled without covering the answer. */
+@media(max-width:700px){
+ html:not([data-maxg-native=true]) body:not([data-edition=mac]).has-conversation .engine-bar{min-height:32px;padding-block:4px;gap:8px}
+ html:not([data-maxg-native=true]) body:not([data-edition=mac]).has-conversation .engine-bar #modelStatus{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+ html:not([data-maxg-native=true]) body:not([data-edition=mac]).has-conversation .compatibility-notice{max-height:42px;overflow-y:auto;padding-block:6px;line-height:1.4}
+ html:not([data-maxg-native=true]) body:not([data-edition=mac]).has-conversation .live-orb-dock.companion-header{height:76px;flex-basis:76px}
+ html:not([data-maxg-native=true]) body:not([data-edition=mac]).has-conversation .companion-header .orb-stage{height:76px;width:95px}
+ html:not([data-maxg-native=true]) body:not([data-edition=mac]) .composer-more>summary{min-height:44px}
+}
+html[data-maxg-keyboard=open]:not([data-maxg-native=true]) body:not([data-edition=mac]).has-conversation .live-orb-dock.companion-header{height:54px;flex-basis:54px}
+html[data-maxg-keyboard=open]:not([data-maxg-native=true]) body:not([data-edition=mac]).has-conversation .companion-header .orb-stage{height:54px;width:68px}
+@media(max-height:540px){
+ .composer-more-panel{position:fixed;left:calc(var(--maxg-safe-left,0px) + 16px);right:calc(var(--maxg-safe-right,0px) + 16px);bottom:calc(100dvh - var(--maxg-app-top,0px) - var(--maxg-app-height,100dvh) + 88px);max-height:min(180px,calc(var(--maxg-app-height,100dvh)*.45))}
 }

@@ -2,6 +2,8 @@ name = "max-g-search"
 main = "gateway-worker.js"
 compatibility_date = "2026-09-12"
 workers_dev = true
+preview_urls = false
+keep_vars = true
 send_metrics = false
 
 [observability]
@@ -17,6 +19,7 @@ head_sampling_rate = 1
 enabled = false
 
 [vars]
+GEMINI_FREE_TIER_CONFIRMED = "true"
 ALLOWED_ORIGINS = "https://max-g.goyonebydesign.com,https://www.goyonebydesign.com,https://goyonebydesign.com"
 # Optional Gemini support fails closed until the owner verifies a Free API
 # project and adds GEMINI_API_KEY, MAXG_SUPPORT_TOKEN and

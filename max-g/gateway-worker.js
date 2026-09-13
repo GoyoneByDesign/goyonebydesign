@@ -3,10 +3,12 @@
  */
 import searchWorker, {allowedOrigins} from './worker.js';
 import {handleGemini} from './gemini-worker.js';
+import {handleNews} from './news-worker.js';
 
 export default {
   async fetch(request, env = {}, ctx) {
     const path = new URL(request.url).pathname;
+    if (path === '/news') return handleNews(request, env);
     if (path === '/support' || path === '/support/health') {
       return handleGemini(request, env, {origins: allowedOrigins(env)});
     }

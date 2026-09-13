@@ -343,8 +343,19 @@ plan without paid APIs. [Cloudflare limits](https://developers.cloudflare.com/wo
 
 ## iPhone, iPad and shared app updates
 
-Install the free Home Screen app from [Get MAX-G](https://www.goyonebydesign.com/max-g/install.html). Follow [the iOS installation guide](./IOS-INSTALL.md). The website, iOS/iPadOS Home Screen app and Mac share release **1.10.0 / build 205**. Open **Settings → Install & updates** to see the version and check/apply a release. Shared updates do not sync private data between devices.
+Install the free Home Screen app from [Get MAX-G](https://www.goyonebydesign.com/max-g/install.html). Follow [the iOS installation guide](./IOS-INSTALL.md). The website, iOS/iPadOS Home Screen app and Mac share release **1.11.0 / build 206**. Open **Settings → Install & updates** to see the version and check/apply a release. Shared updates do not sync private data between devices.
 
 The PWA caches a complete release with SHA-256 integrity checks; partial website deployments keep the previous cache. Mac downloads verified UI snapshots and switches only on its next launch. Native tools, local models, recordings and personal data remain outside this updater. A release can set `min_companion_build` when new native functionality needs an installer.
 
 Before publishing future releases, update `package.json`, `release-version.js` and the release constants/cache version in `sw.js`, then run `python3 scripts/build-release.py`. Publish **all changed app files and release.json in the same repository commit**. Never publish local companion/private/model folders. Keep the Mac native/companion version in step when its code changes.
+
+
+### Quick understanding and illustrated research (1.11.0)
+
+MAX-G interprets common weather/place typos and short requests such as `wheather 20171`, `7days`, `news`, `who Ada Lovelace`, and `about Saturn`. A short public topic can support follow-ups for five minutes in the open conversation. Names, street addresses, source code and action commands are preserved; ambiguous requests ask for clarification. This improves request handling, not model training or consciousness.
+
+Public questions show source cards while local AI is still unloaded. Settings → Connection → Illustrated public answers controls this automatic lookup on both web and Mac; disabling it and web-first answers prefers local knowledge. Internet-denied and private conversations are not sent to public research. BBC News and Sky News RSS supply recent headlines and publisher images through MAX-G’s existing Cloudflare Worker. Topic background uses an exact Wikipedia article or validated redirect and a freely licensed Wikimedia Commons image with attribution. Ambiguous subjects, missing photos and blocked image downloads keep readable text; no stock or generated photo is substituted. A sharing image may be archival or a logo. Each card ends with its original-source link. Small models can still make errors; sources and publication dates remain visible.
+
+Only the current public topic is sent to research services, without chat history, notes or attachments. Images load only when internet permission permits. Research metadata is bounded to 9 KiB per reply; the optional history setting still controls saving. Up to eight topic summaries remain in a short RAM cache, cleared on a new chat, reset or closing the page. The news Worker only retrieves fixed publisher feeds; it is not an arbitrary website proxy.
+
+Installed iPhone/iPad layout now insets the entire app and glowing border around the status area and home indicator, including a fallback when Safari reports zero safe-area values. Keyboard and orientation changes keep the composer visible. Physical device checks remain important because browser automation cannot reproduce every iPad status-bar layout.

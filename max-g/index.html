@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="MAX-G">
   <meta name="mobile-web-app-capable" content="yes">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://esm.run 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data: blob:; connect-src 'self' https: http://localhost:* http://127.0.0.1:*; worker-src 'self' https://cdn.jsdelivr.net blob:; media-src 'self' blob:; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://esm.run 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data: blob: https:; connect-src 'self' https: http://localhost:* http://127.0.0.1:*; worker-src 'self' https://cdn.jsdelivr.net blob:; media-src 'self' blob:; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
   <meta name="format-detection" content="telephone=no">
   <title>MAX-G · Your personal companion</title>
   <link rel="manifest" href="./manifest.json">
@@ -28,6 +28,7 @@
   <link rel="stylesheet" href="./voice-studio.css">
   <link rel="stylesheet" href="./weather-card.css">
   <script src="./launch-context.js" defer></script>
+  <link rel="stylesheet" href="./research-cards.css">
   <link rel="stylesheet" href="./mobile-viewport.css">
 </head>
 <body data-view="chat">
@@ -143,12 +144,15 @@
             <textarea id="messageInput" rows="4" placeholder="Message MAX-G…" maxlength="24000" enterkeyhint="send" aria-describedby="composerHint"></textarea>
             <div class="composer-toolbar"><div class="composer-left"><button id="attachBtn" class="icon-button" type="button" title="Attach text or source files" aria-label="Attach files"><svg class="icon"><use href="#i-clip"/></svg></button><input id="fileInput" type="file" multiple hidden><span class="composer-divider"></span><button id="voiceModeBtn" class="voice-button" type="button" aria-pressed="false"><svg class="icon"><use href="#i-wave"/></svg><span>Voice mode</span></button></div><div class="composer-right"><button id="micBtn" class="icon-button mic-button" type="button" title="Talk to MAX-G" aria-label="Start microphone" aria-pressed="false"><svg class="icon"><use href="#i-mic"/></svg></button><button id="stopBtn" class="send-button stop-button" type="button" aria-label="Stop response" title="Stop response" hidden><svg class="icon"><use href="#i-stop"/></svg></button><button id="sendBtn" class="send-button" type="submit" aria-label="Send message" title="Send message"><svg class="icon"><use href="#i-arrow"/></svg></button></div></div>
           </form>
-          <div class="companion-play" role="group" aria-label="Play with MAX-G"><button id="singBtn" type="button" class="text-button">♫ Sing a new song</button><button id="danceBtn" type="button" class="text-button">Dance</button><button id="playStopBtn" type="button" class="text-button" hidden>Stop play</button><span>Try “sing and dance”</span></div>
+          <div class="voice-feedback"><p id="voiceFeedback" role="status" aria-live="polite" hidden></p><div class="voice-stop-actions"><button id="stopSpeechBtn" type="button" class="text-button" hidden>Stop voice</button><button id="playStopBtn" type="button" class="text-button" hidden>Stop play</button></div></div>
+          <details class="composer-more"><summary>More controls</summary><div class="composer-more-panel">
+          <div class="companion-play" role="group" aria-label="Play with MAX-G"><button id="singBtn" type="button" class="text-button">♫ Sing a new song</button><button id="danceBtn" type="button" class="text-button">Dance</button><span>Try “sing and dance”</span></div>
           <div class="composer-support"><button id="askGeminiBtn" type="button" class="text-button" aria-haspopup="dialog">Ask Gemini <span class="support-cloud-label">optional cloud support</span></button></div>
-          <div class="composer-footer"><span id="composerHint">Enter to send · Shift + Enter for a new line</span><div class="voice-options"><label class="speak-toggle"><input id="speakReplies" type="checkbox"><span>Speak replies</span></label><button id="hearBtn" class="text-button" type="button"><svg class="icon"><use href="#i-volume"/></svg>Hear MAX-G</button></div></div>
-          <div class="voice-feedback"><p id="voiceFeedback" role="status" aria-live="polite" hidden></p><div class="voice-help-actions"><button id="soundHelpBtn" type="button" class="text-button">Sound help</button><button id="stopSpeechBtn" type="button" class="text-button" hidden>Stop voice</button></div></div>
+          <div class="voice-help-actions"><button id="soundHelpBtn" type="button" class="text-button">Sound help</button></div>
           <p class="accuracy-note">Local AI can make mistakes. Check sources for important answers.</p>
           <footer class="mg-maker-credit mg-maker-mobile" aria-label="MAX-G creator"><img src="./assets/goyonebydesign-logo.png" width="24" height="24" alt=""><span>Created by <strong>GoyoneByDesign</strong></span></footer>
+          </div></details>
+          <div class="composer-footer"><span id="composerHint">Enter to send · Shift + Enter for a new line</span><div class="voice-options"><label class="speak-toggle"><input id="speakReplies" type="checkbox"><span>Speak replies</span></label><button id="hearBtn" class="text-button" type="button"><svg class="icon"><use href="#i-volume"/></svg>Hear MAX-G</button></div></div>
         </div>
       </section>
 
