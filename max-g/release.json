@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "version": "1.11.0",
-  "build": 206,
+  "version": "1.11.1",
+  "build": 207,
   "min_companion_build": 205,
   "files": [
     {
@@ -11,13 +11,13 @@
     },
     {
       "path": "IOS-INSTALL.md",
-      "sha256": "e15606e801bfd5903a49c4f6e21ef8374ef5233808471d5f7ea615268496bb1c",
-      "bytes": 5720
+      "sha256": "2792897827fe096f710d6aa6cc1c905e7c0407e41d8086edd111cef8c60aa754",
+      "bytes": 7475
     },
     {
       "path": "README.md",
-      "sha256": "9d1d485c5582dea105f8b996eddc832e9f9a453c1f03b93c95c29d9fa40c6e30",
-      "bytes": 35200
+      "sha256": "db5a4e0e47f9077e5ee256711fda04f637fb2f6cedd27baf118855fa4534d96a",
+      "bytes": 36424
     },
     {
       "path": "VOICE-SETUP.md",
@@ -46,8 +46,8 @@
     },
     {
       "path": "app.js",
-      "sha256": "9dbd73164b088f394b550b66b1f83e43787105fb1f0b7e06e6006157757e491c",
-      "bytes": 107983
+      "sha256": "aba9a76d22387d5f3690ab45a780c72a675f1c324665df610a933de8015b587a",
+      "bytes": 108721
     },
     {
       "path": "assets/goyonebydesign-logo.png",
@@ -81,8 +81,8 @@
     },
     {
       "path": "companion-interactions.js",
-      "sha256": "837bcd6d6a2738a3cfdb8ae47e3f89294005bd3bc8c04a245f7f1bd966c94d16",
-      "bytes": 4921
+      "sha256": "656b087f01c15d0328bd05054567734acd411cd444f3a36e09dcaebae9944495",
+      "bytes": 11609
     },
     {
       "path": "connectors.css",
@@ -191,8 +191,8 @@
     },
     {
       "path": "install.html",
-      "sha256": "6072f61285299e9fcec397fe1eb8681a2f2520ccfc0e79198e78eaedd1f8631f",
-      "bytes": 11089
+      "sha256": "c0ea82dafaaca074a025c9cf9471a8eaef7f71512b9b08764eecd2c86e564931",
+      "bytes": 13297
     },
     {
       "path": "install.js",
@@ -231,8 +231,8 @@
     },
     {
       "path": "mobile-viewport.css",
-      "sha256": "e6c668e86a2d884516ced841312a9b0f863d713e81d3a36adeb5dc1c477f2cda",
-      "bytes": 10971
+      "sha256": "355830db9e21ad717075531a98c189a20806fe078ad6ed444b5fd55865507f1e",
+      "bytes": 11484
     },
     {
       "path": "mobile-viewport.js",
@@ -261,7 +261,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "f8aab9e110a4da1a6455cd5ab7bbe05cfe27f2f05aa48e6245eb617cffc0b76f",
+      "sha256": "2405223fb65d631e1a549eede276e7f08f6b54b11d2512f6339f6c556cc00ec0",
       "bytes": 255
     },
     {
@@ -296,7 +296,7 @@
     },
     {
       "path": "release-version.js",
-      "sha256": "d80a73f9358b7d736a818cf54ddf1a83e677735cb01b53f34118a617c5904896",
+      "sha256": "a5f76cff885408cfd665c322b6912fcb376ce10175d24df0bf8af67d56ff6e88",
       "bytes": 155
     },
     {
@@ -346,7 +346,7 @@
     },
     {
       "path": "sw.js",
-      "sha256": "7009ee6605a295b80944a88dedb318ca3b3ba813675cee9128a87afb378ce6e1",
+      "sha256": "3c42b2d719ed6a2e91ddf8496e294605ea5f5ad03ecc4953365280fe3706e873",
       "bytes": 8194
     },
     {

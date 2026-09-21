@@ -29,7 +29,7 @@ import {renderProfileSettings,renderDisplaySettings} from './profile-ui.js';
 import {attachOrbit,renderOrbitSettings} from './orbit.js';
 import {normalizeUnitSystem,UNIT_SYSTEMS,unitsPrompt} from './units.js';
 import {renderWeatherCard,validateWeatherCard} from './weather-card.js';
-import {COMPANION_PERSONA,performanceCommand,isLocalConversation,socialReply} from './companion-interactions.js';
+import {companionPrompt,performanceCommand,isLocalConversation,socialReply,cleanCompanionReply,classifyConsultationTurn,consultationReply,consultationUnavailable} from './companion-interactions.js';
 import {performSong,stop as stopSong} from './performance.js';
 import {createLocationHub,postalSpeechContext} from './locations-ui.js';
 import {parseLocationIntent,normalizeLocationSettings,normalizeCountry} from './locations.js';
@@ -41,10 +41,10 @@ import {importTextFiles,safeName,download,zip,docx,xlsx,pptx,printReport,csvStat
 const $=id=>document.getElementById(id);
 const EMOTIONS=['neutral','happy','joyful','sad','embarrassed','curious','surprised','excited','thoughtful','confused','concerned','affectionate','frustrated','sleepy','proud','playful','thinking','listening'];
 const STUDY_TOPICS=['site:developer.mozilla.org JavaScript web APIs','site:webllm.mlc.ai local model inference','site:www.w3.org/WAI accessible web interfaces','site:docs.ollama.com structured outputs','site:docs.python.org tutorial errors','site:playwright.dev docs locators'];
-const PERSONA=COMPANION_PERSONA;
 let state=freshState(),session={id:crypto.randomUUID(),title:'New conversation',messages:[]},attachments=[],workspace=[],folderHandle=null;
 let locationPending=null,locationContext=null;
 let publicTopic=null;
+let consultationUntil=0;
 let active=null,taskEpoch=0,queued=null,voiceMode=false,dictationText='',voiceMisses=0,view='chat',settingsTab='general',selectedSkill='',deferredInstall=null,lastAnswer='',saveChain=Promise.resolve(),toastTimer;
 let evaluationProgress='',settingsController=null,performanceEpoch=0,playing=false,playTimer=null;
 let audioAttempt=0,soundController=null;
@@ -197,7 +197,7 @@ const publicResearch=createResearch({search:searchPublic,newsFetcher:(query,{sig
   const url=new URL('/news',BUILTIN_SEARCH_URL);url.searchParams.set('q',query);
   return readJSON(url,{signal,timeout:4800,maxBytes:60000});
 }});
-function clearPublicTopic(){publicTopic=null;publicResearch.clear();}
+function clearPublicTopic(){publicTopic=null;consultationUntil=0;publicResearch.clear();}
 function renderResearch(value,{authorized=false}={}){
   return researchCards(value,{allowImages:state.settings.permissions.internet==='allow'||authorized&&state.settings.permissions.internet!=='deny',onLoadImages:async()=>{await permission('internet');return true;}});
 }
@@ -288,9 +288,7 @@ function speakMessage(message,signal){return speak(message?.content||'',signal,m
 async function speak(text,signal,speechContext=null){stopPlay();const attempt=++audioAttempt;audioFeedback('Preparing voice on this device. The first download may take a few minutes…','preparing',true);const pending=voice.speak(text,{...normalizeVoice(state.settings.voice),language:languageCode(),profile:state.settings.voiceProfile,voiceURI:state.settings.voiceURI,rate:state.settings.rate,emotion:$('orb').dataset.emotion,speechContext:normalizeSpeechContext(speechContext)||{},signal}),generation=voice.generation;$('stopSpeechBtn').hidden=false;try{await pending;if(attempt===audioAttempt&&generation===voice.generation&&!signal?.aborted)audioFeedback('Playback finished. If you heard nothing, open Sound help.');}catch(error){if(attempt!==audioAttempt||generation!==voice.generation||error.name==='AbortError'||signal?.aborted)return;audioFeedback(error.message+' Open Sound help to test the speaker or retry.','error');throw error;}}
 async function ensureModel(run){if(engine.readyFor(state.settings.model))return;if(!desktopMode)await permission('internet',{background:run.kind==='study'||run.kind==='schedule'});checkRun(run);$('modelProgress').hidden=false;await engine.load(state.settings.model,{signal:run.signal,onProgress:p=>{if(active!==run)return;$('modelProgress').value=Number(p.progress)||0;$('modelProgressLabel').textContent=String(p.text||'Preparing local model…').slice(0,220);}});checkRun(run);}
 function promptMessages(query,sources,files,task='chat',maxTokens=256,knowledge=''){
-  const language=state.settings.language==='Auto-detect'?'Follow the user’s language.':`Reply in ${state.settings.language}.`;
-  const style=` ${language} Be ${state.settings.style.toLowerCase()}. ${state.settings.replyLength==='Brief'?'Be concise.':''}`;
-  const system=PERSONA+style+unitsPrompt(state.settings.unitSystem);
+  const system=companionPrompt(state.settings);
 
   const skill=state.skills.find(s=>s.id===selectedSkill&&s.enabled)?.text||'';
   const references=sources.map((s,i)=>`[${i+1}] ${s.title}: ${s.snippet||''}`).join('\n').slice(0,1250);
@@ -311,7 +309,7 @@ function promptMessages(query,sources,files,task='chat',maxTokens=256,knowledge=
   if(task==='document')current+='Create complete document content. Use Markdown; do not claim a file was saved.\n';
   return [{role:'system',content:system},...session.messages.slice(-4).filter(m=>m.content!==query).map(m=>({role:m.role,content:m.content.slice(0,300)})),{role:'user',content:current}];
 }
-function decodeReply(raw){let text=raw;const emotion=text.match(/^\s*\[emotion:([a-z]+)\]\s*/i);if(emotion){setOrb('thinking',emotion[1].toLowerCase());text=text.slice(emotion[0].length);}text=text.replace(/^\s*\[language:[^\]]+\]\s*/i,'');return text;}
+function decodeReply(raw){let text=raw;const emotion=text.match(/^\s*\[emotion:([a-z]+)\]\s*/i);if(emotion){setOrb('thinking',emotion[1].toLowerCase());text=text.slice(emotion[0].length);}text=text.replace(/^\s*\[language:[^\]]+\]\s*/i,'');return cleanCompanionReply(text);}
 function cleanWebReply(text){return text.replace(/\[([^\]]+)\]\(https?:\/\/[^)]+\)/g,'$1').replace(/https?:\/\/\S+/g,'').trim();}
 async function generate(query,sources,files,run,contentNode,task='chat'){
   const outputLimit=answerLimit(query,{document:task==='document',detailed:state.settings.replyLength==='Detailed'});
@@ -377,8 +375,11 @@ async function submit(text=$('messageInput').value,selected=attachments){
   if(active?.kind==='reset')return toast('Wait for the reset to finish. Your draft is still in the box.');
   const playCommand=selected.length?null:performanceCommand(text);
   if(playCommand==='stop'){stop();$('messageInput').value='';return;}
-  if(playCommand&&!active){$('messageInput').value='';return runPlay(playCommand,{userText:text});}
+  if(playCommand&&!active){consultationUntil=0;$('messageInput').value='';return runPlay(playCommand,{userText:text});}
   if(active){if(queued)return toast('One message is already queued. Your new draft is still in the box.');queued={text,attachments:[...selected]};$('messageInput').value='';attachments=[];renderAttachments();if(['study','schedule','evaluation'].includes(active.kind))stop({preserveQueue:true});updateBusy();return;}
+  const consultation=selected.length?{personal:false,nextActive:false}:classifyConsultationTurn(text,{active:Date.now()<consultationUntil});
+  consultationUntil=consultation.nextActive?Date.now()+5*60*1000:0;
+  if(consultation.personal){publicTopic=null;locationPending=null;locationContext=null;locationHub.retireSelection();}
   if(locationPending&&!selected.length){
     const pending=locationPending,follow=weatherFollowup(text,pending);locationPending=null;
     if(follow?.cancel){locationContext=null;locationHub.retireSelection();$('messageInput').value='';connectorReply(pending.intent.kind==='weather'?'Weather lookup cancelled.':'Location lookup cancelled.',text);return;}
@@ -429,14 +430,16 @@ async function submit(text=$('messageInput').value,selected=attachments){
   try{
     if(files.length)await permission('files',{picked:true});checkRun(run);
     const social=files.length?null:socialReply(text,{name:state.profile.displayName,personalize:state.profile.personalize,language:state.settings.language});
+    const consultationOpener=files.length?null:consultationReply(text,{language:state.settings.language});
     const quick=files.length?null:(basicDeviceAnswer(query)||quickAnswer(query,{units:state.settings.unitSystem})),request=files.length?null:weatherRequest(query,state.settings.weatherCity);
     const research=query.match(/^(?:\/(?:research|search|learn)\s+|research\s+|look up\s+|learn about\s+)([\s\S]+)/i);
     if(social){answer=social.text;answerModel='Local greeting';setOrb('idle',social.emotion);}
+    else if(consultationOpener){answer=consultationOpener.text;answerModel='Local conversation guide';setOrb('idle',consultationOpener.emotion);}
     else if(quick){answer=quick.text;setOrb('idle','happy');}
     else if(request){if(request.city){await permission('internet');checkRun(run);}const result=await weather({...request,units:normalizeUnitSystem(request.units||state.settings.unitSystem)},run.signal);checkRun(run);answer=result.text;sources=result.sources;orbit.setWeather(result.orbitWeather);}
     else if(files.length===1&&/\.csv$/i.test(files[0].name)&&/\b(statistics|stats|summary|summari[sz]e|totals|average)\b/i.test(text)){answer=csvStats(files[0].text);}
     else{
-      const plan=researchPlan(research?.[1]||query,{onlineFirst:state.settings.onlineFirst||state.settings.illustratedAnswers,explicit:Boolean(research)||understood.changed&&understood.kind==='general',personal:smallTalk(text),hasFiles:Boolean(files.length)});
+      const plan=researchPlan(research?.[1]||query,{onlineFirst:state.settings.onlineFirst||state.settings.illustratedAnswers,explicit:Boolean(research)||understood.changed&&understood.kind==='general',personal:consultation.personal||smallTalk(text),hasFiles:Boolean(files.length)});
       if(plan){
         const localFallback=allowLocalSearchFallback(query,{explicit:Boolean(research)});
         if(state.settings.permissions.internet==='deny'&&localFallback){searchFailed=true;}
@@ -452,8 +455,8 @@ async function submit(text=$('messageInput').value,selected=attachments){
           catch(error){checkRun(run);if(error.name==='AbortError')throw error;rendering.content.textContent='';rendering.content.hidden=true;toast('The source briefing is ready. Local AI narration is unavailable for this reply.');}
         }
       }else{rendering.content.hidden=false;answer=await generate(research?.[1]||query,sources,files,run,rendering.content,/^\/document\b/i.test(text)?'document':'chat');answerModel=engine.modelId||state.settings.model;}
-      if(answer.trim()==='[SEARCH]'&&!files.length&&smallTalk(text))throw new Error('Sorry, can you say that again? A little more detail will help me understand.');
-      if(answer.trim()==='[SEARCH]'&&!searchFailed&&!files.length&&!sources.length&&researchPlan(query,{explicit:true,personal:smallTalk(text)})){await permission('internet');checkRun(run);publicQuery=query;researchData=await publicResearch.lookup(query,{mode:/\bnews\b/i.test(query)?'news':'topic',signal:run.signal,onPartial:showResearch});checkRun(run);sources=researchSources(researchData);answer=researchAnswer(researchData);answerModel='Public source briefing';}
+      if(answer.trim()==='[SEARCH]'&&!files.length&&(consultation.personal||smallTalk(text)))throw new Error('Sorry, can you say that again? A little more detail will help me understand.');
+      if(answer.trim()==='[SEARCH]'&&!searchFailed&&!files.length&&!sources.length&&researchPlan(query,{explicit:true,personal:consultation.personal||smallTalk(text)})){await permission('internet');checkRun(run);publicQuery=query;researchData=await publicResearch.lookup(query,{mode:/\bnews\b/i.test(query)?'news':'topic',signal:run.signal,onPartial:showResearch});checkRun(run);sources=researchSources(researchData);answer=researchAnswer(researchData);answerModel='Public source briefing';}
       if(answer.trim()==='[SEARCH]')answer=sources.length?'I found these sources, but couldn’t confidently answer from their excerpts. Open the source links below, or ask a more specific question.':'I don’t have enough reliable information to answer that yet. Please add more detail or ask me to research it when web search is available.';
       if(!answer.trim())throw new Error('The local model returned no answer. Please retry or select another installed model.');
       if(searchFailed)answer+='\n\nWeb search was unavailable; this answer uses local knowledge.';
@@ -461,7 +464,7 @@ async function submit(text=$('messageInput').value,selected=attachments){
     }
     checkRun(run);rendering.article.remove();const speechContext=yearQuestionSpeechContext(text,answer);session.messages.push({role:'assistant',content:answer,sources,model:answerModel,...(researchData?{research:researchData}:{}),...(speechContext?{speechContext}:{})});renderMessage(session.messages.at(-1),{authorized:Boolean(researchData)});lastAnswer=answer;record();scrollBottom();
     if(canSpeakReply()){try{await speakMessage(session.messages.at(-1),run.signal);}catch(error){showError(error);voiceMode=false;}}
-  }catch(error){if(active!==run)return;if(error.name==='AbortError'){rendering.content.textContent=rendering.content.textContent?rendering.content.textContent+'\n[Stopped; incomplete.]':'Stopped.';}else{const message=userFacingFailure(error,{online:navigator.onLine,desktop:desktopMode});rendering.content.textContent=message;session.messages.push({role:'assistant',content:message,sources:[],model:'Request status'});lastAnswer=message;if(publicQuery&&!files.length)appendSearchRecovery(rendering,publicQuery,sources);record();toast(message);if(canSpeakReply())try{await speak(message,run.signal);}catch{} }}finally{finish(run);}
+  }catch(error){if(active!==run)return;if(error.name==='AbortError'){rendering.content.textContent=rendering.content.textContent?rendering.content.textContent+'\n[Stopped; incomplete.]':'Stopped.';}else{const recovery=navigator.onLine?consultationUnavailable(text,error,{language:state.settings.language,active:consultation.personal}):null;const message=[recovery?.text,userFacingFailure(error,{online:navigator.onLine,desktop:desktopMode})].filter(Boolean).join('\n\n');if(recovery)setOrb('idle',recovery.emotion);rendering.content.textContent=message;session.messages.push({role:'assistant',content:message,sources:[],model:'Request status'});lastAnswer=message;if(publicQuery&&!files.length)appendSearchRecovery(rendering,publicQuery,sources);record();toast(message);if(canSpeakReply())try{await speak(message,run.signal);}catch{} }}finally{finish(run);}
 }
 async function loadModel(){if(active)return;const run=begin('load');try{await ensureModel(run);toast(desktopMode?'Installed CPU model ready. Conversation works offline; web research still needs internet.':'Local AI is ready. After downloads are cached, this model can work offline.');}catch(error){showError(error);}finally{finish(run);}}
 async function startDictation(continuous=false){

@@ -88,6 +88,16 @@ html[data-maxg-keyboard=open]:not([data-maxg-native=true]) body:not([data-editio
 .composer-more-panel .voice-help-actions{padding-block:3px}
 .composer-more-panel .accuracy-note{margin-block:8px}
 html[data-maxg-keyboard=open] .composer-more{display:none}
+/* A phone keyboard can leave less than 330px above it. Keep the answer, orb and
+   primary composer in that space; setup notices and header tools return when
+   typing ends. They must not squeeze the transcript down to zero height. */
+html[data-maxg-keyboard=open] .compatibility-notice{display:none}
+@media(max-width:700px){
+ html[data-maxg-keyboard=open] .topbar :is(#browserTaskBtn,#installBtn,#updateNoticeBtn){display:none}
+}
+@media(max-height:540px){
+ html[data-maxg-keyboard=open] .topbar{display:none}
+}
 /* The installed Mac shell uses the same disclosure. Its older scroll cap must
    not clip the floating panel or the speaking controls below the summary. */
 html[data-mg-display=ready] body[data-edition=mac] .chat-view .composer-area{max-height:none;overflow:visible;scrollbar-gutter:auto}

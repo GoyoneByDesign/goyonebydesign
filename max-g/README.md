@@ -1,3 +1,11 @@
+# MAX-G 1.11.1 personal conversations and iPhone/iPad testing
+
+Install the shared iPhone/iPad Home Screen app from [Get MAX-G](https://www.goyonebydesign.com/max-g/install.html). Safari handles installation; this is a PWA, not an IPA or App Store binary. The installer includes a short first-use checklist. Website, Home Screen and installed Mac use the same interface release, with capabilities determined by each device and its permissions.
+
+Long answers scroll above the message box. When a phone keyboard leaves very little space, header controls and setup notices temporarily collapse so the answer area, text box, microphone and Send remain accessible. Those controls return when typing ends.
+
+Personal advice and problems stay in the local conversation, including short follow-ups. Broad requests such as “I need advice” get an immediate clarifying question. Specific concerns use the local model with instructions to listen, distinguish facts from assumptions, explain options and suggest practical next steps. If the model cannot start, MAX-G explains what is unavailable and how to continue. These changes do not establish consciousness or guarantee any model's accuracy or parity with commercial assistants.
+
 # MAX-G 1.9.12 county weather and address speech
 
 County weather now resolves the named county separately from neighboring towns or independent cities. Fairfax County and Fairfax City stay distinct. A Virginia-qualified “Loudon” spelling resolves Loudoun County, while Loudon County, Tennessee retains its name. County forecasts identify the mapped county center and explain that conditions vary across the county. Named town/ZIP forecasts remain more local, with seven-day, hourly and U.S. units unchanged.

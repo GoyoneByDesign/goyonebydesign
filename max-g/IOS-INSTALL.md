@@ -8,8 +8,8 @@ MAX-G is available as a free **Home Screen web app** from GoyoneByDesign:
 ## Install on each iPhone or iPad
 
 1. Open **Safari** on the device and visit the MAX-G app address above.
-2. Open Safari’s **Share** menu—the square with an arrow pointing up. Depending on the Safari toolbar, first tap **More (….)**.
-3. Choose **Add to Home Screen**. You may need to scroll through the Share menu or choose **More**. If offered, turn on **Open as Web App**.
+2. On **iPhone**, tap Safari’s **Page Menu**, then **Share**. Some toolbar layouts show **Share** directly—the square with an arrow pointing up. On **iPad**, tap **Share**, then **View More** or **More** if needed.
+3. Scroll through the Share options and choose **Add to Home Screen**. On iPhone, if this action is missing, scroll to **Edit Actions** and add **Add to Home Screen**. If offered, turn on **Open as Web App**.
 4. Keep the name **MAX-G** and tap **Add**.
 5. Open the blue MAX-G icon on your Home Screen.
 
@@ -26,6 +26,18 @@ This is the website-installed iOS edition. It requires neither an unsigned IPA n
 - If verified local browser dictation is unavailable, dictate with the microphone on the iPhone keyboard into the text box.
 - Choose **Settings → This device** to inspect local AI, sound, recording, files, location and online capabilities.
 - Download a compatible local model or voice only when you want to use it. Installation itself does not imply these downloads are complete.
+
+## Try your installed app
+
+Open the blue MAX-G Home Screen icon. Type each message into its message box and tap the upward-arrow **Send** button; **Enter** also sends when using a hardware keyboard.
+
+1. **`2 + 2`** — MAX-G should answer **4**. This checks sending without downloading a model.
+2. **`weather for 20171`** — while online, check that MAX-G identifies **Herndon, Virginia** and shows the forecast. This explicit ZIP-code test does not require GPS permission.
+3. **`I need advice`** — then describe what you need help with. For general AI conversation, check **Settings → This device**, use **Load local AI** on a compatible device, and keep MAX-G open until the initial model download completes. Use Wi-Fi for that first download; a Home Screen installation does not install the model itself.
+4. **Hear MAX-G** — tap this sound control and enable **Speak replies**. If silent, check media volume and Bluetooth routing, then open **More controls → Sound help**. A voice may need its own download. Test microphone input only when ready to grant that permission, or use keyboard dictation.
+5. **Settings → Install & updates** — check for an app update while online. Apply an offered update when your current work is saved.
+
+If local AI is unavailable, the device check explains the missing capability. Installation and basic built-in tools can still work; do not treat successful installation as proof that every device can run a local conversational model. Current Safari supports WebGPU on iOS/iPadOS 26 and later, but model compatibility and available memory still matter.
 
 ## Shared releases and personal data
 
