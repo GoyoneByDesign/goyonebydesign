@@ -28,6 +28,46 @@ function cutBytes(text, budget, tail = false) {
   return result;
 }
 
+/** Keep the latest writing exchange useful inside the local 4K context window.
+ * The caller supplies previous messages only. Reserve the complete current
+ * question before considering history; never shorten it here. Excerpts are
+ * labelled so the model does not mistake a skipped middle for a complete story.
+ */
+export function boundedStoryHistory(input,{system='',current='',maxTokens=1024}={}) {
+  if(!Array.isArray(input))throw new TypeError('Messages must be an array.');
+  if(typeof system!=='string'||typeof current!=='string')throw new TypeError('System and current messages must be strings.');
+  const valid=message=>message&&['user','assistant'].includes(message.role)&&typeof message.content==='string';
+  const count=input.filter(valid).length;
+  let pair=null;
+  for(let i=input.length-1;i>0;i--) {
+    if(valid(input[i])&&input[i].role==='assistant'&&valid(input[i-1])&&input[i-1].role==='user') {
+      pair=[input[i-1],input[i]].map(({role,content})=>({role,content}));break;
+    }
+  }
+  if(!pair)return {messages:[],trimmed:count>0};
+  const outputLimit=Math.max(32,Math.min(1024,Math.floor(Number(maxTokens)||OUTPUT_TOKENS)));
+  const promptBudget=CONTEXT_TOKENS-outputLimit-256;
+  const systemBytes=bytes(cutBytes(system,Math.min(850,Math.floor(promptBudget*0.55))));
+  // boundedMessages charges an additional 32 bytes for every complete pair.
+  const available=promptBudget-systemBytes-bytes(current)-32;
+  const pairBytes=bytes(pair[0].content)+bytes(pair[1].content);
+  if(pairBytes<=available)return {messages:pair,trimmed:count>2};
+  if(available<=0)return {messages:[],trimmed:true};
+
+  const requestLabel='[Previous request excerpt]\n';
+  const user=bytes(pair[0].content)<=300?pair[0].content:requestLabel+cutBytes(pair[0].content,300-bytes(requestLabel));
+  const storyBudget=available-bytes(user);
+  const startLabel='[Earlier story excerpt: beginning]\n',middleLabel='\n[Middle omitted; ending follows]\n';
+  const overhead=bytes(startLabel)+bytes(middleLabel);
+  let assistant=pair[1].content;
+  if(bytes(assistant)>storyBudget) {
+    if(storyBudget<overhead+64)return {messages:[],trimmed:true};
+    const payload=storyBudget-overhead,beginningBudget=Math.floor(payload*0.4);
+    assistant=startLabel+cutBytes(assistant,beginningBudget)+middleLabel+cutBytes(assistant,payload-beginningBudget,true);
+  }
+  return {messages:[{role:'user',content:user},{role:'assistant',content:assistant}],trimmed:true};
+}
+
 /** Byte bounds are deliberately conservative for multilingual BPE tokenization.
  * Reserve generation and chat-template space. Keep system instructions and the
  * latest user turn; drop older pairs before shortening current evidence.

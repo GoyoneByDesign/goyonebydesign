@@ -229,3 +229,7 @@ Natural voice playback may need a separate first download in each browser. Keep 
 MAX-G remembers microphone approval on this device. An existing browser or macOS microphone grant avoids a second MAX-G confirmation; a denied permission still blocks recording. You can change this in Settings → Permissions. Browsers and macOS control their own permission prompts. A newly signed Mac build may request OS permission once after an update. Starting Talk is still required; MAX-G never starts recording just because you opened it.
 
 Short replies such as “more,” “yes,” and “what about tomorrow?” can use the current conversation. Cloudflare receives only the bounded current-session exchanges used for that conversation; previously saved or imported chats are not automatically uploaded.
+
+## Longer stories (1.12.4)
+
+Narration now preserves up to 16,000 source characters and splits speech into small sequential chunks. Long stories no longer stop at the old 1,800-character limit. Stop voice cancels playback and prevents later chunks from starting.

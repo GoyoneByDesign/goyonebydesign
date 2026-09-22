@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "version": "1.12.3",
-  "build": 211,
+  "version": "1.12.4",
+  "build": 212,
   "min_companion_build": 211,
   "files": [
     {
@@ -21,13 +21,13 @@
     },
     {
       "path": "README.md",
-      "sha256": "fd2f006bc471eca2fbe0b9a435bfd3eeedeadec9a6486321793f944336c1bb99",
-      "bytes": 38355
+      "sha256": "46e3271af45277a5db0a5d6e3ec881b08d04deaa71cd3585e219081a04b5e50c",
+      "bytes": 39880
     },
     {
       "path": "VOICE-SETUP.md",
-      "sha256": "555d449e176aec845ef5c0b257aa31df914b53722e20e43990a3d2c953e5d3d1",
-      "bytes": 17532
+      "sha256": "42e86ba7412313e34af83c538ed9a44b817e33fcfe43896ed3beffd0b2a0550a",
+      "bytes": 17795
     },
     {
       "path": "WEATHER-GUIDE.md",
@@ -46,13 +46,13 @@
     },
     {
       "path": "answer-routing.js",
-      "sha256": "252d0abe1d0492cf6aece6080081cff51c1aa5b941abb935050a8fe780a01b91",
-      "bytes": 5219
+      "sha256": "5c3637c093506444ae530183c6561283f6a10fc01148b7ad0e6a66c6ec6290e7",
+      "bytes": 5422
     },
     {
       "path": "app.js",
-      "sha256": "60f8cd2adfe55a44c8821e24c0a4f359e2140daa400f27bf5fc00c58b81c5739",
-      "bytes": 125316
+      "sha256": "17ecb73a44c4cb73836de2f85a9a237913a69d8da1599acb74ed7c52ca430b68",
+      "bytes": 126465
     },
     {
       "path": "assets/goyonebydesign-logo.png",
@@ -86,13 +86,13 @@
     },
     {
       "path": "cloudflare-ai.js",
-      "sha256": "fec2d9e911043b65eea51810047742125d28c649343d01df6f95d32d8dcc0a94",
-      "bytes": 14112
+      "sha256": "9d09524367d87b396a3e038b7e360617c3eef0de3cce7d57cadec9219540ee4c",
+      "bytes": 14113
     },
     {
       "path": "companion-interactions.js",
-      "sha256": "21a3599c4fff36b30af17cc8f2cee63726f3c256cbdd570370914c0dd3861f69",
-      "bytes": 11582
+      "sha256": "4f1ec9013688c6a3c4dcf94b22a62105a7b141abbbb6f18b21cea07dd8a1e645",
+      "bytes": 12376
     },
     {
       "path": "connectors.css",
@@ -108,6 +108,11 @@
       "path": "country-data.js",
       "sha256": "bb60fbda0a7d372bbafd1d913b2b7dc07d9309f7744b1ac904f07acffd04fd1b",
       "bytes": 7410
+    },
+    {
+      "path": "creative-writing.js",
+      "sha256": "f18f72e4e12b69a21ceda6220fabccf601cf515c64ed3a669a2c7f12e5ef135a",
+      "bytes": 6476
     },
     {
       "path": "device-ui.js",
@@ -126,8 +131,8 @@
     },
     {
       "path": "engine.js",
-      "sha256": "e4a2e37b7970db2b1853cdb9964d8fc08304bd1ef5765a62057082c7894d454a",
-      "bytes": 16242
+      "sha256": "37789da94a26bfd366613f3d890a55d1e2d7047914a3d0214ff7c968ab102e39",
+      "bytes": 18685
     },
     {
       "path": "extensions.css",
@@ -271,7 +276,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "87677098d3a961bc962bd9912663d3693cd203ced7e242014b048b4ea2e75fae",
+      "sha256": "c20cae37c7908c637fc321dc72de21e7d98e5374e56351757e5faa7e6c7bb6b1",
       "bytes": 255
     },
     {
@@ -306,7 +311,7 @@
     },
     {
       "path": "release-version.js",
-      "sha256": "696cc4c6ddeafb3801a8197d175539e0f09a23489622ac4b72d1ef6c4b2413ba",
+      "sha256": "e9e294d8686ccbbc4a43b56fae03ae45a8ae5dedfd62cc378090dd5293c621ad",
       "bytes": 155
     },
     {
@@ -356,8 +361,8 @@
     },
     {
       "path": "sw.js",
-      "sha256": "eafb04f3dd314bc9a4df686794f94db6b9f8bcf9091b9f5dc300f274e0125e96",
-      "bytes": 8238
+      "sha256": "122f8995a3f711929fc6595b3a44182cfaf39191f7436e039505b6d0ef895fb6",
+      "bytes": 8265
     },
     {
       "path": "tools.js",
@@ -386,8 +391,8 @@
     },
     {
       "path": "voice-config.js",
-      "sha256": "b71b99ae5bc09537c0f5af1eb991a56dc8b240d7df7f5fea9d98797f4f02480b",
-      "bytes": 5536
+      "sha256": "036032415c3ec57205ef21b5373fcf68614110b282dcd3fbccbc7c354888759e",
+      "bytes": 5542
     },
     {
       "path": "voice-studio.css",
@@ -406,8 +411,8 @@
     },
     {
       "path": "voice.js",
-      "sha256": "0f1e975655f5f65889f99f9921db03a426388020197d9607d975b68ffba80ea8",
-      "bytes": 17233
+      "sha256": "a4de6fd8f0cf09ce01a35076b00caaee101dd54d1feb6f15b5e6efb3136776be",
+      "bytes": 17235
     },
     {
       "path": "weather-card.css",

@@ -3,7 +3,7 @@ import {NeuralVoice} from './neural-voice.js';
 import {normalizeVoice,sentenceChunks,NEURAL_VOICES,deliveryControls} from './voice-config.js';
 import {normalizePronunciation} from './speech-text.js';
 export const PROFILES={Warm:{pitch:1,rate:.98},Bright:{pitch:1.06,rate:1.03},Calm:{pitch:.95,rate:.94},Storyteller:{pitch:1.02,rate:.96},Focused:{pitch:.98,rate:1.02},Playful:{pitch:1.08,rate:1.04}};
-export function spokenText(text,options={}){const clean=String(text).replace(/\n\s*Sources?:[\s\S]*$/i,'').replace(/```[\s\S]*?```/g,' Code is available in the message. ').replace(/\[([^\]]+)\]\(https?:\/\/[^)]+\)/g,'$1').replace(/https?:\/\/\S+/g,'').replace(/\[\d+\]/g,'').replace(/^#{1,6}\s*/gm,'').slice(0,1800);return normalizePronunciation(clean,options).slice(0,6000);}
+export function spokenText(text,options={}){const clean=String(text).replace(/\n\s*Sources?:[\s\S]*$/i,'').replace(/```[\s\S]*?```/g,' Code is available in the message. ').replace(/\[([^\]]+)\]\(https?:\/\/[^)]+\)/g,'$1').replace(/https?:\/\/\S+/g,'').replace(/\[\d+\]/g,'').replace(/^#{1,6}\s*/gm,'').slice(0,16000);return normalizePronunciation(clean,options).slice(0,32000);}
 export class LocalVoice{
   constructor({onState=()=>{},onProgress=()=>{},onLevel=()=>{},helper=null,permission=async()=>{},preferCompanionNeural=false,nativeSpeech=null}={}){this.nativeSpeech=nativeSpeech;this.listeningController=null;this.recognitionCleanup=null;this.onState=onState;this.recognition=null;this.utterance=null;this.generation=0;this.helper=helper;this.permission=permission;this.preferCompanionNeural=preferCompanionNeural;this.neural=new NeuralVoice({onState,onProgress,onLevel});this.cloning=false;}
   async load(options){

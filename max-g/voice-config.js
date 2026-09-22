@@ -34,7 +34,7 @@ export function applyMaleVoicePreset(settings,presetId){
 }
 export function sentenceChunks(text,limit=220,{firstLimit=limit}={}){
   limit=Math.round(number(limit,80,280,220));firstLimit=Math.round(number(firstLimit,80,limit,limit));
-  const clean=String(text).trim().slice(0,1800).replace(/[\uD800-\uDBFF]$/u,''),chunks=[];
+  const clean=String(text).trim().slice(0,32000).replace(/[\uD800-\uDBFF]$/u,''),chunks=[];
   // Native sentence segmentation preserves decimals, abbreviations and CJK
   // punctuation. The fallback keeps full stops together rather than saying 3.14
   // as two sentences on a browser without Intl.Segmenter.
@@ -53,7 +53,11 @@ export function sentenceChunks(text,limit=220,{firstLimit=limit}={}){
     }
   }
   // Avoid many tiny synthesis calls without silently dropping the reply's tail.
-  while(chunks.length>32){let best=-1,size=Infinity;for(let i=1;i<chunks.length-1;i++){const n=chunks[i].length+chunks[i+1].length+1;if(n<=limit&&n<size){best=i;size=n;}}if(best<0)break;chunks.splice(best,2,chunks[best]+' '+chunks[best+1]);}
+  if(chunks.length>32){
+    const packed=[chunks[0]];
+    for(const chunk of chunks.slice(1)){const last=packed.length-1;if(last>0&&packed[last].length+chunk.length+1<=limit)packed[last]+=' '+chunk;else packed.push(chunk);}
+    return packed;
+  }
   return chunks;
 }
 export function deliveryControls({rate=1,pitch=0,depth=0,expression=.35,emotion='neutral',text=''}={}){

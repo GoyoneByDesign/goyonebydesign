@@ -25,7 +25,11 @@ export function searchBeforeReply(query,{onlineFirst=false,explicit=false,person
 export function allowLocalSearchFallback(query,{explicit=false}={}){
   return !explicit&&!needsLiveEvidence(query);
 }
-export function answerLimit(query,{detailed=false,document=false}={}){
+export function answerLimit(query,{detailed=false,document=false,creative=false}={}){
+  if(creative){
+    if(/\b(?:one|1|two|2|three|3|four|4|five|5|six|6)[ -](?:sentences?|lines?|words?)\b|\b(?:tiny|microfiction|very short)\b/i.test(query))return 384;
+    return 1024;
+  }
   if(document)return 768;
   if(detailed||/\b(?:step[- ]by[- ]step|in detail|detailed|complex|architecture|debug|compare|analy[sz]e|implementation)\b/i.test(query))return 768;
   return 384;

@@ -1,3 +1,13 @@
+# MAX-G 1.12.4 — stories and creative conversation
+
+Ask MAX-G to write an original story in any genre: fantasy, mystery, romance, comedy, horror, science fiction, adventure, historical fiction, or a blend. It can also write poems, scenes, dramatic scripts, jokes, and original lyrics. Give characters, a setting, tone, audience, and length if you have preferences; otherwise it begins writing without a setup questionnaire.
+
+Try “Write a fantasy story about a lost moon,” then “Continue,” “Make it funnier,” “Give it a happier ending,” or “Rewrite it in Tagalog.” Creative requests use AI generation directly. Weather, news, websites, or app commands mentioned inside a fictional plot do not trigger those tools. Ordinary questions, live-weather requests, calculations, advice, and coding requests retain their own routes.
+
+Stories receive more output space than brief chat replies. A longer novel is delivered a chapter at a time; ask to continue. Cloudflare retains bounded current-session story context, with no provider or paid-plan change. The small local model has less context space; MAX-G keeps a marked beginning/end excerpt when the whole preceding story cannot fit and shows a notice. Models can still miss a requested word count or detail; revisions are supported.
+
+**Speak replies** and **Hear MAX-G** narrate longer replies in small sequential chunks, including the ending. **Stop voice** remains available. There is no automatic publication or file/device action from generated fiction.
+
 # MAX-G 1.12.3 — continuous conversation and named locations
 
 MAX-G remembers microphone approval and keeps a started voice conversation listening through quiet pauses until you end it. Settings → Voice includes an opt-out. Short follow-up phrases use the current conversation. GPS weather and “where am I?” resolve a city and state, such as Herndon, Virginia, with a brief bounded online lookup; forecasts still work when city naming is unavailable.

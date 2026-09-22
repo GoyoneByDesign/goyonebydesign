@@ -1,9 +1,10 @@
 /** MAX-G shared interface. Selected Cloudflare or local inference, with explicit account/native tools. */
-import {MaxGEngine,MODELS as WEB_MODELS,DEFAULT_MODEL as WEB_DEFAULT_MODEL,checkWebGPU,boundedMessages} from './engine.js';
+import {MaxGEngine,MODELS as WEB_MODELS,DEFAULT_MODEL as WEB_DEFAULT_MODEL,checkWebGPU,boundedMessages,boundedStoryHistory} from './engine.js';
 import {MaxGLocalEngine,LOCAL_MODELS,LOCAL_DEFAULT_MODEL,isDesktopMode,desktopDefaults} from './local-ai.js';
 import {installMobileViewport} from './mobile-viewport.js';
 import {createAppUpdates,installedDisplay,renderUpdateSettings} from './updates.js';
 import {understandRequest} from './request-understanding.js';
+import {creativeRequest} from './creative-writing.js';
 import {createResearch,normalizeResearch} from './research.js';
 import {researchCards} from './research-cards.js';
 import {researchPlan,researchSources,researchAnswer,requestsArticles} from './research-routing.js';
@@ -44,7 +45,7 @@ const EMOTIONS=['neutral','happy','joyful','sad','embarrassed','curious','surpri
 const STUDY_TOPICS=['site:developer.mozilla.org JavaScript web APIs','site:webllm.mlc.ai local model inference','site:www.w3.org/WAI accessible web interfaces','site:docs.ollama.com structured outputs','site:docs.python.org tutorial errors','site:playwright.dev docs locators'];
 let state=freshState(),session={id:crypto.randomUUID(),title:'New conversation',messages:[]},attachments=[],workspace=[],folderHandle=null;
 let locationPending=null,locationContext=null;
-let publicTopic=null;
+let publicTopic=null,creativeSession=null;
 let consultationUntil=0;
 let active=null,taskEpoch=0,queued=null,voiceMode=false,dictationText='',voiceMisses=0,view='chat',settingsTab='general',selectedSkill='',deferredInstall=null,lastAnswer='',saveChain=Promise.resolve(),toastTimer;
 let evaluationProgress='',settingsController=null,performanceEpoch=0,playing=false,playTimer=null;
@@ -234,7 +235,7 @@ const publicResearch=createResearch({search:searchPublic,newsFetcher:(query,{sig
   const url=new URL('/news',BUILTIN_SEARCH_URL);url.searchParams.set('q',query);
   return readJSON(url,{signal,timeout:4800,maxBytes:60000});
 }});
-function clearPublicTopic(){publicTopic=null;consultationUntil=0;publicResearch.clear();cloudHistories.clear();}
+function clearPublicTopic(){publicTopic=null;creativeSession=null;consultationUntil=0;publicResearch.clear();cloudHistories.clear();}
 function renderResearch(value,{authorized=false}={}){
   return researchCards(value,{allowImages:state.settings.illustratedAnswers&&(state.settings.permissions.internet==='allow'||authorized&&state.settings.permissions.internet!=='deny'),onLoadImages:async()=>{await permission('internet');return true;}});
 }
@@ -348,7 +349,7 @@ function speakMessage(message,signal){return speak(message?.content||'',signal,m
 async function speak(text,signal,speechContext=null){stopPlay();const attempt=++audioAttempt;audioFeedback('Getting my voice ready…','preparing',true);const pending=voice.speak(text,{...normalizeVoice(state.settings.voice),language:languageCode(),profile:state.settings.voiceProfile,voiceURI:state.settings.voiceURI,rate:state.settings.rate,emotion:$('orb').dataset.emotion,speechContext:normalizeSpeechContext(speechContext)||{},signal}),generation=voice.generation;$('stopSpeechBtn').hidden=false;try{await pending;if(attempt===audioAttempt&&generation===voice.generation&&!signal?.aborted)audioFeedback(voiceMode?'I’m ready to listen.':'Ready when you are.');}catch(error){if(attempt!==audioAttempt||generation!==voice.generation||error.name==='AbortError'||signal?.aborted)return;audioFeedback(error.message+' Open Sound help to test the speaker or retry.','error');throw error;}}
 async function ensureModel(run){if(engine.readyFor(state.settings.model))return;if(!desktopMode)await permission('internet',{background:run.kind==='study'||run.kind==='schedule'});checkRun(run);$('modelProgress').hidden=false;await engine.load(state.settings.model,{signal:run.signal,onProgress:p=>{if(active!==run)return;$('modelProgress').value=Number(p.progress)||0;$('modelProgressLabel').textContent=String(p.text||'Preparing local model…').slice(0,220);}});checkRun(run);}
 function promptMessages(query,sources,files,task='chat',maxTokens=256,knowledge=''){
-  const system=companionPrompt(state.settings);
+  const system=companionPrompt(state.settings,{creative:task==='creative'});
 
   const skill=state.skills.find(s=>s.id===selectedSkill&&s.enabled)?.text||'';
   const references=sources.map((s,i)=>`[${i+1}] ${s.title}: ${s.snippet||''}`).join('\n').slice(0,1250);
@@ -367,6 +368,11 @@ function promptMessages(query,sources,files,task='chat',maxTokens=256,knowledge=
   if(state.settings.instructions)current+='Owner response preferences: '+state.settings.instructions.slice(0,350)+'\n';
   if(skill)current+='Owner selected workflow: '+skill.slice(0,350)+'\n';
   if(task==='document')current+='Create complete document content. Use Markdown; do not claim a file was saved.\n';
+  if(task==='creative'){
+    const prior=boundedStoryHistory(session.messages.slice(0,-1),{system,current,maxTokens});
+    if(prior.trimmed)toast('Local AI is using a shortened story excerpt to fit this device’s model.');
+    return [{role:'system',content:system},...prior.messages,{role:'user',content:current}];
+  }
   return [{role:'system',content:system},...session.messages.slice(-4).filter(m=>m.content!==query).map(m=>({role:m.role,content:m.content.slice(0,300)})),{role:'user',content:current}];
 }
 function decodeReply(raw){let text=raw;const emotion=text.match(/^\s*\[emotion:([a-z]+)\]\s*/i);if(emotion){setOrb('thinking',emotion[1].toLowerCase());text=text.slice(emotion[0].length);}text=text.replace(/^\s*\[language:[^\]]+\]\s*/i,'');return cleanCompanionReply(text);}
@@ -380,7 +386,7 @@ async function generateCloud(query,sources,files,run,contentNode,task,outputLimi
   }
   if(!geminiAccessToken&&!native)throw cloudflareError(401,'AI_UNAUTHORIZED');
   const history=cloudHistories.get(session.id)||[];
-  const system=companionPrompt(state.settings).replace('Keep personal advice local;','Keep personal details out of public search;')+
+  const system=companionPrompt(state.settings,{creative:task==='creative'}).replace('Keep personal advice local;','Keep personal details out of public search;')+
     ' This conversation uses Cloudflare Workers AI. Only the supplied conversation and source excerpts are available; do not claim access to saved memory, files, apps or completed actions.'+
     (task==='document'?' Produce complete document content as Markdown; do not claim a file was saved.':'');
   const packed=cloudflareMessages({question:query,system,history,sources});
@@ -404,7 +410,7 @@ async function generateCloud(query,sources,files,run,contentNode,task,outputLimi
   }finally{if(paint)cancelAnimationFrame(paint);}
 }
 async function generate(query,sources,files,run,contentNode,task='chat'){
-  const outputLimit=answerLimit(query,{document:task==='document',detailed:state.settings.replyLength==='Detailed'});
+  const outputLimit=answerLimit(query,{creative:task==='creative',document:task==='document',detailed:state.settings.replyLength==='Detailed'});
   if(usingCloud())return generateCloud(query,sources,files,run,contentNode,task,outputLimit);
   let knowledge='';
   if(desktopMode&&state.settings.useMemory){try{knowledge=knowledgeContext(await connectorHub.extensionRequest('memory/search',{query:query.slice(0,500),limit:3},{signal:run.signal}));}catch(error){if(error.name==='AbortError')throw error;toast('Saved knowledge is unavailable for this reply: '+error.message);}checkRun(run);}
@@ -415,7 +421,7 @@ async function generate(query,sources,files,run,contentNode,task='chat'){
   if(paint)cancelAnimationFrame(paint);checkRun(run);$('modelStatus').textContent=`Local response: ${((performance.now()-started)/1000).toFixed(1)} s${firstToken===null?'':` · first text ${((firstToken-started)/1000).toFixed(1)} s`}`;let answer=decodeReply(result.text);if(sources.length)answer=cleanWebReply(answer);if(result.contextTrimmed&&answer.trim()!=='[SEARCH]'){const notice='Some earlier history or supplied context was shortened to fit the local model. Use a shorter request and focused notes for a fuller review.';toast(notice);answer+='\n\n['+notice+']';}if(result.finishReason==='length'&&answer.trim()!=='[SEARCH]')answer+='\n\n[Reply reached the length limit. Ask me to continue.]';return answer.trim();
 }
 const smallTalk=isLocalConversation;
-function forgetGeminiToken(){geminiAccessToken='';cloudAuthPrompted=false;cloudHistories.clear();if(active?.kind==='gemini-support'||usingCloud()&&active?.kind==='chat')active.controller.abort();document.querySelectorAll('[data-gemini-token]').forEach(input=>{input.value='';});refreshInferenceUI();}
+function forgetGeminiToken(){geminiAccessToken='';cloudAuthPrompted=false;creativeSession=null;cloudHistories.clear();if(active?.kind==='gemini-support'||usingCloud()&&active?.kind==='chat')active.controller.abort();document.querySelectorAll('[data-gemini-token]').forEach(input=>{input.value='';});refreshInferenceUI();}
 function openGeminiDialog(){
   if(active)return toast('Finish or stop the current task before asking Gemini.');
   pauseVoiceOutput();stopPlay();
@@ -498,7 +504,10 @@ async function submit(text=$('messageInput').value,selected=attachments){
   if(playCommand==='stop'){stop();$('messageInput').value='';return;}
   if(playCommand&&!active){consultationUntil=0;$('messageInput').value='';return runPlay(playCommand,{userText:text});}
   if(active){if(queued)return toast('One message is already queued. Your new draft is still in the box.');queued={text,attachments:[...selected]};$('messageInput').value='';attachments=[];renderAttachments();if(['study','schedule','evaluation'].includes(active.kind))stop({preserveQueue:true});updateBusy();return;}
-  const consultation=selected.length?{personal:false,nextActive:false}:classifyConsultationTurn(text,{active:Date.now()<consultationUntil});
+  const writing=creativeRequest(text,{context:creativeSession});
+  if(writing){publicTopic=null;locationPending=null;locationContext=null;locationHub.retireSelection();}
+  creativeSession=null;
+  const consultation=selected.length||writing?{personal:false,nextActive:false}:classifyConsultationTurn(text,{active:Date.now()<consultationUntil});
   consultationUntil=consultation.nextActive?Date.now()+5*60*1000:0;
   if(consultation.personal){publicTopic=null;locationPending=null;locationContext=null;locationHub.retireSelection();}
   if(locationPending&&!selected.length){
@@ -514,14 +523,14 @@ async function submit(text=$('messageInput').value,selected=attachments){
     }
     locationContext=null;locationHub.retireSelection();
   }
-  const extension=desktopMode&&!selected.length?extensionCommand(text):null;
+  const extension=!writing&&desktopMode&&!selected.length?extensionCommand(text):null;
   if(extension){
     const run=begin('extension');$('messageInput').value='';
     try{if(extension.operation==='memory/save')await permission('files');checkRun(run);const result=await connectorHub.extensionRequest(extension.operation,extension.body,{signal:run.signal});checkRun(run);const answer=extensionReply(extension,result);connectorReply(answer,text);if(canSpeakReply())await speak(answer,run.signal);}
     catch(error){showError(error);}finally{finish(run);}return;
   }
   let browserTask=null;
-  if(!selected.length){try{browserTask=parseBrowserTask(text);}catch(error){toast(error.message);return;}}
+  if(!writing&&!selected.length){try{browserTask=parseBrowserTask(text);}catch(error){toast(error.message);return;}}
   if(browserTask){
     $('messageInput').value='';browserPanel.prepare(browserTask);
     if(browserTask.mode==='panel'){connectorReply('The browser task panel is open. Add a website and describe what you want me to do.',text);return;}
@@ -530,15 +539,15 @@ async function submit(text=$('messageInput').value,selected=attachments){
     connectorReply('I’m opening this task in the browser side panel. You can watch each step and stop me there.',text);
     try{const result=await browserPanel.start(browserTask);if(result?.message)connectorReply(result.message);}catch(error){if(error.name!=='AbortError')connectorReply(`The browser task paused: ${error.message}`);}return;
   }
-  const understood=understandRequest(text,{context:publicTopic,hasFiles:Boolean(selected.length),hasConversation:usingCloud()?Boolean(cloudHistories.get(session.id)?.length):session.messages.some(m=>m.role==='assistant')});
+  const understood=writing?{query:text,nextContext:null}:understandRequest(text,{context:publicTopic,hasFiles:Boolean(selected.length),hasConversation:usingCloud()?Boolean(cloudHistories.get(session.id)?.length):session.messages.some(m=>m.role==='assistant')});
   const query=understood.query;
   if(understood.clarification){$('messageInput').value='';connectorReply(understood.clarification,text);if(canSpeakReply())try{await speak(understood.clarification);}catch(error){showError(error);}return;}
   publicTopic=understood.nextContext;
-  const locationIntent=selected.length?null:parseLocationIntent(query);
-  const weatherIntent=selected.length?null:weatherRequest(query,normalizeLocationSettings(state.settings.locations).autoLocate!==false?'':state.settings.weatherCity);
+  const locationIntent=writing||selected.length?null:parseLocationIntent(query);
+  const weatherIntent=writing||selected.length?null:weatherRequest(query,normalizeLocationSettings(state.settings.locations).autoLocate!==false?'':state.settings.weatherCity);
   if(weatherIntent)return handleLocationRequest(locationIntent?.kind==='weather'?locationIntent:{kind:'weather',place:weatherIntent.city||'',country:'',useDevice:false},text,weatherIntent);
   if(locationIntent)return handleLocationRequest(locationIntent,text);
-  if(parseDirectCommand(text)){
+  if(!writing&&parseDirectCommand(text)){
     const run=begin('connector-command');$('messageInput').value='';
     try{const result=await connectorHub.handleCommand(text);checkRun(run);if(result?.handled){connectorReply(result.text,text);if(canSpeakReply())try{await speak(result.text,run.signal);}catch(error){showError(error);}}}finally{finish(run);}return;
   }
@@ -551,9 +560,9 @@ async function submit(text=$('messageInput').value,selected=attachments){
   const showResearch=data=>{checkRun(run);if(!data.articles.length&&!data.background)return;if(/WebGPU|GPU adapter|shader-f16|graphics acceleration/i.test($('compatibilityNotice').textContent))$('compatibilityNotice').hidden=true;researchData=data;sources=researchSources(data);if(!showArticleCards)return;rendering.article.classList.add('message-research');const cards=renderResearch(data,{authorized:true});rendering.article.querySelector('[data-research-progress]')?.remove();if(cards){cards.dataset.researchProgress='';rendering.article.append(cards);}rendering.content.textContent='';rendering.content.hidden=true;scrollBottom();};
   try{
     if(files.length)await permission('files',{picked:true});checkRun(run);
-    const social=files.length?null:socialReply(text,{name:state.profile.displayName,personalize:state.profile.personalize,language:state.settings.language});
-    const consultationOpener=files.length?null:consultationReply(text,{language:state.settings.language});
-    const quick=files.length?null:(basicDeviceAnswer(query)||quickAnswer(query,{units:state.settings.unitSystem})),request=files.length?null:weatherRequest(query,state.settings.weatherCity);
+    const social=writing||files.length?null:socialReply(text,{name:state.profile.displayName,personalize:state.profile.personalize,language:state.settings.language});
+    const consultationOpener=writing||files.length?null:consultationReply(text,{language:state.settings.language});
+    const quick=writing||files.length?null:(basicDeviceAnswer(query)||quickAnswer(query,{units:state.settings.unitSystem})),request=writing||files.length?null:weatherRequest(query,state.settings.weatherCity);
     const research=query.match(/^(?:\/(?:research|search|learn)\s+|research\s+|look up\s+|learn about\s+)([\s\S]+)/i);
     if(social){answer=social.text;answerModel='Local greeting';setOrb('idle',social.emotion);}
     else if(consultationOpener){answer=consultationOpener.text;answerModel='Local conversation guide';setOrb('idle',consultationOpener.emotion);}
@@ -561,7 +570,7 @@ async function submit(text=$('messageInput').value,selected=attachments){
     else if(request){if(request.city){await permission('internet');checkRun(run);}const result=await weather({...request,units:normalizeUnitSystem(request.units||state.settings.unitSystem)},run.signal);checkRun(run);answer=result.text;sources=result.sources;orbit.setWeather(result.orbitWeather);}
     else if(files.length===1&&/\.csv$/i.test(files[0].name)&&/\b(statistics|stats|summary|summari[sz]e|totals|average)\b/i.test(text)){answer=csvStats(files[0].text);}
     else{
-      const plan=researchPlan(research?.[1]||query,{onlineFirst:state.settings.onlineFirst,explicit:Boolean(research)||showArticleCards,personal:consultation.personal||smallTalk(text),hasFiles:Boolean(files.length)});
+      const plan=writing?null:researchPlan(research?.[1]||query,{onlineFirst:state.settings.onlineFirst,explicit:Boolean(research)||showArticleCards,personal:consultation.personal||smallTalk(text),hasFiles:Boolean(files.length)});
       if(plan){
         const localFallback=allowLocalSearchFallback(query,{explicit:Boolean(research)});
         if(state.settings.permissions.internet==='deny'&&localFallback){searchFailed=true;}
@@ -576,7 +585,8 @@ async function submit(text=$('messageInput').value,selected=attachments){
           try{rendering.content.hidden=false;const summary=await generate(research?.[1]||query,sources,files,run,rendering.content);if(summary&&summary!=='[SEARCH]'){answer=summary;answerModel=inferenceLabel();}}
           catch(error){checkRun(run);if(error.name==='AbortError')throw error;rendering.content.textContent=answer;rendering.content.hidden=false;if(usingCloud()){answer+='\n\n'+error.message;toast('Sources are ready. AI reply unavailable; see chat.');}else toast('Sources are ready. Local AI narration is unavailable.');if(usingCloud()&&error.code==='AI_UNAUTHORIZED'&&!cloudAuthPrompted){cloudAuthPrompted=true;openAISettings();}}
         }
-      }else{rendering.content.hidden=false;answer=await generate(research?.[1]||query,sources,files,run,rendering.content,/^\/document\b/i.test(text)?'document':'chat');answerModel=inferenceLabel();}
+      }else{rendering.content.hidden=false;answer=await generate(research?.[1]||query,sources,files,run,rendering.content,writing?'creative':/^\/document\b/i.test(text)?'document':'chat');answerModel=inferenceLabel();}
+      if(writing&&answer.trim()==='[SEARCH]')throw new Error('I couldn’t finish the creative response. Please try again, or give me a character or setting to begin with.');
       if(answer.trim()==='[SEARCH]'&&!files.length&&(consultation.personal||smallTalk(text)))throw new Error('Sorry, can you say that again? A little more detail will help me understand.');
       if(answer.trim()==='[SEARCH]'&&!searchFailed&&!files.length&&!sources.length&&researchPlan(query,{explicit:true,personal:consultation.personal||smallTalk(text)})){
         await permission('internet');checkRun(run);publicQuery=query;
@@ -590,6 +600,7 @@ async function submit(text=$('messageInput').value,selected=attachments){
       if(answer==='[SEARCH]'||!answer)throw new Error('I couldn’t verify an answer from the available information. Please try a more specific question.');
     }
     checkRun(run);
+    if(writing)creativeSession=writing.nextContext;
     if(!files.length&&(consultationOpener||(social&&!/\bmy name\b/i.test(text))))rememberCloudExchange(text,consultationOpener?.text||socialReply(text,{personalize:false,language:state.settings.language})?.text);
     rendering.article.remove();const speechContext=yearQuestionSpeechContext(text,answer);session.messages.push({role:'assistant',content:answer,sources,model:answerModel,...(researchData?{research:researchData,showArticles:showArticleCards}:{}),...(speechContext?{speechContext}:{})});renderMessage(session.messages.at(-1),{authorized:Boolean(researchData)});lastAnswer=answer;record();scrollBottom();
     if(canSpeakReply()){try{await speakMessage(session.messages.at(-1),run.signal);}catch(error){showError(error);pauseVoiceOutput();}}
@@ -729,7 +740,7 @@ function renderSettings(tab=settingsTab){pauseVoiceOutput();stopPlay();locationH
  }
  if(tab==='permissions'){add('accessMode','Browser access mode',{options:['Limited','Full']});panel.append(element('p','Limited uses file selection and downloads. Full also permits writing into a folder you explicitly pick where supported. Mac apps and connector accounts have separate permissions in Connectors & devices and require the local companion.','muted'));for(const cap of ['internet','files','microphone','location']){const f=field(cap[0].toUpperCase()+cap.slice(1),state.settings.permissions[cap],{options:['ask','allow','deny']});panel.append(f.wrap);pending['permission:'+cap]=f.input;}panel.append(button('Revoke current folder grant',()=>{if(active?.kind==='files')stop();folderHandle=null;toast('The app forgot its folder handle. Browser site settings can revoke OS grants.');}));}
  if(tab==='memory'){panel.append(toggle('Use relevant notes and reviewed lessons',state.settings.useMemory,v=>{state.settings.useMemory=v;persist();}),toggle('Save chat history on this browser',state.settings.saveChats,v=>{state.settings.saveChats=v;persist();}),element('p','Bounded storage: 12 chats × 20 exchanges, 60 small notes, 40 lessons, 100 feedback items, 8 check runs, 20 skills and 10 schedules. Feedback saves short question/answer excerpts only when you rate a reply, even if chat history is off. Ordinary web answers are not learned automatically. Browser storage may be evicted, especially on mobile; export important notes.','muted'),button('Export personal backup',async()=>{await permission('files');download('MAX-G-personal-backup.json',JSON.stringify(state,null,2),'application/json');}),button('Clear chat history',()=>{stop();clearPublicTopic();state.chats=[];session={id:crypto.randomUUID(),title:'Conversation',messages:[]};lastAnswer='';persist();renderChats();renderChat();}),button(desktopMode?'Release CPU model memory':'Delete downloaded model cache',async()=>{if(desktopMode){stop();await engine.unload();toast('CPU model unloaded. Installed weights are kept.');return;}if(!window.confirm('Delete MAX-G model downloads? You will need to download them again for AI replies.'))return;stop();await engine.clearCache();toast('Model downloads deleted.');}));const reset=field('Factory reset code','',{type:'password'});reset.input.autocomplete='off';panel.append(reset.wrap,button('Reset personal data',async()=>{if(!isResetCode(reset.input.value))throw new Error('That reset code does not match.');await factoryReset();}));}
- panel.append(button('Save settings',async()=>{stop();const oldModel=state.settings.model,oldInference=state.settings.inferenceMode;const candidate=structuredClone(state.settings);for(const [key,input]of Object.entries(pending)){if(key.startsWith('permission:'))candidate.permissions[key.split(':')[1]]=input.value;else candidate[key]=key==='rate'?Math.max(.65,Math.min(1.5,Number(input.value)||1)):input.value.slice(0,key==='instructions'?1200:300);}if(candidate.proxyURL)proxyBase(candidate.proxyURL);state.settings=candidate;if(oldInference!==candidate.inferenceMode){cloudHistories.clear();cloudAuthPrompted=false;}if(candidate.permissions.location==='deny')locationHub.forget({persist:false});if(oldModel!==state.settings.model)await engine.unload();folderHandle=null;const saved=await persist();applySettings();if(!saved)throw new Error('Settings apply in this tab, but could not be saved. Keep this window open and export your notes.');$('settingsDialog').close();toast('Settings saved. Active work stopped; temporary access cleared.');}));}
+ panel.append(button('Save settings',async()=>{stop();const oldModel=state.settings.model,oldInference=state.settings.inferenceMode;const candidate=structuredClone(state.settings);for(const [key,input]of Object.entries(pending)){if(key.startsWith('permission:'))candidate.permissions[key.split(':')[1]]=input.value;else candidate[key]=key==='rate'?Math.max(.65,Math.min(1.5,Number(input.value)||1)):input.value.slice(0,key==='instructions'?1200:300);}if(candidate.proxyURL)proxyBase(candidate.proxyURL);state.settings=candidate;if(oldInference!==candidate.inferenceMode){creativeSession=null;cloudHistories.clear();cloudAuthPrompted=false;}if(candidate.permissions.location==='deny')locationHub.forget({persist:false});if(oldModel!==state.settings.model)await engine.unload();folderHandle=null;const saved=await persist();applySettings();if(!saved)throw new Error('Settings apply in this tab, but could not be saved. Keep this window open and export your notes.');$('settingsDialog').close();toast('Settings saved. Active work stopped; temporary access cleared.');}));}
 async function factoryReset(){
   if(active?.kind==='reset')return toast('The reset is already in progress.');
   locationPending=null;locationContext=null;settingsController?.abort();stop();forgetGeminiToken();geminiDialogRun=null;$('geminiDialog').close();voice.unload();fastWeather.clear();orbit.clearWeather();active=null;taskEpoch++;queued=null;const run=begin('reset');

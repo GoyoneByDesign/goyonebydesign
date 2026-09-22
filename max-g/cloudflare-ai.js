@@ -45,7 +45,7 @@ export function cloudflareMessages({question,system,history=[],sources=[]}={}){
   const eligible=(Array.isArray(history)?history:[]).filter(m=>m&&['user','assistant'].includes(m.role)&&typeof m.content==='string'&&m.content.trim());
   for(let i=eligible.length-1;i>=0&&turns.length<12;i--){
     const m=eligible[i];
-    if(m.content.length>6000||m.content.length>remaining){contextTrimmed=true;break;}
+    if(m.content.length>16000||m.content.length>remaining){contextTrimmed=true;break;}
     turns.unshift({role:m.role,content:m.content});remaining-=m.content.length;
   }
   if(turns.length<eligible.length)contextTrimmed=true;
