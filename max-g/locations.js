@@ -6,6 +6,7 @@
  * Overpass needs app identification: its referrer reveals only this app's origin.
  */
 import {weatherRequest,postalReply} from './tools.js';
+import {STATE_NAMES} from './address-speech.js';
 import {normalizePlaceText,looksLikePostalCode,normalizePostalCode,postalComparisonKey} from './postal-data.js';
 import {parseWeatherPlaceSpec,matchesWeatherPlace,isBroadWeatherPlace,weatherLocalityPrompt,weatherCountySearch,weatherCountyIds,countyWeatherPoint,countyWeatherNotice} from './weather-place.js';
 export const LOCATION_DEFAULTS=Object.freeze({country:'US',place:'',radius:1500,mode:'driving',mapProvider:'google',autoLocate:true,recentWeather:null});
@@ -368,6 +369,35 @@ export function createLocationClient({fetch:fetchImpl=(...args)=>globalThis.fetc
     const message=results.length?(fallbackMessage||'Choose the matching place. Map coordinates and postal coverage are approximate.'):'I could not find a matching location in the available sources. Coverage varies by country; this does not prove the place or code is invalid. Check the country, or try a city, district or street.';
     return remember(key,{...base,results,message},epoch);
   }
+  async function reverseLocation(value,{signal,timeout=1800}={}){
+    checkAbort(signal);const origin=coordinates(value),epoch=generation;
+    // City names need only a coarse point. Exact device coordinates are never
+    // placed in source links, storage, or this provider request.
+    const coarse={lat:Number(origin.lat.toFixed(3)),lon:Number(origin.lon.toFixed(3))};
+    const key=JSON.stringify(['reverse-city',coarse.lat,coarse.lon]),hit=cached(key);if(hit)return hit;
+    const url=new URL('https://photon.komoot.io/reverse');
+    url.search=new URLSearchParams({lat:String(coarse.lat),lon:String(coarse.lon),limit:'5',radius:'3',lang:'en'});
+    const data=await request(url.href,{signal,timeout:Math.max(500,Math.min(2500,Number(timeout)||1800))});
+    if(!Array.isArray(data?.features))throw new LocationError('LOCATION_FORMAT','The city-name service returned unreadable data.');
+    const candidates=[];
+    for(const feature of data.features.slice(0,10)){
+      const props=feature?.properties,geometry=feature?.geometry;if(!props||geometry?.type!=='Point'||!Array.isArray(geometry.coordinates))continue;
+      let mapped;try{mapped=coordinates({lat:geometry.coordinates[1],lon:geometry.coordinates[0]});}catch{continue;}
+      const meters=distance(coarse,mapped);if(meters>3500)continue;
+      const countryCode=normalizeCountry(props.countrycode);if(!countryCode)continue;
+      const type=clean(props.type||props.osm_value,40).toLowerCase();
+      const city=clean(props.city||(['city','town','village','hamlet','locality'].includes(type)?props.name:''),100);
+      const county=clean(props.county,100),rawRegion=clean(props.state,100),region=countryCode==='US'?(STATE_NAMES[rawRegion.toUpperCase()]||rawRegion):rawRegion,country=countryName(countryCode)||clean(props.country,90);
+      // A nearby shop, street, building or arbitrary POI is never called a city.
+      const name=city||county;if(!name)continue;
+      const label=joinLabel([name,region,country]);
+      candidates.push({meters,place:{name,city,region,country,countryCode,label,
+        ...(city&&clean(props.postcode,20)?{postal:clean(props.postcode,20)}:{}),
+        locationNameSource:'Photon',locationNamePrecision:city?'locality':'county',attribution:{...PHOTON_ATTR}}});
+    }
+    candidates.sort((a,b)=>Number(!a.place.city)-Number(!b.place.city)||a.meters-b.meters);
+    checkAbort(signal);return remember(key,{place:candidates[0]?.place||null},epoch);
+  }
   async function nearbyPlaces({lat,lon,category,radius=1500}={}, {signal}={}){
     checkAbort(signal);const origin=coordinates({lat,lon}),epoch=generation;
     if(!Object.hasOwn(FILTERS,category))throw new LocationError('INVALID_CATEGORY','Choose one of the supported nearby-place categories.');
@@ -380,11 +410,12 @@ export function createLocationClient({fetch:fetchImpl=(...args)=>globalThis.fetc
     return remember(key,{results,category,radius,attribution:{...OVERPASS_ATTR},
       message:results.length?'Mapped places within the search area, sorted by straight-line distance. This is a limited list; verify hours, availability and the route in Maps.':'No matching places were returned in this area. Map coverage may be incomplete; try a larger radius or your Maps app.'},epoch);
   }
-  return {resolvePlace,nearbyPlaces,clearCache};
+  return {resolvePlace,reverseLocation,nearbyPlaces,clearCache};
 }
 const defaultClient=createLocationClient();
 export const resolvePlace=(query,options)=>defaultClient.resolvePlace(query,options);
 export const nearbyPlaces=(place,options)=>defaultClient.nearbyPlaces(place,options);
+export const reverseLocation=(point,options)=>defaultClient.reverseLocation(point,options);
 export const clearLocationCache=()=>defaultClient.clearCache();
 globalThis.addEventListener?.('pagehide',clearLocationCache);
 

@@ -35,7 +35,7 @@ function topicAfter(query,pattern) {
   return rest.replace(/^(?:about|on|in|for)\s+/i,'').trim();
 }
 /** Call only for read-only understanding, never to authorize or repair an action command. */
-export function understandRequest(value,{context=null,now=Date.now(),hasFiles=false}={}) {
+export function understandRequest(value,{context=null,now=Date.now(),hasFiles=false,hasConversation=false}={}) {
   const original=String(value??''),text=original.trim();
   const result={query:original,kind:'unchanged',changed:false,clarification:null,contextUsed:false,nextContext:null};
   const done=(query,kind,extra={})=>({...result,query,kind,changed:query!==original,...extra});
@@ -49,7 +49,7 @@ export function understandRequest(value,{context=null,now=Date.now(),hasFiles=fa
   if(ACTION.test(text))return result;
   if(WEATHER_DEFINITION.test(text))return done(original,'general');
   if(/^(?:more|tell me more|more please|and more)[?.!]*$/i.test(text)) {
-    if(!previous)return clarify('What would you like more information about?');
+    if(!previous)return hasConversation?done(original,'general',{contextUsed:true}):clarify('What would you like more information about?');
     const query=previous.kind==='weather'?`Detailed weather forecast${previous.topic?` in ${previous.topic}`:''}`
       :previous.kind==='news'?`More latest news${previous.topic?` about ${previous.topic}`:''}`:`Tell me more about ${previous.topic}.`;
     return done(query,previous.kind,{contextUsed:true,nextContext:remember(previous.kind,previous.topic)});
@@ -64,6 +64,7 @@ export function understandRequest(value,{context=null,now=Date.now(),hasFiles=fa
   const temporal=query.replace(/\b(?:tomorow|tommorow|tommorrow)\b/i,'tomorrow').replace(/^7days\b/i,'7 days');
   if(TIME_ONLY.test(temporal)) {
     if(previous?.kind==='weather')return done(weatherQuery(temporal,previous.topic),'weather',{contextUsed:true,nextContext:remember('weather',previous.topic)});
+    if(hasConversation)return done(original,'general',{contextUsed:true});
     return clarify('What would you like to know for that time—weather, news, or something else?');
   }
   const follow=query.match(/^(?:and|what about|how about)\s+(.+?)[?.!]*$/i);
@@ -71,6 +72,7 @@ export function understandRequest(value,{context=null,now=Date.now(),hasFiles=fa
     const topic=follow[1].trim();
     if(previous?.kind==='news')return done(`Latest news about ${topic}`,'news',{contextUsed:true,nextContext:remember('news',topic)});
     if(previous?.kind==='weather'&&!/^(?:sports|news|music|movies|you|me)$/i.test(topic))return done(`Weather in ${topic}`,'weather',{contextUsed:true,nextContext:remember('weather',topic)});
+    if(hasConversation)return done(original,'general',{contextUsed:true});
     return clarify(`What would you like to know about ${topic}?`);
   }
   const placeFollow=query.match(/^(?:in|for)\s+(.+?)[?.!]*$/i);

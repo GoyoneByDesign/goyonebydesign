@@ -54,8 +54,13 @@ let geminiAccessToken='',geminiDialogRun=null;
 const cloudHistories=new Map();
 let cloudAuthPrompted=false;
 const usingCloud=()=>state.settings.inferenceMode!=='local';
+function rememberCloudExchange(question,answer){
+  if(!usingCloud()||!question||!answer)return;
+  if(cloudHistories.size>=12&&!cloudHistories.has(session.id))cloudHistories.delete(cloudHistories.keys().next().value);
+  cloudHistories.set(session.id,[...(cloudHistories.get(session.id)||[]),{role:'user',content:String(question)},{role:'assistant',content:String(answer)}].slice(-12));
+}
 function inferenceLabel(){return usingCloud()?CLOUDFLARE_AI_LABEL:engine.modelId||state.settings.model;}
-function openAISettings(){renderSettings('connection');$('settingsDialog').showModal();}
+function openAISettings(){renderSettings('connection');pauseVoiceOutput();$('settingsDialog').showModal();}
 function refreshInferenceUI(){
   $('loadModelBtn').textContent=usingCloud()?'Check Cloudflare AI':engine.ready?'Reload local AI':'Load local AI';
   $('inferenceNotice').hidden=false;
@@ -117,7 +122,7 @@ function stopVoiceOutput(){pauseVoiceOutput();audioFeedback('Voice stopped. Your
 function primeAudioFromGesture(){if(normalizeVoice(state.settings.voice).engine==='system')return;const attempt=++audioAttempt,generation=voice.generation;voice.enableAudio().catch(error=>{if(error.name!=='AbortError'&&attempt===audioAttempt&&generation===voice.generation)audioFeedback('Audio needs another tap. Use Hear MAX-G or Sound help to enable it.','error');});}
 function sendFromGesture(){const text=$('messageInput').value.trim();if(text&&!active&&!isResetCode(text)&&!performanceCommand(text)&&state.settings.speak)primeAudioFromGesture();submit().catch(showError);}
 function canSpeakReply(){return (state.settings.speak||voiceMode)&&!$('settingsDialog').open&&!$('soundDialog').open&&!$('geminiDialog').open;}
-function scheduleVoiceListen(delay=500){
+function scheduleVoiceListen(delay=250){
   clearTimeout(voiceListenTimer);const epoch=voiceSession;
   voiceListenTimer=setTimeout(()=>{voiceListenTimer=null;if(!voiceMode||epoch!==voiceSession||voiceStarting||voice.recognition||active||document.hidden||view!=='chat'||$('settingsDialog').open||$('soundDialog').open)return;startDictation(true).catch(showError);},delay);
 }
@@ -149,7 +154,7 @@ const updates=createAppUpdates({desktop:desktopMode,request:operation=>connector
     const check=$('checkUpdatesBtn');if(check)check.disabled=['checking','applying'].includes(value.phase);
   }});
 async function checkAppUpdates(){if(navigator.onLine===false)throw Error('Reconnect to the internet to check for updates.');await permission('internet');return updates.check();}
-function openUpdateSettings(){renderSettings('updates');$('settingsDialog').showModal();}
+function openUpdateSettings(){renderSettings('updates');pauseVoiceOutput();$('settingsDialog').showModal();}
 function backgroundUpdateCheck(){if(!document.hidden&&state.settings.permissions.internet==='allow')updates.check({automatic:true}).catch(()=>{});}
 const browserPanel=createBrowserPanel({workspace:connectorHub.browserWorkspace,toast,onShow:()=>setView('chat'),onConnect:()=>{browserPanel.show(false);setView('connectors');},
   runTask:async action=>{if(active)throw new Error('Finish or stop the current MAX-G task first.');const run=begin('connector-command');try{return await action();}finally{finish(run);}}});
@@ -176,7 +181,7 @@ async function locationReply(text,sources=[],signal=active?.signal,weatherCard=n
   // be slow, and must not block the next typed question or a place clarification.
   if(canSpeakReply()){
     const pending=speakMessage(message,signal).catch(showError);locationSpeech=pending;
-    pending.finally(()=>{if(locationSpeech!==pending)return;locationSpeech=null;if(!active&&voiceMode)scheduleVoiceListen(500);});
+    pending.finally(()=>{if(locationSpeech!==pending)return;locationSpeech=null;if(!active&&voiceMode)scheduleVoiceListen(250);});
   }
 }
 async function handleLocationRequest(intent,text,requestOverride=null){
@@ -196,7 +201,8 @@ async function handleLocationRequest(intent,text,requestOverride=null){
       locationPending=null;locationContext=null;orbit.setWeather(result.orbitWeather);
       $('modelStatus').textContent=result.cached?'Weather ready · checked less than a minute ago':'Weather ready · live weather tool';
       const notices=[result.areaNotice,fallbackNotice,postalCountryNotice].filter(Boolean);
-      await locationReply([result.text,fallbackNotice,postalCountryNotice].filter(Boolean).join('\n\n'),result.sources,signal,result.weatherCard,notices,postalSpeechContext(point));toast('Weather is ready in your conversation.');
+      const sources=[...result.sources,...(point.locationNameResolved&&point.attribution?[{title:point.attribution.text,url:point.attribution.url}]:[])];
+      await locationReply([result.text,fallbackNotice,postalCountryNotice].filter(Boolean).join('\n\n'),sources,signal,result.weatherCard,notices,postalSpeechContext(point));toast('Weather is ready in your conversation.');
     });
     if(!result?.pending){locationPending=null;locationContext=null;}
     return result;
@@ -247,12 +253,30 @@ function persist(){
 function languageCode(){return LANGUAGES[state.settings.language]||'en-US';}
 function networkLabel(){$('networkStatus').textContent=navigator.onLine?(usingCloud()?'Cloudflare AI':state.settings.onlineFirst||state.settings.illustratedAnswers?'Web-first · local AI':'Local conversation'):'Offline · cached tools';}
 function applySettings(){refreshInferenceUI();activityFrame.setMotion(state.settings.motion&&state.settings.orbit.intensity!=='off');if(state.settings.orbit.singing===false&&playing)stopPlay();applyAppearance(state.display);applyOwnerProfile(state.profile);orbit.setConfig(state.settings.orbit,{motion:state.settings.motion});document.body.dataset.theme=state.settings.theme.toLowerCase();document.body.classList.toggle('reduced-motion',!state.settings.motion);document.body.dataset.weatherEffects=state.settings.orbit.weather?'on':'off';document.body.dataset.weatherMotion=state.settings.motion&&state.settings.orbit.intensity!=='off'?'on':'off';for(const card of document.querySelectorAll('.weather-card'))card.dataset.animate=String(state.settings.motion&&state.settings.orbit.intensity!=='off'&&state.settings.orbit.weather);$('speakReplies').checked=state.settings.speak;networkLabel();}
-async function permission(capability,{background=false,picked=false}={}){const choice=state.settings.permissions[capability];if(choice==='deny')throw new Error(`${capability} access is denied in Settings → Permissions.`);if(choice==='ask'&&!picked){if(background)throw new Error('Background work waits for Allow in Permissions.');if(!window.confirm(`Allow MAX-G to use ${capability} for this operation?`))throw new DOMException('Permission was not granted.','AbortError');}return true;}
+async function microphoneAlreadyGranted(){
+  let timer;
+  try{return await Promise.race([(async()=>{
+    if(desktopMode&&globalThis.maxgSpeech?.status){const status=await globalThis.maxgSpeech.status({language:languageCode()});return status.permission==='authorized';}
+    if(navigator.permissions?.query){const status=await navigator.permissions.query({name:'microphone'});return status.state==='granted';}
+    return false;
+  })().catch(()=>false),new Promise(resolve=>{timer=setTimeout(()=>resolve(false),600);})]);}finally{clearTimeout(timer);}
+}
+async function permission(capability,{background=false,picked=false}={}){
+  const choice=state.settings.permissions[capability];
+  if(choice==='deny')throw new Error(`${capability} access is denied in Settings → Permissions.`);
+  if(choice==='ask'&&!picked){
+    if(background)throw new Error('Background work waits for Allow in Permissions.');
+    const granted=capability==='microphone'&&await microphoneAlreadyGranted();
+    if(!granted&&!window.confirm(capability==='microphone'?'Allow MAX-G to use the microphone and remember this choice on this device? You can stop listening or change this in Settings at any time.':`Allow MAX-G to use ${capability} for this operation?`))throw new DOMException('Permission was not granted.','AbortError');
+    if(capability==='microphone'){state.settings.permissions.microphone='allow';await persist();}
+  }
+  return true;
+}
 function updateBusy(){const busy=Boolean(active);activityFrame.set('task',busy&&!active.signal.aborted);$('stopBtn').hidden=!busy;if($('stopTaskBtn'))$('stopTaskBtn').hidden=!busy;$('sendBtn').hidden=busy;$('loadModelBtn').disabled=busy;if($('askGeminiBtn'))$('askGeminiBtn').disabled=busy;$('composerHint').textContent=queued?'One message queued · Stop restores it':'Enter to send · Shift + Enter for a new line';}
 function checkRun(run){if(active!==run||run.signal.aborted)throw new DOMException('Operation stopped.','AbortError');}
 function begin(kind){idleModel.touch();stopPlay();if(locationSpeech){locationSpeech=null;voice.stop();}if(active)throw new Error('Finish or stop the current operation first.');const controller=new AbortController();active={id:++taskEpoch,kind,controller,signal:controller.signal};updateBusy();return active;}
 function stop({preserveQueue=false}={}){pauseVoiceOutput();stopPlay();locationPending=null;locationContext=null;locationHub.retireSelection();connectorHub?.cancel();active?.controller.abort();engine.stop();voice.stop();voiceMode=false;$('voiceModeBtn').setAttribute('aria-pressed','false');$('micBtn').setAttribute('aria-pressed','false');if(queued&&!preserveQueue){$('messageInput').value=queued.text+($('messageInput').value?'\n'+$('messageInput').value:'');attachments=[...queued.attachments,...attachments].slice(0,6);queued=null;renderAttachments();}updateBusy();setOrb('idle');if(!$('voiceFeedback').hidden)audioFeedback('Voice stopped.');}
-function finish(run){if(active!==run)return;idleModel.touch();active=null;if(!locationSpeech)setOrb('idle');updateBusy();if(queued){const next=queued;queued=null;updateBusy();setTimeout(()=>submit(next.text,next.attachments),0);}else if(voiceMode&&!locationSpeech)scheduleVoiceListen(500);}
+function finish(run){if(active!==run)return;idleModel.touch();active=null;if(!locationSpeech)setOrb('idle');updateBusy();if(queued){const next=queued;queued=null;updateBusy();setTimeout(()=>submit(next.text,next.attachments),0);}else if(voiceMode&&!locationSpeech)scheduleVoiceListen(250);}
 function sourceNodes(sources){const row=element('div','','sources');for(const [i,source]of sources.entries()){const url=safePublicURL(source.url);if(!url)continue;const a=element('a',`[${i+1}] ${source.title||new URL(url).hostname}`,'source-link');a.href=url;a.target='_blank';a.rel='noopener noreferrer';row.append(a);}return row;}
 // Ordinary links keep mobile browser user activation. Permission checks are
 // synchronous so a declined request never opens a tab or sends the query.
@@ -506,7 +530,7 @@ async function submit(text=$('messageInput').value,selected=attachments){
     connectorReply('I’m opening this task in the browser side panel. You can watch each step and stop me there.',text);
     try{const result=await browserPanel.start(browserTask);if(result?.message)connectorReply(result.message);}catch(error){if(error.name!=='AbortError')connectorReply(`The browser task paused: ${error.message}`);}return;
   }
-  const understood=understandRequest(text,{context:publicTopic,hasFiles:Boolean(selected.length)});
+  const understood=understandRequest(text,{context:publicTopic,hasFiles:Boolean(selected.length),hasConversation:usingCloud()?Boolean(cloudHistories.get(session.id)?.length):session.messages.some(m=>m.role==='assistant')});
   const query=understood.query;
   if(understood.clarification){$('messageInput').value='';connectorReply(understood.clarification,text);if(canSpeakReply())try{await speak(understood.clarification);}catch(error){showError(error);}return;}
   publicTopic=understood.nextContext;
@@ -565,7 +589,9 @@ async function submit(text=$('messageInput').value,selected=attachments){
       if(searchFailed)answer+='\n\nWeb search was unavailable; this answer uses '+(usingCloud()?'the Cloudflare model’s existing knowledge.':'local knowledge.');
       if(answer==='[SEARCH]'||!answer)throw new Error('I couldn’t verify an answer from the available information. Please try a more specific question.');
     }
-    checkRun(run);rendering.article.remove();const speechContext=yearQuestionSpeechContext(text,answer);session.messages.push({role:'assistant',content:answer,sources,model:answerModel,...(researchData?{research:researchData,showArticles:showArticleCards}:{}),...(speechContext?{speechContext}:{})});renderMessage(session.messages.at(-1),{authorized:Boolean(researchData)});lastAnswer=answer;record();scrollBottom();
+    checkRun(run);
+    if(!files.length&&(consultationOpener||(social&&!/\bmy name\b/i.test(text))))rememberCloudExchange(text,consultationOpener?.text||socialReply(text,{personalize:false,language:state.settings.language})?.text);
+    rendering.article.remove();const speechContext=yearQuestionSpeechContext(text,answer);session.messages.push({role:'assistant',content:answer,sources,model:answerModel,...(researchData?{research:researchData,showArticles:showArticleCards}:{}),...(speechContext?{speechContext}:{})});renderMessage(session.messages.at(-1),{authorized:Boolean(researchData)});lastAnswer=answer;record();scrollBottom();
     if(canSpeakReply()){try{await speakMessage(session.messages.at(-1),run.signal);}catch(error){showError(error);pauseVoiceOutput();}}
   }catch(error){if(active!==run)return;if(error.name==='AbortError'){rendering.content.textContent=rendering.content.textContent?rendering.content.textContent+'\n[Stopped; incomplete.]':'Stopped.';}else{const recovery=!usingCloud()&&navigator.onLine?consultationUnavailable(text,error,{language:state.settings.language,active:consultation.personal}):null;const message=[recovery?.text,error.name==='CloudflareAIError'?error.message:userFacingFailure(error,{online:navigator.onLine,desktop:desktopMode})].filter(Boolean).join('\n\n');if(recovery)setOrb('idle',recovery.emotion);if(usingCloud()&&error.code==='AI_UNAUTHORIZED'&&!cloudAuthPrompted){cloudAuthPrompted=true;openAISettings();}rendering.content.textContent=message;session.messages.push({role:'assistant',content:message,sources:[],model:'Request status'});lastAnswer=message;if(publicQuery&&!files.length&&showArticleCards)appendSearchRecovery(rendering,publicQuery,sources);record();toast(error.name==='CloudflareAIError'?(error.code==='AI_QUOTA_EXHAUSTED'?'Free AI allowance reached. See chat for details.':'Cloudflare reply unavailable. See chat for details.'):message);if(canSpeakReply())try{await speak(message,run.signal);}catch{} }}finally{finish(run);}
 }
@@ -584,7 +610,7 @@ async function startDictation(continuous=false){
     let transcript='';
     await voice.listen({language:languageCode(),recognitionMode:config.recognitionMode,
       onText:text=>{if(epoch!==voiceSession)return;transcript=text;dictationText=text;},
-      onError:(message,detail={})=>{if(epoch!==voiceSession)return;audioFeedback(message,detail.fatal?'error':'info');},
+      onError:(message,detail={})=>{if(epoch!==voiceSession)return;audioFeedback(!detail.fatal&&voiceMode&&state.settings.keepListening?'Listening when you’re ready.':message,detail.fatal?'error':'info');},
       onEnd:async({fatal=false}={})=>{
         if(epoch!==voiceSession)return;voiceStarting=false;syncVoiceControls();
         if(fatal){pauseVoiceOutput();return;}
@@ -598,7 +624,9 @@ async function startDictation(continuous=false){
           return;
         }
         if(!voiceMode)return;
-        if(++voiceMisses>=2){pauseVoiceOutput();audioFeedback('Voice conversation paused. Tap Talk with MAX-G when you’re ready.');return;}
+        voiceMisses=Math.min(voiceMisses+1,8);
+        if(state.settings.keepListening){audioFeedback('Listening when you’re ready.','listening');scheduleVoiceListen(Math.min(2000,voiceMisses*250));return;}
+        if(voiceMisses>=2){pauseVoiceOutput();audioFeedback('Voice conversation paused. Tap Talk with MAX-G when you’re ready.');return;}
         try{await speak('Sorry, can you say that again?');}catch(error){showError(error);pauseVoiceOutput();}
         if(epoch===voiceSession&&voiceMode)scheduleVoiceListen(600);
       }});
@@ -682,7 +710,7 @@ function renderSettings(tab=settingsTab){pauseVoiceOutput();stopPlay();locationH
  if(tab==='profile'){panel.append(renderProfileSettings({profile:state.profile,style:state.settings.style,replyLength:state.settings.replyLength,signal:settingsSignal,onBeforeImage:()=>permission('files',{picked:true}),onSave:async value=>{if(settingsSignal.aborted)return false;stop();state.profile=normalizeProfile(value.profile);state.settings.style=value.style;state.settings.replyLength=value.replyLength;const saved=await persist();applySettings();return saved;}}));return;}
  if(tab==='display'){panel.append(renderDisplaySettings({display:state.display,signal:settingsSignal,onSave:async value=>{if(settingsSignal.aborted)return false;state.display=normalizeDisplay(value);const saved=await persist();applySettings();return saved;}}));panel.append(renderOrbitSettings({settings:state.settings.orbit,onChange:async value=>{if(settingsSignal.aborted)return;state.settings.orbit=value;applySettings();if(!await persist())throw new Error('Animation settings could not be saved.');},onPreview:()=>orbit.playFunny(),onDance:()=>runPlay('dance'),onSneeze:()=>runPlay('sneeze'),onStop:()=>stopPlay()}));return;}
  if(tab==='locations'){panel.append(locationHub.renderPreferences({signal:settingsSignal}));return;}
- if(tab==='voice'){panel.append(renderVoiceStudio({settings:state.settings,voice,ownerName:state.profile.displayName,languages:LANGUAGES,profiles:PROFILES,helper:(...args)=>connectorHub.voiceRequest(...args),permission,signal:settingsSignal,onNotice:toast,onSave:async candidate=>{if(settingsSignal.aborted)return false;stop();state.settings={...candidate,permissions:state.settings.permissions};const saved=await persist();applySettings();return saved;}}));return;}
+ if(tab==='voice'){panel.append(toggle('Keep listening until I end the conversation',state.settings.keepListening,value=>{state.settings.keepListening=value;persist();}),element('p','Quiet pauses do not end a voice conversation. End conversation, Stop voice, leaving the chat, or closing MAX-G stops listening. Browser background and device permission limits still apply.','muted'));panel.append(renderVoiceStudio({settings:state.settings,voice,ownerName:state.profile.displayName,languages:LANGUAGES,profiles:PROFILES,helper:(...args)=>connectorHub.voiceRequest(...args),permission,signal:settingsSignal,onNotice:toast,onSave:async candidate=>{if(settingsSignal.aborted)return false;stop();state.settings={...candidate,permissions:state.settings.permissions};const saved=await persist();applySettings();return saved;}}));return;}
  if(tab==='general'){add('inferenceMode','Conversation engine',{options:[{value:'cloudflare',label:'Cloudflare AI · free allowance · internet required'},{value:'local',label:'Local AI · on this device'}]});panel.append(button('Load local AI for on-device tools',()=>loadLocalModel()),button('Check this device',()=>renderSettings('device')),element('p',desktopMode?'Installed Ollama models run on this Mac’s CPU. Choose a smaller model for faster replies. Loading never downloads model files.':'The 1B model adapts to your GPU. Use This device to check features and manage memory. Larger models and cloned speech need more resources.','muted'));add('model','Local model',{options:MODELS.map(m=>({value:m.id,label:desktopMode?`${m.label}${engine.capability?.models?.find(item=>(item.id||item.name)===m.id)?.installed===false?' · not installed':''}`:`${m.label} · estimated ${m.memoryMB} MB + context`}))});add('unitSystem','Measurements',{options:Object.entries(UNIT_SYSTEMS).map(([value,label])=>({value,label}))});add('style','Personality',{options:['Friendly','Professional','Casual','Playful']});add('replyLength','Reply length',{options:['Brief','Detailed']});add('instructions','Your instructions for Local AI',{type:'textarea'});add('theme','Appearance',{options:['Dark','Light']});panel.append(toggle('Animate Orbit',state.settings.motion,v=>{state.settings.motion=v;applySettings();persist();}),element('p','Temperature is fixed at 0.0. This reduces randomness; it does not prevent mistakes. Model loading and first tokens are not instant.','muted'),button(desktopMode?'Unload CPU model':'Unload GPU model',async()=>{stop();await engine.unload();toast(desktopMode?'CPU model unloaded; installed model files are kept.':'GPU model unloaded; downloaded weights remain cached.');}));}
  if(tab==='connection'){
   add('inferenceMode','Conversation engine',{options:[{value:'cloudflare',label:'Cloudflare AI · free allowance · internet required'},{value:'local',label:'Local AI · on this device'}]});
@@ -715,16 +743,16 @@ async function factoryReset(){
 }
 function bind(){
  installMobileViewport();
- $('askGeminiBtn').onclick=openGeminiDialog;$('geminiForm').addEventListener('submit',event=>{event.preventDefault();sendGeminiSupport().catch(error=>{$('geminiStatus').textContent=error.message;showError(error);});});$('geminiCloseBtn').onclick=()=>$('geminiDialog').close();$('geminiCancelBtn').onclick=()=>$('geminiDialog').close();const cancelGemini=()=>{geminiDialogRun?.controller.abort();};$('geminiDialog').addEventListener('cancel',cancelGemini);$('geminiDialog').addEventListener('close',cancelGemini);$('geminiSettingsBtn').onclick=()=>{$('geminiDialog').close();renderSettings('connection');$('settingsDialog').showModal();};
+ $('askGeminiBtn').onclick=openGeminiDialog;$('geminiForm').addEventListener('submit',event=>{event.preventDefault();sendGeminiSupport().catch(error=>{$('geminiStatus').textContent=error.message;showError(error);});});$('geminiCloseBtn').onclick=()=>$('geminiDialog').close();$('geminiCancelBtn').onclick=()=>$('geminiDialog').close();const cancelGemini=()=>{geminiDialogRun?.controller.abort();};$('geminiDialog').addEventListener('cancel',cancelGemini);$('geminiDialog').addEventListener('close',cancelGemini);$('geminiSettingsBtn').onclick=()=>{$('geminiDialog').close();renderSettings('connection');pauseVoiceOutput();$('settingsDialog').showModal();};
  $('singBtn').onclick=()=>runPlay('sing').catch(showError);$('danceBtn').onclick=()=>runPlay('dance').catch(showError);$('playStopBtn').onclick=()=>stopPlay();
  document.addEventListener('visibilitychange',()=>{if(document.hidden){if(voiceMode||voice.recognition||voiceStarting)pauseVoiceOutput();stopPlay();locationHub.cancel();}});
  $('composerForm').addEventListener('submit',event=>{event.preventDefault();sendFromGesture();});$('messageInput').addEventListener('keydown',event=>{if(event.key==='Enter'&&!event.shiftKey&&!event.isComposing){event.preventDefault();sendFromGesture();}});
  $('inferenceSettingsBtn').onclick=openAISettings;
  $('stopBtn').onclick=()=>stop();if($('stopTaskBtn'))$('stopTaskBtn').onclick=()=>stop();$('newChatBtn').onclick=newConversation;$('loadModelBtn').onclick=()=>loadModel().catch(showError);$('sidebarToggle').onclick=()=>document.body.classList.toggle('sidebar-open');$('sidebarBackdrop').onclick=()=>document.body.classList.remove('sidebar-open');
  for(const b of document.querySelectorAll('.nav-button'))b.onclick=()=>setView(b.dataset.view);for(const b of document.querySelectorAll('.suggestion'))b.onclick=()=>{$('messageInput').value=b.dataset.prompt;$('messageInput').focus();};
- $('settingsBtn').onclick=()=>{renderSettings();$('settingsDialog').showModal();};$('closeSettingsBtn').onclick=()=>$('settingsDialog').close();$('settingsDialog').addEventListener('close',()=>{settingsController?.abort();document.querySelectorAll('[data-gemini-token]').forEach(input=>{input.value='';});stopPlay();stopVoiceOutput();});$('settingsDialog').addEventListener('cancel',()=>{settingsController?.abort();stopPlay();stopVoiceOutput();});for(const b of document.querySelectorAll('.settings-tab'))b.onclick=()=>renderSettings(b.dataset.tab);
+ $('settingsBtn').onclick=()=>{renderSettings();pauseVoiceOutput();$('settingsDialog').showModal();};$('closeSettingsBtn').onclick=()=>$('settingsDialog').close();$('settingsDialog').addEventListener('close',()=>{settingsController?.abort();document.querySelectorAll('[data-gemini-token]').forEach(input=>{input.value='';});stopPlay();stopVoiceOutput();});$('settingsDialog').addEventListener('cancel',()=>{settingsController?.abort();stopPlay();stopVoiceOutput();});for(const b of document.querySelectorAll('.settings-tab'))b.onclick=()=>renderSettings(b.dataset.tab);
  $('speakReplies').onchange=()=>{state.settings.speak=$('speakReplies').checked;if(state.settings.speak)primeAudioFromGesture();else stopVoiceOutput();persist();};$('hearBtn').onclick=()=>{const message=session.messages.findLast(item=>item.role==='assistant');(message?speakMessage(message):speak(`Hello ${state.profile.displayName}! I’m MAX-G. I’m here, and ready to help.`)).catch(showError);};$('micBtn').onclick=()=>{if(voice.recognition||voiceStarting)pauseVoiceOutput();else{primeAudioFromGesture();startDictation(false).catch(showError);}};$('voiceModeBtn').onclick=()=>{if(voiceMode||voiceStarting)stop();else{voiceMisses=0;primeAudioFromGesture();startDictation(true).catch(showError);}};
- $('soundHelpBtn').onclick=openSoundHelp;$('soundCloseBtn').onclick=()=>$('soundDialog').close();$('soundDialog').addEventListener('close',()=>{soundController?.abort();soundController=null;stopVoiceOutput();});$('soundDialog').addEventListener('cancel',()=>{soundController?.abort();stopVoiceOutput();});$('testSpeakerBtn').onclick=testSpeaker;$('soundStopBtn').onclick=stopVoiceOutput;$('stopSpeechBtn').onclick=stopVoiceOutput;$('soundRetryBtn').onclick=()=>{pauseVoiceOutput();speak(`Hello ${state.profile.displayName}. I’m MAX-G. This is my voice on this device.`,soundController?.signal).catch(showError);};$('soundVoiceSettingsBtn').onclick=()=>{$('soundDialog').close();renderSettings('voice');$('settingsDialog').showModal();};
+ $('soundHelpBtn').onclick=openSoundHelp;$('soundCloseBtn').onclick=()=>$('soundDialog').close();$('soundDialog').addEventListener('close',()=>{soundController?.abort();soundController=null;stopVoiceOutput();});$('soundDialog').addEventListener('cancel',()=>{soundController?.abort();stopVoiceOutput();});$('testSpeakerBtn').onclick=testSpeaker;$('soundStopBtn').onclick=stopVoiceOutput;$('stopSpeechBtn').onclick=stopVoiceOutput;$('soundRetryBtn').onclick=()=>{pauseVoiceOutput();speak(`Hello ${state.profile.displayName}. I’m MAX-G. This is my voice on this device.`,soundController?.signal).catch(showError);};$('soundVoiceSettingsBtn').onclick=()=>{$('soundDialog').close();renderSettings('voice');pauseVoiceOutput();$('settingsDialog').showModal();};
  $('attachBtn').onclick=()=>{ $('fileInput').dataset.destination='chat';$('fileInput').accept='.txt,.md,.csv,.json,.html,.css,.js,.ts,.py,.swift,.kt,.java,.rs,.go';$('fileInput').click();};
  $('fileInput').onchange=async()=>{const epoch=taskEpoch;const verify=()=>{if(epoch!==taskEpoch||state.settings.permissions.files==='deny')throw new DOMException('File operation stopped.','AbortError');};try{await permission('files',{picked:true});const target=$('fileInput').dataset.destination;if(target==='notes'){const file=$('fileInput').files[0];if(!file||file.size>500000)throw new Error('Choose a notes JSON file smaller than 500 KB.');const doc=JSON.parse(await file.text());verify();const notes=Array.isArray(doc.notes)?doc.notes:[];for(const note of notes.slice(0,60))if(note&&typeof note.text==='string')state.notes.push({id:crypto.randomUUID(),title:String(note.title||'Imported note').slice(0,150),text:note.text.slice(0,2000),source:String(note.source||'Imported by owner').slice(0,2000),kind:'manual',enabled:note.enabled!==false,time:Date.now()});state.notes=state.notes.slice(-60);await persist();renderMemory();}else{const files=await importSelectedFiles($('fileInput').files,verify);verify();if(target==='work'){for(const file of files){const found=workspace.find(x=>x.name===file.name);if(found)found.text=file.text;else workspace.push(file);}workspace=workspace.slice(-20);renderWork();}else{attachments=[...attachments,...files].slice(0,6);renderAttachments();}}}catch(error){showError(error);}finally{$('fileInput').value='';}};
  window.addEventListener('online',networkLabel);window.addEventListener('offline',()=>{networkLabel();toast('I think I’m offline. Cached local AI and calculations remain available.');});

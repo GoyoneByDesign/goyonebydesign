@@ -1,4 +1,6 @@
-# MAX-G 1.12.2 — talk with MAX-G
+# MAX-G 1.12.3 — continuous conversation and named locations
+
+MAX-G remembers microphone approval and keeps a started voice conversation listening through quiet pauses until you end it. Settings → Voice includes an opt-out. Short follow-up phrases use the current conversation. GPS weather and “where am I?” resolve a city and state, such as Herndon, Virginia, with a brief bounded online lookup; forecasts still work when city naming is unavailable.
 
 MAX-G now prioritizes a natural conversation: brief spoken replies, no unsolicited article cards, and a **Talk with MAX-G** button for a back-and-forth conversation. **Speak replies** controls automatic read-aloud for typed messages. The separate microphone icon dictates into the text box.
 
