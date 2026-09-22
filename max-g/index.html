@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#080e1b">
-  <meta name="description" content="MAX-G — your personal companion, with local AI, thoughtful conversation, and connected tools.">
+  <meta name="description" content="MAX-G — your personal companion, with Cloudflare or local AI, thoughtful conversation, and connected tools.">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="MAX-G">
@@ -74,7 +74,7 @@
       <div class="sidebar-section-title">RECENT CONVERSATIONS</div>
       <div id="chatList" class="chat-list"><p class="empty-history">A fresh start. Your conversations will appear here.</p></div>
       <div class="sidebar-bottom">
-        <div class="local-card"><span class="local-card-icon"><svg class="icon"><use href="#i-lock"/></svg></span><div><strong>Your AI. Your device.</strong><p>Local reasoning, connected tools.</p></div></div>
+        <div class="local-card"><span class="local-card-icon"><svg class="icon"><use href="#i-lock"/></svg></span><div><strong>Your MAX-G. Your choice.</strong><p id="inferenceProvider">Cloudflare or local AI.</p></div></div>
         <div class="mg-maker-credit mg-maker-sidebar"><img src="./assets/goyonebydesign-logo.png" width="36" height="36" alt=""><span><small>Created by</small><strong>GoyoneByDesign</strong></span></div>
         <button id="settingsBtn" class="profile-button"><span class="profile-avatar">MI</span><span><strong data-owner-name>Michael</strong><small id="storageStatus" role="status" aria-live="polite">Personal workspace</small></span><svg class="icon"><use href="#i-settings"/></svg></button>
       </div>
@@ -87,7 +87,8 @@
         <div class="topbar-actions"><span id="networkStatus" class="status-pill"><span class="status-dot"></span>Checking connection</span><button id="updateNoticeBtn" class="button button-small" hidden>Update available</button><button id="installBtn" class="button button-small" hidden><svg class="icon"><use href="#i-download"/></svg>Install</button></div>
       </header>
 
-      <div class="engine-bar" role="region" aria-label="Local AI status"><span class="engine-symbol"><svg class="icon"><use href="#i-chip"/></svg></span><span id="modelStatus">Local model not loaded</span><button id="loadModelBtn" class="text-button">Load local AI <span aria-hidden="true">↗</span></button><progress id="modelProgress" max="1" value="0" hidden aria-label="Model download progress"></progress><span id="modelProgressLabel" class="model-progress-label" aria-live="polite"></span><button id="stopTaskBtn" class="button button-small" type="button" hidden>Stop task</button></div>
+      <div class="engine-bar" role="region" aria-label="AI connection status"><span class="engine-symbol"><svg class="icon"><use href="#i-chip"/></svg></span><span id="modelStatus">Checking selected AI connection</span><button id="loadModelBtn" class="text-button">AI connection <span aria-hidden="true">↗</span></button><progress id="modelProgress" max="1" value="0" hidden aria-label="Model download progress"></progress><span id="modelProgressLabel" class="model-progress-label" aria-live="polite"></span><button id="stopTaskBtn" class="button button-small" type="button" hidden>Stop task</button></div>
+      <div id="inferenceNotice" class="inference-notice"><span id="inferenceDescription">Choose Cloudflare AI or local AI in Connection settings.</span><button id="inferenceSettingsBtn" class="text-button" type="button">AI settings</button></div>
       <div id="compatibilityNotice" class="compatibility-notice" role="status" hidden></div>
 
       <section id="chatView" class="chat-view" aria-label="Conversation with MAX-G">
@@ -174,6 +175,6 @@
   <dialog id="soundDialog" class="settings-dialog sound-dialog" aria-labelledby="soundTitle"><header class="dialog-header"><div><p class="eyebrow">VOICE ON THIS DEVICE</p><h2 id="soundTitle">Let’s get the sound working</h2></div><button id="soundCloseBtn" type="button" class="icon-button" aria-label="Close sound help">✕</button></header><div class="sound-body"><p>First, play a short speaker test. It needs no voice download or microphone. This also resets MAX-G’s audio connection after a call or screen lock.</p><p id="soundStatus" class="sound-status" role="status" aria-live="polite">Turn up your media volume, then tap Play speaker test.</p><div class="sound-actions"><button id="testSpeakerBtn" class="button" type="button">Play speaker test</button><button id="soundRetryBtn" class="button" type="button">Try MAX-G’s voice</button><button id="soundStopBtn" class="button" type="button">Stop sound</button></div><ol><li>If the tone is silent, check media volume and the audio destination in iPhone Control Center. Sound may be going to Bluetooth headphones or another device.</li><li>Turn off Silent Mode if needed, keep MAX-G visible, and try the speaker test again.</li><li>If the tone works but speech does not, watch the voice status above. The natural voice downloads separately on each device; its first preparation can take a few minutes.</li></ol><p>Your iPhone has its own voice settings and downloads. A cloned voice needs the paired Mac companion; it does not automatically follow you to your phone.</p><button id="soundVoiceSettingsBtn" class="button" type="button">Open Voice Studio</button><p class="muted">Voice Studio also offers installed local system voices if this device cannot prepare a natural voice. No cloud voice service is used.</p></div></dialog>
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
   <a id="downloadAnchor" hidden></a>
-  <noscript><div class="noscript-notice">MAX-G needs JavaScript for local AI and its conversation tools. Enable JavaScript, then reload this page.</div></noscript>
+  <noscript><div class="noscript-notice">MAX-G needs JavaScript for AI and its conversation tools. Enable JavaScript, then reload this page.</div></noscript>
 </body>
 </html>

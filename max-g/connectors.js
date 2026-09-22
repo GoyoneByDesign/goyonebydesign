@@ -310,33 +310,36 @@ export class HelperClient {
   async request(path,{method='GET',body,signal,onChunk}={}) {
     if (!/^\/api\/[a-z/_-]+$/.test(path)) throw new Error('Invalid helper endpoint.');
     if (!this.token) throw new Error('Pair MAX-G with the local Mac helper first.');
-    if(onChunk&&path!=='/api/local-ai/chat')throw new Error('Streaming is only supported for local AI replies.');
+    if(onChunk&&!['/api/local-ai/chat','/api/cloudflare-ai/chat'].includes(path))throw new Error('Streaming is only supported for AI replies.');
     const requestToken=this.token,requestURL=this.url;
     const controller=new AbortController();
     const abort=()=>controller.abort();
     signal?.addEventListener('abort',abort,{once:true});
     if (signal?.aborted) abort();
-    const timeout=setTimeout(abort,path==='/api/voice/synthesize'||['/api/local-ai/chat','/api/local-ai/load','/api/ui-updates/apply'].includes(path)?360000:60000);
+    const timeout=setTimeout(abort,path==='/api/voice/synthesize'||['/api/local-ai/chat','/api/local-ai/load','/api/ui-updates/apply','/api/cloudflare-ai/chat'].includes(path)?360000:60000);
     try {
       const response=await this.fetch(requestURL+path,{method,headers:{Authorization:`Bearer ${requestToken}`,...(body===undefined?{}:{'Content-Type':'application/json'})},
         ...(body===undefined?{}:{body:JSON.stringify(body)}),credentials:'omit',cache:'no-store',mode:'cors',redirect:'error',signal:controller.signal});
       if(onChunk&&response.ok){
         if(!response.body?.getReader)throw new Error('The Mac helper did not return a reply stream.');
+        const sse=path==='/api/cloudflare-ai/chat';
+        if(sse&&!/^text\/event-stream\b/i.test(response.headers.get('Content-Type')||''))throw new Error('Cloudflare AI did not return a reply stream.');
         const reader=response.body.getReader(),decoder=new TextDecoder();let buffer='',total=0,completed=false;
-        const deliver=line=>{if(!line.trim())return;let chunk;try{chunk=JSON.parse(line);}catch{throw new Error('The Mac helper returned an unreadable reply stream.');}if(controller.signal.aborted)throw ABORT();onChunk(chunk);};
-        try{for(;;){const {done,value}=await reader.read();if(controller.signal.aborted)throw ABORT();if(done){buffer+=decoder.decode();if(buffer.trim())deliver(buffer);completed=true;return;}
+        let frame=[];
+        const deliver=line=>{if(sse){line=line.replace(/\r$/,'');if(line){if(line.startsWith('data:'))frame.push(line.slice(5).trimStart());return;}if(!frame.length)return;line=frame.join('\n');frame=[];}if(!line.trim())return;let chunk;try{chunk=JSON.parse(line);}catch{throw new Error('The Mac helper returned an unreadable reply stream.');}if(controller.signal.aborted)throw ABORT();onChunk(chunk);};
+        try{for(;;){const {done,value}=await reader.read();if(controller.signal.aborted)throw ABORT();if(done){buffer+=decoder.decode();if(buffer.trim())deliver(buffer);if(sse&&frame.length)deliver('');completed=true;return;}
           total+=value.byteLength;if(total>300000)throw new Error('The Mac helper reply exceeded its safe size limit.');buffer+=decoder.decode(value,{stream:true});
           let newline;while((newline=buffer.indexOf('\n'))!==-1){deliver(buffer.slice(0,newline));buffer=buffer.slice(newline+1);}
         }}finally{if(!completed){controller.abort();try{await reader.cancel();}catch{}}reader.releaseLock();}
       }
       let data;
       try {data=await response.json();} catch {throw new Error(`The Mac helper returned an unreadable response (${response.status}).`);}
-      if (!response.ok) throw new Error(data?.error?.message || data?.message || data?.error || `Mac helper request failed (${response.status}).`);
+      if (!response.ok) {const error=new Error(data?.error?.message || data?.message || data?.error || `Mac helper request failed (${response.status}).`);if(path.startsWith('/api/cloudflare-ai/')&&typeof data?.error==='string'&&/^AI_[A-Z_]+$/.test(data.error)){error.code=data.error;error.status=response.status;}throw error;}
       return data;
     } catch (error) {
       if (signal?.aborted) throw ABORT();
       const raw=error.name==='AbortError'?'The Mac helper took too long. Check its status before retrying.':error.message||String(error);
-      throw new Error(raw.split(requestToken).join('[pairing key hidden]'));
+      const safe=new Error(raw.split(requestToken).join('[pairing key hidden]'));if(path.startsWith('/api/cloudflare-ai/')&&typeof error.code==='string'&&/^AI_[A-Z_]+$/.test(error.code)){safe.code=error.code;safe.status=error.status;}throw safe;
     } finally {clearTimeout(timeout);signal?.removeEventListener('abort',abort);}
   }
 }
@@ -793,6 +796,17 @@ export function initializeConnectors({toast=()=>{},generateText,findMusic,onRepl
     try{verify();const result=await target.request('/api/local-ai/'+operation,{method:'POST',body,signal:controller.signal,...(onChunk?{onChunk:chunk=>{verify();onChunk(chunk);}}:{})});verify();return result;}
     finally{searchControllers.delete(controller);signal?.removeEventListener('abort',abort);}
   }
+  async function nativeCloudflareRequest(operation,body={}, {signal,onChunk}={}){
+    if(!['status','chat','cancel'].includes(operation))throw new Error('Unknown Cloudflare AI operation.');
+    const address=new URL(globalThis.location?.href||'https://invalid.example/');
+    if(address.protocol!=='http:'||!['127.0.0.1','localhost'].includes(address.hostname)||address.searchParams.get('desktop')!=='1'||client.url!==address.origin)throw new Error('Use saved Cloudflare access from the installed MAX-G app on this Mac.');
+    const target=client,token=client.token,controller=new AbortController(),abort=()=>controller.abort();
+    signal?.addEventListener('abort',abort,{once:true});if(signal?.aborted)abort();
+    if(operation!=='cancel')searchControllers.add(controller);
+    const verify=()=>{if(controller.signal.aborted||client!==target||client.token!==token)throw ABORT();};
+    try{verify();const result=await target.request('/api/cloudflare-ai/'+operation,{method:'POST',body,signal:controller.signal,...(onChunk?{onChunk:chunk=>{verify();onChunk(chunk);}}:{})});verify();return result;}
+    finally{searchControllers.delete(controller);signal?.removeEventListener('abort',abort);}
+  }
   async function extensionRequest(operation,body={}, {signal}={}){
     if(!['status','configure','math','document','memory/list','memory/save','memory/search','memory/delete','memory/clear','code','github'].includes(operation))throw new Error('Unknown extension operation.');
     const address=new URL(globalThis.location?.href||'https://invalid.example/');
@@ -809,5 +823,5 @@ export function initializeConnectors({toast=()=>{},generateText,findMusic,onRepl
     if(address.protocol!=='http:'||!['127.0.0.1','localhost'].includes(address.hostname)||address.searchParams.get('desktop')!=='1'||client.url!==address.origin)throw Error('Use app updates from the installed MAX-G Mac window.');
     return client.request('/api/ui-updates/'+operation,{method:'POST',body:{}});
   }
-  return {render,handleCommand,disconnect,reset,publicSearch,voiceRequest,localAIRequest,extensionRequest,updateRequest,browserWorkspace,cancel:cancelOperation,refresh:()=>guarded(refresh),get paired(){return Boolean(client.token);},get deviceStatus(){return {paired:Boolean(client.token),connected:Boolean(client.token&&status),platform:typeof status?.platform==='string'?status.platform.slice(0,32):null};}};
+  return {render,handleCommand,disconnect,reset,publicSearch,voiceRequest,localAIRequest,nativeCloudflareRequest,extensionRequest,updateRequest,browserWorkspace,cancel:cancelOperation,refresh:()=>guarded(refresh),get paired(){return Boolean(client.token);},get deviceStatus(){return {paired:Boolean(client.token),connected:Boolean(client.token&&status),platform:typeof status?.platform==='string'?status.platform.slice(0,32):null};}};
 }

@@ -14,7 +14,7 @@ export const LANGUAGES={'Auto-detect':'en-US',English:'en-US',Tagalog:'fil-PH',S
 // Blank proxyURL uses searchConnection: the shipped default or an explicit companion.
 // Custom endpoint overrides remain authoritative and are never rewritten by an update.
 // Internet permission remains the control for disabling all public requests.
-export const DEFAULTS=Object.freeze({model:'Llama-3.2-1B-Instruct-q4f16_1-MLC',language:'Auto-detect',unitSystem:'us',style:'Friendly',replyLength:'Brief',instructions:'',onlineFirst:true,illustratedAnswers:true,proxyURL:'',searchConnection:'default',weatherCity:'',speak:true,voiceProfile:'Warm',voiceURI:'',rate:1,motion:true,theme:'Dark',saveChats:false,useMemory:true,accessMode:'Limited',permissions:{internet:'allow',files:'ask',microphone:'ask',location:'ask'},hourlyLearning:false,voice:normalizeVoice(),orbit:normalizeOrbitSettings(),locations:normalizeLocationSettings(),deviceMode:'auto',performanceSeed:0});
+export const DEFAULTS=Object.freeze({inferenceMode:'cloudflare',model:'Llama-3.2-1B-Instruct-q4f16_1-MLC',language:'Auto-detect',unitSystem:'us',style:'Friendly',replyLength:'Brief',instructions:'',onlineFirst:true,illustratedAnswers:true,proxyURL:'',searchConnection:'default',weatherCity:'',speak:true,voiceProfile:'Warm',voiceURI:'',rate:1,motion:true,theme:'Dark',saveChats:false,useMemory:true,accessMode:'Limited',permissions:{internet:'allow',files:'ask',microphone:'ask',location:'ask'},hourlyLearning:false,voice:normalizeVoice(),orbit:normalizeOrbitSettings(),locations:normalizeLocationSettings(),deviceMode:'auto',performanceSeed:0});
 const validTime=(value,fallback)=>Number.isFinite(Number(value))&&Number(value)>=0&&Number(value)<8640000000000000?Number(value):fallback;
 export function freshState(){return {version:1,profile:normalizeProfile(),display:normalizeDisplay(),settings:structuredClone(DEFAULTS),chats:[],notes:[],skills:[],jobs:[],improvement:freshImprovement(),study:{nextRun:Date.now()+3600000,cursor:0,history:[]}};}
 /** Pronunciation hints contain identifiers only, never a full place, GPS fix,
@@ -40,6 +40,7 @@ export function validateState(raw){
   clean.improvement=validateImprovement(raw.improvement);clean.profile=normalizeProfile(raw.profile);clean.display=normalizeDisplay(raw.display);
   const s=raw.settings||{};
   for(const [key,base]of Object.entries(DEFAULTS))if(key!=='permissions'&&typeof s[key]===typeof base)clean.settings[key]=s[key];
+  clean.settings.inferenceMode=['cloudflare','local'].includes(s.inferenceMode)?s.inferenceMode:'cloudflare';
   clean.settings.performanceSeed=Number.isInteger(s.performanceSeed)&&s.performanceSeed>=0&&s.performanceSeed<=0xffffffff?s.performanceSeed:0;
   clean.settings.unitSystem=normalizeUnitSystem(s.unitSystem);
   clean.settings.deviceMode=normalizeDeviceMode(s.deviceMode);clean.settings.voice=normalizeVoice(s.voice);clean.settings.orbit=normalizeOrbitSettings(s.orbit);clean.settings.locations=normalizeLocationSettings(s.locations);

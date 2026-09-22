@@ -91,3 +91,8 @@ body.has-conversation .message-weather .message-actions button{min-height:30px}
  body.has-conversation .live-orb-dock.companion-header{flex-basis:54px;height:54px}
  body.has-conversation .companion-header .orb-stage{width:68px;height:54px}
 }
+
+/* Selected inference provider and the cloud data boundary stay visible above chat. */
+.inference-notice{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 22px;color:var(--muted,#a9bbd0);font-size:13px;line-height:1.4;border-bottom:1px solid rgba(110,218,255,.12);background:rgba(16,32,53,.65);flex-shrink:0}
+.inference-notice .text-button{flex-shrink:0;white-space:nowrap}
+@media(max-width:640px){.inference-notice{padding:7px 12px;font-size:12px;gap:8px}.inference-notice>span{min-width:0}.inference-notice .text-button{font-size:12px}}

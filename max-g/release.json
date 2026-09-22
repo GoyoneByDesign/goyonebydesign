@@ -1,9 +1,14 @@
 {
   "schema": 1,
-  "version": "1.11.1",
-  "build": 207,
-  "min_companion_build": 205,
+  "version": "1.12.0",
+  "build": 208,
+  "min_companion_build": 208,
   "files": [
+    {
+      "path": "CLOUDFLARE-AI.md",
+      "sha256": "1bdfc348c482eec5e411be9226afac283c800be50fa03dfbbdccf0f82c7d28d0",
+      "bytes": 3690
+    },
     {
       "path": "DEVICE-GUIDE.md",
       "sha256": "5ba23a511421e8e74123c52d532191e09d3c3872383afaa941ff0588802f277a",
@@ -11,13 +16,13 @@
     },
     {
       "path": "IOS-INSTALL.md",
-      "sha256": "2792897827fe096f710d6aa6cc1c905e7c0407e41d8086edd111cef8c60aa754",
-      "bytes": 7475
+      "sha256": "492e9a44aea742ea8c4b13aeeb9c374f6a39a9741dc3f71bc83b0c4cd0eeda13",
+      "bytes": 7525
     },
     {
       "path": "README.md",
-      "sha256": "db5a4e0e47f9077e5ee256711fda04f637fb2f6cedd27baf118855fa4534d96a",
-      "bytes": 36424
+      "sha256": "f41f1c9ece4e83f55b8ec1a61960052255f2057be2aebdf53f0c67238a9d8f98",
+      "bytes": 36941
     },
     {
       "path": "VOICE-SETUP.md",
@@ -46,8 +51,8 @@
     },
     {
       "path": "app.js",
-      "sha256": "aba9a76d22387d5f3690ab45a780c72a675f1c324665df610a933de8015b587a",
-      "bytes": 108721
+      "sha256": "dad1c3099b94261d89077bec66ee174d3f495ee5c542d9f4adab47c2f7b926c7",
+      "bytes": 118244
     },
     {
       "path": "assets/goyonebydesign-logo.png",
@@ -80,6 +85,11 @@
       "bytes": 9131
     },
     {
+      "path": "cloudflare-ai.js",
+      "sha256": "b6854d476d533a90e7f15f85634b94be78136254bc5704e7e466d4107e4e49e0",
+      "bytes": 14118
+    },
+    {
       "path": "companion-interactions.js",
       "sha256": "656b087f01c15d0328bd05054567734acd411cd444f3a36e09dcaebae9944495",
       "bytes": 11609
@@ -91,8 +101,8 @@
     },
     {
       "path": "connectors.js",
-      "sha256": "9b4a9c694455a7f6069db0131cc1a35a6c795e8057284b98f3da7fdcce5d5669",
-      "bytes": 105029
+      "sha256": "33c4061e3047c7fb65e0e19673234420214c51ba1431fd1371eb7c7191fd5ece",
+      "bytes": 107090
     },
     {
       "path": "country-data.js",
@@ -176,8 +186,8 @@
     },
     {
       "path": "index.html",
-      "sha256": "b45d7eeba2d8c83278972028c7c4a54b38d067d18c91b1e8e4ea18ca51b938e9",
-      "bytes": 23493
+      "sha256": "a066616a990ed56d203919f3f3447b63aad92c95a86df8b30d46c61de503d3ac",
+      "bytes": 23778
     },
     {
       "path": "inference-worker.js",
@@ -191,8 +201,8 @@
     },
     {
       "path": "install.html",
-      "sha256": "c0ea82dafaaca074a025c9cf9471a8eaef7f71512b9b08764eecd2c86e564931",
-      "bytes": 13297
+      "sha256": "9d48e309897752daf5ae4baa6cfc5cd07191fd9f6625db2df894cb088be4b595",
+      "bytes": 13377
     },
     {
       "path": "install.js",
@@ -261,7 +271,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "2405223fb65d631e1a549eede276e7f08f6b54b11d2512f6339f6c556cc00ec0",
+      "sha256": "f3d6c5261abf33adbd013d5433174bd758396240c1b9b4792d51910a92c946c6",
       "bytes": 255
     },
     {
@@ -296,7 +306,7 @@
     },
     {
       "path": "release-version.js",
-      "sha256": "a5f76cff885408cfd665c322b6912fcb376ce10175d24df0bf8af67d56ff6e88",
+      "sha256": "eeec3cf808145985f754a4a794e2877f06b00e86112215df8966c09f7230f797",
       "bytes": 155
     },
     {
@@ -336,18 +346,18 @@
     },
     {
       "path": "state.js",
-      "sha256": "dbe75514f767260d24029d3164af9b95c4be4344c90cc3c2f420dddede8ebd94",
-      "bytes": 9651
+      "sha256": "b6d293628e4bf54b3a9d4c52dbc7d31b1a46439868d02e6f544204d00ce991c4",
+      "bytes": 9788
     },
     {
       "path": "style.css",
-      "sha256": "913e26cc614ef1ffc43f2bfadf5ecf705b7b9dc000063c82d718745174928e49",
-      "bytes": 44185
+      "sha256": "b9072696d6377194fb646854eb4806d486c0bce0f1f6425706d62bbeff07b2cd",
+      "bytes": 44758
     },
     {
       "path": "sw.js",
-      "sha256": "3c42b2d719ed6a2e91ddf8496e294605ea5f5ad03ecc4953365280fe3706e873",
-      "bytes": 8194
+      "sha256": "5806d2269ffad905649bdf9dfaefcfa1532538df0ff4ea873cb4b67436934fe3",
+      "bytes": 8238
     },
     {
       "path": "tools.js",

@@ -33,7 +33,7 @@ Open the blue MAX-G Home Screen icon. Type each message into its message box and
 
 1. **`2 + 2`** — MAX-G should answer **4**. This checks sending without downloading a model.
 2. **`weather for 20171`** — while online, check that MAX-G identifies **Herndon, Virginia** and shows the forecast. This explicit ZIP-code test does not require GPS permission.
-3. **`I need advice`** — then describe what you need help with. For general AI conversation, check **Settings → This device**, use **Load local AI** on a compatible device, and keep MAX-G open until the initial model download completes. Use Wi-Fi for that first download; a Home Screen installation does not install the model itself.
+3. **`I need advice`** — then describe what you need help with. For online conversation without a model download, choose **Cloudflare AI** in **Settings → Connection** and import your private MAX-G support token file for this session. See [Cloudflare setup](CLOUDFLARE-AI.md). For on-device conversation, choose **Local AI**, check **This device**, and load a compatible local model.
 4. **Hear MAX-G** — tap this sound control and enable **Speak replies**. If silent, check media volume and Bluetooth routing, then open **More controls → Sound help**. A voice may need its own download. Test microphone input only when ready to grant that permission, or use keyboard dictation.
 5. **Settings → Install & updates** — check for an app update while online. Apply an offered update when your current work is saved.
 

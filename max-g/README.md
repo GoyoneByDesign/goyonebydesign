@@ -1,3 +1,7 @@
+# MAX-G 1.12.0 Cloudflare Free conversation
+
+Cloudflare AI adds streamed GLM 4.7 Flash replies through MAX-G’s existing Worker, with bounded current-session conversation context. Select Cloudflare AI or Local AI in Settings → Connection. Cloudflare processes cloud-mode conversation on its servers; local inference remains available. See [Cloudflare AI setup and free limits](CLOUDFLARE-AI.md). Website and iPhone/iPad use the same release. The updated Mac companion can keep its owner access token in Keychain.
+
 # MAX-G 1.11.1 personal conversations and iPhone/iPad testing
 
 Install the shared iPhone/iPad Home Screen app from [Get MAX-G](https://www.goyonebydesign.com/max-g/install.html). Safari handles installation; this is a PWA, not an IPA or App Store binary. The installer includes a short first-use checklist. Website, Home Screen and installed Mac use the same interface release, with capabilities determined by each device and its permissions.
