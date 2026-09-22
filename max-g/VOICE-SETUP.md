@@ -210,3 +210,18 @@ from proprietary hosted voice products.
 English speech follows Michael’s preference for individual house-number digits: **2603 → two six zero three** when it is part of an address or explicitly labeled as a house/address number. Common street suffixes, directions and unit labels expand in address context: St → Street, Rd → Road, Ave → Avenue, NW → Northwest, Apt → Apartment. Contextual place names expand VA → Virginia, NY → New York and other USPS state/postal-area codes. St. Louis, Mt. Vernon and Ft. Myers use Saint, Mount and Fort.
 
 Written text is preserved. Ordinary quantities, calendar years, temperature units, programming expressions and professional initials are handled separately. The digit-by-digit house-number rule is a personal speaking preference; [USPS Publication 28](https://pe.usps.com/text/pub28/pub28apb.htm) supplies the abbreviation names, not a universal pronunciation rule. Speech recognition and uncommon or ambiguous address formats may still need a fully spelled-out place name.
+
+
+## Conversation controls (1.12.2)
+
+1. Tap **Talk with MAX-G** in the message box and grant microphone access when your device asks.
+2. Speak, then pause. MAX-G sends the finished phrase, answers aloud, and listens for your next turn.
+3. Tap **End conversation** or **Stop voice** to end the session. Two silent turns pause it; tap Talk again to resume.
+
+**Speak replies** reads typed answers automatically. **Hear MAX-G** replays the latest reply. The small microphone icon only dictates text for you to review before pressing Enter.
+
+The installed Mac uses its existing local Whisper runtime and installed speech models. No microphone audio is sent to Cloudflare by this path; your finished text follows the selected conversation engine. Speech output still uses your selected voice.
+
+Browser on-device dictation availability depends on browser and language. If unavailable, MAX-G offers an explicit **Use browser dictation** choice. The browser/device speech provider may process microphone audio online. This choice is saved in Voice Studio → microphone recognition, can be changed back to local-only, and obeys the internet and microphone permissions. No paid speech service is configured. Without supported recognition, keyboard dictation or typing plus spoken replies remains available.
+
+Natural voice playback may need a separate first download in each browser. Keep MAX-G visible during a voice conversation. Browsers and the installed Mac stop active microphone sessions when you leave or close the app; they do not listen in the background.

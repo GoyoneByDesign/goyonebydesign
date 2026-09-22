@@ -18,7 +18,7 @@ export function basicDeviceAnswer(value,date=new Date()){
 export function isReasoningRequest(value){
   return /^(?:please\s+)?(?:explain|compare|design|plan|debug|review|analy[sz]e|write|create|build|translate|summari[sz]e|help me (?:write|understand|plan|debug)|how (?:do|does|can|should)|why\b)/i.test(String(value).trim());
 }
-export function searchBeforeReply(query,{onlineFirst=true,explicit=false,personal=false,hasFiles=false}={}){
+export function searchBeforeReply(query,{onlineFirst=false,explicit=false,personal=false,hasFiles=false}={}){
   if(hasFiles||personal)return false;
   return explicit||needsLiveEvidence(query)||(onlineFirst&&!isReasoningRequest(query));
 }

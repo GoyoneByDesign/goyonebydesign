@@ -13,7 +13,7 @@ export const MALE_VOICE_PRESETS=Object.freeze([
   Object.freeze({id:'adult',name:'Adult',description:'Warm, steady American male voice · Fenrir',neuralVoice:'am_fenrir',rate:1,pitch:0,depth:1,expression:.35}),
   Object.freeze({id:'older',name:'Older-sounding',description:'Calm, measured British male voice · George',neuralVoice:'bm_george',rate:.92,pitch:-.5,depth:1.5,expression:.3}),
 ]);
-export const VOICE_DEFAULTS=Object.freeze({voiceRevision:1,engine:'neural',neuralVoice:'am_fenrir',pitch:0,depth:1,expression:0.35,cloneId:''});
+export const VOICE_DEFAULTS=Object.freeze({voiceRevision:1,recognitionMode:'local',engine:'neural',neuralVoice:'am_fenrir',pitch:0,depth:1,expression:0.35,cloneId:''});
 const number=(n,min,max,fallback)=>typeof n==='number'&&Number.isFinite(n)?Math.max(min,Math.min(max,n)):fallback;
 export function normalizeVoice(value={}){value=value&&typeof value==='object'?value:{};
 const engine=['neural','system','clone'].includes(value.engine)?value.engine:'neural';
@@ -22,7 +22,7 @@ const migrated=Number.isInteger(value.voiceRevision)&&value.voiceRevision>=1;
 // retain recorded-voice/system settings and any later deliberate selection.
 const legacyFemale=engine==='neural'&&!migrated&&/^af_/.test(value.neuralVoice||'');
 return {
-  voiceRevision:1,engine,
+  voiceRevision:1,recognitionMode:value.recognitionMode==='browser'?'browser':'local',engine,
   neuralVoice:!legacyFemale&&NEURAL_VOICES.some(v=>v.id===value.neuralVoice)?value.neuralVoice:VOICE_DEFAULTS.neuralVoice,
   pitch:number(value.pitch,-4,4,0),depth:number(value.depth,-6,6,VOICE_DEFAULTS.depth),expression:number(value.expression,0,1,.35),
   cloneId:typeof value.cloneId==='string'&&/^[a-zA-Z0-9_-]{1,80}$/.test(value.cloneId)?value.cloneId:'',

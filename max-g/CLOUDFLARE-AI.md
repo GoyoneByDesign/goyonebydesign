@@ -1,6 +1,6 @@
 # MAX-G Cloudflare AI — free connection
 
-MAX-G 1.12.1 offers **Cloudflare AI** in **Settings → Connection → Conversation engine**. Its fixed model is Qwen 3.8 27B (`@cf/qwen/qwen3.8-27b`), hosted by Cloudflare. No ChatGPT, Gemini or Claude API is used for this mode. Ask Gemini remains a separate, optional action.
+MAX-G 1.12.2 offers **Cloudflare AI** in **Settings → Connection → Conversation engine**. Its fixed model is Qwen 3.8 27B (`@cf/qwen/qwen3.8-27b`), hosted by Cloudflare. No ChatGPT, Gemini or Claude API is used for this mode. Ask Gemini remains a separate, optional action.
 
 ## Start a conversation
 

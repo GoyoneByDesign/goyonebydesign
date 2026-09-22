@@ -87,6 +87,8 @@ export function renderVoiceStudio({settings,voice,ownerName='Michael',languages,
   const presetSection=el('section','','male-voice-presets');presetSection.setAttribute('aria-label','Male voice styles');
   presetSection.append(el('h4','A man’s voice, your way'),el('p','Choose the age style you like, then fine-tune its sound below. Preview each voice before saving.','male-voice-note'));
   const presetCards=el('div','','male-voice-grid');presetSection.append(presetCards);root.append(presetSection);
+  field('recognitionMode','Microphone recognition',draft.recognitionMode,[{value:'local',label:'Local only · on this device or installed Mac'},{value:'browser',label:'Browser dictation · may use the browser provider’s servers'}]);
+  root.append(el('p','Local only keeps speech recognition on your device and requires an available local language pack or the installed Mac speech runtime. Browser dictation supports more browsers, including Safari where available, but may send microphone audio to the browser or operating-system provider for transcription. Selecting it and saving is your opt-in; MAX-G never switches automatically. This choice is separate from the AI conversation engine.','muted'));
   field('engine','Voice engine',draft.engine,[{value:'neural',label:'Natural neural voice · on this device'},{value:'clone',label:'My cloned voice · paired Mac companion'},{value:'system',label:'Installed system voice · other languages'}]);
   field('neuralVoice','Natural voice',draft.neuralVoice,NEURAL_VOICES.map(v=>({value:v.id,label:v.name})));
   field('language','Conversation language',settings.language,Object.keys(languages));field('voiceProfile','System voice delivery profile',settings.voiceProfile,Object.keys(profiles));
@@ -94,7 +96,7 @@ export function renderVoiceStudio({settings,voice,ownerName='Michael',languages,
   const slider=(key,label,value,min,max,step,suffix)=>{const input=field(key,label,value);input.type='range';input.min=min;input.max=max;input.step=step;input.value=value;const output=el('output');const update=()=>output.textContent=Number(input.value).toFixed(['rate','expression'].includes(key)?2:1)+suffix;input.addEventListener('input',update);input.parentElement.append(output);update();};
   slider('rate','Speaking speed',settings.rate,.65,1.5,.01,'×');slider('pitch','Pitch',draft.pitch,-4,4,.5,' semitones');slider('depth','Depth / warmth',draft.depth,-6,6,.5,' dB');slider('expression','Expressive delivery',draft.expression,0,1,.01,'');
   root.append(el('p','Natural browser voices currently speak English. Other selected languages use the installed-system option; available voices vary by device. Expression adds gentle timing and pitch changes. Depth adjusts vocal warmth; pitch can also change playback length.','muted'));
-  const values=()=>({...settings,language:bindings.language.value,voiceProfile:bindings.voiceProfile.value,voiceURI:bindings.voiceURI.value,rate:Number(bindings.rate.value),voice:normalizeVoice({...draft,engine:bindings.engine.value,neuralVoice:bindings.neuralVoice.value,pitch:Number(bindings.pitch.value),depth:Number(bindings.depth.value),expression:Number(bindings.expression.value),cloneId:bindings.cloneId?.value||draft.cloneId})});
+  const values=()=>({...settings,language:bindings.language.value,voiceProfile:bindings.voiceProfile.value,voiceURI:bindings.voiceURI.value,rate:Number(bindings.rate.value),voice:normalizeVoice({...draft,recognitionMode:bindings.recognitionMode.value,engine:bindings.engine.value,neuralVoice:bindings.neuralVoice.value,pitch:Number(bindings.pitch.value),depth:Number(bindings.depth.value),expression:Number(bindings.expression.value),cloneId:bindings.cloneId?.value||draft.cloneId})});
   let voiceEpoch=0,ensurePlaybackAllowed=()=>{};
   const stopPreview=()=>{voiceEpoch++;voice.stop();};
   const preview=field('preview','Preview words',`Hello ${ownerName}. I’m MAX-G. Let’s take this one step at a time. I’m listening.`);preview.maxLength=400;
@@ -115,7 +117,7 @@ export function renderVoiceStudio({settings,voice,ownerName='Michael',languages,
     const hearButton=action('Hear',()=>hear(applyMaleVoicePreset(values(),preset.id),preset.name.toLowerCase()),'button button-small');hearButton.setAttribute('aria-label',`Hear ${preset.name}`);
     const actions=el('div','','male-voice-actions');actions.append(choose,hearButton);card.append(actions);presetCards.append(card);presetButtons.push({preset,card,choose});
   }
-  for(const key of ['engine','neuralVoice','language','voiceProfile','voiceURI','rate','pitch','depth','expression'])bindings[key].addEventListener(bindings[key].type==='range'?'input':'change',()=>{stopPreview();markPreset();});
+  for(const key of ['recognitionMode','engine','neuralVoice','language','voiceProfile','voiceURI','rate','pitch','depth','expression'])bindings[key].addEventListener(bindings[key].type==='range'?'input':'change',()=>{stopPreview();markPreset();});
   markPreset();
   root.append(action('Hear this voice',()=>hear(values())),action('Stop voice',()=>{stopPreview();status.textContent='Voice stopped.';}),action('Load natural voice',async()=>{
     ensurePlaybackAllowed();stopPreview();const epoch=voiceEpoch;

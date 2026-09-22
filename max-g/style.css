@@ -99,3 +99,10 @@ body.has-conversation .message-weather .message-actions button{min-height:30px}
 
 /* Temporary notices stay above the composer, including with the phone keyboard open. */
 @media(max-width:640px){#toast.toast{top:calc(var(--maxg-app-top,var(--maxg-visible-top,0px)) + 64px);bottom:auto;height:auto;max-height:calc(2.9em + 22px);width:calc(100% - 32px);padding:10px 14px;font-size:12px;line-height:1.45;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;pointer-events:none}}
+
+/* Conversation stays primary; evidence opens only when requested. */
+.conversation-sources{margin-top:10px;font-size:.85em;color:var(--muted)}
+.conversation-sources>summary{cursor:pointer;width:fit-content;padding:5px 0}
+.voice-button{border:1px solid #55dff34a;border-radius:999px;padding:7px 10px;background:#26c6ef0d}
+.voice-button[aria-pressed=true]{border-color:#63efff;background:#26c6ef20}
+#dictationChoice{max-width:520px;width:calc(100vw - 32px)}

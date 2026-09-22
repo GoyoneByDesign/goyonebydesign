@@ -1,4 +1,10 @@
-# MAX-G 1.12.1 Cloudflare Free conversation
+# MAX-G 1.12.2 — talk with MAX-G
+
+MAX-G now prioritizes a natural conversation: brief spoken replies, no unsolicited article cards, and a **Talk with MAX-G** button for a back-and-forth conversation. **Speak replies** controls automatic read-aloud for typed messages. The separate microphone icon dictates into the text box.
+
+Current facts can still be checked online. Sources stay collapsed; ask “Show me articles about…” or use **Show articles** below a sourced answer to open the visual results. Legacy automatic web-first preferences migrate once to conversation; an explicit later web-first selection remains available.
+
+The installed Mac uses its existing offline Whisper microphone runtime. On the website, use on-device recognition where supported, or explicitly choose browser dictation when offered; that service may process audio through your browser/device provider. MAX-G never enables remote dictation silently. Voice remains foreground-only; Stop, navigation, backgrounding, and quitting end microphone capture.
 
 Cloudflare AI adds streamed Qwen 3.8 27B replies through MAX-G’s existing Worker, with bounded current-session conversation context. Select Cloudflare AI or Local AI in Settings → Connection. Cloudflare processes cloud-mode conversation on its servers; local inference remains available. See [Cloudflare AI setup and free limits](CLOUDFLARE-AI.md). Website and iPhone/iPad use the same release. The updated Mac companion can keep its owner access token in Keychain.
 
