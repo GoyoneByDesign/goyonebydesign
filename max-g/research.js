@@ -156,7 +156,7 @@ function matchedPage(data,subject){
   return current===target?page:null;
 }
 
-async function wikipediaBackground(subject,fetcher,signal,onBackground=()=>{}){
+async function wikipediaBackground(subject,fetcher,signal,onBackground=()=>{},includeImages=true){
   if(!subject||subject.length>140||/[|\u0000-\u001f]/.test(subject))return null;
   const data=await publicJSON(WIKI,{action:'query',format:'json',formatversion:2,origin:'*',titles:subject,
     redirects:1,prop:'pageimages|extracts|pageprops|info',inprop:'url',exintro:1,explaintext:1,exsentences:4,
@@ -166,6 +166,7 @@ async function wikipediaBackground(subject,fetcher,signal,onBackground=()=>{}){
   if(!summary)return null;
   const result={title,url:wikiURL(title),summary,source:'Wikipedia',image:null};
   onBackground(result);
+  if(!includeImages)return result;
   if(typeof page.pageimage!=='string'||page.pageimage.length>300||/[|\u0000-\u001f]/.test(page.pageimage))return result;
   try{
     const imageData=await publicJSON(COMMONS,{action:'query',format:'json',formatversion:2,origin:'*',
@@ -205,15 +206,17 @@ async function gdeltNews(query,fetcher,signal){
 
 /** search(query, signal) uses MAX-G's existing transport. Optional
  * newsFetcher(query,{signal}) can provide a fixed-publisher RSS adapter instead
- * of GDELT. Both are independent of local language-model loading.
+ * of GDELT. Both are independent of local language-model loading. lookup with
+ * includeImages:false skips photo metadata and bounds optional-source waiting
+ * after usable search/news evidence; full article cards remain the default.
  */
 export function createResearch({search,newsFetcher,fetcher=globalThis.fetch?.bind(globalThis),now=()=>Date.now(),
-  searchTimeoutMs=8000,newsTimeoutMs=5000,topicTimeoutMs=5000,enrichmentGraceMs=1000}={}){
+  searchTimeoutMs=8000,newsTimeoutMs=5000,topicTimeoutMs=5000,enrichmentGraceMs=1000,conversationGraceMs=180}={}){
   if(typeof search!=='function')throw TypeError('Supply MAX-G’s public search adapter.');
   const cache=new Map(),runs=new Set();let generation=0;
   return {
     clear(){generation++;cache.clear();for(const cancel of runs)cancel();},
-    async lookup(rawQuery,{mode='topic',subject='',signal,onPartial=()=>{}}={}){
+    async lookup(rawQuery,{mode='topic',subject='',signal,onPartial=()=>{},includeImages=true}={}){
       const query=researchText(rawQuery,300);if(!query||!['news','topic'].includes(mode))throw Error('Enter a news topic, person, or item to research.');
       aborted(signal);const turn=generation,searchController=new AbortController(),extraController=new AbortController();
       const cancel=()=>{searchController.abort();extraController.abort();};runs.add(cancel);
@@ -234,6 +237,7 @@ export function createResearch({search,newsFetcher,fetcher=globalThis.fetch?.bin
         const data=await search(mode==='news'&&!/\bnews\b/i.test(query)?query+' latest news':query,inner);
         active();aborted(inner);searchRows=normalizeResearch({...value,articles:Array.isArray(data?.results)?data.results:[]})?.articles||[];
         searchProvider=researchText(data?.provider,40)||'Web search';merge();emit();
+        if(!includeImages&&searchRows.length)markEnriched();
       },searchController.signal,searchTimeoutMs).catch(error=>{if(error?.name==='AbortError'&&signal?.aborted)throw error;});
       let extraTask;
       if(mode==='news'){
@@ -244,19 +248,21 @@ export function createResearch({search,newsFetcher,fetcher=globalThis.fetch?.bin
         },extraController.signal,newsTimeoutMs).catch(error=>{if(error?.name==='AbortError'&&signal?.aborted)throw error;});
       }else{
         extraTask=deadline(async inner=>{
-          const topic=topicSubject(subject||query),key=titleKey(topic),hit=cache.get(key),time=now();
+          // A text-only lookup must not cache away a later request for photos.
+          const topic=topicSubject(subject||query),key=(includeImages?'full:':'text:')+titleKey(topic),hit=cache.get(key),time=now();
           const background=hit&&time-hit.time>=0&&time-hit.time<600000?structuredClone(hit.value):await wikipediaBackground(topic,fetcher,inner,early=>{
             active();aborted(inner);value.background=early;emit();
-          });
+          },includeImages);
           active();aborted(inner);value.background=background;
-          if(background){cache.set(key,{time,value:structuredClone(background)});while(cache.size>8)cache.delete(cache.keys().next().value);emit();if(background.image)markEnriched();}
+          if(background){cache.set(key,{time,value:structuredClone(background)});while(cache.size>8)cache.delete(cache.keys().next().value);emit();if(includeImages&&background.image)markEnriched();}
         },extraController.signal,topicTimeoutMs).catch(error=>{if(error?.name==='AbortError'&&signal?.aborted)throw error;});
       }
       try{
-        // A complete news feed or attributed topic photo is useful immediately.
-        // Give general search a short chance to add sources, then stop its owned
-        // request rather than holding the user's answer for the full timeout.
-        const grace=enriched.then(()=>new Promise(resolve=>{graceTimer=setTimeout(resolve,enrichmentGraceMs);}));
+        // Conversational answers use current search evidence as soon as it is
+        // ready; photos and other optional enrichment must not delay speech.
+        // Encyclopedia text alone never cuts short a pending fresh search.
+        // Full article cards retain the longer photo/news enrichment grace.
+        const grace=enriched.then(()=>new Promise(resolve=>{graceTimer=setTimeout(resolve,includeImages?enrichmentGraceMs:conversationGraceMs);}));
         await Promise.race([Promise.all([searchTask,extraTask]),grace]);active();value.complete=true;
         value.notice=mode==='news'?(newsRows.length?'Open the original articles for full reporting. Sharing images may be archival or publisher logos.':'Live web search results. Article publication dates and sharing images were not independently available.')
           :'Wikipedia is background information. Check the linked original sources for current details.';

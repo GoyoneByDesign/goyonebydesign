@@ -1,3 +1,3 @@
 /** Shared interface release for the website, Home Screen app and Mac shell. */
-export const RELEASE_VERSION = '1.12.5';
-export const RELEASE_BUILD = 213;
+export const RELEASE_VERSION = '1.12.6';
+export const RELEASE_BUILD = 214;

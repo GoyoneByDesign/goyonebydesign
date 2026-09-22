@@ -5,7 +5,7 @@ import {normalizePronunciation} from './speech-text.js';
 export const PROFILES={Warm:{pitch:1,rate:.98},Bright:{pitch:1.06,rate:1.03},Calm:{pitch:.95,rate:.94},Storyteller:{pitch:1.02,rate:.96},Focused:{pitch:.98,rate:1.02},Playful:{pitch:1.08,rate:1.04}};
 export function spokenText(text,options={}){const clean=String(text).replace(/\n\s*Sources?:[\s\S]*$/i,'').replace(/```[\s\S]*?```/g,' Code is available in the message. ').replace(/\[([^\]]+)\]\(https?:\/\/[^)]+\)/g,'$1').replace(/https?:\/\/\S+/g,'').replace(/\[\d+\]/g,'').replace(/^#{1,6}\s*/gm,'').slice(0,16000);return normalizePronunciation(clean,options).slice(0,32000);}
 export class LocalVoice{
-  constructor({onState=()=>{},onProgress=()=>{},onLevel=()=>{},helper=null,permission=async()=>{},preferCompanionNeural=false,nativeSpeech=null}={}){this.deliveryWaits=new Set();this.nativeSpeech=nativeSpeech;this.listeningController=null;this.recognitionCleanup=null;this.onState=onState;this.recognition=null;this.utterance=null;this.generation=0;this.helper=helper;this.permission=permission;this.preferCompanionNeural=preferCompanionNeural;this.neural=new NeuralVoice({onState,onProgress,onLevel});this.cloning=false;}
+  constructor({onState=()=>{},onProgress=()=>{},onLevel=()=>{},helper=null,permission=async()=>{},preferCompanionNeural=false,nativeSpeech=null}={}){this.deliveryWaits=new Set();this.synthesisController=null;this.nativeSpeech=nativeSpeech;this.listeningController=null;this.recognitionCleanup=null;this.onState=onState;this.recognition=null;this.utterance=null;this.generation=0;this.helper=helper;this.permission=permission;this.preferCompanionNeural=preferCompanionNeural;this.neural=new NeuralVoice({onState,onProgress,onLevel});this.cloning=false;}
   async load(options){
     const generation=this.generation;this.onState('thinking');
     try{if(this.preferCompanionNeural&&this.helper){const result=await this.helper('status',{},options);if(!result.preset_ready)throw new Error('The installed MAX-G voice runtime needs repair. Open Voice Studio for status.');return result;}return await this.neural.load(options);}
@@ -17,7 +17,7 @@ export class LocalVoice{
   async preview(text,settings,{signal}={}){const config=normalizeVoice(settings.voice);return this.speak(text,{...config,language:({English:'en-US','Auto-detect':'en-US',Tagalog:'fil-PH',Spanish:'es-ES','Chinese (Mandarin)':'zh-CN',Japanese:'ja-JP',Italian:'it-IT',Russian:'ru-RU',Korean:'ko-KR'})[settings.language]||'en-US',profile:settings.voiceProfile,voiceURI:settings.voiceURI,rate:settings.rate,signal});}
   voices(){return globalThis.speechSynthesis?.getVoices().filter(v=>v.localService) || [];}
   async readyVoices(){if(this.voices().length)return this.voices();await new Promise(resolve=>{const timer=setTimeout(done,1500);const synth=globalThis.speechSynthesis;function done(){clearTimeout(timer);synth?.removeEventListener('voiceschanged',done);resolve();}synth?.addEventListener('voiceschanged',done,{once:true});});return this.voices();}
-  stop(){this.generation++;for(const cancel of [...this.deliveryWaits])cancel();this.listeningController?.abort();this.recognitionCleanup?.();this.neural.stop();if(this.cloning){this.cloning=false;this.helper?.('unload').catch(()=>{});}this.finishSpeech?.();this.finishSpeech=null;const recognition=this.recognition;this.recognition=null;try{recognition?.abort();}catch{}globalThis.speechSynthesis?.cancel();this.utterance=null;this.onState('idle');}
+  stop(){this.generation++;for(const cancel of [...this.deliveryWaits])cancel();this.synthesisController?.abort();this.synthesisController=null;this.listeningController?.abort();this.recognitionCleanup?.();this.neural.stop();if(this.cloning){this.cloning=false;this.helper?.('unload').catch(()=>{});}this.finishSpeech?.();this.finishSpeech=null;const recognition=this.recognition;this.recognition=null;try{recognition?.abort();}catch{}globalThis.speechSynthesis?.cancel();this.utterance=null;this.onState('idle');}
   async speak(text,{engine='system',neuralVoice='am_fenrir',cloneId='',pitch=0,depth=0,expression=.35,language='en-US',profile='Warm',voiceURI='',rate=1,emotion='neutral',laughter=true,chuckle=false,signal,speechContext={}}={}){
     if(signal?.aborted)throw new DOMException('Voice stopped.','AbortError');
     const clean=spokenText(text,{...speechContext,language}).trim();if(!clean){this.stop();return;}
@@ -33,8 +33,35 @@ export class LocalVoice{
       }
       const localPreset=engine==='neural'&&this.preferCompanionNeural;
       if(!this.helper||(!localPreset&&(engine!=='clone'||!cloneId)))throw new Error('Choose a saved recording in Voice Studio and pair with the Mac companion.');
-      this.cloning=true;const abort=()=>{if(generation===this.generation)this.stop();};signal?.addEventListener('abort',abort,{once:true});
-      try{await this.neural.unlock({signal});for(const segment of speechPlan(clean,{limit:260,firstLimit:120,rate,pitch,depth,emotion,expression,laughter,chuckle})){const chunk=segment.text;if(signal?.aborted||generation!==this.generation)throw new DOMException('Voice stopped.','AbortError');this.onState('thinking');const controls=segment.controls;const audio=await this.helper('synthesize',{text:chunk,mode:localPreset?'preset':'clone',voice:neuralVoice,language:NEURAL_VOICES.find(v=>v.id===neuralVoice)?.language||language,...(localPreset?{}:{sample_id:cloneId}),rate:controls.speed,pitch:controls.pitch,depth:controls.depth/6},{signal});if(signal?.aborted||generation!==this.generation)throw new DOMException('Voice stopped.','AbortError');if(audio.mime!=='audio/wav'||typeof audio.base64!=='string'||audio.base64.length>12000000)throw new Error('The companion returned invalid voice audio.');const bytes=Uint8Array.from(atob(audio.base64),c=>c.charCodeAt(0)),buffer=await this.neural.context.decodeAudioData(bytes.buffer);if(signal?.aborted||generation!==this.generation)throw new DOMException('Voice stopped.','AbortError');await deliveryPause(segment.pauseBeforeMs,{signal,cancellations:this.deliveryWaits});if(signal?.aborted||generation!==this.generation)throw new DOMException('Voice stopped.','AbortError');await this.neural.play(buffer.getChannelData(0),buffer.sampleRate,{pitch:0,depth:0},{signal});}}finally{signal?.removeEventListener('abort',abort);if(generation===this.generation){this.cloning=false;this.onState('idle');this.neural.scheduleIdle();}}return;
+      const synthesis=new AbortController();this.synthesisController=synthesis;this.cloning=true;
+      const verify=()=>{if(signal?.aborted||synthesis.signal.aborted||generation!==this.generation)throw new DOMException('Voice stopped.','AbortError');};
+      const abort=()=>{if(generation===this.generation)this.stop();};signal?.addEventListener('abort',abort,{once:true});
+      const plan=speechPlan(clean,{limit:260,firstLimit:120,rate,pitch,depth,emotion,expression,laughter,chuckle});
+      const prepare=async segment=>{
+        verify();const controls=segment.controls;
+        const audio=await this.helper('synthesize',{text:segment.text,mode:localPreset?'preset':'clone',voice:neuralVoice,language:NEURAL_VOICES.find(v=>v.id===neuralVoice)?.language||language,...(localPreset?{}:{sample_id:cloneId}),rate:controls.speed,pitch:controls.pitch,depth:controls.depth/6},{signal:synthesis.signal});
+        verify();if(audio.mime!=='audio/wav'||typeof audio.base64!=='string'||audio.base64.length>12000000)throw new Error('The companion returned invalid voice audio.');
+        const bytes=Uint8Array.from(atob(audio.base64),c=>c.charCodeAt(0)),buffer=await this.neural.context.decodeAudioData(bytes.buffer);verify();return buffer;
+      };
+      try{
+        await this.neural.unlock({signal:synthesis.signal});verify();let next=plan.length?prepare(plan[0]):null;
+        for(let i=0;i<plan.length;i++){
+          this.onState('thinking');const buffer=await next;verify();
+          // Keep only one future chunk in flight while the current audio plays.
+          // This hides synthesis time without overlapping speech or growing a queue.
+          next=i+1<plan.length?prepare(plan[i+1]):null;next?.catch(()=>{});
+          await deliveryPause(plan[i].pauseBeforeMs,{signal:synthesis.signal,cancellations:this.deliveryWaits});verify();
+          await this.neural.play(buffer.getChannelData(0),buffer.sampleRate,{pitch:0,depth:0},{signal:synthesis.signal});verify();
+        }
+      }catch(error){
+        if(generation===this.generation){
+          // Preserve this attempt's identity for genuine failures: callers use
+          // generation changes to distinguish a user Stop from an audio error.
+          synthesis.abort();this.neural.stop();if(this.cloning){this.cloning=false;this.helper('unload').catch(()=>{});}
+        }
+        throw error;
+      }
+      finally{signal?.removeEventListener('abort',abort);synthesis.abort();if(this.synthesisController===synthesis)this.synthesisController=null;if(generation===this.generation){this.cloning=false;this.onState('idle');this.neural.scheduleIdle();}}return;
     }
     this.stop();this.finishSpeech?.();const generation=++this.generation;globalThis.speechSynthesis?.cancel();const voices=await this.readyVoices();if(signal?.aborted||generation!==this.generation)return;
     if(!voices.length)throw new Error('No installed local browser voice is available. Add a system voice or use the desktop edition.');

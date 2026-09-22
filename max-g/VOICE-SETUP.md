@@ -239,3 +239,10 @@ Narration now preserves up to 16,000 source characters and splits speech into sm
 The selected voice now varies delivery per sentence. Questions, gentle support, celebrations, and playful setup/punchline timing use bounded pitch/rate adjustments and short cancelable pauses. **Settings → Voice → Light laughter during playful replies** permits an occasional spoken “Ha!” when a response includes a suitable cue. This is speech-based chuckling, not human nonverbal laughter. Expression zero or laughter off suppresses it; serious support never adds it.
 
 **Settings → General → Humor** selects balanced, more playful, or jokes only on request. Saved assistant replies retain only bounded emotion/chuckle presentation metadata, so Read aloud uses the intended tone. Saving chat history remains optional.
+
+
+## Faster response playback (1.12.6)
+
+With Speak replies or Talk with MAX-G enabled, plain prose can begin with its first complete sentence before text generation ends. The remaining text plays once in order. Jokes keep setup/punchline pacing, and code or uncertain sentence boundaries wait for the complete answer. Stop voice, changing views, backgrounding, or opening voice/settings controls cancels automatic queued speech.
+
+The installed Mac prepares at most one upcoming speech chunk while the current one plays. Prefetch stops on cancellation or playback/synthesis failure. It does not download a new voice or change your selected voice, language, pitch, depth, or expression.

@@ -1,3 +1,11 @@
+# MAX-G 1.12.6 — faster replies and speech
+
+MAX-G starts speaking a complete opening sentence while the rest of a prose reply is still arriving, then reads the remainder once. It waits for a confirmed sentence boundary rather than speaking partial words. Short replies, jokes, code and other formatted content retain full-reply delivery where needed. Stop voice prevents later queued speech; text can continue to finish. Existing expressive delivery, replay, and continuous conversation remain available.
+
+The Mac avoids a redundant connection-status request before each Cloudflare answer and prepares one next voice chunk during playback. Conversational web research uses source text without waiting for optional photos; **Show articles** retrieves pictures when requested. Current questions still check fresh sources. First-text timing measures visible answer text from the task's start, including research, rather than counting hidden model tags or starting after connection checks.
+
+These changes keep the same model, answer budgets, free-plan connection and native Mac identity. Device speed, voice/model cold starts, connection quality and provider availability still affect real response time. No new paid service, background model download, or automatic provider switching was added.
+
 # MAX-G 1.12.5 — expressive companion conversation
 
 Talk with MAX-G for friendly conversation, ideas, practical help, playful banter, or dad jokes. Its conversation prompt uses current context, varies jokes, and treats personal worries seriously. A personal concern mentioning tomorrow, news, or weather stays in the conversation rather than accidentally becoming a forecast or public search.
