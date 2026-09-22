@@ -246,3 +246,7 @@ The selected voice now varies delivery per sentence. Questions, gentle support, 
 With Speak replies or Talk with MAX-G enabled, plain prose can begin with its first complete sentence before text generation ends. The remaining text plays once in order. Jokes keep setup/punchline pacing, and code or uncertain sentence boundaries wait for the complete answer. Stop voice, changing views, backgrounding, or opening voice/settings controls cancels automatic queued speech.
 
 The installed Mac prepares at most one upcoming speech chunk while the current one plays. Prefetch stops on cancellation or playback/synthesis failure. It does not download a new voice or change your selected voice, language, pitch, depth, or expression.
+
+## Personal conversation and check-ins (1.12.7)
+
+In a voice conversation you can say “Remember that I prefer listening before advice” or “What do you remember about me?”. These commands save or read explicit personal memories locally. Settings → Companion provides editing, pause, forgetting, and optional Cloudflare sharing. Sharing starts off; enable it and save if you want cloud AI to use those memories. A selected check-in topic can prompt one gentle question when you say hello in English, at most once daily. No background listening or reminders are added. End conversation and Stop voice still stop capture/playback.

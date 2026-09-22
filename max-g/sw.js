@@ -2,16 +2,16 @@
  * Model tensors/config/tokenizers/WASM belong to WebLLM's IndexedDB cache.
  * This worker never caches searches, conversations, uploads or arbitrary pages.
  */
-const VERSION = '2026-09-21.22';
-const RELEASE_VERSION = '1.12.6';
-const RELEASE_BUILD = 214;
+const VERSION = '2026-09-21.23';
+const RELEASE_VERSION = '1.12.7';
+const RELEASE_BUILD = 215;
 const SCOPE = new URL(self.registration.scope);
 const PREFIX = `maxg-pwa:${encodeURIComponent(SCOPE.pathname)}:`;
 const SHELL_CACHE = `${PREFIX}shell:${VERSION}`;
 const LIBRARY_CACHE = `${PREFIX}libraries:0.2.85`;
 const WEBLLM_URL = 'https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@0.2.85/+esm';
 const SHELL_FILES = [
-  './reply-speech.js', './conversation-delivery.js',
+  './companion-memory.js', './reply-speech.js', './conversation-delivery.js',
   './creative-writing.js',
   './request-understanding.js', './research.js', './research-routing.js', './research-cards.js', './research-cards.css',
   './mobile-viewport.js', './mobile-viewport.css', './IOS-INSTALL.md', './release-version.js', './updates.js', './updates.css', './install.html', './install.css', './install.js',

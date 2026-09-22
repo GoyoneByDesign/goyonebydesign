@@ -1,3 +1,15 @@
+# MAX-G 1.12.7 — personal memory and thoughtful check-ins
+
+MAX-G acknowledges feelings before advice, offers listening or practical steps, and follows the conversation without claiming human feelings, consciousness or background monitoring. Personal questions such as “I need you to understand me” stay in conversation rather than becoming a public web search. Fast streamed text, early spoken replies, expressive delivery and existing tools remain available.
+
+Open **Settings → Companion** to save up to 24 short personal memories, edit them, pause individual items, or forget them. You can also type or say **“Remember that I prefer listening before advice”** and **“What do you remember about me?”**. Only explicit personal-memory requests are saved; ordinary conversation, old notes, profile details and chat history are not mined for personal facts. Memories are reference data, not model training or tool authorization. Avoid passwords and access keys.
+
+**Personal-memory sharing with Cloudflare is off by default.** Enable **Use these personal memories with Cloudflare AI**, then **Save companion settings**, if you want the cloud conversation to use relevant enabled memories. Local AI can use enabled memories on this device. Neither mode adds them to public search queries. Changing, pausing or forgetting memories stops an active answer and clears prior AI context; visible old chats and exported backups remain until separately deleted. Already transmitted information cannot be retracted from a provider.
+
+For a gentle follow-up, select **Check in about this** on a memory and leave **Gentle check-ins when I say hello** enabled. When you greet MAX-G in English, it can ask about one selected topic, at most once per day on that device. These are local conversational replies, not background reminders or notifications. MAX-G does not watch you while the app is closed. You can turn check-ins off at any time.
+
+Memories and preferences stay on the current device; they do not automatically sync to another Mac, phone or tablet. **Memory & data** includes personal backup, chat deletion and factory reset. The shared website, Home Screen app and Mac interface use this same release. The installed Mac native bundle stays at build211 to preserve its signature and microphone identity; no provider or paid-plan change is required.
+
 # MAX-G 1.12.6 — faster replies and speech
 
 MAX-G starts speaking a complete opening sentence while the rest of a prose reply is still arriving, then reads the remainder once. It waits for a confirmed sentence boundary rather than speaking partial words. Short replies, jokes, code and other formatted content retain full-reply delivery where needed. Stop voice prevents later queued speech; text can continue to finish. Existing expressive delivery, replay, and continuous conversation remain available.

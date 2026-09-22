@@ -1,4 +1,5 @@
 import {normalizeDelivery} from './conversation-delivery.js';
+import {normalizeCompanionMemory} from './companion-memory.js';
 /** Bounded local personal data. No network calls; model weights use a separate WebLLM store. */
 import {freshImprovement,validateImprovement} from './improvement.js';
 import {normalizeProfile,normalizeDisplay} from './profile.js';
@@ -17,7 +18,7 @@ export const LANGUAGES={'Auto-detect':'en-US',English:'en-US',Tagalog:'fil-PH',S
 // Internet permission remains the control for disabling all public requests.
 export const DEFAULTS=Object.freeze({conversationRevision:1,micPreferenceRevision:1,keepListening:true,humor:'balanced',laughter:true,inferenceMode:'cloudflare',model:'Llama-3.2-1B-Instruct-q4f16_1-MLC',language:'Auto-detect',unitSystem:'us',style:'Friendly',replyLength:'Brief',instructions:'',onlineFirst:false,illustratedAnswers:true,proxyURL:'',searchConnection:'default',weatherCity:'',speak:true,voiceProfile:'Warm',voiceURI:'',rate:1,motion:true,theme:'Dark',saveChats:false,useMemory:true,accessMode:'Limited',permissions:{internet:'allow',files:'ask',microphone:'allow',location:'ask'},hourlyLearning:false,voice:normalizeVoice(),orbit:normalizeOrbitSettings(),locations:normalizeLocationSettings(),deviceMode:'auto',performanceSeed:0});
 const validTime=(value,fallback)=>Number.isFinite(Number(value))&&Number(value)>=0&&Number(value)<8640000000000000?Number(value):fallback;
-export function freshState(){return {version:1,profile:normalizeProfile(),display:normalizeDisplay(),settings:structuredClone(DEFAULTS),chats:[],notes:[],skills:[],jobs:[],improvement:freshImprovement(),study:{nextRun:Date.now()+3600000,cursor:0,history:[]}};}
+export function freshState(){return {version:1,profile:normalizeProfile(),display:normalizeDisplay(),settings:structuredClone(DEFAULTS),companion:normalizeCompanionMemory(),chats:[],notes:[],skills:[],jobs:[],improvement:freshImprovement(),study:{nextRun:Date.now()+3600000,cursor:0,history:[]}};}
 /** Pronunciation hints contain identifiers only, never a full place, GPS fix,
  * provider result, account data or a replacement version of the displayed text. */
 export function normalizeSpeechContext(raw){
@@ -38,7 +39,7 @@ export function yearQuestionSpeechContext(question,answer){
 }
 export function validateState(raw){
   const clean=freshState(); if(!raw||typeof raw!=='object')return clean;
-  clean.improvement=validateImprovement(raw.improvement);clean.profile=normalizeProfile(raw.profile);clean.display=normalizeDisplay(raw.display);
+  clean.improvement=validateImprovement(raw.improvement);clean.profile=normalizeProfile(raw.profile);clean.display=normalizeDisplay(raw.display);clean.companion=normalizeCompanionMemory(raw.companion);
   const s=raw.settings||{};
   for(const [key,base]of Object.entries(DEFAULTS))if(key!=='permissions'&&typeof s[key]===typeof base)clean.settings[key]=s[key];
   // Earlier releases enabled illustrated search for every fact. Migrate once to conversation.

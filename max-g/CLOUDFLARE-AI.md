@@ -9,7 +9,7 @@ MAX-G 1.12.3 offers **Cloudflare AI** in **Settings → Connection → Conversat
 - **Check Cloudflare AI setup** checks configuration without spending an inference request. Send a question to verify actual model access.
 - Try **“Explain why the sky is blue in three sentences.”** Then ask **“Explain it to a child.”** The second message should use the context of the current cloud conversation.
 
-Cloudflare mode sends your new messages, recent cloud-session conversation and relevant public source excerpts to Cloudflare. Stored profile details, saved memories, restored old chats and attachments are excluded. Select **Local AI** to discuss files or use local memories. Cloudflare AI requires an internet connection; local AI requires a compatible device and installed model. Voice and weather remain separate features.
+Cloudflare mode sends your new messages, recent cloud-session conversation and relevant public source excerpts to Cloudflare. Personal memories are excluded by default. **Settings → Companion → Use these personal memories with Cloudflare AI → Save companion settings** explicitly enables sharing of relevant, enabled personal memories with chat requests. Turning sharing off, editing, pausing or deleting memories clears the prior cloud conversation context; old visible chat records remain. Stored profile details, legacy notes, restored old chats and attachments stay excluded. Select **Local AI** to discuss files or use memories without cloud inference. Personal memories never become public search queries. Cloudflare AI requires an internet connection; local AI requires a compatible device and installed model. Voice and weather remain separate features.
 
 ## Free plan and limits
 

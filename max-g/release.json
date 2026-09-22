@@ -1,13 +1,13 @@
 {
   "schema": 1,
-  "version": "1.12.6",
-  "build": 214,
+  "version": "1.12.7",
+  "build": 215,
   "min_companion_build": 211,
   "files": [
     {
       "path": "CLOUDFLARE-AI.md",
-      "sha256": "dab9501cf31e33885fa26b0d8a55ce081cfc9353042eb1666c32e002b0da6668",
-      "bytes": 3680
+      "sha256": "42253cf2f299fa702cae526ffb677c4ba88cc029b5733ac5826111495c51f912",
+      "bytes": 4123
     },
     {
       "path": "DEVICE-GUIDE.md",
@@ -21,13 +21,13 @@
     },
     {
       "path": "README.md",
-      "sha256": "674b4f57c8d5bc46c16e177b59329bc3797d5606d5f39070b3dfc5ea7336ebab",
-      "bytes": 42747
+      "sha256": "2e87f55360e37d5535139313cf18285f289e581593ce2f51a7976179341bc032",
+      "bytes": 45105
     },
     {
       "path": "VOICE-SETUP.md",
-      "sha256": "0926f835a2f90859e43754bd906b13baf2669c36656b0d73bdf1e9f8ec2afecf",
-      "bytes": 19255
+      "sha256": "3f2010974cc7ec9b0ecc0efda3d95d911c5e787443eb99ca01e1954ce4c556cf",
+      "bytes": 19892
     },
     {
       "path": "WEATHER-GUIDE.md",
@@ -51,8 +51,8 @@
     },
     {
       "path": "app.js",
-      "sha256": "ad3d6e3563824392cade2e728a8294ac934aa0eb41807fa721cc5e733bf88da2",
-      "bytes": 129734
+      "sha256": "edfff2439e1fa78b3a4d46a62012cce160979ba7113148a330fa8b909a183585",
+      "bytes": 140979
     },
     {
       "path": "assets/goyonebydesign-logo.png",
@@ -86,13 +86,18 @@
     },
     {
       "path": "cloudflare-ai.js",
-      "sha256": "9d09524367d87b396a3e038b7e360617c3eef0de3cce7d57cadec9219540ee4c",
-      "bytes": 14113
+      "sha256": "644e143c2c1a9e28c0cf933bb618c5aeccfd06edee518ccde97256529cfc5376",
+      "bytes": 15718
     },
     {
       "path": "companion-interactions.js",
-      "sha256": "12d3c1dca7de0cf2ffc89a0a9e63b74ce3416e0bb1a924204097a9edbbd2a47d",
-      "bytes": 15121
+      "sha256": "91782211d35bf3ed86849601732d42a01c2cbfcc6e8365fb63da5fb711783ac6",
+      "bytes": 16195
+    },
+    {
+      "path": "companion-memory.js",
+      "sha256": "4a9de0e892fdca62cf5da6a3f4087b710ce42db1611d56be9e4f85413c38dcea",
+      "bytes": 8572
     },
     {
       "path": "connectors.css",
@@ -196,8 +201,8 @@
     },
     {
       "path": "index.html",
-      "sha256": "d9d9ec7a0825032064f076298bfeede9164b5bdd6aa0cc72969b15b4dfe399ff",
-      "bytes": 23809
+      "sha256": "796c205ebb4ea178501d98e3ee860fd85571cb67c66f381ba48eced5b4cbff32",
+      "bytes": 23877
     },
     {
       "path": "inference-worker.js",
@@ -281,7 +286,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "09501ecc49bead820d9ddcb4ed856cf8716d1fbf2aea30975b5b375ed980fb49",
+      "sha256": "7578346b90ca7a6f7a4183589162a119e5413a7732b62188b5cd70c52fb08183",
       "bytes": 255
     },
     {
@@ -316,7 +321,7 @@
     },
     {
       "path": "release-version.js",
-      "sha256": "d584e8fcb216476b475b8960854d513c64527e13732a4fb1674a9fc0dc8e6067",
+      "sha256": "9dd48f6c7720c1b4ac99d3906b905441d84e5f7d4fa359b219aed3210a0702a8",
       "bytes": 155
     },
     {
@@ -361,8 +366,8 @@
     },
     {
       "path": "state.js",
-      "sha256": "7e2197e7c4fbad4af09318110d44fbece8e1049976f9dee66a0256b5948c464d",
-      "bytes": 10585
+      "sha256": "56a5eb81196e816c8e6e01d20fe279a726823a59c3a0fd3c673ba19162c0a4f2",
+      "bytes": 10742
     },
     {
       "path": "style.css",
@@ -371,8 +376,8 @@
     },
     {
       "path": "sw.js",
-      "sha256": "650057913aa615948b5b2160c3a6b7a97976fea03b94107e293f244a9ffd6eba",
-      "bytes": 8318
+      "sha256": "0c010530f16eee08d80bc0eeb4e514cdf39b46a01968de6c5d18c38222c9398e",
+      "bytes": 8343
     },
     {
       "path": "tools.js",
