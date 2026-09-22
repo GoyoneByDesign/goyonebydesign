@@ -1,6 +1,6 @@
 # MAX-G Cloudflare AI — free connection
 
-MAX-G 1.12.0 offers **Cloudflare AI** in **Settings → Connection → Conversation engine**. Its fixed model is GLM 4.7 Flash (`@cf/zai-org/glm-4.7-flash`), hosted by Cloudflare. No ChatGPT, Gemini or Claude API is used for this mode. Ask Gemini remains a separate, optional action.
+MAX-G 1.12.1 offers **Cloudflare AI** in **Settings → Connection → Conversation engine**. Its fixed model is Qwen 3.8 27B (`@cf/qwen/qwen3.8-27b`), hosted by Cloudflare. No ChatGPT, Gemini or Claude API is used for this mode. Ask Gemini remains a separate, optional action.
 
 ## Start a conversation
 
@@ -24,10 +24,10 @@ The existing `max-g-search` Worker provides `/ai/health` and `/ai`, alongside it
 - Workers AI binding named `AI`.
 - `CLOUDFLARE_AI_FREE_TIER_CONFIRMED=true`, after checking Workers Free.
 - Existing encrypted `MAXG_SUPPORT_TOKEN` and `SEARCH_RATE_LIMIT` binding.
-- Fixed GLM 4.7 Flash model, bounded context and answer length, temperature 0, streaming visible text, request cancellation and a deadline.
+- Fixed Qwen 3.8 27B model, bounded context and answer length, temperature 0, streaming visible text, request cancellation and a deadline.
 
 Existing Worker secrets are preserved during deployment. No credential belongs in GitHub Pages files. The browser uses a session token; the Mac proxy authenticates paired local requests and forwards its Keychain token only to MAX-G’s fixed HTTPS Worker. A public website address is not authentication.
 
 Larger models and more context can improve answers, but they do not guarantee accuracy or parity with other assistants. Check consequential answers and original sources.
 
-Sources: [Cloudflare GLM 4.7 Flash](https://developers.cloudflare.com/workers-ai/models/glm-4.7-flash/), [Workers AI pricing](https://developers.cloudflare.com/workers-ai/platform/pricing/), [Workers bindings](https://developers.cloudflare.com/workers-ai/configuration/bindings/).
+Sources: [Cloudflare Qwen 3.8 27B](https://developers.cloudflare.com/workers-ai/models/qwen3.8-27b/), [Workers AI pricing](https://developers.cloudflare.com/workers-ai/platform/pricing/), [Workers bindings](https://developers.cloudflare.com/workers-ai/configuration/bindings/).

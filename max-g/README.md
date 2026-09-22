@@ -1,6 +1,6 @@
-# MAX-G 1.12.0 Cloudflare Free conversation
+# MAX-G 1.12.1 Cloudflare Free conversation
 
-Cloudflare AI adds streamed GLM 4.7 Flash replies through MAX-G’s existing Worker, with bounded current-session conversation context. Select Cloudflare AI or Local AI in Settings → Connection. Cloudflare processes cloud-mode conversation on its servers; local inference remains available. See [Cloudflare AI setup and free limits](CLOUDFLARE-AI.md). Website and iPhone/iPad use the same release. The updated Mac companion can keep its owner access token in Keychain.
+Cloudflare AI adds streamed Qwen 3.8 27B replies through MAX-G’s existing Worker, with bounded current-session conversation context. Select Cloudflare AI or Local AI in Settings → Connection. Cloudflare processes cloud-mode conversation on its servers; local inference remains available. See [Cloudflare AI setup and free limits](CLOUDFLARE-AI.md). Website and iPhone/iPad use the same release. The updated Mac companion can keep its owner access token in Keychain.
 
 # MAX-G 1.11.1 personal conversations and iPhone/iPad testing
 

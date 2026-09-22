@@ -96,3 +96,6 @@ body.has-conversation .message-weather .message-actions button{min-height:30px}
 .inference-notice{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 22px;color:var(--muted,#a9bbd0);font-size:13px;line-height:1.4;border-bottom:1px solid rgba(110,218,255,.12);background:rgba(16,32,53,.65);flex-shrink:0}
 .inference-notice .text-button{flex-shrink:0;white-space:nowrap}
 @media(max-width:640px){.inference-notice{padding:7px 12px;font-size:12px;gap:8px}.inference-notice>span{min-width:0}.inference-notice .text-button{font-size:12px}}
+
+/* Temporary notices stay above the composer, including with the phone keyboard open. */
+@media(max-width:640px){#toast.toast{top:calc(var(--maxg-app-top,var(--maxg-visible-top,0px)) + 64px);bottom:auto;height:auto;max-height:calc(2.9em + 22px);width:calc(100% - 32px);padding:10px 14px;font-size:12px;line-height:1.45;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;pointer-events:none}}

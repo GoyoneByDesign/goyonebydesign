@@ -3,8 +3,8 @@ import {BUILTIN_SEARCH_URL} from './tools.js';
 import {validateSupportToken} from './gemini.js';
 
 export const CLOUDFLARE_AI_URL=BUILTIN_SEARCH_URL+'/ai';
-export const CLOUDFLARE_AI_MODEL='@cf/zai-org/glm-4.7-flash';
-export const CLOUDFLARE_AI_LABEL='Cloudflare AI · GLM 4.7 Flash';
+export const CLOUDFLARE_AI_MODEL='@cf/qwen/qwen3.8-27b';
+export const CLOUDFLARE_AI_LABEL='Cloudflare AI · Qwen 3.8 27B';
 const MAX_CONTEXT=18000,MAX_BODY_BYTES=64000,MAX_RESPONSE_BYTES=256*1024,MAX_TIMEOUT=75000;
 const encoder=new TextEncoder();
 export class CloudflareAIError extends Error{constructor(code,message){super(message);this.name='CloudflareAIError';this.code=code;}}

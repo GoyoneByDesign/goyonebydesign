@@ -1,13 +1,13 @@
 {
   "schema": 1,
-  "version": "1.12.0",
-  "build": 208,
-  "min_companion_build": 208,
+  "version": "1.12.1",
+  "build": 209,
+  "min_companion_build": 209,
   "files": [
     {
       "path": "CLOUDFLARE-AI.md",
-      "sha256": "1bdfc348c482eec5e411be9226afac283c800be50fa03dfbbdccf0f82c7d28d0",
-      "bytes": 3690
+      "sha256": "79061556d60a747e673bc54d2d31133facaf9086736069ce5ec1bd8a6486db2d",
+      "bytes": 3680
     },
     {
       "path": "DEVICE-GUIDE.md",
@@ -21,8 +21,8 @@
     },
     {
       "path": "README.md",
-      "sha256": "f41f1c9ece4e83f55b8ec1a61960052255f2057be2aebdf53f0c67238a9d8f98",
-      "bytes": 36941
+      "sha256": "1ed9bece781bf2c81b01a99a5e54a55252e5280144678c1ec94cf473db99c06b",
+      "bytes": 36940
     },
     {
       "path": "VOICE-SETUP.md",
@@ -51,8 +51,8 @@
     },
     {
       "path": "app.js",
-      "sha256": "dad1c3099b94261d89077bec66ee174d3f495ee5c542d9f4adab47c2f7b926c7",
-      "bytes": 118244
+      "sha256": "11906adb4ad4e295d97d480b6778f54b7c56e0dab1aeebe4610e9fa604ec4f55",
+      "bytes": 118356
     },
     {
       "path": "assets/goyonebydesign-logo.png",
@@ -86,8 +86,8 @@
     },
     {
       "path": "cloudflare-ai.js",
-      "sha256": "b6854d476d533a90e7f15f85634b94be78136254bc5704e7e466d4107e4e49e0",
-      "bytes": 14118
+      "sha256": "fec2d9e911043b65eea51810047742125d28c649343d01df6f95d32d8dcc0a94",
+      "bytes": 14112
     },
     {
       "path": "companion-interactions.js",
@@ -271,7 +271,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "f3d6c5261abf33adbd013d5433174bd758396240c1b9b4792d51910a92c946c6",
+      "sha256": "d6c45348fc60b084bda55ec704991c48b5f643913fd970a19e453ea83ee71d50",
       "bytes": 255
     },
     {
@@ -306,7 +306,7 @@
     },
     {
       "path": "release-version.js",
-      "sha256": "eeec3cf808145985f754a4a794e2877f06b00e86112215df8966c09f7230f797",
+      "sha256": "c54478af7e813f6828e61ff78ea6a4df65b74b869291ff527e20410394ade5e1",
       "bytes": 155
     },
     {
@@ -351,12 +351,12 @@
     },
     {
       "path": "style.css",
-      "sha256": "b9072696d6377194fb646854eb4806d486c0bce0f1f6425706d62bbeff07b2cd",
-      "bytes": 44758
+      "sha256": "27a168e06918d34af7023df78bc90cdf71ba2fb5135ad74e731dd4608b819597",
+      "bytes": 45185
     },
     {
       "path": "sw.js",
-      "sha256": "5806d2269ffad905649bdf9dfaefcfa1532538df0ff4ea873cb4b67436934fe3",
+      "sha256": "1d2e8a793ac285f2902bddfea9727d4f8cbc9d1266b6595290b0759b5f60ce94",
       "bytes": 8238
     },
     {

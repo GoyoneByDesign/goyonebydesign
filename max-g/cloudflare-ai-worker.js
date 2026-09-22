@@ -4,7 +4,7 @@
  */
 import {verifySupportToken} from './gemini-worker.js';
 
-export const CLOUDFLARE_AI_MODEL = '@cf/zai-org/glm-4.7-flash';
+export const CLOUDFLARE_AI_MODEL = '@cf/qwen/qwen3.8-27b';
 export const CLOUDFLARE_AI_PROVIDER = 'Cloudflare Workers AI';
 export const AI_LIMITS = Object.freeze({requestBytes: 65536, messages: 32, messageChars: 16000, contextChars: 24000, outputChars: 16000, responseBytes: 524288, eventChars: 65536, timeoutMs: 60000});
 const ORIGINS = Object.freeze([
