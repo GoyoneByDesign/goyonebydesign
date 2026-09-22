@@ -233,3 +233,9 @@ Short replies such as “more,” “yes,” and “what about tomorrow?” can 
 ## Longer stories (1.12.4)
 
 Narration now preserves up to 16,000 source characters and splits speech into small sequential chunks. Long stories no longer stop at the old 1,800-character limit. Stop voice cancels playback and prevents later chunks from starting.
+
+## Expressive companion delivery (1.12.5)
+
+The selected voice now varies delivery per sentence. Questions, gentle support, celebrations, and playful setup/punchline timing use bounded pitch/rate adjustments and short cancelable pauses. **Settings → Voice → Light laughter during playful replies** permits an occasional spoken “Ha!” when a response includes a suitable cue. This is speech-based chuckling, not human nonverbal laughter. Expression zero or laughter off suppresses it; serious support never adds it.
+
+**Settings → General → Humor** selects balanced, more playful, or jokes only on request. Saved assistant replies retain only bounded emotion/chuckle presentation metadata, so Read aloud uses the intended tone. Saving chat history remains optional.

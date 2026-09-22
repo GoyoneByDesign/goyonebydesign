@@ -1,3 +1,13 @@
+# MAX-G 1.12.5 — expressive companion conversation
+
+Talk with MAX-G for friendly conversation, ideas, practical help, playful banter, or dad jokes. Its conversation prompt uses current context, varies jokes, and treats personal worries seriously. A personal concern mentioning tomorrow, news, or weather stays in the conversation rather than accidentally becoming a forecast or public search.
+
+Reply expression now connects the animated character and speech. Replay preserves the reply's tone when chat saving is enabled. Existing voices use small sentence-level changes in pacing and pitch for questions, celebrations, gentle support, and joke delivery. Optional light laughter is a brief spoken “Ha!” cue, not a recording of human nonverbal laughter. These are expressive AI behaviors, not human feelings or consciousness.
+
+Use **Settings → General → Humor** for **Warm & balanced**, **More playful**, or **Only when I ask**. In **Settings → Voice**, **Light laughter during playful replies** turns spoken chuckles on or off. The existing expression slider controls delivery strength; zero suppresses expressive adjustments and added chuckles. Serious replies suppress laughter even if the model supplies the wrong cue. Stop voice and End conversation remain available.
+
+Original stories, creative revisions, continuous foreground listening, weather, locations, and other tools remain available. The Free Cloudflare connection and local AI option are unchanged. This shared interface update preserves the installed Mac's native bundle and signing identity.
+
 # MAX-G 1.12.4 — stories and creative conversation
 
 Ask MAX-G to write an original story in any genre: fantasy, mystery, romance, comedy, horror, science fiction, adventure, historical fiction, or a blend. It can also write poems, scenes, dramatic scripts, jokes, and original lyrics. Give characters, a setting, tone, audience, and length if you have preferences; otherwise it begins writing without a setup questionnaire.

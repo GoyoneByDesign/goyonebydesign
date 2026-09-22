@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "version": "1.12.4",
-  "build": 212,
+  "version": "1.12.5",
+  "build": 213,
   "min_companion_build": 211,
   "files": [
     {
@@ -21,13 +21,13 @@
     },
     {
       "path": "README.md",
-      "sha256": "46e3271af45277a5db0a5d6e3ec881b08d04deaa71cd3585e219081a04b5e50c",
-      "bytes": 39880
+      "sha256": "5497015960dbdfc37fb10befda612e9d553834041e912cdb273a50ebfb4e8f60",
+      "bytes": 41452
     },
     {
       "path": "VOICE-SETUP.md",
-      "sha256": "42e86ba7412313e34af83c538ed9a44b817e33fcfe43896ed3beffd0b2a0550a",
-      "bytes": 17795
+      "sha256": "6e5fc79ceb601d3482d5756033099e8f580b4d751bc30197cb80e517da1ca588",
+      "bytes": 18570
     },
     {
       "path": "WEATHER-GUIDE.md",
@@ -51,8 +51,8 @@
     },
     {
       "path": "app.js",
-      "sha256": "17ecb73a44c4cb73836de2f85a9a237913a69d8da1599acb74ed7c52ca430b68",
-      "bytes": 126465
+      "sha256": "91f37944548e191dc75adb5ef8058fa03b3c8c390f13c8bd8e386a27447ba5b4",
+      "bytes": 127551
     },
     {
       "path": "assets/goyonebydesign-logo.png",
@@ -91,8 +91,8 @@
     },
     {
       "path": "companion-interactions.js",
-      "sha256": "4f1ec9013688c6a3c4dcf94b22a62105a7b141abbbb6f18b21cea07dd8a1e645",
-      "bytes": 12376
+      "sha256": "12d3c1dca7de0cf2ffc89a0a9e63b74ce3416e0bb1a924204097a9edbbd2a47d",
+      "bytes": 15121
     },
     {
       "path": "connectors.css",
@@ -103,6 +103,11 @@
       "path": "connectors.js",
       "sha256": "33c4061e3047c7fb65e0e19673234420214c51ba1431fd1371eb7c7191fd5ece",
       "bytes": 107090
+    },
+    {
+      "path": "conversation-delivery.js",
+      "sha256": "d3d1ce922080ade1eb767cd0505762d039b8d548fb6c59a9aee724864129099a",
+      "bytes": 2832
     },
     {
       "path": "country-data.js",
@@ -261,8 +266,8 @@
     },
     {
       "path": "neural-voice.js",
-      "sha256": "974724ab059dd23f18de1268e91b63a8b5961e4bbe395f8cf17c703a746273ae",
-      "bytes": 12428
+      "sha256": "1d2959edad49594191973caf7aec3dacb68e1442f36bd1546cf8b0b3bb112c71",
+      "bytes": 12603
     },
     {
       "path": "orbit.css",
@@ -276,7 +281,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "c20cae37c7908c637fc321dc72de21e7d98e5374e56351757e5faa7e6c7bb6b1",
+      "sha256": "390d90b227da1a171816408a87d2d4ac3aadb36ce302197a4f7335016f967d83",
       "bytes": 255
     },
     {
@@ -311,7 +316,7 @@
     },
     {
       "path": "release-version.js",
-      "sha256": "e9e294d8686ccbbc4a43b56fae03ae45a8ae5dedfd62cc378090dd5293c621ad",
+      "sha256": "0d3381ca59596b7fd03c14a805b364555e097c13a535a0e7e477354f23d13656",
       "bytes": 155
     },
     {
@@ -351,8 +356,8 @@
     },
     {
       "path": "state.js",
-      "sha256": "10cac0b8454b67c1a4eaefd8daddd281d3b3da7cdc02ab799920a0cbe561117f",
-      "bytes": 10356
+      "sha256": "7e2197e7c4fbad4af09318110d44fbece8e1049976f9dee66a0256b5948c464d",
+      "bytes": 10585
     },
     {
       "path": "style.css",
@@ -361,8 +366,8 @@
     },
     {
       "path": "sw.js",
-      "sha256": "122f8995a3f711929fc6595b3a44182cfaf39191f7436e039505b6d0ef895fb6",
-      "bytes": 8265
+      "sha256": "0415a27edfd8302728a85aec19f4201882371d6c12004741294503e2e97b9daf",
+      "bytes": 8297
     },
     {
       "path": "tools.js",
@@ -391,8 +396,8 @@
     },
     {
       "path": "voice-config.js",
-      "sha256": "036032415c3ec57205ef21b5373fcf68614110b282dcd3fbccbc7c354888759e",
-      "bytes": 5542
+      "sha256": "526c3fcda45b64c5bcc750a28d0a3b9c7fa102bb232b17ee1522ec62072a17e3",
+      "bytes": 9146
     },
     {
       "path": "voice-studio.css",
@@ -411,8 +416,8 @@
     },
     {
       "path": "voice.js",
-      "sha256": "a4de6fd8f0cf09ce01a35076b00caaee101dd54d1feb6f15b5e6efb3136776be",
-      "bytes": 17235
+      "sha256": "d8bb0062484f7469b2de8e3227f0152808f21342c64b99fcdd9d960b5f8abe7f",
+      "bytes": 17755
     },
     {
       "path": "weather-card.css",

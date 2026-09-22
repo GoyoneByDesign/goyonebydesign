@@ -1,10 +1,10 @@
-import {sentenceChunks,deliveryControls} from './voice-config.js';
+import {speechPlan,deliveryPause} from './voice-config.js';
 const abortError=()=>new DOMException('Voice stopped.','AbortError');
 /** Bounded sentence synthesis and playback, with one sentence of lookahead. */
 export class NeuralVoice {
   constructor({onState=()=>{},onProgress=()=>{},onLevel=()=>{}}={}) {
     Object.assign(this,{onState,onProgress,onLevel});
-    this.worker=null;this.ready=false;this.pending=new Map();this.counter=0;this.epoch=0;
+    this.deliveryWaits=new Set();this.worker=null;this.ready=false;this.pending=new Map();this.counter=0;this.epoch=0;
     this.context=null;this.current=null;this.playback=null;this.timer=null;this.idleTimer=null;this.unlocks=new Set();this.speaking=false;
     this.audioSession=null;this.previousAudioSessionType=null;
   }
@@ -93,12 +93,12 @@ export class NeuralVoice {
     for(const task of this.pending.values()){clearTimeout(task.timer);task.reject(error);}this.pending.clear();
   }
   stop() {
-    this.clearIdle();this.epoch++;this.speaking=false;for(const abort of [...this.unlocks])abort();this.playback?.cancel();
+    this.clearIdle();this.epoch++;this.speaking=false;for(const cancel of [...this.deliveryWaits])cancel();for(const abort of [...this.unlocks])abort();this.playback?.cancel();
     if(this.pending.size)this.retireWorker(abortError());
     this.onLevel(0);this.onState('idle');this.scheduleIdle();
   }
   unload(error=abortError()) {
-    this.clearIdle();this.epoch++;this.speaking=false;for(const abort of [...this.unlocks])abort();this.playback?.cancel();this.retireWorker(error);
+    this.clearIdle();this.epoch++;this.speaking=false;for(const cancel of [...this.deliveryWaits])cancel();for(const abort of [...this.unlocks])abort();this.playback?.cancel();this.retireWorker(error);
     this.closeContext();this.restoreAudioSession();
     this.onLevel(0);this.onState('idle');
   }
@@ -172,17 +172,17 @@ export class NeuralVoice {
   async speak(text,{signal,neuralVoice='am_fenrir',...options}={}) {
     this.stop();const epoch=this.epoch;
     const verify=()=>{if(signal?.aborted||epoch!==this.epoch)throw abortError();};
-    verify();const chunks=sentenceChunks(text,220,{firstLimit:120});if(!chunks.length)return;
+    verify();const plan=speechPlan(text,{...options,limit:220,firstLimit:120});if(!plan.length)return;
     this.speaking=true;
-    const controls=chunks.map(text=>deliveryControls({...options,text}));
-    const generate=i=>this.request('generate',{text:chunks[i],voice:neuralVoice,speed:controls[i].speed});
+    const generate=i=>this.request('generate',{text:plan[i].text,voice:neuralVoice,speed:plan[i].controls.speed});
     const abort=()=>{if(epoch===this.epoch)this.stop();};signal?.addEventListener('abort',abort,{once:true});
     try {
       await this.unlock({signal});verify();await this.load({signal});verify();let next=generate(0);
-      for(let i=0;i<chunks.length;i++) {
+      for(let i=0;i<plan.length;i++) {
         this.onState('thinking');const audio=await next;verify();
-        next=i+1<chunks.length?generate(i+1):null;next?.catch(()=>{});
-        await this.play(new Float32Array(audio.samples),audio.sampleRate,controls[i],{signal,epoch});
+        next=i+1<plan.length?generate(i+1):null;next?.catch(()=>{});
+        await deliveryPause(plan[i].pauseBeforeMs,{signal,cancellations:this.deliveryWaits});verify();
+        await this.play(new Float32Array(audio.samples),audio.sampleRate,plan[i].controls,{signal,epoch});
       }
     } catch(error) {if(epoch===this.epoch)this.stop();throw error;}
     finally {signal?.removeEventListener('abort',abort);if(epoch===this.epoch){this.speaking=false;this.onState('idle');this.scheduleIdle();}}
