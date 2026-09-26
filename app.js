@@ -2,19 +2,6 @@
   const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const applyView4RealBranding = () => {
-    document.title = "Goyone By Design | Branding, Websites & View4Real";
-
-    const metaUpdates = new Map([
-      ["meta[name='description']", "Professional branding, websites, ads, menus, and product launch work from Goyone By Design. Featuring View4Real, a vision-adaptive display comfort utility."],
-      ["meta[property='og:title']", "Goyone By Design | Branding, Websites & View4Real"],
-      ["meta[property='og:description']", "Professional branding, websites, ads, menus, and product launch work from Goyone By Design. Featuring View4Real for Windows and iPhone."]
-    ]);
-
-    metaUpdates.forEach((content, selector) => {
-      const meta = document.querySelector(selector);
-      if (meta) meta.setAttribute("content", content);
-    });
-
     document.querySelectorAll("a[href]").forEach((link) => {
       const href = link.getAttribute("href");
       if (!href) return;

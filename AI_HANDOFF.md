@@ -1,5 +1,12 @@
 # goyonebydesign — AI handoff
 
+## September 26, 2026 — Homepage app navigation cleanup
+
+- Removed individual app shortcuts from the homepage top bar, navigation, hero and footer, including MAX-G install and MAX-ZETA links. Removed the separate SightSync/View4Real promotion; the existing Apps collection retains its product links and downloads.
+- Homepage navigation and footer use Apps. Homepage metadata now describes the whole collection; JavaScript no longer overwrites it with a single product title.
+- Added Questrix’s repository-documented Google AI Studio project link, labeled as AI Studio with possible owner sign-in. The Commissary and StockPilot remain visible with actual previews; their deployed web addresses have not been supplied or found, so launch links are pending. Do not invent addresses or label source repositories as running apps.
+- Checks: catalog validation (8 cards, 2 enabled native downloads, 22 disabled native controls), JavaScript syntax, homepage link audit, local browser navigation and catalog inspection. No app authentication or private business data was changed.
+
 ## Applications catalog — September 26, 2026
 
 - Added /apps/ with eight projects, approved artwork, genuine local screenshots or clearly labeled brand/product illustrations, search/filtering and enlarged previews. Homepage navigation, hero and Applications section link to the catalog; sitemap includes it.
