@@ -1,0 +1,3 @@
+671e93f4de39f10fed1bc32196fe52d2e6761f03581cce2775858e802085201a  StatusPing-0.1.0-android-test.apk
+6abdd13a368b1d6f9c5525d202e6d34efc9aece4988ee299dc4b20be13d6c357  SightSync_0.1.0_x64-setup.exe
+58b1d8082956ae5aa8e5bd07c3508d29b5a0a32d689365bc2dff2361966ff584  SightSync_0.1.0_x64_en-US.msi

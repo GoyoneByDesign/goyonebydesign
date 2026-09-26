@@ -1,5 +1,15 @@
 # goyonebydesign — AI handoff
 
+## Applications catalog — September 26, 2026
+
+- Added /apps/ with eight projects, approved artwork, genuine local screenshots or clearly labeled brand/product illustrations, search/filtering and enlarged previews. Homepage navigation, hero and Applications section link to the catalog; sitemap includes it.
+- Edit apps/catalog.json and run `node scripts/build-apps.mjs`. Run `node scripts/check-apps.mjs` and `node --check apps/apps.js`. See apps/README.md for asset provenance, download rules and retention.
+- Public prerelease archive: https://github.com/GoyoneByDesign/goyonebydesign/releases/tag/apps-preview-2026-09-26. Contains StatusPing 0.1.0 Android test APK, legacy SightSync 0.1.0 Windows EXE and MSI, and SHA256SUMS.txt. All three installers were anonymously downloaded and hashes verified. These are not store-approved releases. Private source repositories remain private.
+- Two native download buttons are enabled (StatusPing Android and SightSync Windows); 22 unavailable platform buttons are disabled. Browser/PWA links stay separate. MAX-ZETA private screens and unavailable SavvyKin runtime are not fabricated.
+- Browser checks: desktop and 393x852 mobile, no horizontal overflow, available filter selects two cards, name search/empty state, dialog opening/closing and disabled platform controls. No real messages, forms, inventory changes or external app provider actions were submitted.
+- GitHub Pages publishes main at the repository root. Verify the live /apps/ URL and final synchronization after pushing; source code checks alone do not prove deployment.
+- Cleanup limitation: automatic approval review blocked recursive deletion of obsolete StatusPing build folders and the temporary Questrix/Commissary preview dependencies. They remain locally. Preview servers for those two apps were stopped; source and private exports were preserved.
+
 ## Project and source map
 
 This repository contains the public website (`index.html`, `app.js`, `styles.css`), product pages (`max/`, `view4real/`, `sightsync/`, `pmix/`), a MAX-G browser copy in `max-g/`, and the PMIX application in `pmix-app/`. Select the relevant component before editing. The standalone MAX-G repository is separate; do not silently replace either copy with the other.
