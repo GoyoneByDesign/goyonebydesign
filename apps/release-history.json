@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "order": "newest-first-per-app-platform",
+  "releases": [
+    {
+      "app": "view4real",
+      "platform": "windows",
+      "version": "SightSync 0.1.0 legacy beta",
+      "path": "downloads/SightSync_0.1.0_x64-setup.exe",
+      "sha256": "6abdd13a368b1d6f9c5525d202e6d34efc9aece4988ee299dc4b20be13d6c357"
+    }
+  ]
+}

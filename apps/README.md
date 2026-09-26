@@ -19,3 +19,7 @@ StatusPing screenshot photography: Vidal Balielo Jr., https://www.pexels.com/pho
 ## Retention
 
 Keep current installers in GitHub Releases and locally. Remove superseded temporary extraction folders, duplicate build archives, and generated caches after verifying the current replacement. Preserve original supplied archives, private backups, source, signing material, and existing releases unless their replacement and purpose are clear. Never delete unrelated downloads based only on age.
+
+## Installation and maintenance
+
+MAX-G links to `/apps/install.html` for separate web installation and updates. MyThang is included with unavailable native installers. SAVVYKIN has existing local Android source and a test APK, but its local backend configuration is not a public-ready release. See [MAINTENANCE.md](MAINTENANCE.md) for bounded release-artifact cleanup.

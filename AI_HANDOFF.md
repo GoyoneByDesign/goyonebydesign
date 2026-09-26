@@ -58,3 +58,7 @@ Prepared September 26, 2026 from repository documentation and manifests. This is
 - [Antigravity project rules](https://www.antigravity.google/docs/rules/)
 - [Gemini CLI project context](https://geminicli.com/docs/cli/gemini-md/)
 - [Codex AGENTS.md instructions](https://learn.chatgpt.com/docs/agent-configuration/agents-md)
+
+## September 26 — Catalog completion and release retention
+
+Preserved the concurrently published catalog, its official artwork/screenshots, compact homepage navigation, and public StatusPing/SightSync release links. Added MyThang (nine apps), MAX-G web install/update help, corrected SAVVYKIN local source/build availability, and a bounded release cleanup script with nine retention/refusal tests. The source of truth remains apps/catalog.json with scripts/build-apps.mjs. See apps/MAINTENANCE.md. No native app binary or private runtime data was changed. Published bytes and responsive browser behavior are verified in the accompanying release report; physical device testing remains pending.
