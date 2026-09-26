@@ -29,6 +29,7 @@
   <link rel="stylesheet" href="./weather-card.css">
   <script src="./launch-context.js" defer></script>
   <link rel="stylesheet" href="./research-cards.css">
+  <link rel="stylesheet" href="./premium.css">
   <link rel="stylesheet" href="./mobile-viewport.css">
 </head>
 <body data-view="chat">
@@ -65,6 +66,7 @@
       <nav class="main-nav" aria-label="Workspace">
         <button class="nav-button active" data-view="chat" aria-current="page"><svg class="icon"><use href="#i-chat"/></svg>Conversation<span class="nav-dot"></span></button>
         <button class="nav-button" data-view="work"><svg class="icon"><use href="#i-work"/></svg>Work studio</button>
+        <button class="nav-button" data-view="finance"><svg class="icon"><use href="#i-work"/></svg>Bills &amp; budget</button>
         <button class="nav-button" data-view="places"><svg class="icon"><use href="#i-location"/></svg>Places &amp; directions</button>
         <button class="nav-button" data-view="memory"><svg class="icon"><use href="#i-memory"/></svg>Memory</button>
         <button class="nav-button" data-view="learn"><svg class="icon"><use href="#i-learn"/></svg>Learning</button>
@@ -84,7 +86,7 @@
     <main class="main-content">
       <header class="topbar">
         <div class="topbar-title"><button id="sidebarToggle" class="icon-button mobile-menu" aria-label="Toggle navigation" aria-controls="sidebar" aria-expanded="false"><svg class="icon"><use href="#i-menu"/></svg></button><span class="mobile-brand">MAX-G</span><span class="desktop-title">Personal companion</span><span class="edition-badge">WEB EDITION</span></div>
-        <div class="topbar-actions"><span id="networkStatus" class="status-pill"><span class="status-dot"></span>Checking connection</span><button id="updateNoticeBtn" class="button button-small" hidden>Update available</button><button id="installBtn" class="button button-small" hidden><svg class="icon"><use href="#i-download"/></svg>Install</button></div>
+        <div class="topbar-actions"><span id="networkStatus" class="status-pill"><span class="status-dot"></span>Checking connection</span><button id="quickCheckUpdatesBtn" type="button" class="button button-small">Check updates</button><button id="updateNoticeBtn" class="button button-small" hidden>Update available</button><button id="installBtn" class="button button-small" hidden><svg class="icon"><use href="#i-download"/></svg>Install</button></div>
       </header>
 
       <div class="engine-bar" role="region" aria-label="AI connection status"><span class="engine-symbol"><svg class="icon"><use href="#i-chip"/></svg></span><span id="modelStatus">Checking selected AI connection</span><button id="loadModelBtn" class="text-button">AI connection <span aria-hidden="true">↗</span></button><progress id="modelProgress" max="1" value="0" hidden aria-label="Model download progress"></progress><span id="modelProgressLabel" class="model-progress-label" aria-live="polite"></span><button id="stopTaskBtn" class="button button-small" type="button" hidden>Stop task</button></div>
@@ -129,7 +131,7 @@
           <div id="welcome" class="welcome">
             <div class="welcome-eyebrow"><span></span> HERE FOR YOUR NEXT IDEA</div>
             <h1 data-owner-greeting>What’s on your mind, Michael?</h1>
-            <p class="welcome-description">Type a message or tap Talk with MAX-G.<br>I’ll listen, answer, and keep the conversation going.</p>
+            <p class="welcome-description">A little clarity. A new idea. Your next creation.<br>Let’s work on it together.</p>
             <div class="suggestions" aria-label="Conversation starters">
               <button class="suggestion" data-prompt="What is the weather today?"><svg class="icon"><use href="#i-sun"/></svg><span>Plan my day<small>Check today’s weather</small></span><span class="suggestion-arrow">↗</span></button>
               <button class="suggestion" data-prompt="Convert 72 degrees Fahrenheit to Celsius."><svg class="icon"><use href="#i-spark"/></svg><span>Figure it out<small>Math &amp; conversions</small></span><span class="suggestion-arrow">↗</span></button>
@@ -139,11 +141,15 @@
           <div id="messages" class="messages" role="log" aria-live="polite" aria-relevant="additions" aria-label="Messages"></div>
         </div>
         <div class="composer-area">
+          <div class="quick-controls" aria-label="AI preferences">
+            <button id="fastLocalBtn" type="button" class="text-button" aria-pressed="false">AI settings</button>
+            <div class="reply-modes" role="group" aria-label="Reply length"><button type="button" class="text-button" data-reply-length="Brief" aria-pressed="true">Brief</button><button type="button" class="text-button" data-reply-length="Detailed" aria-pressed="false">Detailed</button></div>
+          </div>
           <div id="attachmentList" class="attachment-list" aria-label="Attached files"></div>
           <form id="composerForm" class="composer" autocomplete="off">
             <label for="messageInput" class="sr-only">Message MAX-G</label>
             <textarea id="messageInput" rows="4" placeholder="Message MAX-G…" maxlength="24000" enterkeyhint="send" aria-describedby="composerHint"></textarea>
-            <div class="composer-toolbar"><div class="composer-left"><button id="attachBtn" class="icon-button" type="button" title="Attach text or source files" aria-label="Attach files"><svg class="icon"><use href="#i-clip"/></svg></button><input id="fileInput" type="file" multiple hidden><span class="composer-divider"></span><button id="voiceModeBtn" class="voice-button" type="button" aria-pressed="false"><svg class="icon"><use href="#i-wave"/></svg><span>Talk with MAX-G</span></button></div><div class="composer-right"><button id="micBtn" class="icon-button mic-button" type="button" title="Dictate a message to the text box" aria-label="Dictate a message" aria-pressed="false"><svg class="icon"><use href="#i-mic"/></svg></button><button id="stopBtn" class="send-button stop-button" type="button" aria-label="Stop response" title="Stop response" hidden><svg class="icon"><use href="#i-stop"/></svg></button><button id="sendBtn" class="send-button" type="submit" aria-label="Send message" title="Send message"><svg class="icon"><use href="#i-arrow"/></svg></button></div></div>
+            <div class="composer-toolbar"><div class="composer-left"><button id="attachBtn" class="icon-button" type="button" title="Attach documents, text or source files" aria-label="Attach files"><svg class="icon"><use href="#i-clip"/></svg></button><input id="fileInput" type="file" multiple hidden><span class="composer-divider"></span><button id="voiceModeBtn" class="voice-button" type="button" aria-pressed="false"><svg class="icon"><use href="#i-wave"/></svg><span>Talk with MAX-G</span></button></div><div class="composer-right"><button id="micBtn" class="icon-button mic-button" type="button" title="Dictate a message to the text box" aria-label="Dictate a message" aria-pressed="false"><svg class="icon"><use href="#i-mic"/></svg></button><button id="stopBtn" class="send-button stop-button" type="button" aria-label="Stop response" title="Stop response" hidden><svg class="icon"><use href="#i-stop"/></svg></button><button id="sendBtn" class="send-button" type="submit" aria-label="Send message" title="Send message"><svg class="icon"><use href="#i-arrow"/></svg></button></div></div>
           </form>
           <div class="voice-feedback"><p id="voiceFeedback" role="status" aria-live="polite" hidden></p><div class="voice-stop-actions"><button id="stopSpeechBtn" type="button" class="text-button" hidden>Stop voice</button><button id="playStopBtn" type="button" class="text-button" hidden>Stop play</button></div></div>
           <details class="composer-more"><summary>More controls</summary><div class="composer-more-panel">

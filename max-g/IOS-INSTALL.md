@@ -5,7 +5,7 @@ MAX-G is available as a free **Home Screen web app** from GoyoneByDesign:
 - Installation page: <https://www.goyonebydesign.com/max-g/install.html>
 - App: <https://www.goyonebydesign.com/max-g/>
 
-## Install on each iPhone or iPad
+## Install on your iPhone 15 Pro Max (or another iPhone/iPad)
 
 1. Open **Safari** on the device and visit the MAX-G app address above.
 2. On **iPhone**, tap Safari’s **Page Menu**, then **Share**. Some toolbar layouts show **Share** directly—the square with an arrow pointing up. On **iPad**, tap **Share**, then **View More** or **More** if needed.
@@ -35,7 +35,7 @@ Open the blue MAX-G Home Screen icon. Type each message into its message box and
 2. **`weather for 20171`** — while online, check that MAX-G identifies **Herndon, Virginia** and shows the forecast. This explicit ZIP-code test does not require GPS permission.
 3. **`I need advice`** — then describe what you need help with. For online conversation without a model download, choose **Cloudflare AI** in **Settings → Connection** and import your private MAX-G support token file for this session. See [Cloudflare setup](CLOUDFLARE-AI.md). For on-device conversation, choose **Local AI**, check **This device**, and load a compatible local model.
 4. **Hear MAX-G** — tap this sound control and enable **Speak replies**. If silent, check media volume and Bluetooth routing, then open **More controls → Sound help**. A voice may need its own download. Test microphone input only when ready to grant that permission, or use keyboard dictation.
-5. **Settings → Install & updates** — check for an app update while online. Apply an offered update when your current work is saved.
+5. **Check updates** — use the visible button at the top of MAX-G, or Settings → Install & updates. Choose Update & reopen after saving current work. A fresh idle launch can apply an already downloaded update automatically; once you interact, updates wait for you.
 
 If local AI is unavailable, the device check explains the missing capability. Installation and basic built-in tools can still work; do not treat successful installation as proof that every device can run a local conversational model. Current Safari supports WebGPU on iOS/iPadOS 26 and later, but model compatibility and available memory still matter.
 
@@ -67,3 +67,13 @@ Publish `install.html`, `install.css`, `install.js`, this guide, the shared mani
 The install page loads only local assets and uses no third-party install service, tracking script or external QR generator. Its install button appears only after a real browser `beforeinstallprompt` event. Acceptance of that prompt is not reported as a completed install; completion is recognized from `appinstalled` or an installed display mode.
 
 Verify on a physical iPhone/iPad after deployment: Add to Home Screen, launch from the icon, send a message with Enter, enable/test voice, use allowed location access, reopen after an update, and test an offline launch after a completed online visit. Automated browser checks cannot verify an Apple Home Screen installation or the actual microphone/speaker hardware.
+
+## What the phone can install safely
+
+This is a Home Screen web app using Apple's Safari installation flow, not a signed IPA or App Store binary. No jailbreak, configuration profile, enterprise certificate, or Developer Mode is required for this route. A website cannot override Screen Time or managed-device restrictions; if Add to Home Screen is blocked by management, ask the device administrator. Installation on your physical phone has not been verified from this Mac.
+
+For a native binary, Apple signing is required. Free Personal Team provisioning expires after seven days; TestFlight distribution requires an Apple Developer Program membership and builds expire after 90 days. Do not treat an unsigned IPA as installable on an ordinary iPhone.
+
+Phone and Mac software versions can match, but Mac Ollama models and Mac-only automation do not move to the phone. The phone needs its own supported local model or an explicitly configured online AI connection. Local Safari inference requires compatible WebGPU/iOS and enough memory; it has not been benchmarked on your iPhone 15 Pro Max. No unlimited cloud AI service is enabled by installing this app.
+
+To publish an update from any coding assistant, use the canonical source, run checks, increment the release, regenerate release.json, then publish every manifest-listed web file and sw.js under the established /max-g/ path in one website commit. Verify deployed hashes before telling the owner an update is available. Publishing updates does not synchronize personal records between devices.

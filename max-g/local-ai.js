@@ -1,10 +1,12 @@
 /** Explicit installed-Mac engine. Browser WebLLM remains the hosted default. */
 import {boundedMessages,OUTPUT_TOKENS} from './engine.js';
 
+export const LOCAL_CODING_MODEL='qwen2.5-coder:7b-instruct';
 export const LOCAL_DEFAULT_MODEL='qwen3:4b-instruct-2507-q4_K_M';
 export const LOCAL_MODELS=Object.freeze([
   {id:LOCAL_DEFAULT_MODEL,label:'Qwen3 · 4B Instruct · balanced CPU'},
   {id:'qwen2.5:3b',label:'Qwen 2.5 · 3B · faster CPU'},
+  {id:LOCAL_CODING_MODEL,label:'Qwen 2.5 Coder · 7B · deeper coding (slower)'},
   {id:'llama3.1',label:'Llama 3.1 · 8B · slower CPU'},
 ].map(Object.freeze));
 export function isDesktopMode(value=globalThis.location?.href){
@@ -67,7 +69,9 @@ export class MaxGLocalEngine{
     }catch(error){if(epoch===this._epoch){this._ready=false;this._modelId=null;this._loading=false;this._state(error.name==='AbortError'?'unloaded':'error',{message:error.message});}throw error;}
     finally{signal?.removeEventListener('abort',cancel);if(epoch===this._epoch)this._controller=null;}
   }
-  async stream(input,{onToken=()=>{},onUsage=()=>{},signal,maxTokens=OUTPUT_TOKENS,responseFormat}={}){
+  async stream(input,{onToken=()=>{},onUsage=()=>{},signal,maxTokens=OUTPUT_TOKENS,responseFormat,profile}={}){
+    if(profile!==undefined&&profile!=='coding')throw Error('Unsupported local profile.');
+    if(profile==='coding'&&this._capability?.coding_profile!==1)throw Error('Reopen MAX-G after installing the coding helper update.');
     if(responseFormat!==undefined&&responseFormat!=='json')throw Error('Choose the supported JSON response format or leave it unset.');
     if(signal?.aborted)throw abortError();
     if(!this.ready)throw Error('Load an installed CPU model first.');
@@ -76,7 +80,7 @@ export class MaxGLocalEngine{
     if(signal?.aborted||waitingEpoch!==this._epoch)throw abortError();
     if(this.busy)throw Error('MAX-G is already answering. Stop or wait before sending another request.');
     if(!this.ready)throw Error('Load an installed CPU model first.');
-    const limit=Math.max(32,Math.min(1024,Math.floor(Number(maxTokens)||OUTPUT_TOKENS))),bounded=boundedMessages(input,limit);
+    const limit=Math.max(32,Math.min(profile==='coding'?4096:1024,Math.floor(Number(maxTokens)||OUTPUT_TOKENS))),bounded=profile==='coding'?codingMessages(input,limit):boundedMessages(input,limit);
     const epoch=this._epoch,controller=new AbortController(),requestId=crypto.randomUUID(),stop=()=>this.stop();
     this._controller=controller;this._requestId=requestId;this._busy=true;
     signal?.addEventListener('abort',stop,{once:true});if(signal?.aborted)stop();
@@ -84,7 +88,7 @@ export class MaxGLocalEngine{
     const current=()=>{if(controller.signal.aborted||epoch!==this._epoch)throw abortError();};
     try{
       this._state('generating',{contextTrimmed:bounded.truncated});
-      await this._call('chat',{model:this._modelId,messages:bounded.messages,max_tokens:limit,request_id:requestId,...(responseFormat?{response_format:responseFormat}:{})},{signal:controller.signal,onChunk:chunk=>{
+      await this._call('chat',{model:this._modelId,messages:bounded.messages,max_tokens:limit,request_id:requestId,...(profile?{profile}:{}),...(responseFormat?{response_format:responseFormat}:{})},{signal:controller.signal,onChunk:chunk=>{
         current();if(chunk.error)throw Error(chunk.message||chunk.error?.message||String(chunk.error));
         if(final)throw Error('The local model returned data after its completion receipt.');
         if(typeof chunk.token==='string'){text+=chunk.token;onToken(chunk.token,text);}
@@ -109,4 +113,11 @@ export class MaxGLocalEngine{
     await this._cancelling;await this._call('unload',{});this._state('unloaded');
   }
   async clearCache(){throw Error('Installed Ollama models are managed on this Mac. Use Unload CPU model to release memory; this app does not delete model files.');}
+}
+
+export function codingMessages(input,maximum=1536){
+  if(!Array.isArray(input)||!input.length||input.length>16)throw Error('Use 1–16 coding messages.');
+  const size=input.reduce((n,item)=>n+new TextEncoder().encode(item.content).length+32,0);
+  if(size>16384-maximum-256)throw Error('Coding context is full. Read a smaller source excerpt.');
+  return {messages:input.map(item=>({...item})),truncated:false};
 }

@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "version": "1.12.7",
-  "build": 215,
+  "version": "1.16.0",
+  "build": 221,
   "min_companion_build": 211,
   "files": [
     {
@@ -16,13 +16,18 @@
     },
     {
       "path": "IOS-INSTALL.md",
-      "sha256": "492e9a44aea742ea8c4b13aeeb9c374f6a39a9741dc3f71bc83b0c4cd0eeda13",
-      "bytes": 7525
+      "sha256": "cf5ff47f015a996d9a88a1506fa217ce3e052746af5c498f0873f3775366bfd8",
+      "bytes": 9236
+    },
+    {
+      "path": "LOCAL-ASSISTANT.md",
+      "sha256": "a8a46ba8418a71bc4e1c34354fe7f240029b20fd2dfd1dbb1aae28c968d025f7",
+      "bytes": 2144
     },
     {
       "path": "README.md",
-      "sha256": "2e87f55360e37d5535139313cf18285f289e581593ce2f51a7976179341bc032",
-      "bytes": 45105
+      "sha256": "bbbed769cf4cc011deee48fac7958551ca46e524315ac4ee315eb4f712b50a2f",
+      "bytes": 1884
     },
     {
       "path": "VOICE-SETUP.md",
@@ -51,8 +56,8 @@
     },
     {
       "path": "app.js",
-      "sha256": "edfff2439e1fa78b3a4d46a62012cce160979ba7113148a330fa8b909a183585",
-      "bytes": 140979
+      "sha256": "479c45c61e6193cb17790bdc39bad6a7b0a746f66a805799462d86bbbb8e8fd5",
+      "bytes": 150622
     },
     {
       "path": "assets/goyonebydesign-logo.png",
@@ -90,6 +95,11 @@
       "bytes": 15718
     },
     {
+      "path": "coding-workspace.js",
+      "sha256": "6c113c66be1597bc98629093183b3c6700f84873c813f516486f48830786bfda",
+      "bytes": 10756
+    },
+    {
       "path": "companion-interactions.js",
       "sha256": "91782211d35bf3ed86849601732d42a01c2cbfcc6e8365fb63da5fb711783ac6",
       "bytes": 16195
@@ -106,8 +116,8 @@
     },
     {
       "path": "connectors.js",
-      "sha256": "33c4061e3047c7fb65e0e19673234420214c51ba1431fd1371eb7c7191fd5ece",
-      "bytes": 107090
+      "sha256": "d4c5a7101f3401542ebfc06d0ce6f16f11e7b261fb6cbc84b2cf1d6719538c49",
+      "bytes": 112791
     },
     {
       "path": "conversation-delivery.js",
@@ -140,6 +150,11 @@
       "bytes": 11647
     },
     {
+      "path": "document-context.js",
+      "sha256": "fccf623ce9c5262c21717511d3eb6ca3bf090207ba396f6fdb94fb55b8754cc1",
+      "bytes": 2537
+    },
+    {
       "path": "engine.js",
       "sha256": "37789da94a26bfd366613f3d890a55d1e2d7047914a3d0214ff7c968ab102e39",
       "bytes": 18685
@@ -158,6 +173,11 @@
       "path": "files.js",
       "sha256": "6afba29232cfc6d8f1e6781157a217eb9ba9d88a48ae46b3f39f2f7651939560",
       "bytes": 14771
+    },
+    {
+      "path": "finance.js",
+      "sha256": "c7c92fe77bf8cf50583e0f43e908fa83363d8dea9dcf61fece2dd6cbd079c96b",
+      "bytes": 13482
     },
     {
       "path": "gemini.js",
@@ -201,8 +221,8 @@
     },
     {
       "path": "index.html",
-      "sha256": "796c205ebb4ea178501d98e3ee860fd85571cb67c66f381ba48eced5b4cbff32",
-      "bytes": 23877
+      "sha256": "71eaee8337b04e8c5116e72ca66d13e28e870e6295d3fca499d51bc4887fddd5",
+      "bytes": 24637
     },
     {
       "path": "inference-worker.js",
@@ -216,8 +236,8 @@
     },
     {
       "path": "install.html",
-      "sha256": "9d48e309897752daf5ae4baa6cfc5cd07191fd9f6625db2df894cb088be4b595",
-      "bytes": 13377
+      "sha256": "fe2c46dd40bc685ef8a249e72c457ea1f23ab4b2b2a34b56cc0db0b3780158c3",
+      "bytes": 13619
     },
     {
       "path": "install.js",
@@ -231,8 +251,8 @@
     },
     {
       "path": "local-ai.js",
-      "sha256": "105d113106afb839a97e30c9c820af8f82b7a170dbeff2f00cd3dc1473e00ae1",
-      "bytes": 8388
+      "sha256": "2c27b84c0cb21560f83ddfd4efe4cbdf1fd71226226d1fce6f0184d2487ee72b",
+      "bytes": 9276
     },
     {
       "path": "locations-ui.js",
@@ -286,7 +306,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "7578346b90ca7a6f7a4183589162a119e5413a7732b62188b5cd70c52fb08183",
+      "sha256": "0fbce0c602c0ee0b29637570795ef866dce14b6a7b7c1352431dcc785fecef66",
       "bytes": 255
     },
     {
@@ -305,6 +325,11 @@
       "bytes": 5381
     },
     {
+      "path": "premium.css",
+      "sha256": "11dc7aeb483781bc2c0d13197951d351adf302652e461e49a2c80fe87c82871b",
+      "bytes": 9304
+    },
+    {
       "path": "profile-ui.js",
       "sha256": "21674cd5e3429df59dd394ea6abde556c6c02825be59bc99a474547be29f1edd",
       "bytes": 14947
@@ -321,7 +346,7 @@
     },
     {
       "path": "release-version.js",
-      "sha256": "9dd48f6c7720c1b4ac99d3906b905441d84e5f7d4fa359b219aed3210a0702a8",
+      "sha256": "0f3562d88c7c956ba44ea7e06c6b36ab997cc821b3892ca5c0ddb91ea8b90592",
       "bytes": 155
     },
     {
@@ -355,6 +380,11 @@
       "bytes": 19081
     },
     {
+      "path": "rich-text.js",
+      "sha256": "fae5d632dd2c7fed9af4f0f91303d4c6d03ed12ed9e43793e303b0a89b1148ba",
+      "bytes": 3852
+    },
+    {
       "path": "song-vocals.js",
       "sha256": "6fc4d84c94103affed4fce3bc13223ca7d9db86d06f803939c2b9e30f9fc6266",
       "bytes": 5904
@@ -366,8 +396,8 @@
     },
     {
       "path": "state.js",
-      "sha256": "56a5eb81196e816c8e6e01d20fe279a726823a59c3a0fd3c673ba19162c0a4f2",
-      "bytes": 10742
+      "sha256": "39be25099deb7b914c12caad645f9d6735d2903ec9fc56368bdaeff85ec96c55",
+      "bytes": 10863
     },
     {
       "path": "style.css",
@@ -376,8 +406,8 @@
     },
     {
       "path": "sw.js",
-      "sha256": "0c010530f16eee08d80bc0eeb4e514cdf39b46a01968de6c5d18c38222c9398e",
-      "bytes": 8343
+      "sha256": "a137288ca48a9b46cc6dfa2c304e1c8eaf16316a49224b289494263afda42867",
+      "bytes": 8469
     },
     {
       "path": "tools.js",
@@ -401,8 +431,8 @@
     },
     {
       "path": "updates.js",
-      "sha256": "441e2758cf995873704f20a1c6ba6ff0df4c5ab766e616c4592c2cb4883df25f",
-      "bytes": 7999
+      "sha256": "c65960556d71bc142a828001e7507d03d8eb50aaa1d2933651ee6ca8a9f71189",
+      "bytes": 8676
     },
     {
       "path": "voice-config.js",

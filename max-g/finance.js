@@ -1,0 +1,67 @@
+// Local household planning. No network requests, model calls or payment operations.
+const LIMIT=100000000; // cents per entry
+const categories=['Phone','Internet','Electricity','Gas','Water','Insurance','Housing','Debt minimum','Subscription','Other'];
+const cleanText=(value,max=100)=>String(value??'').replace(/[\u0000-\u001f\u007f]/g,' ').trim().slice(0,max);
+export function localDate(now=new Date()){return `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;}
+export function validDate(value){if(typeof value!=='string'||!/^20\d{2}-\d{2}-\d{2}$/.test(value))return false;const date=new Date(value+'T12:00:00Z');return Number.isFinite(date.getTime())&&date.toISOString().slice(0,10)===value;}
+export function moneyCents(value,{optional=false}={}){const text=String(value??'').trim();if(!text&&optional)return null;if(!/^\d{1,7}(?:\.\d{1,2})?$/.test(text))throw Error('Enter a non-negative dollar amount with at most two decimals, without commas or currency symbols.');const [whole,fraction='']=text.split('.');const cents=Number(whole)*100+Number(fraction.padEnd(2,'0'));if(cents>LIMIT)throw Error('Amount exceeds this planner’s $1,000,000 per-entry limit.');return cents;}
+const cents=value=>Number.isInteger(value)&&value>=0&&value<=LIMIT?value:null;
+export function normalizeFinance(raw={}){
+ const value=raw&&typeof raw==='object'?raw:{};const month=/^20\d{2}-(?:0[1-9]|1[0-2])$/.test(value.month)?value.month:localDate().slice(0,7);
+ const seen=new Set();const bills=[];
+ for(const item of (Array.isArray(value.bills)?value.bills:[]).slice(0,240)){
+  if(!item||typeof item!=='object'||typeof item.id!=='string'||!/^[A-Za-z0-9_-]{1,80}$/.test(item.id)||seen.has(item.id)||!validDate(item.due)||cents(item.amount)===null||!cleanText(item.name))continue;
+  seen.add(item.id);bills.push({id:item.id,name:cleanText(item.name),category:categories.includes(item.category)?item.category:'Other',due:item.due,amount:item.amount,previous:cents(item.previous),quote:cents(item.quote),paid:item.paid===true,notes:cleanText(item.notes,600)});
+ }
+ return {month,income:cents(value.income),essentials:cents(value.essentials),savings:cents(value.savings),enjoyment:cents(value.enjoyment),bills};
+}
+export function financeSummary(raw,today=localDate()){
+ const data=normalizeFinance(raw);const bills=data.bills.filter(b=>b.due.startsWith(data.month)).sort((a,b)=>a.due.localeCompare(b.due));
+ const total=bills.reduce((n,b)=>n+b.amount,0),unpaid=bills.filter(b=>!b.paid).reduce((n,b)=>n+b.amount,0);
+ const complete=['income','essentials','savings','enjoyment'].every(k=>data[k]!==null);
+ return {bills,total,unpaid,remaining:complete?data.income-total-data.essentials-data.savings-data.enjoyment:null,overdue:data.bills.filter(b=>!b.paid&&b.due<today),increases:bills.filter(b=>b.previous!==null&&b.amount>b.previous),potential:bills.reduce((n,b)=>n+(b.quote===null?0:Math.max(0,b.amount-b.quote)),0)};
+}
+const dollars=value=>value===null?'Not entered':new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(value/100);
+export function negotiationDraft(bill){return `Hello, I’m reviewing my ${bill.category.toLowerCase()} bill with ${bill.name}. The current bill is ${dollars(bill.amount)}${bill.previous===null?'':`, compared with ${dollars(bill.previous)} previously`}. Please explain any change in rates, usage, fees or expired promotions. Are there lower-cost plans or discounts for my existing account that preserve the service I need? Please provide the total including taxes and fees, any contract or cancellation charges, and the price after a promotion ends. Please do not change my service or enroll me in anything without my approval.`;}
+export function financeCSV(raw){const d=normalizeFinance(raw),s=financeSummary(d);const cell=value=>{let text=String(value??'');if(/^[\s]*[=+@-]/.test(text))text="'"+text;return '"'+text.replaceAll('"','""')+'"';};const amount=v=>v===null?'':(v/100).toFixed(2);return [['Monthly plan',d.month],['Monthly take-home',amount(d.income)],['Other essentials',amount(d.essentials)],['Savings reserve',amount(d.savings)],['Enjoyment allowance',amount(d.enjoyment)],[],['Provider','Category','Due date','Bill USD','Previous comparable bill USD','Alternative quote USD','Marked paid by owner','Notes'],...s.bills.map(b=>[b.name,b.category,b.due,amount(b.amount),amount(b.previous),amount(b.quote),b.paid?'Yes':'No',b.notes])].map(row=>row.map(cell).join(',')).join('\r\n');}
+export function renderFinance(panel,{getData,onSave,onExport,toast=()=>{}}){
+ let editing=null,removed=null,busy=false;
+ const el=(tag,text='',cls='')=>{const node=document.createElement(tag);node.textContent=text;if(cls)node.className=cls;return node;};
+ const btn=(label,fn)=>{const b=el('button',label,'button');b.type='button';b.onclick=()=>Promise.resolve().then(fn).catch(e=>toast(e.message));return b;};
+ const card=(title,text)=>{const c=el('section','','card');c.append(el('h3',title),el('p',text,'muted'));return c;};
+ const field=(label,value,type='text',choices)=>{const wrap=el('label','','field');wrap.append(el('span',label));const input=el(choices?'select':'input');input.setAttribute('aria-label',label);if(choices)for(const choice of choices){const o=el('option',choice);o.value=choice;input.append(o);}else input.type=type;input.value=value??'';if(type==='number'){input.min='0';input.step='0.01';}wrap.append(input);return {wrap,input};};
+ const grid=(...nodes)=>{const g=el('div');g.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:14px;margin:16px 0';g.append(...nodes);return g;};
+ const save=async data=>{if(busy)throw Error('Wait for the current save.');busy=true;try{await onSave(normalizeFinance(data));draw();}finally{busy=false;}};
+ const value=v=>v===null?'':(v/100).toFixed(2);
+ function draw(){
+  const d=normalizeFinance(getData()),s=financeSummary(d);panel.replaceChildren();
+  panel.append(el('p','Stored on this device with your personal MAX-G data, including personal backups. No bank connection or AI credits. Use amounts and provider names; no account numbers needed.','muted'));
+  const plan=card('Make room for life','Set a recurring monthly plan. Other essentials should include groceries, transport, housing and debt minimums not already entered as bills. Avoid counting the same cost twice. These baseline amounts apply to the month you select.');
+  const month=field('Planning month',d.month,'month'),income=field('Monthly take-home income (USD)',value(d.income),'number'),essentials=field('Other monthly essentials (USD)',value(d.essentials),'number'),savings=field('Monthly savings reserve (USD)',value(d.savings),'number'),enjoyment=field('Monthly enjoyment allowance (USD)',value(d.enjoyment),'number');
+  plan.append(grid(month.wrap,income.wrap,essentials.wrap,savings.wrap,enjoyment.wrap),btn('Save monthly plan',async()=>{if(!/^20\d{2}-(?:0[1-9]|1[0-2])$/.test(month.input.value))throw Error('Choose a valid planning month.');await save({...d,month:month.input.value,income:moneyCents(income.input.value),essentials:moneyCents(essentials.input.value),savings:moneyCents(savings.input.value),enjoyment:moneyCents(enjoyment.input.value)});toast('Monthly plan saved locally.');}));panel.append(plan);
+  const overview=card('Your monthly picture','Based only on entered bills and your recurring plan. This is not a bank balance or a pay-date cash-flow forecast. Add every expense before relying on the remainder. Marking a bill paid does not remove it from your monthly costs.');
+  overview.append(grid(...[['Bills this month',dollars(s.total)],['Still marked unpaid',dollars(s.unpaid)],['Reserved for enjoyment',dollars(d.enjoyment)],[s.remaining!==null&&s.remaining<0?'Plan shortfall':'Unallocated after plan',dollars(s.remaining)]].map(([title,v])=>{const c=el('div');c.append(el('p',title,'muted'),el('h2',v));return c;})));
+  if(s.remaining===null)overview.append(el('p','Enter all four monthly amounts, including zero where appropriate, to calculate the remainder.'));
+  if(s.remaining!==null&&s.remaining<0)overview.append(el('p','Entered costs and reserves exceed take-home income. Review bill options and missing or duplicated entries before changing the enjoyment allowance.'));
+  if(!s.bills.length)overview.append(el('p','No bills entered for this month yet.'));
+  if(s.overdue.length)overview.append(el('p',`${s.overdue.length} past-due entry/entries are still marked unpaid across all recorded months. Check actual payment status: ${s.overdue.map(b=>`${b.name} (${b.due})`).join(', ')}.`));
+  panel.append(overview);
+  const form=card(editing?'Edit bill':'Add a bill','Record one statement and its exact due date. Compare only bills covering similar periods. Alternative quotes are scenarios, not verified savings.');
+  const original=d.bills.find(b=>b.id===editing);const name=field('Provider or bill name',original?.name||'');name.input.placeholder='For example: AT&T';name.input.maxLength=100;
+  const category=field('Bill category',original?.category||'Phone','text',categories),due=field('Due date',original?.due||`${d.month}-01`,'date'),amount=field('Current bill (USD)',original?value(original.amount):'','number'),previous=field('Previous comparable bill (USD, optional)',original?value(original.previous):'','number'),quote=field('Alternative quote (USD, optional)',original?value(original.quote):'','number'),notes=field('Notes about usage, fees or offer terms',original?.notes||'');notes.input.maxLength=600;
+  form.append(grid(name.wrap,category.wrap,due.wrap,amount.wrap,previous.wrap,quote.wrap),notes.wrap,btn(editing?'Save bill changes':'Add bill',async()=>{
+   if(!name.input.value.trim()||!validDate(due.input.value))throw Error('Enter a provider and valid due date.');if(!editing&&d.bills.length>=240)throw Error('This planner stores up to 240 bill entries. Export a backup before removing older entries.');
+   const bill={id:editing||crypto.randomUUID(),name:name.input.value,category:category.input.value,due:due.input.value,amount:moneyCents(amount.input.value),previous:moneyCents(previous.input.value,{optional:true}),quote:moneyCents(quote.input.value,{optional:true}),notes:notes.input.value,paid:original?.paid||false};
+   if(!editing&&d.bills.some(b=>b.name.toLowerCase()===bill.name.trim().toLowerCase()&&b.due===bill.due))throw Error('That provider already has an entry on this date. Edit it to avoid counting it twice.');
+   const next={...d,bills:editing?d.bills.map(b=>b.id===editing?bill:b):[...d.bills,bill]};editing=null;await save(next);toast('Bill saved locally.');
+  }));if(editing)form.append(btn('Cancel editing',()=>{editing=null;draw();}));panel.append(form);
+  const list=card('Bill calendar','Payment status is a manual record; these controls do not pay bills. Due dates are shown while this page is open; background reminders are not configured.');
+  for(const b of s.bills){const row=el('section');row.style.cssText='border-top:1px solid #72809944;padding:16px 0';row.append(el('h4',`${b.name} · ${dollars(b.amount)}`),el('p',`${b.due} · ${b.category} · ${b.paid?'Marked paid':b.due<localDate()?'Past due — check status':'Unpaid'}`));if(b.previous!==null&&b.amount>b.previous)row.append(el('p',`Up ${dollars(b.amount-b.previous)} from the previous comparable bill. Check usage, billing days, rates and fees.`));if(b.notes)row.append(el('p',b.notes));row.append(grid(btn('Edit '+b.name,()=>{editing=b.id;draw();}),btn(b.paid?'Mark unpaid':'Mark paid',()=>save({...d,bills:d.bills.map(item=>item.id===b.id?{...item,paid:!item.paid}:item)})),btn('Prepare savings request',()=>{const draft=el('pre',negotiationDraft(b));draft.style.cssText='white-space:pre-wrap;overflow-wrap:anywhere';row.append(draft);}),btn('Remove entry',()=>{removed=b;editing=null;return save({...d,bills:d.bills.filter(item=>item.id!==b.id)});})));list.append(row);}
+  if(removed)list.append(btn('Undo last removal',()=>{if(d.bills.length>=240)throw Error('Planner entry limit reached.');const bill=removed;removed=null;return save({...d,bills:[...d.bills,bill]});}));panel.append(list);
+  const lower=card('Lower costs without losing what matters','Start with bill errors, expired promotions, unused add-ons and equivalent lower-cost plans. A lower payment from budget billing may only spread costs; verify whether the annual total changes.');
+  lower.append(el('p',`Potential reduction from your entered quotes: ${dollars(s.potential)} for this month’s bills, before switching fees, eligibility checks or service changes. This is not achieved savings.`));
+  for(const [label,url] of [['AT&T: check eligible AutoPay and paperless discounts','https://www.att.com/deals/autopay-discount/'],['Energy.gov: home energy assessment guide','https://www.energy.gov/node/4811536'],['LIHEAP: check energy assistance eligibility','https://liheapch.acf.hhs.gov/eligible/'],['CFPB: bill calendar guidance','https://www.consumerfinance.gov/archive/blog/budget-help-manage-your-monthly-expenses-bill-calendar/']]){const p=el('p'),link=el('a',label);link.href=url;link.target='_blank';link.rel='noopener noreferrer';p.append(link);lower.append(p);}
+  lower.append(el('p','These are official information links, not confirmed offers. Check current eligibility, total cost and terms before switching or enrolling. MAX-G has not contacted providers or changed your service.','muted'),btn('Export this month as CSV',()=>onExport(financeCSV(d))));panel.append(lower);
+ }
+ draw();
+}
