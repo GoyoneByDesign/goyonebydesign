@@ -3,6 +3,16 @@
   "order": "newest-first-per-app-platform",
   "releases": [
     {
+      "app": "savvykin",
+      "platform": "android",
+      "version": "0.36-debug",
+      "path": "downloads/releases/savvykin/android/SavvyKin-0.36-debug.apk",
+      "sha256": "386b087eb1fc21f0defc151635169368456d3c842e77beba6cd696de704a5c4b",
+      "bytes": 14614771,
+      "published": "2026-09-26",
+      "status": "test build; local backend required"
+    },
+    {
       "app": "view4real",
       "platform": "windows",
       "version": "SightSync 0.1.0 legacy beta",
