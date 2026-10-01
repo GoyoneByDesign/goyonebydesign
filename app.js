@@ -1,339 +1,180 @@
+/* Progressive enhancement only. Content, project images and contact POST work without JavaScript. */
 (() => {
-  const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  const applyView4RealBranding = () => {
-    document.querySelectorAll("a[href]").forEach((link) => {
-      const href = link.getAttribute("href");
-      if (!href) return;
-      link.setAttribute("href", href.replace(/sightsync\//gi, "view4real/"));
-    });
-
-    const oldProduct = document.getElementById("sightsync");
-    if (oldProduct) oldProduct.id = "view4real";
-
-    const exactText = new Map([
-      ["SightSync for Windows is now available.", "View4Real for Windows and iPhone is now in development."],
-      ["View SightSync", "View View4Real"],
-      ["See SightSync", "See View4Real"],
-      ["SightSync for Windows", "View4Real for Windows and iPhone"],
-      ["Open SightSync Page", "Open View4Real Page"],
-      ["SightSync / Software Launch", "View4Real / Software Launch"],
-      ["Brand Systems · Restaurant · Web · SightSync", "Brand Systems · Restaurant · Web · View4Real"],
-      ["Windows Display Profile", "Display Comfort Profile"],
-      ["Ctrl + F5", "Quick switch"],
-      ["Toggle regular view", "Change profile anytime"]
-    ]);
-
-    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-    const nodes = [];
-    while (walker.nextNode()) nodes.push(walker.currentNode);
-
-    nodes.forEach((node) => {
-      const trimmed = node.nodeValue.trim();
-      if (exactText.has(trimmed)) {
-        node.nodeValue = node.nodeValue.replace(trimmed, exactText.get(trimmed));
-        return;
-      }
-      if (node.nodeValue.includes("SightSync is a Windows display comfort utility created by Goyone By Design.")) {
-        node.nodeValue = "View4Real is a vision-adaptive display comfort utility created by Goyone By Design. It helps users create local readability profiles and tune brightness, contrast, warmth, text scaling, and prescription-inspired settings for more comfortable screen reading.";
-        return;
-      }
-      if (node.nodeValue.includes("Windows 10 and Windows 11.")) {
-        node.nodeValue = "Windows desktop MVP and iPhone MVP are in active development. Recommendations are comfort-based display suggestions and are not medical advice.";
-        return;
-      }
-      node.nodeValue = node.nodeValue.replace(/SightSync/g, "View4Real");
-    });
-
-    const mock = document.querySelector(".productMock");
-    if (mock) mock.setAttribute("aria-label", "View4Real app preview");
-  };
-
-  applyView4RealBranding();
-
-  // Year
+  "use strict";
+  document.documentElement.classList.add("js");
   const year = document.getElementById("year");
   if (year) year.textContent = new Date().getFullYear();
-
-  // Header elevation
-  const header = document.querySelector(".header");
-  const setHeaderElevation = () => {
-    const elevated = window.scrollY > 8;
-    header?.setAttribute("data-elevate", elevated ? "true" : "false");
+  const toggle = document.querySelector(".menu-toggle");
+  const menu = document.getElementById("navMenu");
+  const closeMenu = () => {
+    menu.dataset.open = "false";
+    toggle.setAttribute("aria-expanded", "false");
   };
-  setHeaderElevation();
-  window.addEventListener("scroll", setHeaderElevation, { passive: true });
-
-  // Mobile nav toggle
-  const toggle = document.querySelector(".nav__toggle");
-  const menu = document.querySelector(".nav__menu");
   if (toggle && menu) {
     toggle.addEventListener("click", () => {
-      const isOpen = menu.getAttribute("data-open") === "true";
-      menu.setAttribute("data-open", isOpen ? "false" : "true");
-      toggle.setAttribute("aria-expanded", isOpen ? "false" : "true");
+      const open = toggle.getAttribute("aria-expanded") !== "true";
+      toggle.setAttribute("aria-expanded", String(open));
+      menu.dataset.open = String(open);
     });
-
-    menu.querySelectorAll("a").forEach((a) => {
-      a.addEventListener("click", () => {
-        menu.setAttribute("data-open", "false");
-        toggle.setAttribute("aria-expanded", "false");
-      });
+    menu.addEventListener("click", (e) => {
+      if (e.target.closest("a")) closeMenu();
     });
-
-    document.addEventListener("click", (e) => {
-      if (!menu.contains(e.target) && !toggle.contains(e.target)) {
-        menu.setAttribute("data-open", "false");
-        toggle.setAttribute("aria-expanded", "false");
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && menu.dataset.open === "true") {
+        closeMenu();
+        toggle.focus();
       }
     });
-  }
-
-  // Smooth scrolling for anchors
-  document.querySelectorAll('a[href^="#"]').forEach((link) => {
-    link.addEventListener("click", (e) => {
-      const id = link.getAttribute("href");
-      if (!id || id === "#") return;
-      const target = document.querySelector(id);
-      if (!target) return;
-
-      e.preventDefault();
-      target.scrollIntoView({ behavior: prefersReduced ? "auto" : "smooth", block: "start" });
-      history.pushState(null, "", id);
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest(".header")) closeMenu();
     });
-  });
-
-  // Scroll reveal
-  const revealEls = Array.from(document.querySelectorAll(".reveal"));
-  if ("IntersectionObserver" in window && revealEls.length) {
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const en of entries) {
-          if (en.isIntersecting) {
-            en.target.classList.add("is-in");
-            io.unobserve(en.target);
-          }
-        }
-      },
-      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
+    window
+      .matchMedia("(min-width: 701px)")
+      .addEventListener("change", closeMenu);
+  }
+  const dialog = document.getElementById("preview");
+  const previews = [...document.querySelectorAll("[data-preview]")];
+  const image = document.getElementById("previewImage");
+  const title = document.getElementById("previewTitle");
+  let index = 0,
+    returnFocus;
+  const showImage = (i) => {
+    index = (i + previews.length) % previews.length;
+    image.src = previews[index].href;
+    image.alt = previews[index].querySelector("img").alt;
+    title.textContent = `${previews[index].dataset.title} / ${index + 1} of ${previews.length}`;
+  };
+  if (dialog && typeof dialog.showModal === "function") {
+    previews.forEach((link, i) =>
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        returnFocus = link;
+        showImage(i);
+        dialog.showModal();
+        document.body.style.overflow = "hidden";
+      }),
     );
-    revealEls.forEach((el) => io.observe(el));
-  } else {
-    revealEls.forEach((el) => el.classList.add("is-in"));
-  }
-
-  // Cursor glow (follows mouse) - desktop only
-  const glow = document.querySelector(".cursorGlow");
-  if (glow && !prefersReduced) {
-    let raf = 0;
-    window.addEventListener(
-      "pointermove",
-      (e) => {
-        cancelAnimationFrame(raf);
-        raf = requestAnimationFrame(() => {
-          glow.style.transform = `translate(${e.clientX - 120}px, ${e.clientY - 120}px)`;
-        });
-      },
-      { passive: true }
-    );
-  }
-
-  // Card glow tracking (services cards)
-  const glowCards = Array.from(document.querySelectorAll("[data-glow]"));
-  if (!prefersReduced) {
-    glowCards.forEach((card) => {
-      card.addEventListener("pointermove", (e) => {
-        const r = card.getBoundingClientRect();
-        const x = ((e.clientX - r.left) / r.width) * 100;
-        const y = ((e.clientY - r.top) / r.height) * 100;
-        card.style.setProperty("--gx", `${x}%`);
-        card.style.setProperty("--gy", `${y}%`);
-      });
+    document
+      .getElementById("previous")
+      .addEventListener("click", () => showImage(index - 1));
+    document
+      .getElementById("next")
+      .addEventListener("click", () => showImage(index + 1));
+    document
+      .getElementById("closePreview")
+      .addEventListener("click", () => dialog.close());
+    dialog.addEventListener("click", (e) => {
+      if (e.target === dialog) {
+        const r = dialog.getBoundingClientRect();
+        if (
+          e.clientX < r.left ||
+          e.clientX > r.right ||
+          e.clientY < r.top ||
+          e.clientY > r.bottom
+        )
+          dialog.close();
+      }
+    });
+    dialog.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        showImage(index - 1);
+      }
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        showImage(index + 1);
+      }
+    });
+    dialog.addEventListener("close", () => {
+      document.body.style.overflow = "";
+      returnFocus?.focus();
     });
   }
-
-  // Magnetic buttons (subtle)
-  const magnetic = Array.from(document.querySelectorAll(".magnetic"));
-  if (!prefersReduced) {
-    magnetic.forEach((el) => {
-      el.addEventListener("pointermove", (e) => {
-        const r = el.getBoundingClientRect();
-        const x = e.clientX - (r.left + r.width / 2);
-        const y = e.clientY - (r.top + r.height / 2);
-        el.style.transform = `translate(${x * 0.06}px, ${y * 0.08}px)`;
-      });
-      el.addEventListener("pointerleave", () => {
-        el.style.transform = "translate(0,0)";
-      });
-    });
-  }
-
-  // Tilt (hero device + work cards)
-  const tiltEls = Array.from(document.querySelectorAll("[data-tilt]"));
-  if (!prefersReduced) {
-    tiltEls.forEach((el) => {
-      el.style.willChange = "transform";
-      el.addEventListener("pointermove", (e) => {
-        const r = el.getBoundingClientRect();
-        const px = (e.clientX - r.left) / r.width;
-        const py = (e.clientY - r.top) / r.height;
-        const rotY = (px - 0.5) * 10; // left/right
-        const rotX = (0.5 - py) * 10; // up/down
-        el.style.transform = `perspective(900px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateY(-2px)`;
-      });
-      el.addEventListener("pointerleave", () => {
-        el.style.transform = "";
-      });
-    });
-  }
-
-  // Contact form -> mailto (works on GitHub Pages)
-  const form = document.getElementById("contactForm");
-  const formNote = document.getElementById("formNote");
-  const emailLink = document.getElementById("emailLink");
-  const toEmail = "admin@goyonebydesign.com"; // change if needed
-  if (emailLink) emailLink.href = `mailto:${toEmail}`;
-
-  if (form) {
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const data = new FormData(form);
-      const name = (data.get("name") || "").toString().trim();
-      const email = (data.get("email") || "").toString().trim();
-      const service = (data.get("service") || "").toString().trim();
-      const message = (data.get("message") || "").toString().trim();
-
-      const subject = encodeURIComponent(`GBD Inquiry: ${service} — ${name}`);
-      const body = encodeURIComponent(
-        `Name: ${name}\nEmail: ${email}\nService: ${service}\n\nDetails:\n${message}\n\n— Sent from goyonebydesign.github.io`
-      );
-
-
-      (() => {
   const form = document.getElementById("contactForm");
   if (!form) return;
-
-  const note = document.getElementById("formNote");
-  const btn  = document.getElementById("sendBtn");
-  const ENDPOINT = form.getAttribute("action") || "https://formspree.io/f/mregjvak";
-
-  const setNote = (msg, state = "") => {
-    if (!note) return;
-    note.textContent = msg;
-    note.classList.remove("is-warn","is-bad","is-good");
-    if (state) note.classList.add(state);
+  const note = document.getElementById("formNote"),
+    button = document.getElementById("sendBtn");
+  let sending = false,
+    lastSent = 0;
+  const fields = ["name", "email", "service", "message"];
+  const setNote = (text, state = "") => {
+    note.textContent = text;
+    note.className = `formNote ${state}`;
   };
-
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    e.stopPropagation(); // IMPORTANT: prevents any other submit listener (like old mailto code)
-
-    // Honeypot
-    if (form._gotcha && form._gotcha.value) {
-      setNote("✅ Sent!", "is-good");
-      return;
+  const validate = () => {
+    let firstInvalid;
+    fields.forEach((name) => {
+      const input = form.elements.namedItem(name);
+      const valid = input.checkValidity() && input.value.trim().length > 0;
+      const field = input.closest(".field"),
+        error = field.querySelector(".errorText");
+      error.id = `${name}-error`;
+      input.setAttribute("aria-describedby", error.id);
+      input.setAttribute("aria-invalid", String(!valid));
+      field.classList.toggle("is-error", !valid);
+      if (!valid && !firstInvalid) firstInvalid = input;
+    });
+    if (firstInvalid) {
+      firstInvalid.focus();
+      return false;
     }
-
-    btn && (btn.disabled = true);
-    setNote("Sending…");
-
-    try {
-      const res = await fetch(ENDPOINT, {
-        method: "POST",
-        headers: { "Accept": "application/json" },
-        body: new FormData(form)
-      });
-
-      if (res.ok) {
-        form.reset();
-        setNote("✅ Sent! Thanks — I’ll reply soon.", "is-good");
-      } else {
-        setNote("Something went wrong. Please email admin@goyonebydesign.com.", "is-bad");
-      }
-    } catch {
-      setNote("Network error. Please try again.", "is-bad");
-    } finally {
-      btn && (btn.disabled = false);
+    return true;
+  };
+  // Keep browser validation as the no-JS fallback; use accessible inline errors when JS runs.
+  form.noValidate = true;
+  form.addEventListener("input", (e) => {
+    const field = e.target.closest(".field");
+    if (
+      field?.classList.contains("is-error") &&
+      e.target.checkValidity() &&
+      e.target.value.trim()
+    ) {
+      field.classList.remove("is-error");
+      e.target.setAttribute("aria-invalid", "false");
     }
   });
-})();
-
-    });
-  }
-
-  // Particle canvas (lightweight)
-  const canvas = document.getElementById("particles");
-  if (!canvas || prefersReduced) return;
-
-  const ctx = canvas.getContext("2d", { alpha: true });
-  let w = 0, h = 0, dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
-  const particles = [];
-  const count = 60;
-
-  const resize = () => {
-    w = window.innerWidth;
-    h = window.innerHeight;
-    canvas.width = Math.floor(w * dpr);
-    canvas.height = Math.floor(h * dpr);
-    canvas.style.width = `${w}px`;
-    canvas.style.height = `${h}px`;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  };
-  resize();
-  window.addEventListener("resize", resize, { passive: true });
-
-  const rand = (a, b) => a + Math.random() * (b - a);
-
-  for (let i = 0; i < count; i++) {
-    particles.push({
-      x: rand(0, w),
-      y: rand(0, h),
-      r: rand(0.8, 2.2),
-      vx: rand(-0.25, 0.25),
-      vy: rand(-0.18, 0.18),
-      a: rand(0.12, 0.28)
-    });
-  }
-
-  function draw() {
-    ctx.clearRect(0, 0, w, h);
-
-    // Particles
-    for (const p of particles) {
-      p.x += p.vx;
-      p.y += p.vy;
-
-      if (p.x < -20) p.x = w + 20;
-      if (p.x > w + 20) p.x = -20;
-      if (p.y < -20) p.y = h + 20;
-      if (p.y > h + 20) p.y = -20;
-
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(255,255,255,${p.a})`;
-      ctx.fill();
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (sending) return;
+    if (!validate()) {
+      setNote("Please check the highlighted fields.", "is-bad");
+      return;
     }
-
-    // Lines (subtle)
-    for (let i = 0; i < particles.length; i++) {
-      for (let j = i + 1; j < particles.length; j++) {
-        const a = particles[i], b = particles[j];
-        const dx = a.x - b.x;
-        const dy = a.y - b.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 130) {
-          const alpha = (1 - dist / 130) * 0.10;
-          ctx.strokeStyle = `rgba(38,167,222,${alpha})`;
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.moveTo(a.x, a.y);
-          ctx.lineTo(b.x, b.y);
-          ctx.stroke();
-        }
-      }
+    if (form.elements.namedItem("_gotcha").value) return;
+    if (Date.now() - lastSent < 45000) {
+      setNote("Please wait a moment before sending another message.");
+      return;
     }
-
-    requestAnimationFrame(draw);
-  }
-  requestAnimationFrame(draw);
+    sending = true;
+    button.disabled = true;
+    button.textContent = "Sending…";
+    setNote("Sending your message…");
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 20000);
+    try {
+      const response = await fetch(form.action, {
+        method: "POST",
+        headers: { Accept: "application/json" },
+        body: new FormData(form),
+        signal: controller.signal,
+      });
+      if (!response.ok) throw new Error("Message not accepted");
+      lastSent = Date.now();
+      form.reset();
+      fields.forEach((name) =>
+        form.elements.namedItem(name).removeAttribute("aria-invalid"),
+      );
+      setNote("Message sent. Thank you! Michael will be in touch.", "is-good");
+    } catch {
+      setNote(
+        "Your message could not be confirmed. Please try again or email admin@goyonebydesign.com.",
+        "is-bad",
+      );
+    } finally {
+      clearTimeout(timeout);
+      sending = false;
+      button.disabled = false;
+      button.textContent = "Send request";
+    }
+  });
 })();

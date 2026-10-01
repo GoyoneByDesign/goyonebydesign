@@ -1,524 +1,514 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Goyone By Design | Branding, Websites & Apps</title>
-  <meta name="description" content="Professional branding, websites, ads, menus, and product launch work from Goyone By Design. Explore our application collection." />
-  <meta name="theme-color" content="#060709" />
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Goyone By Design | Branding, Websites & Apps</title>
+    <meta
+      name="description"
+      content="Professional branding, websites, ads, menus, and product launch work from Goyone By Design. Explore our application collection."
+    />
+    <meta name="theme-color" content="#151614" />
 
-  <!-- Canonical -->
-  <link rel="canonical" href="https://www.goyonebydesign.com/" />
+    <!-- Canonical -->
+    <link rel="canonical" href="https://www.goyonebydesign.com/" />
 
-  <!-- Open Graph / Social -->
-  <meta property="og:title" content="Goyone By Design | Branding, Websites & Apps" />
-  <meta property="og:description" content="Professional branding, websites, ads, menus, and product launch work from Goyone By Design. Explore our application collection." />
-  <meta property="og:url" content="https://www.goyonebydesign.com/" />
-  <meta property="og:type" content="website" />
-  <meta name="twitter:card" content="summary_large_image" />
+    <!-- Open Graph / Social -->
+    <meta
+      property="og:title"
+      content="Goyone By Design | Branding, Websites & Apps"
+    />
+    <meta
+      property="og:description"
+      content="Professional branding, websites, ads, menus, and product launch work from Goyone By Design. Explore our application collection."
+    />
+    <meta property="og:url" content="https://www.goyonebydesign.com/" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
 
-  <!-- Robots -->
-  <meta name="robots" content="index,follow" />
+    <!-- Robots -->
+    <meta name="robots" content="index,follow" />
 
-  <!-- Fonts (match your original) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Fraunces:opsz,wght@9..144,300;9..144,600;9..144,800&display=swap" rel="stylesheet">
+    <!-- Studio typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Fraunces:opsz,wght@9..144,300;9..144,600;9..144,800&display=swap"
+      rel="stylesheet"
+    />
 
-  <!-- Your existing CSS/JS (keeps the moving background behavior you already like) -->
-  <link rel="stylesheet" href="./styles.css" />
-  <script defer src="./app.js"></script>
+    <!-- Lightweight editorial homepage -->
+    <link rel="stylesheet" href="./styles.css" />
+    <script defer src="./app.js"></script>
 
-  <!-- Enhancements (safe overrides) -->
-  <style>
-    /* ---------- Avatar Enhancement ---------- */
-    .contactCard__avatar{
-      width:72px;height:72px;border-radius:50%;
-      object-fit:cover;filter:grayscale(100%);
-      transition:all .35s ease;
-      box-shadow:0 8px 24px rgba(0,0,0,.35);
-      flex:0 0 auto;
-    }
-    .contactCard__top:hover .contactCard__avatar{
-      filter:grayscale(0%);
-      box-shadow:0 10px 30px rgba(255,180,90,.35);
-    }
-
-    /* ---------- Form UX Enhancements ---------- */
-    .formActions{
-      display:flex;flex-direction:column;gap:12px;margin-top:10px;
-    }
-    @media(min-width:820px){
-      .formActions{flex-direction:row;align-items:center;gap:16px;}
-      .formActions .formNote{margin:0;}
-    }
-    .formNote{scroll-margin-top:110px;}
-    .field .errorText{
-      display:none;
-      margin-top:8px;
-      font-size:.9rem;
-      line-height:1.2;
-      color:#ff6b6b;
-    }
-    .field.is-error .errorText{display:block;}
-    .field.is-error input,
-    .field.is-error select,
-    .field.is-error textarea{
-      outline:2px solid rgba(255,107,107,.55);
-      box-shadow:0 0 0 6px rgba(255,107,107,.10);
-    }
-    .field.is-ok input,
-    .field.is-ok select,
-    .field.is-ok textarea{
-      outline:2px solid rgba(120,255,190,.25);
-    }
-
-    /* ---------- Lightbox ---------- */
-    .lightboxOverlay{
-      position:fixed;inset:0;
-      background:rgba(0,0,0,.78);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding:24px;
-      z-index:9999;
-      backdrop-filter: blur(6px);
-    }
-    .lightboxOverlay.is-open{display:flex;}
-    .lightbox{
-      width:min(1100px, 96vw);
-      max-height:92vh;
-      border-radius:18px;
-      overflow:hidden;
-      background:rgba(10,10,12,.92);
-      border:1px solid rgba(255,255,255,.12);
-      box-shadow: 0 28px 90px rgba(0,0,0,.6);
-      display:flex;
-      flex-direction:column;
-    }
-    .lightboxTop{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:14px 14px;
-      border-bottom:1px solid rgba(255,255,255,.10);
-      gap:12px;
-    }
-    .lightboxTitle{
-      font-weight:700;
-      font-size:0.98rem;
-      opacity:.95;
-      margin:0;
-      padding:0 6px;
-      overflow:hidden;
-      white-space:nowrap;
-      text-overflow:ellipsis;
-    }
-    .lightboxBtns{
-      display:flex; gap:10px; align-items:center;
-    }
-    .lbBtn{
-      appearance:none;
-      border:1px solid rgba(255,255,255,.18);
-      background:rgba(255,255,255,.06);
-      color:#fff;
-      padding:10px 12px;
-      border-radius:12px;
-      cursor:pointer;
-      font:inherit;
-      transition:.2s ease;
-    }
-    .lbBtn:hover{background:rgba(255,255,255,.10);}
-    .lightboxBody{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:16px;
-      overflow:auto;
-    }
-    .lightboxBody img{
-      max-width:100%;
-      height:auto;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.10);
-      background:#0b0b0f;
-    }
-
-    /* Make work images clickable */
-    .workCard__thumb img,
-    .workCard img{cursor: zoom-in;}
-
-    /* Reduced motion */
-    @media (prefers-reduced-motion: reduce){
-      .contactCard__avatar{transition:none;}
-      .lbBtn{transition:none;}
-    }
-
-    /* Rate limit note colors */
-    .formNote.is-warn{color:#ffd36a;}
-    .formNote.is-bad{color:#ff6b6b;}
-    .formNote.is-good{color:#8dffb7;}
-  </style>
-
-  <!-- JSON-LD Schema (fixed invalid JSON) -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
+    <!-- JSON-LD Schema (fixed invalid JSON) -->
+    <script type="application/ld+json">
       {
-        "@type": "WebSite",
-        "@id": "https://www.goyonebydesign.com/#website",
-        "url": "https://www.goyonebydesign.com/",
-        "name": "Goyone By Design",
-        "description": "Professional branding, websites, ads, menus, and product launch work from Goyone By Design. Explore our application collection.",
-        "inLanguage": "en-US",
-        "publisher": { "@id": "https://www.goyonebydesign.com/#organization" }
-      },
-      {
-        "@type": "Organization",
-        "@id": "https://www.goyonebydesign.com/#organization",
-        "name": "Goyone By Design",
-        "url": "https://www.goyonebydesign.com/",
-        "email": "admin@goyonebydesign.com",
-        "founder": { "@id": "https://www.goyonebydesign.com/#person" }
-      },
-      {
-        "@type": "Person",
-        "@id": "https://www.goyonebydesign.com/#person",
-        "name": "Michael Goyone",
-        "jobTitle": "Founder, Creative Director",
-        "email": "admin@goyonebydesign.com",
-        "worksFor": { "@id": "https://www.goyonebydesign.com/#organization" }
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://www.goyonebydesign.com/#website",
+            "url": "https://www.goyonebydesign.com/",
+            "name": "Goyone By Design",
+            "description": "Professional branding, websites, ads, menus, and product launch work from Goyone By Design. Explore our application collection.",
+            "inLanguage": "en-US",
+            "publisher": {
+              "@id": "https://www.goyonebydesign.com/#organization"
+            }
+          },
+          {
+            "@type": "Organization",
+            "@id": "https://www.goyonebydesign.com/#organization",
+            "name": "Goyone By Design",
+            "url": "https://www.goyonebydesign.com/",
+            "email": "admin@goyonebydesign.com",
+            "founder": { "@id": "https://www.goyonebydesign.com/#person" }
+          },
+          {
+            "@type": "Person",
+            "@id": "https://www.goyonebydesign.com/#person",
+            "name": "Michael Goyone",
+            "jobTitle": "Founder, Creative Director",
+            "email": "admin@goyonebydesign.com",
+            "worksFor": {
+              "@id": "https://www.goyonebydesign.com/#organization"
+            }
+          }
+        ]
       }
-    ]
-  }
-  </script>
-</head>
+    </script>
+  </head>
 
-<body>
-  <a class="skip-link" href="#main">Skip to content</a>
-
-  <!-- Ambient FX (this is your moving background) -->
-  <div class="fx fx--aurora" aria-hidden="true"></div>
-  <div class="fx fx--grid" aria-hidden="true"></div>
-  <div class="fx fx--vignette" aria-hidden="true"></div>
-  <canvas id="particles" aria-hidden="true"></canvas>
-  <div class="cursorGlow" aria-hidden="true"></div>
-
-  <!-- Topbar (from your original) -->
-  <div class="topbar">
-    <div class="container topbar__inner">
-      <span class="chip chip--live">
-        <span class="chip__dot" aria-hidden="true"></span>
-        Now Booking
-      </span>
-      <span class="topbar__text">Branding, websites, and product launches.</span>
-    </div>
-  </div>
-
-  <!-- Header (from your original) -->
-  <header class="header" data-elevate="false">
-    <div class="container header__inner">
-      <a class="brand" href="#" aria-label="Goyone By Design home">
-        <img class="brand__logo" src="logo.png" alt="Goyone By Design logo" />
-        <div class="brand__stack">
-          <span class="brand__name">Goyone By Design</span>
-          <span class="brand__sub">Brand systems, websites, and product launches</span>
-        </div>
-      </a>
-
-      <nav class="nav" aria-label="Primary">
-        <button class="nav__toggle" aria-expanded="false" aria-controls="navMenu">
-          <span class="nav__toggleLines" aria-hidden="true"></span>
-          <span class="sr-only">Menu</span>
-        </button>
-
-        <div class="nav__menu" id="navMenu">
-          <a href="#services">Services</a>
-          <a href="apps/">Apps</a>
-          <a href="#work">Work</a>
-          <a href="#process">Process</a>
-          <a href="#contact">Contact</a>
-          <a class="btn btn--small btn--primary magnetic" href="#contact">Get a quote</a>
-        </div>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="header">
+      <a class="brand" href="#main" aria-label="Goyone By Design home"
+        ><img
+          src="logo.png"
+          width="52"
+          height="52"
+          alt="Goyone By Design logo"
+        /><span>Goyone<span class="brand__small">By Design</span></span></a
+      >
+      <button class="menu-toggle" aria-expanded="false" aria-controls="navMenu">
+        Menu <span aria-hidden="true">＋</span>
+      </button>
+      <nav id="navMenu" aria-label="Primary">
+        <a href="#work">Work</a><a href="#services">Services</a
+        ><a href="apps/">Apps</a><a href="#process">Process</a
+        ><a class="nav-contact" href="#contact"
+          >Let’s talk <span aria-hidden="true">↗</span></a
+        >
       </nav>
-    </div>
-  </header>
-
-  <main id="main">
-    <!-- Hero -->
-    <section class="hero">
-      <div class="container hero__grid">
-        <div class="hero__copy">
-          <p class="eyebrow">
-            <span class="eyebrow__line" aria-hidden="true"></span>
-            BRANDING • WEBSITES • PRODUCT LAUNCHES
-          </p>
-
-          <h1 class="hero__title">
-            Bringing Your Brand to<br />
-            <span class="gradText">Life.</span>
-          </h1>
-
-          <p class="hero__sub">
-            Logos, menus, ads, websites, and launch pages with clean visuals and clear calls to action.
-          </p>
-
-          <div class="hero__cta">
-            <a class="btn btn--primary btn--lg magnetic" href="#contact">
-              Get a quote
-              <span class="btn__shine" aria-hidden="true"></span>
-            </a>
-            <a class="btn btn--ghost btn--lg magnetic" href="apps/">Explore our applications</a>
-          </div>
+    </header>
+    <main id="main">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-top">
+          <p class="eyebrow">Independent design. Real-world impact.</p>
+          <p class="hero-location">Northern Virginia / Working remotely</p>
         </div>
-
-        <div class="hero__visual" aria-hidden="true">
-          <div class="orb orb--a"></div>
-          <div class="orb orb--b"></div>
-          <div class="orb orb--c"></div>
-
-          <div class="device tilt" data-tilt>
-            <div class="device__top">
-              <span class="pill">GBD</span>
-              <span class="pill pill--ghost">Premium</span>
-            </div>
-            <div class="device__mid">
-              <div class="scanline"></div>
-              <p class="device__title">Client-ready Brand System</p>
-              <p class="device__text">Logo • Menu • Ads • Website • Launch</p>
-              <div class="bars">
-                <span class="bar bar--1"></span>
-                <span class="bar bar--2"></span>
-                <span class="bar bar--3"></span>
-              </div>
-            </div>
-            <div class="device__bottom">
-              <span class="dot dot--m"></span>
-              <span class="dot dot--r"></span>
-              <span class="dot dot--b"></span>
-              <span class="dot dot--o"></span>
-            </div>
-          </div>
-
-          <div class="frame"></div>
+        <h1 id="hero-title">
+          Good design.<br /><span class="hero-second"
+            >Great <em>possibilities.</em></span
+          >
+        </h1>
+        <div class="hero-bottom">
+          <p>
+            Brand identities, websites and digital products.<br />Distinctive by
+            design. Built to be useful.
+          </p>
+          <a class="round-link" href="#work"
+            ><span>Explore the work</span
+            ><span class="round-arrow" aria-hidden="true">↘</span></a
+          >
         </div>
-      </div>
-    </section>
-
-    <!-- Services -->
-    <section class="section" id="services">
-      <div class="container">
-        <div class="sectionHead">
-          <h2 class="reveal">Services</h2>
-          <p class="reveal" style="transition-delay:80ms">
-            Clean, professional design deliverables for businesses that need to look credible online and in print.
+        <div class="hero-art" aria-hidden="true">
+          <div class="art-orbit orbit-one"></div>
+          <div class="art-orbit orbit-two"></div>
+          <div class="art-orbit orbit-three"></div>
+          <span class="art-cross">+</span
+          ><span class="art-caption">Form × function</span>
+        </div>
+      </section>
+      <section class="work section" id="work" aria-labelledby="work-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">01 / Selected work</p>
+            <h2 id="work-title">A point of view.<br />In every detail.</h2>
+          </div>
+          <p>
+            Brand identities, restaurant menus and<br />visual applications from
+            the studio.
           </p>
         </div>
-
-        <div class="cards cards--3">
-          <article class="card card--glow reveal" data-glow>
-            <div class="card__icon" aria-hidden="true">⟡</div>
-            <h3>Brand Identity</h3>
-            <p>Logo design, color systems, typography, brand rules, and social kits.</p>
-            <ul>
-              <li>Primary + alternate logos</li>
-              <li>Brand guidelines (PDF)</li>
-              <li>Export pack for print & web</li>
-            </ul>
+        <div class="work-grid">
+          <article class="project project-1">
+            <a
+              class="project-image"
+              href="assets/work/aurelian-logo.png"
+              data-preview
+              data-title="Aurelian — Brand identity"
+              aria-label="Enlarge Aurelian logo design"
+              ><img
+                src="assets/work/previews/aurelian-logo.webp"
+                width="1536"
+                height="1024"
+                alt="Aurelian logo design"
+                loading="lazy"
+                decoding="async"
+              /><span class="project-open" aria-hidden="true">↗</span></a
+            >
+            <div class="project-caption">
+              <h3>Aurelian</h3>
+              <span>Brand identity</span>
+            </div>
+            <p class="project-description">
+              Clean mark with premium spacing and practical brand geometry.
+            </p>
           </article>
-
-          <article class="card card--glow reveal" data-glow style="transition-delay:80ms">
-            <div class="card__icon" aria-hidden="true">⌁</div>
-            <h3>Restaurant Design</h3>
-            <p>Menus, flyers, coupons, posters, signage, packaging, uniforms.</p>
-            <ul>
-              <li>Upsell-friendly hierarchy</li>
-              <li>Print-ready + digital versions</li>
-              <li>Consistent look across locations</li>
-            </ul>
+          <article class="project project-2">
+            <a
+              class="project-image"
+              href="assets/work/nox-storefront.png"
+              data-preview
+              data-title="Nox & Co. — Brand application"
+              aria-label="Enlarge Nox storefront mockup"
+              ><img
+                src="assets/work/previews/nox-storefront.webp"
+                width="1536"
+                height="1024"
+                alt="Nox storefront mockup"
+                loading="lazy"
+                decoding="async"
+              /><span class="project-open" aria-hidden="true">↗</span></a
+            >
+            <div class="project-caption">
+              <h3>Nox & Co.</h3>
+              <span>Brand application</span>
+            </div>
+            <p class="project-description">
+              Real-world brand placement with high-end contrast and clarity.
+            </p>
           </article>
-
-          <article class="card card--glow reveal" data-glow style="transition-delay:160ms">
-            <div class="card__icon" aria-hidden="true">⌬</div>
-            <h3>Web & Digital</h3>
-            <p>Fast landing pages, modern sites, promo graphics, thumbnails and content kits.</p>
-            <ul>
-              <li>Mobile-first layout</li>
-              <li>Speed + SEO basics</li>
-              <li>Conversion-focused sections</li>
-            </ul>
+          <article class="project project-3">
+            <a
+              class="project-image"
+              href="assets/work/velora-card.png"
+              data-preview
+              data-title="Velora — Print design"
+              aria-label="Enlarge Velora brand card design"
+              ><img
+                src="assets/work/previews/velora-card.webp"
+                width="1536"
+                height="1024"
+                alt="Velora brand card design"
+                loading="lazy"
+                decoding="async"
+              /><span class="project-open" aria-hidden="true">↗</span></a
+            >
+            <div class="project-caption">
+              <h3>Velora</h3>
+              <span>Print design</span>
+            </div>
+            <p class="project-description">
+              Premium typography and layout designed to feel polished and
+              credible.
+            </p>
+          </article>
+          <article class="project project-4">
+            <a
+              class="project-image"
+              href="assets/work/aurelian-menu.png"
+              data-preview
+              data-title="Aurelian — Menu design"
+              aria-label="Enlarge Aurelian menu design"
+              ><img
+                src="assets/work/previews/aurelian-menu.webp"
+                width="1536"
+                height="1024"
+                alt="Aurelian menu design"
+                loading="lazy"
+                decoding="async"
+              /><span class="project-open" aria-hidden="true">↗</span></a
+            >
+            <div class="project-caption">
+              <h3>Aurelian</h3>
+              <span>Menu design</span>
+            </div>
+            <p class="project-description">
+              Clean hierarchy, modern spacing, upscale finish.
+            </p>
+          </article>
+          <article class="project project-5">
+            <a
+              class="project-image"
+              href="assets/work/nox-menu.png"
+              data-preview
+              data-title="Nox & Co. — Menu design"
+              aria-label="Enlarge Nox menu design"
+              ><img
+                src="assets/work/previews/nox-menu.webp"
+                width="1536"
+                height="1024"
+                alt="Nox menu design"
+                loading="lazy"
+                decoding="async"
+              /><span class="project-open" aria-hidden="true">↗</span></a
+            >
+            <div class="project-caption">
+              <h3>Nox & Co.</h3>
+              <span>Menu design</span>
+            </div>
+            <p class="project-description">
+              Premium layout built for readability and conversion.
+            </p>
+          </article>
+          <article class="project project-6">
+            <a
+              class="project-image"
+              href="assets/work/velora-menu.png"
+              data-preview
+              data-title="Velora Kitchen — Menu design"
+              aria-label="Enlarge Velora menu design"
+              ><img
+                src="assets/work/previews/velora-menu.webp"
+                width="1536"
+                height="1024"
+                alt="Velora menu design"
+                loading="lazy"
+                decoding="async"
+              /><span class="project-open" aria-hidden="true">↗</span></a
+            >
+            <div class="project-caption">
+              <h3>Velora Kitchen</h3>
+              <span>Menu design</span>
+            </div>
+            <p class="project-description">
+              Modern type and spacing with a clean upscale presentation.
+            </p>
           </article>
         </div>
-      </div>
-    </section>
-
-    <section class="section" id="applications">
-      <div class="container">
-        <div class="productSpotlight">
-          <div class="productSpotlight__copy">
-            <p class="eyebrow">OUR APPLICATIONS</p>
-            <h2>Good ideas. Made useful.</h2>
-            <p>Explore StatusPing, View4Real, MAX-G, MAX-ZETA, The Commissary, Questrix, StockPilot, and SavvyKin. See real previews and download the available Android and Windows test builds.</p>
-            <a class="btn btn--primary btn--lg" href="apps/">Browse all applications &amp; downloads →</a>
-            <p class="productFine">Platform buttons are enabled only when an installer is available.</p>
+      </section>
+      <section
+        class="services section"
+        id="services"
+        aria-labelledby="services-title"
+      >
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">02 / What we do</p>
+            <h2 id="services-title">
+              One clear vision.<br />Every expression.
+            </h2>
           </div>
-          <a href="apps/" aria-label="Explore StatusPing and our full app collection"><img src="apps/assets/statusping-screen.png" alt="StatusPing check-in application preview" loading="lazy" style="width:100%;border-radius:20px;display:block"></a>
-        </div>
-      </div>
-    </section>
-    <!-- Work (with Lightbox) -->
-    <section class="section section--alt" id="work">
-      <div class="container">
-        <div class="sectionHead">
-          <h2 class="reveal">Selected Work</h2>
-          <p class="reveal" style="transition-delay:80ms">
-            Selected brand, menu, and website visuals from the studio.
+          <p>
+            From the first impression to the everyday detail,<br />design that
+            brings your business together.
           </p>
         </div>
-
-        <div class="workGrid">
-          <article class="workCard reveal" data-tilt data-lightbox-title="Aurelian — Logo">
-            <div class="workCard__thumb">
-              <img src="assets/work/aurelian-logo.png" alt="Aurelian logo design" loading="lazy" />
-              <div class="workCard__meta">
-                <span class="tag">Brand Identity</span>
-                <span class="workCard__title">Aurelian — Logo</span>
-              </div>
+        <div class="service-list">
+          <details open>
+            <summary>
+              <span class="service-number">01</span>
+              <h3>Brand identity</h3>
+              <span class="service-plus" aria-hidden="true">+</span>
+            </summary>
+            <div class="service-body">
+              <p>
+                Logo design, color systems, typography, brand rules and social
+                kits.
+              </p>
+              <ul>
+                <li>Primary + alternate logos</li>
+                <li>Brand guidelines</li>
+                <li>Print & web export packs</li>
+              </ul>
             </div>
-            <div class="workCard__body">
-              <p class="muted">Clean mark with premium spacing and practical brand geometry.</p>
+          </details>
+          <details>
+            <summary>
+              <span class="service-number">02</span>
+              <h3>Restaurant design</h3>
+              <span class="service-plus" aria-hidden="true">+</span>
+            </summary>
+            <div class="service-body">
+              <p>
+                Menus, flyers, coupons, posters, signage, packaging and
+                uniforms.
+              </p>
+              <ul>
+                <li>Clear, upsell-friendly hierarchy</li>
+                <li>Print-ready + digital versions</li>
+                <li>A consistent look across locations</li>
+              </ul>
             </div>
-          </article>
-
-          <article class="workCard reveal" data-tilt style="transition-delay:80ms" data-lightbox-title="Nox — Storefront">
-            <div class="workCard__thumb">
-              <img src="assets/work/nox-storefront.png" alt="Nox storefront mockup" loading="lazy" />
-              <div class="workCard__meta">
-                <span class="tag">Brand Application</span>
-                <span class="workCard__title">Nox — Storefront</span>
-              </div>
+          </details>
+          <details>
+            <summary>
+              <span class="service-number">03</span>
+              <h3>Web & digital</h3>
+              <span class="service-plus" aria-hidden="true">+</span>
+            </summary>
+            <div class="service-body">
+              <p>
+                Fast landing pages, modern websites, promo graphics, thumbnails
+                and content kits.
+              </p>
+              <ul>
+                <li>Mobile-first layouts</li>
+                <li>Speed + SEO basics</li>
+                <li>Clear calls to action</li>
+              </ul>
             </div>
-            <div class="workCard__body">
-              <p class="muted">Real-world brand placement with high-end contrast and clarity.</p>
-            </div>
-          </article>
-
-          <article class="workCard reveal" data-tilt style="transition-delay:160ms" data-lightbox-title="Velora — Brand Card">
-            <div class="workCard__thumb">
-              <img src="assets/work/velora-card.png" alt="Velora brand card design" loading="lazy" />
-              <div class="workCard__meta">
-                <span class="tag">Print Design</span>
-                <span class="workCard__title">Velora — Brand Card</span>
-              </div>
-            </div>
-            <div class="workCard__body">
-              <p class="muted">Premium typography and layout designed to feel polished and credible.</p>
-            </div>
-          </article>
-
-          <article class="workCard reveal" data-tilt style="transition-delay:240ms" data-lightbox-title="Aurelian — Menu">
-            <div class="workCard__thumb">
-              <img src="assets/work/aurelian-menu.png" alt="Aurelian menu design" loading="lazy" />
-              <div class="workCard__meta">
-                <span class="tag">Menu Design</span>
-                <span class="workCard__title">Aurelian — Menu</span>
-              </div>
-            </div>
-            <div class="workCard__body">
-              <p class="muted">Clean hierarchy, modern spacing, upscale finish.</p>
-            </div>
-          </article>
-
-          <article class="workCard reveal" data-tilt style="transition-delay:320ms" data-lightbox-title="Nox — Menu">
-            <div class="workCard__thumb">
-              <img src="assets/work/nox-menu.png" alt="Nox menu design" loading="lazy" />
-              <div class="workCard__meta">
-                <span class="tag">Menu Design</span>
-                <span class="workCard__title">Nox — Menu</span>
-              </div>
-            </div>
-            <div class="workCard__body">
-              <p class="muted">Premium layout built for readability and conversion.</p>
-            </div>
-          </article>
-
-          <article class="workCard reveal" data-tilt style="transition-delay:400ms" data-lightbox-title="Velora — Menu">
-            <div class="workCard__thumb">
-              <img src="assets/work/velora-menu.png" alt="Velora menu design" loading="lazy" />
-              <div class="workCard__meta">
-                <span class="tag">Menu Design</span>
-                <span class="workCard__title">Velora — Menu</span>
-              </div>
-            </div>
-            <div class="workCard__body">
-              <p class="muted">Modern type and spacing with a clean upscale presentation.</p>
-            </div>
-          </article>
+          </details>
         </div>
-      </div>
-    </section>
-
-    <!-- Process -->
-    <section class="section" id="process">
-      <div class="container">
-        <div class="sectionHead">
-          <h2 class="reveal">Process</h2>
-          <p class="reveal" style="transition-delay:80ms">Simple, fast, and professional—built for real business deadlines.</p>
+      </section>
+      <section
+        class="applications section"
+        id="applications"
+        aria-labelledby="apps-title"
+      >
+        <div class="apps-copy">
+          <p class="eyebrow">03 / Beyond the canvas</p>
+          <h2 id="apps-title">Good ideas.<br /><em>Made useful.</em></h2>
+          <p>
+            Explore the studio’s growing collection of applications. Real
+            previews, product details and available Android and Windows test
+            builds, all in one place.
+          </p>
+          <a class="button button-light" href="apps/"
+            >Explore all 9 applications <span aria-hidden="true">↗</span></a
+          >
+          <p class="fine">
+            StatusPing · View4Real · MAX-G · MAX-ZETA · The Commissary ·
+            Questrix · StockPilot · SavvyKin · MyThang
+          </p>
         </div>
-
-        <div class="steps">
-          <div class="step reveal">
-            <div class="step__num">01</div>
-            <h3>Discovery</h3>
-            <p>Goal, audience, examples, timeline, deliverables.</p>
+        <a
+          class="app-preview"
+          href="apps/"
+          aria-label="Explore StatusPing and the full app collection"
+          ><div class="app-preview-top">
+            <span>Inside the app collection</span
+            ><span aria-hidden="true">↗</span>
           </div>
-          <div class="step reveal" style="transition-delay:80ms">
-            <div class="step__num">02</div>
+          <img
+            src="apps/assets/statusping-screen.png"
+            alt="StatusPing check-in application preview"
+            width="1368"
+            height="688"
+            loading="lazy"
+            decoding="async"
+          /><span class="app-preview-bottom"
+            >StatusPing <span>Application preview</span></span
+          ></a
+        >
+      </section>
+      <section
+        class="process section"
+        id="process"
+        aria-labelledby="process-title"
+      >
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">04 / The process</p>
+            <h2 id="process-title">From possibility<br />to purpose.</h2>
+          </div>
+          <p>
+            A clear path from the first conversation<br />to the final files.
+          </p>
+        </div>
+        <ol class="steps">
+          <li>
+            <span>01 /</span>
+            <h3>Discover</h3>
+            <p>
+              The goal, the audience, the references. We start with the right
+              questions.
+            </p>
+          </li>
+          <li>
+            <span>02 /</span>
             <h3>Design</h3>
-            <p>First concepts delivered quickly with clear direction.</p>
-          </div>
-          <div class="step reveal" style="transition-delay:160ms">
-            <div class="step__num">03</div>
+            <p>
+              First concepts, with a clear creative direction and room to
+              explore.
+            </p>
+          </li>
+          <li>
+            <span>03 /</span>
             <h3>Refine</h3>
-            <p>Revisions until it feels premium and correct.</p>
-          </div>
-          <div class="step reveal" style="transition-delay:240ms">
-            <div class="step__num">04</div>
+            <p>Thoughtful revisions. Every detail brought into focus.</p>
+          </li>
+          <li>
+            <span>04 /</span>
             <h3>Deliver</h3>
-            <p>Organized exports for print, web, and social.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Contact (fixed Formspree POST + still uses fetch for inline success) -->
-    <section class="section" id="contact">
-      <div class="container">
-        <div class="sectionHead">
-          <h2 class="reveal">Contact</h2>
-          <p class="reveal" style="transition-delay:80ms">Send questions, suggestions, or project requests to admin@goyonebydesign.com.</p>
-        </div>
-
-        <div class="contactGrid">
-          <!-- ✅ IMPORTANT FIX: action + method added -->
+            <p>Organized, practical exports for print, web and social.</p>
+          </li>
+        </ol>
+      </section>
+      <section
+        class="contact section"
+        id="contact"
+        aria-labelledby="contact-title"
+      >
+        <p class="eyebrow">05 / Start a conversation</p>
+        <h2 id="contact-title">
+          Your next chapter.<br /><em>Let’s design it.</em
+          ><span aria-hidden="true">↗</span>
+        </h2>
+        <div class="contact-grid">
+          <aside class="contact-person">
+            <img
+              src="assets/work/mike.png"
+              class="contact-photo"
+              width="1500"
+              height="1500"
+              alt="Michael Goyone portrait"
+              loading="lazy"
+            />
+            <h3>Michael Goyone</h3>
+            <p>Founder · Creative Director</p>
+            <a href="mailto:admin@goyonebydesign.com"
+              >admin@goyonebydesign.com ↗</a
+            >
+            <p class="contact-location">Northern Virginia · Remote</p>
+            <p class="contact-note">
+              Have a project in mind, a question or a suggestion? Send a note.
+              I’d love to hear about it.
+            </p>
+          </aside>
           <form
-            class="form reveal"
+            class="form"
             id="contactForm"
             action="https://formspree.io/f/mregjvak"
             method="POST"
             accept-charset="UTF-8"
-            novalidate
           >
             <div class="fieldRow">
               <div class="field" data-field="name">
                 <label for="name">Name</label>
-                <input id="name" name="name" type="text" placeholder="Your name" autocomplete="name" required />
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  placeholder="Your name"
+                  autocomplete="name"
+                  required
+                />
                 <div class="errorText">Please enter your name.</div>
               </div>
               <div class="field" data-field="email">
                 <label for="email">Email</label>
-                <input id="email" name="email" type="email" placeholder="you@email.com" autocomplete="email" required />
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="you@email.com"
+                  autocomplete="email"
+                  required
+                />
                 <div class="errorText">Please enter a valid email address.</div>
               </div>
             </div>
@@ -531,7 +521,7 @@
                 <option>Menu / Restaurant Design</option>
                 <option>Flyers / Ads / Promo</option>
                 <option>Website / Landing Page</option>
-                <option>SightSync / Software Launch</option>
+                <option>View4Real / Software Launch</option>
                 <option>Question / Suggestion</option>
                 <option>Other</option>
               </select>
@@ -540,278 +530,77 @@
 
             <div class="field" data-field="message">
               <label for="message">Details</label>
-              <textarea id="message" name="message" rows="6" placeholder="Goal, deadline, and what you want designed." required></textarea>
+              <textarea
+                id="message"
+                name="message"
+                rows="6"
+                placeholder="Goal, deadline, and what you want designed."
+                required
+              ></textarea>
               <div class="errorText">Please enter your project details.</div>
             </div>
 
             <!-- Optional (helps Formspree emails look nicer) -->
-            <input type="hidden" name="_subject" value="New GoyoneByDesign Contact Request" />
+            <input
+              type="hidden"
+              name="_subject"
+              value="New GoyoneByDesign Contact Request"
+            />
             <input type="hidden" name="_format" value="plain" />
 
             <!-- Honeypot -->
-            <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;opacity:0;" />
+            <input
+              type="text"
+              name="_gotcha"
+              tabindex="-1"
+              autocomplete="off"
+              style="position: absolute; left: -9999px; opacity: 0"
+            />
 
             <div class="formActions">
-              <button class="btn btn--primary btn--lg magnetic" id="sendBtn" type="submit">
+              <button
+                class="btn btn--primary btn--lg magnetic"
+                id="sendBtn"
+                type="submit"
+              >
                 Send request
                 <span class="btn__shine" aria-hidden="true"></span>
               </button>
-              <p class="formNote muted" id="formNote" role="status" aria-live="polite">
-                Messages are sent securely.
+              <p
+                class="formNote muted"
+                id="formNote"
+                role="status"
+                aria-live="polite"
+              >
+                Your message goes directly to Michael.
               </p>
             </div>
           </form>
-
-          <aside class="contactCard reveal" style="transition-delay:100ms">
-            <div class="contactCard__top">
-              <img src="assets/work/mike.png" class="contactCard__avatar" alt="Michael Goyone portrait" />
-              <div>
-                <h3>Michael Goyone</h3>
-                <p class="muted">Founder · Creative Director</p>
-              </div>
-            </div>
-
-            <div class="contactList">
-              <div class="contactItem">
-                <span class="contactLabel">Email</span>
-                <a href="mailto:admin@goyonebydesign.com">admin@goyonebydesign.com</a>
-              </div>
-              <div class="contactItem">
-                <span class="contactLabel">Location</span>
-                <span>Northern Virginia · Remote</span>
-              </div>
-              <div class="contactItem">
-                <span class="contactLabel">Specialty</span>
-                <span>Brand Systems · Restaurant · Web · SightSync</span>
-              </div>
-              <div class="contactItem">
-                <span class="contactLabel">Style</span>
-                <span>Professional · Premium · Clean</span>
-              </div>
-            </div>
-          </aside>
+        </div>
+      </section>
+    </main>
+    <footer class="footer">
+      <div class="footer-wordmark" aria-hidden="true">GOYONE<span>↗</span></div>
+      <div class="footer-bottom">
+        <p>© <span id="year">2026</span> Goyone By Design</p>
+        <nav aria-label="Footer">
+          <a href="apps/">Apps</a><a href="#services">Services</a
+          ><a href="#work">Work</a><a href="#contact">Contact</a>
+        </nav>
+        <a href="#main">Back to top ↑</a>
+      </div>
+    </footer>
+    <dialog class="lightbox" id="preview" aria-labelledby="previewTitle">
+      <div class="lightbox-top">
+        <p id="previewTitle">Portfolio preview</p>
+        <div>
+          <button type="button" id="previous" aria-label="Previous image">
+            ←</button
+          ><button type="button" id="next" aria-label="Next image">→</button
+          ><button type="button" id="closePreview">Close ×</button>
         </div>
       </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <div class="container footer__inner">
-      <div class="footer__brand">
-        <img class="footer__logo" src="logo.png" alt="Goyone By Design logo" />
-        <span>© <span id="year"></span> Goyone By Design. All rights reserved.</span>
-      </div>
-      <div class="footer__links">
-        <a href="apps/">Apps</a>
-        <a href="#services">Services</a>
-        <a href="#work">Work</a>
-        <a href="#contact">Contact</a>
-      </div>
-    </div>
-  </footer>
-
-  <!-- LIGHTBOX -->
-  <div class="lightboxOverlay" id="lightboxOverlay" aria-hidden="true">
-    <div class="lightbox" role="dialog" aria-modal="true" aria-label="Portfolio image preview">
-      <div class="lightboxTop">
-        <p class="lightboxTitle" id="lightboxTitle">Preview</p>
-        <div class="lightboxBtns">
-          <button class="lbBtn" id="lbPrev" type="button" aria-label="Previous image">Prev</button>
-          <button class="lbBtn" id="lbNext" type="button" aria-label="Next image">Next</button>
-          <button class="lbBtn" id="lbClose" type="button" aria-label="Close preview">Close</button>
-        </div>
-      </div>
-      <div class="lightboxBody">
-        <img id="lightboxImg" alt="Portfolio preview">
-      </div>
-    </div>
-  </div>
-
-  <script>
-    /* Year */
-    const yearEl = document.getElementById("year");
-    if (yearEl) yearEl.textContent = new Date().getFullYear();
-
-    /* CONTACT: validation + formspree + auto-scroll + rate limit */
-    (() => {
-      const form = document.getElementById("contactForm");
-      if (!form) return;
-
-      // ✅ Endpoint now comes from the real form action (never drifts)
-      const ENDPOINT = form.getAttribute("action");
-
-      const note = document.getElementById("formNote");
-      const btn  = document.getElementById("sendBtn");
-
-      const fields = {
-        name: form.querySelector('[data-field="name"]'),
-        email: form.querySelector('[data-field="email"]'),
-        service: form.querySelector('[data-field="service"]'),
-        message: form.querySelector('[data-field="message"]')
-      };
-
-      const setNote = (msg, state = "") => {
-        note.textContent = msg;
-        note.classList.remove("is-warn","is-bad","is-good");
-        if (state) note.classList.add(state);
-      };
-
-      const markField = (fieldEl, ok) => {
-        if (!fieldEl) return;
-        fieldEl.classList.toggle("is-error", !ok);
-        fieldEl.classList.toggle("is-ok", ok);
-      };
-
-      const validate = () => {
-        const name = (form.name?.value || "").trim();
-        const email = (form.email?.value || "").trim();
-        const service = (form.service?.value || "").trim();
-        const message = (form.message?.value || "").trim();
-        const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
-        markField(fields.name, name.length > 1);
-        markField(fields.email, emailOk);
-        markField(fields.service, !!service);
-        markField(fields.message, message.length > 5);
-
-        return (name.length > 1 && emailOk && !!service && message.length > 5);
-      };
-
-      ["input","change","blur"].forEach(evt => {
-        form.addEventListener(evt, (e) => {
-          if (["INPUT","TEXTAREA","SELECT"].includes(e.target.tagName)) validate();
-        }, true);
-      });
-
-      const RATE_KEY = "gbd_form_last_submit";
-      const COOLDOWN_MS = 45 * 1000;
-      const getRemaining = () => {
-        const last = Number(localStorage.getItem(RATE_KEY) || "0");
-        const remaining = (last + COOLDOWN_MS) - Date.now();
-        return remaining > 0 ? remaining : 0;
-      };
-
-      form.addEventListener("submit", async (e) => {
-        // ✅ We keep preventDefault for the inline success UX,
-        // but the form is still a real POST form if JS is blocked/disabled.
-        e.preventDefault();
-
-        if (form._gotcha && form._gotcha.value) {
-          setNote("✅ Sent!", "is-good");
-          note.scrollIntoView({ behavior: "smooth", block: "center" });
-          return;
-        }
-
-        const remaining = getRemaining();
-        if (remaining > 0) {
-          setNote(`Please wait ${Math.ceil(remaining/1000)}s before sending another message.`, "is-warn");
-          note.scrollIntoView({ behavior: "smooth", block: "center" });
-          return;
-        }
-
-        if (!validate()) {
-          setNote("Please fix the highlighted fields.", "is-bad");
-          note.scrollIntoView({ behavior: "smooth", block: "center" });
-          const firstError = form.querySelector(".field.is-error input, .field.is-error select, .field.is-error textarea");
-          firstError?.focus();
-          return;
-        }
-
-        btn.disabled = true;
-        setNote("Sending…");
-
-        try {
-          const res = await fetch(ENDPOINT, {
-            method: "POST",
-            headers: { "Accept": "application/json" },
-            body: new FormData(form)
-          });
-
-          if (res.ok) {
-            localStorage.setItem(RATE_KEY, String(Date.now()));
-            form.reset();
-            Object.values(fields).forEach(f => f?.classList.remove("is-error","is-ok"));
-            setNote("✅ Sent! Thanks — I’ll reply soon.", "is-good");
-            note.scrollIntoView({ behavior: "smooth", block: "center" });
-          } else {
-            setNote("Something went wrong. Please email admin@goyonebydesign.com.", "is-bad");
-            note.scrollIntoView({ behavior: "smooth", block: "center" });
-          }
-        } catch {
-          setNote("Network error. Please try again.", "is-bad");
-          note.scrollIntoView({ behavior: "smooth", block: "center" });
-        } finally {
-          btn.disabled = false;
-        }
-      });
-    })();
-
-    /* PORTFOLIO LIGHTBOX */
-    (() => {
-      const overlay = document.getElementById("lightboxOverlay");
-      const imgEl = document.getElementById("lightboxImg");
-      const titleEl = document.getElementById("lightboxTitle");
-      const btnClose = document.getElementById("lbClose");
-      const btnPrev = document.getElementById("lbPrev");
-      const btnNext = document.getElementById("lbNext");
-
-      const cards = Array.from(document.querySelectorAll(".workCard"));
-      if (!overlay || !imgEl || cards.length === 0) return;
-
-      const items = cards.map(card => {
-        const img = card.querySelector("img");
-        return {
-          src: img?.getAttribute("src"),
-          alt: img?.getAttribute("alt") || "Portfolio preview",
-          title: card.getAttribute("data-lightbox-title") || img?.getAttribute("alt") || "Preview"
-        };
-      }).filter(x => !!x.src);
-
-      let idx = 0;
-      let lastFocus = null;
-
-      const open = (i) => {
-        idx = (i + items.length) % items.length;
-        const it = items[idx];
-        imgEl.src = it.src;
-        imgEl.alt = it.alt;
-        titleEl.textContent = it.title;
-
-        lastFocus = document.activeElement;
-        overlay.classList.add("is-open");
-        overlay.setAttribute("aria-hidden", "false");
-        btnClose.focus();
-        document.body.style.overflow = "hidden";
-      };
-
-      const close = () => {
-        overlay.classList.remove("is-open");
-        overlay.setAttribute("aria-hidden", "true");
-        document.body.style.overflow = "";
-        if (lastFocus && lastFocus.focus) lastFocus.focus();
-      };
-
-      const prev = () => open(idx - 1);
-      const next = () => open(idx + 1);
-
-      cards.forEach((card, i) => {
-        const img = card.querySelector("img");
-        img?.addEventListener("click", () => open(i));
-      });
-
-      btnClose?.addEventListener("click", close);
-      btnPrev?.addEventListener("click", prev);
-      btnNext?.addEventListener("click", next);
-
-      overlay.addEventListener("click", (e) => { if (e.target === overlay) close(); });
-
-      document.addEventListener("keydown", (e) => {
-        if (!overlay.classList.contains("is-open")) return;
-        if (e.key === "Escape") close();
-        if (e.key === "ArrowLeft") prev();
-        if (e.key === "ArrowRight") next();
-      });
-    })();
-  </script>
-</body>
+      <img id="previewImage" alt="" />
+    </dialog>
+  </body>
 </html>
