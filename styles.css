@@ -1109,3 +1109,18 @@ details[open] .service-plus {
     padding: 5px 0;
   }
 }
+
+/* Explicit intrinsic sizing prevents HTML height attributes stretching previews. */
+.project-image img {
+  height: auto;
+}
+.arrow-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.12em;
+  flex-shrink: 0;
+}
+.service-body li:before {
+  content: "+";
+}
