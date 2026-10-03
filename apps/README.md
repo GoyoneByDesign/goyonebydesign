@@ -10,9 +10,9 @@ Only add a platform to an app's downloads object after an actual installer is up
 
 ## Images
 
-MAX-ZETA, The Commissary, SavvyKin and StatusPing use Michael's supplied artwork. MAX-G and View4Real use existing project assets. Questrix and StockPilot use simple letter project marks, not newly claimed official logos.
+MAX-ZETA, The Commissary, SavvyKin and StatusPing use Michael's supplied artwork. MAX-ALPHA and View4Real use existing project assets. Questrix and StockPilot use simple letter project marks, not newly claimed official logos.
 
-Screenshots show real local interfaces: StatusPing, MAX-G, Questrix's seeded mock-feedback dashboard, StockPilot's seeded demo dashboard, and The Commissary's login with a synthetic email and empty password. View4Real uses its existing product-page illustration, explicitly labeled rather than described as a native app screenshot. MAX-ZETA's private workspace and SavvyKin's unavailable runtime use branded artwork, not fabricated screens.
+Screenshots show real local interfaces: StatusPing, MAX-ALPHA, Questrix's seeded mock-feedback dashboard, StockPilot's seeded demo dashboard, and The Commissary's login with a synthetic email and empty password. View4Real uses its existing product-page illustration, explicitly labeled rather than described as a native app screenshot. MAX-ZETA's private workspace and SavvyKin's unavailable runtime use branded artwork, not fabricated screens.
 
 StatusPing screenshot photography: Vidal Balielo Jr., https://www.pexels.com/photo/photo-of-family-walking-on-park-2880897/, Pexels license https://www.pexels.com/license/. Full source credit is also kept in StatusPing/docs/PHOTO_CREDITS.md.
 
@@ -22,4 +22,4 @@ Keep current installers in GitHub Releases and locally. Remove superseded tempor
 
 ## Installation and maintenance
 
-MAX-G links to `/apps/install.html` for separate web installation and updates. MyThang is included with unavailable native installers. SAVVYKIN has existing local Android source and a test APK, but its local backend configuration is not a public-ready release. See [MAINTENANCE.md](MAINTENANCE.md) for bounded release-artifact cleanup.
+MAX-ALPHA links to `/apps/install.html` for separate web installation and updates. MyThang is included with unavailable native installers. SAVVYKIN has existing local Android source and a test APK, but its local backend configuration is not a public-ready release. See [MAINTENANCE.md](MAINTENANCE.md) for bounded release-artifact cleanup.

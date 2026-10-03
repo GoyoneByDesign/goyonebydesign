@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#080e1b">
+  <meta name="description" content="MAX-ALPHA — your personal companion, with Cloudflare or local AI, thoughtful conversation, and connected tools.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="MAX-ALPHA">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://esm.run 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data: blob: https:; connect-src 'self' https: http://localhost:* http://127.0.0.1:*; worker-src 'self' https://cdn.jsdelivr.net blob:; media-src 'self' blob:; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+  <meta name="format-detection" content="telephone=no">
+  <title>MAX-ALPHA · Your personal companion</title>
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" type="image/png" href="./icons/icon-192.png">
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./updates.css">
+  <link rel="stylesheet" href="./connectors.css">
+  <link rel="stylesheet" href="./browser-panel.css">
+  <link rel="stylesheet" href="./extensions.css">
+  <link rel="stylesheet" href="./improvement.css">
+  <link rel="stylesheet" href="./profile.css">
+  <link rel="stylesheet" href="./locations.css">
+  <link rel="stylesheet" href="./device.css">
+  <link rel="stylesheet" href="./orbit.css">
+  <link rel="stylesheet" href="./voice-studio.css">
+  <link rel="stylesheet" href="./weather-card.css">
+  <script src="./launch-context.js" defer></script>
+  <link rel="stylesheet" href="./research-cards.css">
+  <link rel="stylesheet" href="./premium.css">
+  <link rel="stylesheet" href="./mobile-viewport.css">
+</head>
+<body data-view="chat">
+  <svg class="icon-definitions" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5H4l-1 1v-9.5a9 9 0 0 1 18 0Z"/><path d="M8 10h8M8 14h5"/></symbol>
+    <symbol id="i-work" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="14" rx="3"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12c5 3 13 3 18 0M10 13h4"/></symbol>
+    <symbol id="i-memory" viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v18H6.5A2.5 2.5 0 0 1 4 18.5Zm0 13A2.5 2.5 0 0 1 6.5 16H20M9 7h6M9 11h4"/></symbol>
+    <symbol id="i-learn" viewBox="0 0 24 24"><path d="m3 9 9-5 9 5-9 5Zm3 2v6c4 3 8 3 12 0v-6M21 9v7"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><path d="m9 3-1 3-3 1-2 3 2 2-1 3 2 3 3-.2 2 3h3l1-3 3-1 2-3-2-2 1-3-2-3-3 .2-2-3Z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M12 19V5m-6 6 6-6 6 6"/></symbol>
+    <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8"/></symbol>
+    <symbol id="i-volume" viewBox="0 0 24 24"><path d="m11 4-6 5H2v6h3l6 5ZM15 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/></symbol>
+    <symbol id="i-wave" viewBox="0 0 24 24"><path d="M3 10v4M7 6v12M12 3v18M17 7v10M21 10v4"/></symbol>
+    <symbol id="i-clip" viewBox="0 0 24 24"><path d="m9 12 6-6a3 3 0 0 1 4 4L9 20a5 5 0 0 1-7-7L13 2m-8 13 9-9"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/></symbol>
+    <symbol id="i-chip" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="3"/><path d="M9 2v4m6-4v4M9 18v4m6-4v4M2 9h4m-4 6h4m12-6h4m-4 6h4"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 15v5h16v-5"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="m12 3 2.7 6.3L21 12l-6.3 2.7L12 21l-2.7-6.3L3 12l6.3-2.7ZM20 2v4m-2-2h4"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1 1m12 12 1 1M5 19l1-1M18 6l1-1"/></symbol>
+    <symbol id="i-code" viewBox="0 0 24 24"><path d="m7 7-5 5 5 5m10-10 5 5-5 5m-3-14-4 18"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/></symbol>
+    <symbol id="i-location" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol>
+    <symbol id="i-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></symbol>
+  </defs></svg>
+
+  <a class="skip-link" href="#messageInput">Skip to conversation</a>
+  <div class="app-shell">
+    <aside id="sidebar" class="sidebar" aria-label="Main navigation">
+      <a class="brand" href="./" aria-label="MAX-ALPHA home"><img src="./icons/icon-192.png" width="40" height="40" alt=""><span>MAX-ALPHA<span class="brand-caption">YOUR PERSONAL COMPANION</span></span></a>
+      <button id="newChatBtn" class="button new-chat"><svg class="icon"><use href="#i-plus"/></svg>New conversation<span class="keyboard-hint">＋</span></button>
+      <nav class="main-nav" aria-label="Workspace">
+        <button class="nav-button active" data-view="chat" aria-current="page"><svg class="icon"><use href="#i-chat"/></svg>Conversation<span class="nav-dot"></span></button>
+        <button class="nav-button" data-view="work"><svg class="icon"><use href="#i-work"/></svg>Work studio</button>
+        <button class="nav-button" data-view="finance"><svg class="icon"><use href="#i-work"/></svg>Bills &amp; budget</button>
+        <button class="nav-button" data-view="places"><svg class="icon"><use href="#i-location"/></svg>Places &amp; directions</button>
+        <button class="nav-button" data-view="memory"><svg class="icon"><use href="#i-memory"/></svg>Memory</button>
+        <button class="nav-button" data-view="learn"><svg class="icon"><use href="#i-learn"/></svg>Learning</button>
+        <button class="nav-button" data-view="connectors"><svg class="icon"><use href="#i-work"/></svg>Connectors & devices</button>
+      </nav>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-section-title">RECENT CONVERSATIONS</div>
+      <div id="chatList" class="chat-list"><p class="empty-history">A fresh start. Your conversations will appear here.</p></div>
+      <div class="sidebar-bottom">
+        <div class="local-card"><span class="local-card-icon"><svg class="icon"><use href="#i-lock"/></svg></span><div><strong>Your MAX-ALPHA. Your choice.</strong><p id="inferenceProvider">Cloudflare or local AI.</p></div></div>
+        <div class="mg-maker-credit mg-maker-sidebar"><img src="./assets/goyonebydesign-logo.png" width="36" height="36" alt=""><span><small>Created by</small><strong>GoyoneByDesign</strong></span></div>
+        <button id="settingsBtn" class="profile-button"><span class="profile-avatar">MI</span><span><strong data-owner-name>Michael</strong><small id="storageStatus" role="status" aria-live="polite">Personal workspace</small></span><svg class="icon"><use href="#i-settings"/></svg></button>
+      </div>
+    </aside>
+    <button id="sidebarBackdrop" class="sidebar-backdrop" aria-label="Close navigation" tabindex="-1"></button>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="topbar-title"><button id="sidebarToggle" class="icon-button mobile-menu" aria-label="Toggle navigation" aria-controls="sidebar" aria-expanded="false"><svg class="icon"><use href="#i-menu"/></svg></button><span class="mobile-brand">MAX-ALPHA</span><span class="desktop-title">Personal companion</span><span class="edition-badge">WEB EDITION</span></div>
+        <div class="topbar-actions"><span id="networkStatus" class="status-pill"><span class="status-dot"></span>Checking connection</span><button id="quickCheckUpdatesBtn" type="button" class="button button-small">Check updates</button><button id="updateNoticeBtn" class="button button-small" hidden>Update available</button><button id="installBtn" class="button button-small" hidden><svg class="icon"><use href="#i-download"/></svg>Install</button></div>
+      </header>
+
+      <div class="engine-bar" role="region" aria-label="AI connection status"><span class="engine-symbol"><svg class="icon"><use href="#i-chip"/></svg></span><span id="modelStatus">Checking selected AI connection</span><button id="loadModelBtn" class="text-button">AI connection <span aria-hidden="true">↗</span></button><progress id="modelProgress" max="1" value="0" hidden aria-label="Model download progress"></progress><span id="modelProgressLabel" class="model-progress-label" aria-live="polite"></span><button id="stopTaskBtn" class="button button-small" type="button" hidden>Stop task</button></div>
+      <div id="inferenceNotice" class="inference-notice"><span id="inferenceDescription">Choose Cloudflare AI or local AI in Connection settings.</span><button id="inferenceSettingsBtn" class="text-button" type="button">AI settings</button></div>
+      <div id="compatibilityNotice" class="compatibility-notice" role="status" hidden></div>
+
+      <section id="chatView" class="chat-view" aria-label="Conversation with MAX-ALPHA">
+        <div id="liveOrbDock" class="live-orb-dock companion-header" aria-label="MAX-ALPHA companion">
+            <div class="orb-stage">
+              <div id="orb" class="orb" data-state="idle" data-emotion="neutral" role="img" aria-label="MAX-ALPHA, a glowing blue globe with expressive white eyes and an orbiting hoop">
+                <svg class="orb-art" viewBox="0 0 400 320" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <defs>
+                    <radialGradient id="orbBody" cx="31%" cy="20%" r="83%"><stop offset="0" stop-color="#b4ffff"/><stop offset=".18" stop-color="#2bdced"/><stop offset=".43" stop-color="#078fce"/><stop offset=".8" stop-color="#073678"/><stop offset="1" stop-color="#31e7ff"/></radialGradient>
+                    <radialGradient id="orbAmbient"><stop stop-color="#26c6ef" stop-opacity=".21"/><stop offset="1" stop-color="#26c6ef" stop-opacity="0"/></radialGradient>
+                    <linearGradient id="orbRing" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#eaffff"/><stop offset=".35" stop-color="#63efff"/><stop offset=".7" stop-color="#e7fbff"/><stop offset="1" stop-color="#409ee9"/></linearGradient>
+                    <linearGradient id="orbShine" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e1ffff" stop-opacity=".7"/><stop offset="1" stop-color="#e1ffff" stop-opacity="0"/></linearGradient>
+                    <filter id="orbGlow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5"/></filter>
+                    <filter id="eyeGlow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="3"/></filter>
+                  </defs>
+                  <ellipse class="orb-shadow" cx="200" cy="287" rx="66" ry="9" fill="#209cda" opacity=".12"/>
+                  <ellipse cx="200" cy="155" rx="190" ry="150" fill="url(#orbAmbient)"/>
+                  <g class="orb-character">
+                    <g class="hoop hoop-back"><ellipse cx="200" cy="159" rx="151" ry="43" transform="rotate(-22 200 159)" fill="none" stroke="#44daf9" stroke-width="10" opacity=".4" filter="url(#orbGlow)"/><ellipse cx="200" cy="159" rx="151" ry="43" transform="rotate(-22 200 159)" fill="none" stroke="url(#orbRing)" stroke-width="6"/></g>
+                    <circle cx="200" cy="151" r="100" fill="#2ee2f4" filter="url(#orbGlow)" opacity=".38"/>
+                    <circle class="orb-sphere" cx="200" cy="151" r="99" fill="url(#orbBody)" stroke="#8cf4ff" stroke-width="1.2"/>
+                    <ellipse cx="167" cy="94" rx="54" ry="22" transform="rotate(-30 167 94)" fill="url(#orbShine)"/>
+                    <path d="M112 143a90 90 0 0 1 88-82" fill="none" stroke="#c8ffff" stroke-width="2.5" opacity=".7" stroke-linecap="round"/>
+                    <g class="orb-face">
+                      <text class="orb-forehead-mark" x="200" y="113" text-anchor="middle" fill="#f6ffff" stroke="#74e9ff" stroke-width="0.5" font-family="Arial, sans-serif" font-size="37" font-weight="800">A</text>
+                      <g class="eye eye-left"><ellipse cx="168" cy="150" rx="9" ry="15" fill="#b5ffff" filter="url(#eyeGlow)"/><ellipse cx="168" cy="150" rx="8" ry="14" fill="#f6ffff"/><path class="happy-eye" d="M158 152Q168 136 178 152" fill="none" stroke="#f6ffff" stroke-width="5" stroke-linecap="round"/></g>
+                      <g class="eye eye-right"><ellipse cx="232" cy="150" rx="9" ry="15" fill="#b5ffff" filter="url(#eyeGlow)"/><ellipse cx="232" cy="150" rx="8" ry="14" fill="#f6ffff"/><path class="happy-eye" d="M222 152Q232 136 242 152" fill="none" stroke="#f6ffff" stroke-width="5" stroke-linecap="round"/></g>
+                      <g class="orb-blush"><ellipse cx="149" cy="171" rx="12" ry="5" fill="#fba3d5"/><ellipse cx="251" cy="171" rx="12" ry="5" fill="#fba3d5"/></g>
+                    </g>
+                    <g class="hoop hoop-front"><path d="M60 216c12 29 77 22 155-8s132-68 126-94" fill="none" stroke="#30dcf5" stroke-width="13" opacity=".6" filter="url(#orbGlow)"/><path d="M60 216c12 29 77 22 155-8s132-68 126-94" fill="none" stroke="url(#orbRing)" stroke-width="7" stroke-linecap="round"/><path d="M64 217c19 23 80 14 153-14s118-59 121-82" fill="none" stroke="#e6ffff" stroke-width="1.5" opacity=".8" stroke-linecap="round"/><circle class="hoop-glint" cx="114" cy="223" r="4" fill="white"/></g>
+                  </g>
+                </svg>
+                <span class="voice-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+              </div>
+            </div>
+          <div class="live-orb-caption"><strong>MAX-ALPHA</strong><span id="orbStatus">Here with you</span></div>
+        </div>
+        <div id="conversationScroll" class="conversation-scroll">
+          <div id="welcome" class="welcome">
+            <div class="welcome-eyebrow"><span></span> HERE FOR YOUR NEXT IDEA</div>
+            <h1 data-owner-greeting>What’s on your mind, Michael?</h1>
+            <p class="welcome-description">A little clarity. A new idea. Your next creation.<br>Let’s work on it together.</p>
+            <div class="suggestions" aria-label="Conversation starters">
+              <button class="suggestion" data-prompt="What is the weather today?"><svg class="icon"><use href="#i-sun"/></svg><span>Plan my day<small>Check today’s weather</small></span><span class="suggestion-arrow">↗</span></button>
+              <button class="suggestion" data-prompt="Convert 72 degrees Fahrenheit to Celsius."><svg class="icon"><use href="#i-spark"/></svg><span>Figure it out<small>Math &amp; conversions</small></span><span class="suggestion-arrow">↗</span></button>
+              <button class="suggestion" data-prompt="Help me plan and create a simple app."><svg class="icon"><use href="#i-code"/></svg><span>Make something<small>Bring an idea to life</small></span><span class="suggestion-arrow">↗</span></button>
+            </div>
+          </div>
+          <div id="messages" class="messages" role="log" aria-live="polite" aria-relevant="additions" aria-label="Messages"></div>
+        </div>
+        <div class="composer-area">
+          <div class="quick-controls" aria-label="AI preferences">
+            <button id="fastLocalBtn" type="button" class="text-button" aria-pressed="false">AI settings</button>
+            <div class="reply-modes" role="group" aria-label="Reply length"><button type="button" class="text-button" data-reply-length="Brief" aria-pressed="true">Brief</button><button type="button" class="text-button" data-reply-length="Detailed" aria-pressed="false">Detailed</button></div>
+          </div>
+          <div id="attachmentList" class="attachment-list" aria-label="Attached files"></div>
+          <form id="composerForm" class="composer" autocomplete="off">
+            <label for="messageInput" class="sr-only">Message MAX-ALPHA</label>
+            <textarea id="messageInput" rows="4" placeholder="Message MAX-ALPHA…" maxlength="24000" enterkeyhint="send" aria-describedby="composerHint"></textarea>
+            <div class="composer-toolbar"><div class="composer-left"><button id="attachBtn" class="icon-button" type="button" title="Attach documents, text or source files" aria-label="Attach files"><svg class="icon"><use href="#i-clip"/></svg></button><input id="fileInput" type="file" multiple hidden><span class="composer-divider"></span><button id="voiceModeBtn" class="voice-button" type="button" aria-pressed="false"><svg class="icon"><use href="#i-wave"/></svg><span>Talk with MAX-ALPHA</span></button></div><div class="composer-right"><button id="micBtn" class="icon-button mic-button" type="button" title="Dictate a message to the text box" aria-label="Dictate a message" aria-pressed="false"><svg class="icon"><use href="#i-mic"/></svg></button><button id="stopBtn" class="send-button stop-button" type="button" aria-label="Stop response" title="Stop response" hidden><svg class="icon"><use href="#i-stop"/></svg></button><button id="sendBtn" class="send-button" type="submit" aria-label="Send message" title="Send message"><svg class="icon"><use href="#i-arrow"/></svg></button></div></div>
+          </form>
+          <div class="voice-feedback"><p id="voiceFeedback" role="status" aria-live="polite" hidden></p><div class="voice-stop-actions"><button id="stopSpeechBtn" type="button" class="text-button" hidden>Stop voice</button><button id="playStopBtn" type="button" class="text-button" hidden>Stop play</button></div></div>
+          <details class="composer-more"><summary>More controls</summary><div class="composer-more-panel">
+          <div class="companion-play" role="group" aria-label="Play with MAX-ALPHA"><button id="singBtn" type="button" class="text-button">♫ Sing a new song</button><button id="danceBtn" type="button" class="text-button">Dance</button><span>Try “sing and dance”</span></div>
+          <div class="composer-support"><button id="askGeminiBtn" type="button" class="text-button" aria-haspopup="dialog">Ask Gemini <span class="support-cloud-label">optional cloud support</span></button></div>
+          <div class="voice-help-actions"><button id="soundHelpBtn" type="button" class="text-button">Sound help</button></div>
+          <p class="accuracy-note">Local AI can make mistakes. Check sources for important answers.</p>
+          <footer class="mg-maker-credit mg-maker-mobile" aria-label="MAX-ALPHA creator"><img src="./assets/goyonebydesign-logo.png" width="24" height="24" alt=""><span>Created by <strong>GoyoneByDesign</strong></span></footer>
+          </div></details>
+          <div class="composer-footer"><span id="composerHint">Enter to send · Shift + Enter for a new line</span><div class="voice-options"><label class="speak-toggle"><input id="speakReplies" type="checkbox"><span>Speak replies</span></label><button id="hearBtn" class="text-button" type="button"><svg class="icon"><use href="#i-volume"/></svg>Hear MAX-ALPHA</button></div></div>
+        </div>
+      </section>
+
+      <section id="workspaceView" class="workspace-view" hidden><header class="page-heading"><p class="eyebrow">YOUR PERSONAL WORKSPACE</p><h1 id="viewTitle">Work studio</h1><p id="viewSubtitle"></p></header><div id="viewPanel" class="view-panel"></div></section>
+    </main>
+  </div>
+
+  <dialog id="settingsDialog" class="settings-dialog" aria-labelledby="settingsTitle"><header class="dialog-header"><div><p class="eyebrow">MAKE YOURSELF AT HOME</p><h2 id="settingsTitle">MAX-ALPHA settings</h2></div><button id="closeSettingsBtn" class="icon-button" aria-label="Close settings"><svg class="icon"><use href="#i-close"/></svg></button></header><div class="settings-layout"><nav class="settings-tabs" aria-label="Settings categories"><button class="settings-tab" data-tab="profile">Profile</button><button class="settings-tab" data-tab="companion">Companion</button><button class="settings-tab" data-tab="display">Display &amp; animation</button><button class="settings-tab active" data-tab="general">General</button><button class="settings-tab" data-tab="extensions">Extensions</button><button class="settings-tab" data-tab="device">This device</button><button class="settings-tab" data-tab="updates">Install &amp; updates</button><button class="settings-tab" data-tab="connection">Connection</button><button class="settings-tab" data-tab="locations">Location &amp; maps</button><button class="settings-tab" data-tab="voice">Voice Studio</button><button class="settings-tab" data-tab="permissions">Permissions</button><button class="settings-tab" data-tab="memory">Memory &amp; data</button></nav><div id="settingsContent" class="settings-content"></div></div></dialog>
+  <dialog id="geminiDialog" class="settings-dialog gemini-dialog" aria-labelledby="geminiTitle" aria-describedby="geminiDisclosure">
+    <header class="dialog-header"><div><p class="eyebrow">OPTIONAL CLOUD SUPPORT</p><h2 id="geminiTitle">Ask Gemini</h2></div><button id="geminiCloseBtn" type="button" class="icon-button" aria-label="Close Gemini support">✕</button></header>
+    <form id="geminiForm" class="gemini-body">
+      <p id="geminiDisclosure">Only the text below goes through MAX-ALPHA’s Cloudflare Worker to Google. Your chat history, memory, profile and attachments are not included. Google may use free-tier requests and responses to improve its products. Use public, non-sensitive questions.</p>
+      <label class="field"><span>Question to share with Gemini</span><textarea id="geminiQuestion" rows="6" maxlength="4000" placeholder="Review or edit the exact question to send…" required></textarea></label>
+      <p class="small muted">Normal Send and Enter in MAX-ALPHA stay local. Your original draft and attachments stay in the composer. Gemini can make mistakes; its free tier has request limits.</p>
+      <p id="geminiStatus" role="status" aria-live="polite"></p>
+      <div class="gemini-actions"><button id="geminiSendBtn" type="submit" class="button button-primary">Send to Gemini</button><button id="geminiCancelBtn" type="button" class="button">Cancel</button><button id="geminiSettingsBtn" type="button" class="text-button">Connection settings</button></div>
+    </form>
+  </dialog>
+  <dialog id="soundDialog" class="settings-dialog sound-dialog" aria-labelledby="soundTitle"><header class="dialog-header"><div><p class="eyebrow">VOICE ON THIS DEVICE</p><h2 id="soundTitle">Let’s get the sound working</h2></div><button id="soundCloseBtn" type="button" class="icon-button" aria-label="Close sound help">✕</button></header><div class="sound-body"><p>First, play a short speaker test. It needs no voice download or microphone. This also resets MAX-ALPHA’s audio connection after a call or screen lock.</p><p id="soundStatus" class="sound-status" role="status" aria-live="polite">Turn up your media volume, then tap Play speaker test.</p><div class="sound-actions"><button id="testSpeakerBtn" class="button" type="button">Play speaker test</button><button id="soundRetryBtn" class="button" type="button">Try MAX-ALPHA’s voice</button><button id="soundStopBtn" class="button" type="button">Stop sound</button></div><ol><li>If the tone is silent, check media volume and the audio destination in iPhone Control Center. Sound may be going to Bluetooth headphones or another device.</li><li>Turn off Silent Mode if needed, keep MAX-ALPHA visible, and try the speaker test again.</li><li>If the tone works but speech does not, watch the voice status above. The natural voice downloads separately on each device; its first preparation can take a few minutes.</li></ol><p>Your iPhone has its own voice settings and downloads. A cloned voice needs the paired Mac companion; it does not automatically follow you to your phone.</p><button id="soundVoiceSettingsBtn" class="button" type="button">Open Voice Studio</button><p class="muted">Voice Studio also offers installed local system voices if this device cannot prepare a natural voice. No cloud voice service is used.</p></div></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <a id="downloadAnchor" hidden></a>
+  <noscript><div class="noscript-notice">MAX-ALPHA needs JavaScript for AI and its conversation tools. Enable JavaScript, then reload this page.</div></noscript>
+</body>
+</html>

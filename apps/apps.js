@@ -1,3 +1,4 @@
+if(location.hash==='#max-g')location.hash='max-alpha';
 const cards=[...document.querySelectorAll('.app-card')];
 const search=document.querySelector('#search');
 let filter='all';

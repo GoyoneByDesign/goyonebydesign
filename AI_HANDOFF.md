@@ -2,7 +2,7 @@
 
 ## September 26, 2026 — Homepage app navigation cleanup
 
-- Removed individual app shortcuts from the homepage top bar, navigation, hero and footer, including MAX-G install and MAX-ZETA links. Removed the separate SightSync/View4Real promotion; the existing Apps collection retains its product links and downloads.
+- Removed individual app shortcuts from the homepage top bar, navigation, hero and footer, including MAX-ALPHA install and MAX-ZETA links. Removed the separate SightSync/View4Real promotion; the existing Apps collection retains its product links and downloads.
 - Homepage navigation and footer use Apps. Homepage metadata now describes the whole collection; JavaScript no longer overwrites it with a single product title.
 - Added Questrix’s repository-documented Google AI Studio project link, labeled as AI Studio with possible owner sign-in. The Commissary and StockPilot remain visible with actual previews; their deployed web addresses have not been supplied or found, so launch links are pending. Do not invent addresses or label source repositories as running apps.
 - Checks: catalog validation (8 cards, 2 enabled native downloads, 22 disabled native controls), JavaScript syntax, homepage link audit, local browser navigation and catalog inspection. No app authentication or private business data was changed.
@@ -15,17 +15,17 @@
 - Two native download buttons are enabled (StatusPing Android and SightSync Windows); 22 unavailable platform buttons are disabled. Browser/PWA links stay separate. MAX-ZETA private screens and unavailable SavvyKin runtime are not fabricated.
 - Browser checks: desktop and 393x852 mobile, no horizontal overflow, available filter selects two cards, name search/empty state, dialog opening/closing and disabled platform controls. No real messages, forms, inventory changes or external app provider actions were submitted.
 - GitHub Pages publishes main at the repository root. Verify the live /apps/ URL and final synchronization after pushing; source code checks alone do not prove deployment.
-- Deployment verified September 26: GitHub Pages run 36277599779 succeeded; https://www.goyonebydesign.com/apps/ returned HTTP 200 and was inspected in the browser. Published filters showed the two downloadable apps, both real release URLs, and 22 disabled platform controls. Homepage navigation was then compacted by grouping MAX-G/MAX-ZETA under Applications; their app links remain in the gallery.
+- Deployment verified September 26: GitHub Pages run 36277599779 succeeded; https://www.goyonebydesign.com/apps/ returned HTTP 200 and was inspected in the browser. Published filters showed the two downloadable apps, both real release URLs, and 22 disabled platform controls. Homepage navigation was then compacted by grouping MAX-ALPHA/MAX-ZETA under Applications; their app links remain in the gallery.
 - Cleanup limitation: automatic approval review blocked recursive deletion of obsolete StatusPing build folders and the temporary Questrix/Commissary preview dependencies. They remain locally. Preview servers for those two apps were stopped; source and private exports were preserved.
 
 ## Project and source map
 
-This repository contains the public website (`index.html`, `app.js`, `styles.css`), product pages (`max/`, `view4real/`, `sightsync/`, `pmix/`), a MAX-G browser copy in `max-g/`, and the PMIX application in `pmix-app/`. Select the relevant component before editing. The standalone MAX-G repository is separate; do not silently replace either copy with the other.
+This repository contains the public website (`index.html`, `app.js`, `styles.css`), product pages (`max/`, `view4real/`, `sightsync/`, `pmix/`), a MAX-ALPHA browser copy in `max-alpha/`, and the PMIX application in `pmix-app/`. Select the relevant component before editing. The standalone MAX-ALPHA repository is separate; do not silently replace either copy with the other.
 
 ## Setup and verification
 
 - Static website: from the repository root, run `python3 -m http.server 8765 --bind 127.0.0.1`; on Windows use `py -m http.server 8765 --bind 127.0.0.1`. Visit http://127.0.0.1:8765 and check changed pages and asset links.
-- MAX-G browser copy: Node.js 22 or newer. From `max-g`, run `npm test`. See `max-g/README.md` for setup.
+- MAX-ALPHA browser copy: Node.js 22 or newer. From `max-alpha`, run `npm test`. See `max-alpha/README.md` for setup.
 - PMIX: from `pmix-app`, run `npm ci`, `npm test`, and `npm run build`. Read `pmix-app/README.md` and `pmix-app/.env.example` before using external services or deployment.
 - There is no root package manifest; run package commands in the appropriate component directory.
 
@@ -61,4 +61,11 @@ Prepared September 26, 2026 from repository documentation and manifests. This is
 
 ## September 26 — Catalog completion and release retention
 
-Preserved the concurrently published catalog, its official artwork/screenshots, compact homepage navigation, and public StatusPing/SightSync release links. Added MyThang (nine apps), MAX-G web install/update help, corrected SAVVYKIN local source/build availability, and a bounded release cleanup script with nine retention/refusal tests. The source of truth remains apps/catalog.json with scripts/build-apps.mjs. See apps/MAINTENANCE.md. No native app binary or private runtime data was changed. Published bytes and responsive browser behavior are verified in the accompanying release report; physical device testing remains pending.
+Preserved the concurrently published catalog, its official artwork/screenshots, compact homepage navigation, and public StatusPing/SightSync release links. Added MyThang (nine apps), MAX-ALPHA web install/update help, corrected SAVVYKIN local source/build availability, and a bounded release cleanup script with nine retention/refusal tests. The source of truth remains apps/catalog.json with scripts/build-apps.mjs. See apps/MAINTENANCE.md. No native app binary or private runtime data was changed. Published bytes and responsive browser behavior are verified in the accompanying release report; physical device testing remains pending.
+
+
+## October 3, 2026 — MAX-ALPHA identity update
+
+Renamed active MAX-ALPHA UI, persona text, manifests, exports, documentation, test filenames and website catalog/path. Added a centered A to the native SVG character and generated install-icon artwork. The A uses existing real processing/speaking signals, pulses gently, is idle-off and static with reduced motion. Occasional natural blinks also respect reduced motion. Preserved separate website/app baselines, personal storage/native bridges, existing cloud service endpoints, repository history, homepage and unrelated apps. Legacy website/install route migration preserves query/hash and user data.
+
+Verification: dedicated application baseline tests plus branding/activity tests, JavaScript syntax, release manifest integrity and catalog validation. Browser preview at loopback is blocked in the cloud browser; published verification will be reported after Pages completes. No live API calls, fees, credential changes or native-device tests. GitHub repository metadata rename was completed by the owner and verified with stable repository ID 1389535974. See RENAME-COMPATIBILITY.md in the application directory.

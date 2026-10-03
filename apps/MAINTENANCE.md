@@ -2,7 +2,7 @@
 
 The source of truth is `apps/catalog.json`. Run `node scripts/build-apps.mjs` and `node scripts/check-apps.mjs` after edits. Preserve approved logos, real screenshot captions, native versus web labels, and private workspace access controls. Platform links must identify an actual public installer; missing platforms remain disabled. Installation instructions live at `/apps/install.html`.
 
-Current catalog: nine apps, StatusPing Android test APK, legacy SightSync Windows EXE, MAX-G web installation, and the existing private MAX-ZETA web workspace. MyThang has no signed iPhone distribution build. SAVVYKIN has local Android source and a debug APK configured for a local test backend, not a public-ready release. Physical phone/Windows installation remains a separate validation step.
+Current catalog: nine apps, StatusPing Android test APK, legacy SightSync Windows EXE, MAX-ALPHA web installation, and the existing private MAX-ZETA web workspace. MyThang has no signed iPhone distribution build. SAVVYKIN has local Android source and a debug APK configured for a local test backend, not a public-ready release. Physical phone/Windows installation remains a separate validation step.
 
 ## Save a release
 
@@ -19,4 +19,4 @@ Run `python3 scripts/clean-app-releases.py` to preview. After release and backup
 
 The script keeps the two newest registered releases per app/platform, files linked by the catalog, every unregistered file, and legacy paths outside `downloads/releases/`. Changed hashes, duplicate records, path traversal and symlinks stop the operation. Source, user data, signing keys, personal Downloads and Git history are outside its scope. It does not delete GitHub Release assets or Drive backups; those need separate inventory and replacement verification.
 
-This is a release-time workflow, not a background deletion service. Updating the catalog does not automatically replace native applications installed on a phone. MAX-G already handles its own web-interface updates. The initial cleanup inventory has no obsolete files, so no application artifacts were deleted.
+This is a release-time workflow, not a background deletion service. Updating the catalog does not automatically replace native applications installed on a phone. MAX-ALPHA already handles its own web-interface updates. The initial cleanup inventory has no obsolete files, so no application artifacts were deleted.
