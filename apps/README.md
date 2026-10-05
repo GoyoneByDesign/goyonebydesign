@@ -22,4 +22,4 @@ Keep current installers in GitHub Releases and locally. Remove superseded tempor
 
 ## Installation and maintenance
 
-MAX-ALPHA links to `/apps/install.html` for separate web installation and updates. MyThang is included with unavailable native installers. SAVVYKIN has existing local Android source and a test APK, but its local backend configuration is not a public-ready release. See [MAINTENANCE.md](MAINTENANCE.md) for bounded release-artifact cleanup.
+MAX-ALPHA links to `/apps/install.html` for separate web installation and updates. MyThang was removed from the public catalog on October 5, 2026; its source project and existing artwork are preserved. SAVVYKIN has existing local Android source and a test APK, but its local backend configuration is not a public-ready release. See [MAINTENANCE.md](MAINTENANCE.md) for bounded release-artifact cleanup.

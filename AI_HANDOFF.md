@@ -1,5 +1,12 @@
 # goyonebydesign — AI handoff
 
+## October 5, 2026 — MyThang catalog removal
+
+- Removed MyThang from the public catalog, icon navigation, and installation help. Preserved its source project, artwork and history. The public page now has nine cards; the remaining cards and download URLs are unchanged.
+- Used a targeted HTML update because the existing generated page includes BOARDROOM and a site-local SavvyKin download that the current generator does not preserve. Do not regenerate the page until that existing source/render drift is reconciled.
+- Checks: JavaScript syntax and whitespace validation passed. Focused checks confirm every remaining catalog record and rendered card is unchanged, the displayed count is nine, the three existing installer links and 21 disabled controls remain, and referenced artwork exists.
+- Existing aggregate check limitation: `node scripts/check-apps.mjs` fails its final card-count assertion both before (10 rendered / 9 records) and after (9 rendered / 8 records), because BOARDROOM exists only in the rendered page. This unrelated mismatch was not changed. GitHub Pages and live-browser publication are verified separately after synchronization.
+
 ## September 26, 2026 — Homepage app navigation cleanup
 
 - Removed individual app shortcuts from the homepage top bar, navigation, hero and footer, including MAX-ALPHA install and MAX-ZETA links. Removed the separate SightSync/View4Real promotion; the existing Apps collection retains its product links and downloads.

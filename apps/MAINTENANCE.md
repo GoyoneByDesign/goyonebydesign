@@ -2,7 +2,7 @@
 
 The source of truth is `apps/catalog.json`. Run `node scripts/build-apps.mjs` and `node scripts/check-apps.mjs` after edits. Preserve approved logos, real screenshot captions, native versus web labels, and private workspace access controls. Platform links must identify an actual public installer; missing platforms remain disabled. Installation instructions live at `/apps/install.html`.
 
-Current catalog: nine apps, StatusPing Android test APK, legacy SightSync Windows EXE, MAX-ALPHA web installation, and the existing private MAX-ZETA web workspace. MyThang has no signed iPhone distribution build. SAVVYKIN has local Android source and a debug APK configured for a local test backend, not a public-ready release. Physical phone/Windows installation remains a separate validation step.
+Current public page: nine apps (eight catalog records plus the existing BOARDROOM card), StatusPing Android test APK, legacy SightSync Windows EXE, MAX-ALPHA web installation, and the existing private MAX-ZETA web workspace. MyThang was removed from the public catalog on October 5, 2026; its source project and existing artwork are preserved. SAVVYKIN has local Android source and a debug APK configured for a local test backend, not a public-ready release. Physical phone/Windows installation remains a separate validation step.
 
 ## Save a release
 

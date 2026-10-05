@@ -159,21 +159,5 @@
     },
     "sha256": "386b087eb1fc21f0defc151635169368456d3c842e77beba6cd696de704a5c4b",
     "bytes": 14614771
-  },
-  {
-    "id": "mythang",
-    "name": "MyThang",
-    "category": "Local deals",
-    "status": "In development",
-    "icon": "mythang.png",
-    "caption": "Existing MyThang project artwork. A signed iPhone release is not available.",
-    "description": "An iPhone project for browsing nearby grocery and retail deals, organizing store visits and exploring discounts.",
-    "features": [
-      "Nearby stores",
-      "Deal browsing",
-      "SwiftUI prototype"
-    ],
-    "note": "SwiftUI source and a simulator build exist. The current catalog uses sample deals. No signed iPhone distribution build, Android APK or Windows installer is available.",
-    "downloads": {}
   }
 ]
