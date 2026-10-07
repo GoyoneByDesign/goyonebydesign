@@ -2,7 +2,9 @@
 
 The source of truth is `apps/catalog.json`. Run `node scripts/build-apps.mjs` and `node scripts/check-apps.mjs` after edits. Preserve approved logos, real screenshot captions, native versus web labels, and private workspace access controls. Platform links must identify an actual public installer; missing platforms remain disabled. Installation instructions live at `/apps/install.html`.
 
-Current public page: nine apps (eight catalog records plus the existing BOARDROOM card), StatusPing Android test APK, legacy SightSync Windows EXE, MAX-ALPHA web installation, and the existing private MAX-ZETA web workspace. MyThang was removed from the public catalog on October 5, 2026; its source project and existing artwork are preserved. SAVVYKIN has local Android source and a debug APK configured for a local test backend, not a public-ready release. Physical phone/Windows installation remains a separate validation step.
+Prepared catalog: nine app records including BOARDROOM, three verified existing test downloads (StatusPing v0.1.0 Android, legacy SightSync v0.1.0 Windows, and legacy SavvyKin v0.36 Android), MAX-ALPHA web installation, and private MAX-ZETA/BOARDROOM launch links. JustMyPick is the confirmed replacement display name for SavvyKin; its new v0.37 source work is not represented as an installer. MyThang remains removed at the owner’s prior request; its source and artwork are preserved. Physical phone/Windows installation remains a separate validation step.
+
+The generator now retains the complete nine-app inventory, explicit download URLs, legacy package labeling and per-download integrity metadata. `check-apps.mjs` validates local package bytes and hashes, exact rendered destinations, native availability and the requested MyThang removal. Publication is a separate authorized step; local preparation alone does not change the live site.
 
 ## Save a release
 

@@ -1,5 +1,14 @@
 # goyonebydesign — AI handoff
 
+## October 7, 2026 — Existing public app-hub corrections
+
+- Reconciled BOARDROOM into the nine-record catalog so regeneration preserves the existing private-app launch card. Kept MyThang removed, the same three existing public test downloads, their exact destinations and checksums, and all private app access controls unchanged.
+- Corrected explicit download URL handling, development filters, legacy anchors and legacy/native-build labels. Updated JustMyPick display branding while clearly identifying the old SavvyKin v0.36 APK; no new APK, iPhone package, Windows EXE or private source archive is published.
+- Catalog metadata identifies the already-live MAX-ALPHA v1.16.2 / build 223 and MAX-ZETA v3.61.0 / build 84. View4Real v0.2.1 is labeled source work only; its existing SightSync v0.1.0 download remains a legacy test.
+- Based publication on current website main ac97b0747f9e04b4290c24b4ddc7d81784f90061. Preserve every MAX-ALPHA runtime/release byte and its cancellation/import fix. The earlier October 7 MAX-ALPHA handoff remains below.
+- Verification for this update: nine catalog records, three installer links and 21 disabled platform buttons; five simulated UI cases; nine release-cleanup tests using temporary fixtures only; JavaScript syntax, deterministic generation, scoped-diff and whitespace checks. Re-run these against final source before publication. Prior anonymous package integrity checks were completed October 6. No physical-device, signing, or real-browser/responsive-layout verification is claimed; the previously canceled cloud browser action is not retried.
+- Owner requested publication October 7. GitHub Pages publishes main automatically; verify the exact remote commit, Pages success and served asset bytes before reporting the hub live. No provider activation, credential setup, payment or private-access changes belong to this update.
+
 ## October 5, 2026 — MyThang catalog removal
 
 - Removed MyThang from the public catalog, icon navigation, and installation help. Preserved its source project, artwork and history. The public page now has nine cards; the remaining cards and download URLs are unchanged.

@@ -1,8 +1,9 @@
-if(location.hash==='#max-g')location.hash='max-alpha';
+const legacyAnchors={'#max-g':'max-alpha','#savvykin':'justmypick'};
+if(legacyAnchors[location.hash])location.hash=legacyAnchors[location.hash];
 const cards=[...document.querySelectorAll('.app-card')];
 const search=document.querySelector('#search');
 let filter='all';
-function update(){let count=0;for(const card of cards){const match=card.dataset.search.toLowerCase().includes(search.value.trim().toLowerCase());const ready=card.dataset.downloadable==='true';const developing=card.querySelector('.status').textContent==='In development';card.hidden=!(match&&(filter==='all'||(filter==='downloads'&&ready)||(filter==='development'&&developing)));if(!card.hidden)count++;}document.querySelector('#results').textContent=`${count} application${count===1?'':'s'}`;document.querySelector('#empty').hidden=count!==0;}
+function update(){let count=0;for(const card of cards){const match=card.dataset.search.toLowerCase().includes(search.value.trim().toLowerCase());const ready=card.dataset.downloadable==='true';const developing=card.dataset.development==='true';card.hidden=!(match&&(filter==='all'||(filter==='downloads'&&ready)||(filter==='development'&&developing)));if(!card.hidden)count++;}document.querySelector('#results').textContent=`${count} application${count===1?'':'s'}`;document.querySelector('#empty').hidden=count!==0;}
 search.addEventListener('input',update);
 document.querySelectorAll('[data-filter]').forEach(button=>button.addEventListener('click',()=>{filter=button.dataset.filter;document.querySelectorAll('[data-filter]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));update();}));
 document.querySelectorAll('.icon-wall a').forEach(a=>a.addEventListener('click',()=>{filter='all';search.value='';document.querySelectorAll('[data-filter]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.filter==='all')));update();}));
