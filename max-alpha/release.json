@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "version": "1.16.1",
-  "build": 222,
+  "version": "1.16.2",
+  "build": 223,
   "min_companion_build": 205,
   "files": [
     {
@@ -56,8 +56,8 @@
     },
     {
       "path": "app.js",
-      "sha256": "2d6cb26bd80948e8b9dc7e90c87fde6e2baecc39d9f8afa6b8d1dbf68c84d7e9",
-      "bytes": 150890
+      "sha256": "615c8dec21f26c1607845d9e3522300528e0cb389cbdb059a674f3644ee1c252",
+      "bytes": 150938
     },
     {
       "path": "assets/goyonebydesign-logo.png",
@@ -306,7 +306,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "8fe3eda8cc2c1456165baae3f7f809e18be45d9bdbc266985e0fa83f41e60454",
+      "sha256": "e649b85362f3343d98bfd3eb07c8e71d7f040a229739a2dfb25ee7f7dd5622ec",
       "bytes": 259
     },
     {
@@ -346,7 +346,7 @@
     },
     {
       "path": "release-version.js",
-      "sha256": "7a3dc32f9e84024fd214839aaefd776010c21b7bb570416308b14649bcab771a",
+      "sha256": "b0ec8769f6f0b1448c362bcb1fddaa816fa798d12f3ee42dbf380d058ee8a76f",
       "bytes": 155
     },
     {
@@ -406,7 +406,7 @@
     },
     {
       "path": "sw.js",
-      "sha256": "a58d87c4583d41d39c375580d709dd7abe2a515f1f6f3d47134c4073d756bce0",
+      "sha256": "ff0151002c723056d2fc090f04cabe42cf060de641afc0d32ff889842d5e87ce",
       "bytes": 8491
     },
     {
