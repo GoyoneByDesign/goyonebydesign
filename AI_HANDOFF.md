@@ -1,5 +1,12 @@
 # goyonebydesign — AI handoff
 
+## October 9, 2026 — Selected Questrix Dialogue Q branding
+
+- Replaced the generic Questrix project mark on the homepage, app-gallery card and gallery icon navigation with Michael’s selected concept 1, Dialogue Q. Added its matching transparent wordmark on light panels; original production artwork is reused without redrawing.
+- Preserved the existing development screenshot and identified the selected branding as card artwork. No Questrix runtime, application internals, authentication, other project branding or site layout was changed.
+- Rollback baseline: 82613a867803639c983964c35e4bf075a12030d9, retained as backup/pre-questrix-logo-2026-10-09, plus a verified full-history Git bundle. Source tests, deterministic regeneration, asset checks and a scoped revert dry-run are required before publication. Browser launch remains unavailable in this environment; artwork pixels were inspected directly.
+
+
 ## October 9, 2026 — Approved public portfolio redesign
 
 - Applied Michael’s approved portfolio composition with his requested charcoal background, warm-white typography, Manrope display / DM Sans body fonts and orange-red accent. Font files are self-hosted with their OFL licenses. Photographs remain bright and unfiltered, with no dark overlay.

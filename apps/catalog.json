@@ -153,9 +153,9 @@
     "name": "Questrix",
     "category": "Surveys & insights",
     "status": "In development",
-    "icon": "questrix.svg",
+    "icon": "questrix-dialogue-q-icon.png",
     "screen": "questrix-screen.png",
-    "caption": "Actual development interface; project mark shown in the card.",
+    "caption": "Actual development interface; selected Dialogue Q branding shown on this card.",
     "description": "Create surveys, collect responses, and turn feedback into useful insights. A developing workspace for teams and shareable questionnaires.",
     "features": [
       "Survey builder",

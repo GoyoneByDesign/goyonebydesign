@@ -12,7 +12,7 @@ Only add a platform to an app's downloads object after an actual installer is up
 
 ## Images
 
-MAX-ZETA, The Commissary, SavvyKin and StatusPing use Michael's supplied artwork. MAX-ALPHA and View4Real use existing project assets. Questrix uses its existing simple letter project mark. StockPilot now uses Michael’s original supplied teal/navy app icon and primary logo, reused without redrawing.
+MAX-ZETA, The Commissary, SavvyKin and StatusPing use Michael's supplied artwork. MAX-ALPHA and View4Real use existing project assets. Questrix uses Michael’s selected Dialogue Q logo and icon, reused from the approved transparent production assets; its existing development screenshot is unchanged. StockPilot now uses Michael’s original supplied teal/navy app icon and primary logo, reused without redrawing.
 
 Screenshots show real local interfaces: StatusPing, MAX-ALPHA, Questrix's seeded mock-feedback dashboard, StockPilot's seeded demo dashboard, and The Commissary's login with a synthetic email and empty password. View4Real uses its existing product-page illustration, explicitly labeled rather than described as a native app screenshot. MAX-ZETA’s private workspace and JustMyPick’s unavailable runtime use branded artwork, not fabricated screens. JustMyPick’s Happy Bag SVG is copied from the current iOS source artwork; BOARDROOM uses the established Goyone By Design logo.
 
