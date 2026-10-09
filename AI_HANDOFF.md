@@ -1,5 +1,16 @@
 # goyonebydesign — AI handoff
 
+## October 9, 2026 — Approved public portfolio redesign
+
+- Applied Michael’s approved portfolio composition with his requested charcoal background, warm-white typography, Manrope display / DM Sans body fonts and orange-red accent. Font files are self-hosted with their OFL licenses. Photographs remain bright and unfiltered, with no dark overlay.
+- Reused the original supplied GoyoneByDesign, Anita’s and StockPilot artwork. StockPilot’s original teal/navy icon and primary logo replace the generic letter mark. Actual Arlington photography and the explicitly labeled Bull Run design mockup remain distinct.
+- Homepage and /apps/ are public portfolio surfaces: project purpose, features, authentic previews and honest development notes. Public gallery launch/download controls are removed. Owner sign-in at /owner/ redirects to the separately hosted owner-private hub: https://goyone-owner-hub.michaelgoyone78.chatgpt.site . This is genuine platform-restricted access, not a browser PIN gate.
+- Preserved existing /pmix/, /max/, /boardroom/ redirects, all MAX-ALPHA / PMIX runtime bytes, DNS/CNAME, original installers and release URLs. Existing public source, binaries and GitHub history remain public; placing links in the private hub does not make these artifacts confidential. Additional private hosting/migration is a separate security task.
+- Retained the existing Formspree destination and contact fields, with a single validated submit handler and error recovery. No contact message was sent during tests.
+- Rollback baseline: 2a047aca9f3081bcac7bd3996d1646bacb52b088, retained as backup/pre-redesign-2026-10-09. A full-history Git bundle and exact 302-file baseline archive were verified before edits. Roll back through a history-preserving revert of the scoped redesign commit, without force push or overwriting concurrent unrelated work.
+- Source verification: nine catalog cards, all asset/local-link checks, preserved installer checksum metadata, five existing catalog UI simulations, four portfolio interaction/contact simulations, nine release-cleanup tests, deterministic generation, JavaScript syntax and whitespace checks. Chromium launch failed due environment socket permissions, including the elevated retry: visual/responsive browser QA and real contact delivery are not claimed. Deployment and served-byte checks are recorded in the task result.
+
+
 ## October 7, 2026 — Existing public app-hub corrections
 
 - Reconciled BOARDROOM into the nine-record catalog so regeneration preserves the existing private-app launch card. Kept MyThang removed, the same three existing public test downloads, their exact destinations and checksums, and all private app access controls unchanged.

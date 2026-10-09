@@ -21,7 +21,7 @@ for(const app of apps){
   assert.ok(html.includes(`id="${app.id}"`),`${app.id} is rendered`);
   for(const link of [app.web,app.install,app.releaseNotes].filter(Boolean)){
     assert.ok(validUrl(link),`${app.id} uses a safe destination`);
-    assert.ok(html.includes(`href="${escape(link)}"`),`${app.id} destination is rendered`);
+    assert.ok(!html.includes(`href="${escape(link)}"`),`${app.id} application destination is not exposed as a gallery launch control`);
     if(link.startsWith('/')){
       const pathname=link.split('#')[0];
       assert.ok(fs.existsSync(path.join(root,pathname.endsWith('/')?pathname+'index.html':pathname)),link);
@@ -35,7 +35,7 @@ for(const app of apps){
     assert.match(download.verified,/^\d{4}-\d{2}-\d{2}$/,'Verification date');
     const url=download.url||release+download.file;
     assert.ok(validUrl(url));
-    assert.ok(html.includes(`href="${escape(url)}"`),'Exact verified URL is rendered');
+    assert.ok(!html.includes(`href="${escape(url)}"`),'Installer is not a public gallery control');
     if(url.startsWith('/')){
       const bytes=fs.readFileSync(path.join(root,url));
       assert.equal(bytes.length,download.bytes);
@@ -46,12 +46,13 @@ for(const app of apps){
   if(app.compact)assert.equal(Object.keys(app.downloads).length,0,'Compact cards cannot hide downloads');
   else disabled+=3-Object.keys(app.downloads).length;
 }
-assert.equal((html.match(/class="download active"/g)||[]).length,enabled);
-assert.equal((html.match(/class="download" disabled/g)||[]).length,disabled);
+assert.equal((html.match(/class="download active"/g)||[]).length,0);
+assert.equal((html.match(/class="download" disabled/g)||[]).length,0);
 assert.equal((html.match(/<article class="app-card"/g)||[]).length,apps.length);
 assert.ok(html.includes(`${apps.length} applications`),'Accurate app count');
 assert.ok(apps.some(a=>a.id==='boardroom'),'Preserve BOARDROOM');
 assert.ok(!apps.some(a=>a.id==='mythang'),'Preserve requested MyThang removal');
 assert.ok(apps.find(a=>a.id==='justmypick').downloads.android.label.includes('Legacy'),'Old SavvyKin build stays labeled');
 assert.ok(apps.find(a=>a.id==='view4real').downloads.windows.label.includes('Legacy'),'Old SightSync build stays labeled');
-console.log(`${apps.length} apps; ${enabled} verified installer links; ${disabled} disabled platform buttons; all assets, local routes and catalog/download metadata pass.`);
+assert.ok(html.includes('href="/owner/"'),'Owner entry links to the separately protected hub');
+console.log(`${apps.length} preview-only app cards; ${enabled} preserved installer records; no public gallery launch/download controls; assets, routes and catalog metadata pass.`);

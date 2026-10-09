@@ -175,7 +175,7 @@
     "name": "StockPilot",
     "category": "Commerce operations",
     "status": "In development",
-    "icon": "stockpilot.svg",
+    "icon": "stockpilot-original-icon.png",
     "screen": "stockpilot-screen.png",
     "caption": "Actual local interface with seeded demonstration data, not live sales.",
     "description": "Bring products, suppliers, pricing, and orders into one self-hosted workspace. Review changes before connecting them to your store.",

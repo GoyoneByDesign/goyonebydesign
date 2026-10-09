@@ -1,6 +1,6 @@
 # Application catalog
 
-The public catalog lives at https://www.goyonebydesign.com/apps/. The catalog includes BOARDROOM in its source data, honors explicit per-download URLs, and preserves legacy app-name anchors. Edit catalog.json, then run `node scripts/build-apps.mjs` from the repository root. The generated HTML works without JavaScript; JavaScript adds filters and preview dialogs. Run `node --test scripts/test-apps-ui.mjs` for source-level filter/search/preview checks; these do not replace visual browser QA. Serve the root directory to preview.
+The public catalog lives at https://www.goyonebydesign.com/apps/. The public catalog is preview-only: mission, features, authentic imagery, and development notes. App launch/download controls live in the separately owner-private hub linked through /owner/. Existing public legacy binaries remain public at their original URLs; hub sign-in does not change that. Catalog metadata retains exact legacy download records and private app destinations for maintenance, but the public generator does not render them as controls. BOARDROOM and legacy app-name anchors are preserved. Edit catalog.json, then run `node scripts/build-apps.mjs` from the repository root. The generated HTML works without JavaScript; JavaScript adds filters and preview dialogs. Run `node --test scripts/test-apps-ui.mjs` for source-level filter/search/preview checks; these do not replace visual browser QA. Serve the root directory to preview.
 
 ## Downloads
 
@@ -12,7 +12,7 @@ Only add a platform to an app's downloads object after an actual installer is up
 
 ## Images
 
-MAX-ZETA, The Commissary, SavvyKin and StatusPing use Michael's supplied artwork. MAX-ALPHA and View4Real use existing project assets. Questrix and StockPilot use simple letter project marks, not newly claimed official logos.
+MAX-ZETA, The Commissary, SavvyKin and StatusPing use Michael's supplied artwork. MAX-ALPHA and View4Real use existing project assets. Questrix uses its existing simple letter project mark. StockPilot now uses Michael’s original supplied teal/navy app icon and primary logo, reused without redrawing.
 
 Screenshots show real local interfaces: StatusPing, MAX-ALPHA, Questrix's seeded mock-feedback dashboard, StockPilot's seeded demo dashboard, and The Commissary's login with a synthetic email and empty password. View4Real uses its existing product-page illustration, explicitly labeled rather than described as a native app screenshot. MAX-ZETA’s private workspace and JustMyPick’s unavailable runtime use branded artwork, not fabricated screens. JustMyPick’s Happy Bag SVG is copied from the current iOS source artwork; BOARDROOM uses the established Goyone By Design logo.
 
