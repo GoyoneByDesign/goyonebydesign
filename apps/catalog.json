@@ -64,14 +64,14 @@
       "Reading preferences",
       "Windows desktop"
     ],
-    "note": "VIEW4REAL development and test work is being verified. A current Windows package must be published and its download bytes verified before a download is enabled. No Android or iOS installer is available.",
+    "note": "VIEW4REAL v0.2.2 unsigned Windows portable test package passed its build, browser UI tests and native window launch/close checks locally. Hardware brightness and interactive native controls remain unverified. The corrected package is not yet published here. No Android or iOS installer is available.",
     "web": "/view4real/",
     "webLabel": "Explore VIEW4REAL",
     "downloads": {},
     "development": true,
-    "platforms": "Legacy Windows x64 test",
-    "version": "Current source v0.2.1",
-    "access": "Current test publication pending"
+    "platforms": "Windows x64 test",
+    "version": "Windows test v0.2.2",
+    "access": "Verified local test; publication pending"
   },
   {
     "id": "max-alpha",
