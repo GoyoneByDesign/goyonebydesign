@@ -52,35 +52,26 @@
   },
   {
     "id": "view4real",
-    "name": "View4Real / SightSync",
+    "name": "VIEW4REAL",
     "category": "Display comfort",
     "status": "New build in development",
     "icon": "view4real.svg",
     "screen": "view4real-screen.png",
-    "caption": "Current View4Real product-page illustration; the download is the earlier SightSync build.",
-    "description": "Keep your display preferences together, with profiles for reading, work, and evening screen time. View4Real is the next chapter of SightSync.",
+    "caption": "VIEW4REAL display-comfort preview. Current native test-package publication is pending.",
+    "description": "Keep your display preferences together, with profiles for reading, work, and evening screen time.",
     "features": [
       "Display profiles",
       "Reading preferences",
       "Windows desktop"
     ],
-    "note": "Current View4Real v0.2.1 is source work; no new Windows installer is verified. The available download is legacy SightSync v0.1.0 only. Trusted signing and current Windows-device testing are pending. No Android or iOS installer.",
+    "note": "VIEW4REAL development and test work is being verified. A current Windows package must be published and its download bytes verified before a download is enabled. No Android or iOS installer is available.",
     "web": "/view4real/",
-    "webLabel": "Explore View4Real",
-    "downloads": {
-      "windows": {
-        "file": "SightSync_0.1.0_x64-setup.exe",
-        "label": "v0.1.0 · Legacy preview",
-        "sha256": "6abdd13a368b1d6f9c5525d202e6d34efc9aece4988ee299dc4b20be13d6c357",
-        "bytes": 2569135,
-        "verified": "2026-10-06",
-        "name": "SightSync legacy preview"
-      }
-    },
+    "webLabel": "Explore VIEW4REAL",
+    "downloads": {},
     "development": true,
     "platforms": "Legacy Windows x64 test",
     "version": "Current source v0.2.1",
-    "access": "Public legacy download"
+    "access": "Current test publication pending"
   },
   {
     "id": "max-alpha",
@@ -196,32 +187,21 @@
     "category": "Shopping companion",
     "status": "New build in development",
     "icon": "justmypick.svg",
-    "caption": "JustMyPick Happy Bag artwork from the current app source. Runtime screenshots are not yet available.",
-    "description": "Formerly SavvyKin. A shopping-list and price-comparison companion, with the current JustMyPick Android and iOS versions still in development.",
+    "caption": "JustMyPick Happy Bag branding verified on the Android emulator; test-package publication is pending.",
+    "description": "A shopping-list and price-comparison companion, with persistent lists and budgets.",
     "features": [
       "Shopping lists",
       "Price comparison prototype",
       "Saved-list source work"
     ],
-    "note": "No new JustMyPick APK or signed iPhone build is verified. The available download is the old SavvyKin v0.36-debug for Android 8+, without the newer changes. A configured local test backend is required for online features; physical-phone testing remains pending.",
-    "downloads": {
-      "android": {
-        "file": "SavvyKin-0.36-debug.apk",
-        "url": "/downloads/releases/savvykin/android/SavvyKin-0.36-debug.apk",
-        "label": "SavvyKin v0.36 · Legacy test",
-        "sha256": "386b087eb1fc21f0defc151635169368456d3c842e77beba6cd696de704a5c4b",
-        "bytes": 14614771,
-        "verified": "2026-10-06",
-        "name": "SavvyKin legacy test"
-      }
-    },
+    "note": "JustMyPick v0.38/build 38 Android debug test APK passed branding, startup and saved-list preservation checks on the emulator. The corrected package is not yet published here. Online features require a configured test backend; physical-phone validation and iOS packaging remain pending.",
+    "downloads": {},
     "development": true,
     "platforms": "Android / iOS source",
     "aliases": [
       "savvykin"
     ],
-    "version": "Current source v0.37",
-    "access": "Legacy Android test only",
-    "releaseNotes": "/downloads/releases/savvykin/android/RELEASE-NOTES.md"
+    "version": "Android test v0.38 / build 38",
+    "access": "Verified local test; publication pending"
   }
 ]

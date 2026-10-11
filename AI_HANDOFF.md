@@ -1,5 +1,15 @@
 # goyonebydesign — AI handoff
 
+## October 11, 2026 - Tested visible rebrand working branch
+
+- VIEW4REAL is the visible product name on the homepage, catalog, product and subscription-agreement pages. Hidden aliases/routes retain compatibility. Subscription agreement changed only product-name casing; its substantive terms remain unchanged.
+- JustMyPick copy identifies locally tested Android 0.38 / build 38. The archived SavvyKin 0.36 APK and old SightSync installers remain preserved but are removed from the active catalog download metadata. No corrected package was published to the website or owner hub.
+- Checks passed: catalog generation/validation, four portfolio simulations, five catalog UI simulations, and ten actual isolated headless Edge page/viewport branding and overflow checks at 1440 and 393 pixels. External requests blocked; no forms, owner login, payments or Chrome interaction.
+- Current public gallery has no download buttons; a fresh uncached live response confirmed this. The retained repository APK still labels itself SavvyKin. The authenticated owner hub's active download target was not inspected.
+- Next publication step: use the exact tested package, verify public served SHA256 and installer display branding, update the owner hub's actual destination, then review/merge and verify deployment. The JustMyPick test certificate differs from the archived 0.36 certificate; an in-place phone update requires the original key. VIEW4REAL Windows package verification is recorded separately.
+- This branch changes source only; no main-branch merge, website deployment, release asset upload or store publication.
+
+
 ## October 9, 2026 — Selected Questrix Dialogue Q branding
 
 - Replaced the generic Questrix project mark on the homepage, app-gallery card and gallery icon navigation with Michael’s selected concept 1, Dialogue Q. Added its matching transparent wordmark on light panels; original production artwork is reused without redrawing.
