@@ -25,7 +25,7 @@
     "id": "statusping",
     "name": "StatusPing",
     "category": "Everyday care",
-    "status": "Android test build",
+    "status": "Android debug test build",
     "icon": "statusping.png",
     "screen": "statusping-screen.png",
     "caption": "Actual browser preview of the shared Android interface.",
@@ -35,43 +35,61 @@
       "Local reminders",
       "Backup & restore"
     ],
-    "note": "Android 7+ · v0.1.0 debug/test APK. This previously published build is separate from newer source work. Local check-ins only; automatic family alerts are not available. Physical-phone validation and store release are pending.",
+    "note": "Android 7+ · StatusPing 0.2.0-review.3/build 5 isolated debug test APK. Regression and native emulator check-in/reminder tests passed, including bounded delivery after ordinary process death. Full 12-hour/Doze/reboot and real-phone reliability remain unverified. Live caregiver/email/SMS/call escalation is not tested; production upgrade compatibility is not established.",
     "downloads": {
       "android": {
-        "file": "StatusPing-0.1.0-android-test.apk",
-        "label": "v0.1.0 · Test APK",
-        "sha256": "671e93f4de39f10fed1bc32196fe52d2e6761f03581cce2775858e802085201a",
-        "bytes": 5609949,
-        "verified": "2026-10-06"
+        "file": "StatusPing-0.2.0-review.3-build5-debug-tested.apk",
+        "url": "/downloads/releases/statusping/android/0.2.0-review.3-build5/StatusPing-0.2.0-review.3-build5-debug-tested.apk",
+        "githubUrl": "https://github.com/GoyoneByDesign/goyonebydesign/releases/download/apps-test-2026-10-11/StatusPing-0.2.0-review.3-build5-debug-tested.apk",
+        "label": "StatusPing 0.2.0-review.3 / build 5 · Debug test APK",
+        "sha256": "e268728105edcea339110e72b46719a8548e01ac78b14634eead17a610915e96",
+        "bytes": 6511597,
+        "verified": "2026-10-11",
+        "name": "StatusPing 0.2.0-review.3 / build 5",
+        "signing": "Isolated debug test key"
       }
     },
     "development": true,
     "platforms": "Android 7+",
-    "version": "Test v0.1.0",
-    "access": "Public test download"
+    "version": "Android test 0.2.0-review.3 / build 5",
+    "access": "Public test download; not a production upgrade",
+    "releaseNotes": "/downloads/releases/apps-test-2026-10-11/TEST-RELEASE-NOTES.txt"
   },
   {
     "id": "view4real",
     "name": "VIEW4REAL",
     "category": "Display comfort",
-    "status": "New build in development",
+    "status": "Unsigned Windows test build",
     "icon": "view4real.svg",
     "screen": "view4real-screen.png",
-    "caption": "VIEW4REAL display-comfort preview. Current native test-package publication is pending.",
+    "caption": "VIEW4REAL display-comfort illustration; the current unsigned portable test download is separate from this artwork.",
     "description": "Keep your display preferences together, with profiles for reading, work, and evening screen time.",
     "features": [
       "Display profiles",
       "Reading preferences",
       "Windows desktop"
     ],
-    "note": "VIEW4REAL v0.2.2 unsigned Windows portable test package passed its build, browser UI tests and native window launch/close checks locally. Hardware brightness and interactive native controls remain unverified. The corrected package is not yet published here. No Android or iOS installer is available.",
+    "note": "VIEW4REAL 0.2.2 unsigned Windows x64 portable test ZIP, containing the actual executable. Build, browser interaction, Rust tests and native window launch/close checks passed. Physical brightness hardware and interactive native controls remain untested; billing is not connected. Existing WebView2 Runtime required. No Android or iOS installer.",
     "web": "/view4real/",
     "webLabel": "Explore VIEW4REAL",
-    "downloads": {},
+    "downloads": {
+      "windows": {
+        "file": "VIEW4REAL-0.2.2-Windows-x64-portable-tested.zip",
+        "url": "/downloads/releases/view4real/windows/0.2.2/VIEW4REAL-0.2.2-Windows-x64-portable-tested.zip",
+        "githubUrl": "https://github.com/GoyoneByDesign/goyonebydesign/releases/download/apps-test-2026-10-11/VIEW4REAL-0.2.2-Windows-x64-portable-tested.zip",
+        "label": "VIEW4REAL 0.2.2 Windows x64 portable · Unsigned portable test ZIP",
+        "sha256": "c58a14142f33bdf207f4b7fc80eda2a996eaa5075bf50ec0fd9d88ada4b42849",
+        "bytes": 3040051,
+        "verified": "2026-10-11",
+        "name": "VIEW4REAL 0.2.2 Windows x64 portable",
+        "signing": "Unsigned; Authenticode NotSigned"
+      }
+    },
     "development": true,
     "platforms": "Windows x64 test",
     "version": "Windows test v0.2.2",
-    "access": "Verified local test; publication pending"
+    "access": "Public test download; not a production upgrade",
+    "releaseNotes": "/downloads/releases/apps-test-2026-10-11/TEST-RELEASE-NOTES.txt"
   },
   {
     "id": "max-alpha",
@@ -185,23 +203,36 @@
     "id": "justmypick",
     "name": "JustMyPick",
     "category": "Shopping companion",
-    "status": "New build in development",
+    "status": "Android debug test build",
     "icon": "justmypick.svg",
-    "caption": "JustMyPick Happy Bag branding verified on the Android emulator; test-package publication is pending.",
+    "caption": "Current JustMyPick Happy Bag artwork, verified in the Android emulator. Runtime checks and test-download limits are documented in Installation help.",
     "description": "A shopping-list and price-comparison companion, with persistent lists and budgets.",
     "features": [
       "Shopping lists",
       "Price comparison prototype",
       "Saved-list source work"
     ],
-    "note": "JustMyPick v0.38/build 38 Android debug test APK passed branding, startup and saved-list preservation checks on the emulator. The corrected package is not yet published here. Online features require a configured test backend; physical-phone validation and iOS packaging remain pending.",
-    "downloads": {},
+    "note": "Android 8+ · JustMyPick 0.38/build 38 debug test APK. Branding, startup and same-key emulator list/cart/budget preservation passed. Its test certificate differs from old SavvyKin 0.36: an in-place update requires the original key. Do not uninstall or erase your existing app to work around this. Live integrations and physical-phone validation remain pending.",
+    "downloads": {
+      "android": {
+        "file": "JustMyPick-0.38-build38-debug-tested.apk",
+        "url": "/downloads/releases/justmypick/android/0.38-build38/JustMyPick-0.38-build38-debug-tested.apk",
+        "githubUrl": "https://github.com/GoyoneByDesign/goyonebydesign/releases/download/apps-test-2026-10-11/JustMyPick-0.38-build38-debug-tested.apk",
+        "label": "JustMyPick 0.38 / build 38 · Debug test APK",
+        "sha256": "f3370c6f69e991cb57a1e6b6e4348cb821c7822e7e9238f2c0f06612af4e1e1a",
+        "bytes": 13894315,
+        "verified": "2026-10-11",
+        "name": "JustMyPick 0.38 / build 38",
+        "signing": "Isolated debug test key"
+      }
+    },
     "development": true,
     "platforms": "Android / iOS source",
     "aliases": [
       "savvykin"
     ],
     "version": "Android test v0.38 / build 38",
-    "access": "Verified local test; publication pending"
+    "access": "Public test download; not a production upgrade",
+    "releaseNotes": "/downloads/releases/apps-test-2026-10-11/TEST-RELEASE-NOTES.txt"
   }
 ]

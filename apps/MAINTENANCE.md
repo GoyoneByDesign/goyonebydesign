@@ -1,5 +1,9 @@
 # Release storage and bounded cleanup
 
+## October 11, 2026 - Authorized current public test downloads
+
+Michael explicitly approved publication of JustMyPick0.38/build38 and StatusPingreview.3/build5 isolated-debug APKs and VIEW4REAL0.2.2 unsigned portable ZIP. Current versioned website files and GitHub prerelease assets are exact tested bytes with checksums. Public test-download links are on Installation help; the portfolio gallery links there. Private owner-hub/workspace access remains unchanged. Original legacy installers and GitHub releases are preserved, excluded from the current download records, and not presented as new packages. No cleanup ran. Earlier availability notes below are historical. The private owner hub needs a separate supported link update.
+
 The source of truth is `apps/catalog.json`. Run `node scripts/build-apps.mjs` and `node scripts/check-apps.mjs` after edits. Preserve approved logos, real screenshot captions, native versus web labels, and private workspace access controls. Platform links must identify an actual public installer; missing platforms remain disabled. Installation instructions live at `/apps/install.html`.
 
 Prepared catalog: nine app records including BOARDROOM, three verified existing test downloads (StatusPing v0.1.0 Android, legacy SightSync v0.1.0 Windows, and legacy SavvyKin v0.36 Android), MAX-ALPHA web installation, and private MAX-ZETA/BOARDROOM launch links. JustMyPick is the confirmed replacement display name for SavvyKin; its new v0.37 source work is not represented as an installer. MyThang remains removed at the owner’s prior request; its source and artwork are preserved. Physical phone/Windows installation remains a separate validation step.

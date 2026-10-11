@@ -20,7 +20,7 @@ function harness(hash=''){
   return {cards,search,results,empty,filters,icons,previews,dialog,img,location,visible:()=>cards.filter(c=>!c.hidden),clickFilter:name=>filters.find(f=>f.dataset.filter===name).handlers.click()};
 }
 test('filters use actual download and development fields',()=>{
-  const h=harness();h.clickFilter('downloads');assert.equal(h.visible().length,1);h.clickFilter('development');assert.equal(h.visible().length,6);h.clickFilter('all');assert.equal(h.visible().length,9);
+  const h=harness();h.clickFilter('downloads');assert.equal(h.visible().length,3);h.clickFilter('development');assert.equal(h.visible().length,6);h.clickFilter('all');assert.equal(h.visible().length,9);
 });
 test('old SavvyKin search finds JustMyPick; empty results recover',()=>{
   const h=harness();h.search.value=' SAVVYKIN ';h.search.handlers.input();assert.deepEqual(h.visible().map(x=>x.id),['justmypick']);assert.equal(h.results.textContent,'1 application');h.search.value='does-not-exist';h.search.handlers.input();assert.equal(h.visible().length,0);assert.equal(h.empty.hidden,false);h.search.value='';h.search.handlers.input();assert.equal(h.visible().length,9);

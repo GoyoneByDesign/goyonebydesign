@@ -1,5 +1,9 @@
 # Application catalog
 
+## October 11, 2026 - Authorized current public test downloads
+
+Michael explicitly approved publication of JustMyPick0.38/build38 and StatusPingreview.3/build5 isolated-debug APKs and VIEW4REAL0.2.2 unsigned portable ZIP. Current versioned website files and GitHub prerelease assets are exact tested bytes with checksums. Public test-download links are on Installation help; the portfolio gallery links there. Private owner-hub/workspace access remains unchanged. Original legacy installers and GitHub releases are preserved, excluded from the current download records, and not presented as new packages. No cleanup ran. Earlier availability notes below are historical. The private owner hub needs a separate supported link update.
+
 The public catalog lives at https://www.goyonebydesign.com/apps/. The public catalog is preview-only: mission, features, authentic imagery, and development notes. App launch/download controls live in the separately owner-private hub linked through /owner/. Existing public legacy binaries remain public at their original URLs; hub sign-in does not change that. Catalog metadata retains exact legacy download records and private app destinations for maintenance, but the public generator does not render them as controls. BOARDROOM and legacy app-name anchors are preserved. Edit catalog.json, then run `node scripts/build-apps.mjs` from the repository root. The generated HTML works without JavaScript; JavaScript adds filters and preview dialogs. Run `node --test scripts/test-apps-ui.mjs` for source-level filter/search/preview checks; these do not replace visual browser QA. Serve the root directory to preview.
 
 ## Downloads

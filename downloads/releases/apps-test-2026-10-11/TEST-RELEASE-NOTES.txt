@@ -1,0 +1,15 @@
+Verified test downloads: JustMyPick 0.38 / build 38, StatusPing 0.2.0-review.3 / build 5, and VIEW4REAL 0.2.2 for Windows x64.
+
+These are test builds, not store-approved or compatible production upgrades. The Android APKs use an isolated debug test key. VIEW4REAL is an unsigned portable ZIP containing the actual Windows executable, not a source archive or installer.
+
+JustMyPick now shows its Happy Bag icon and current name in the launcher, Android launch screen, custom splash and Profile. Actual emulator startup and saved-list/cart/budget preservation passed for a same-key test update. Its certificate differs from the old SavvyKin 0.36 APK: this download cannot update that installation in place. A compatible update requires the original signing key. Do not uninstall or erase the existing app to work around this; preserve its data.
+
+StatusPing passed 155 regression tests and actual native emulator check-in/reminder tests, including bounded native reminder delivery after ordinary process death. A full 12-hour cycle, Doze/reboot and physical-phone reliability have not been verified. Live caregiver/email/SMS/call integrations were not exercised.
+
+VIEW4REAL passed 13 application, 91 research, 20 browser and seven Rust tests, plus six branding/viewport checks. The actual executable opened with the correct Windows title, responded and closed cleanly on a private desktop. Interactive native controls and physical brightness hardware remain untested. The research model does not establish clinical benefit. WebView2 Runtime must already be installed.
+
+JustMyPick's unchanged core/backend checks passed (245 Java assertions and 47 mock backend tests). Live retailer, account/email, AI and store-billing integrations remain unverified. iOS requires Mac/Xcode and is not included. No real charges or messages occurred.
+
+Debug/unsigned downloads can trigger security warnings. Do not bypass operating-system, browser, SmartScreen or antivirus protections. If blocked, stop and report the warning.
+
+Older releases and their original URLs are preserved. SHA256SUMS.txt records the exact tested package hashes.

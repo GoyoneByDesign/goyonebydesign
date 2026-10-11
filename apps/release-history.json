@@ -3,6 +3,39 @@
   "order": "newest-first-per-app-platform",
   "releases": [
     {
+      "app": "view4real",
+      "platform": "windows",
+      "version": "0.2.2",
+      "path": "downloads/releases/view4real/windows/0.2.2/VIEW4REAL-0.2.2-Windows-x64-portable-tested.zip",
+      "sha256": "c58a14142f33bdf207f4b7fc80eda2a996eaa5075bf50ec0fd9d88ada4b42849",
+      "bytes": 3040051,
+      "published": "2026-10-11",
+      "status": "Unsigned; Authenticode NotSigned; verified test build; not a production upgrade",
+      "githubUrl": "https://github.com/GoyoneByDesign/goyonebydesign/releases/download/apps-test-2026-10-11/VIEW4REAL-0.2.2-Windows-x64-portable-tested.zip"
+    },
+    {
+      "app": "statusping",
+      "platform": "android",
+      "version": "0.2.0-review.3-build5",
+      "path": "downloads/releases/statusping/android/0.2.0-review.3-build5/StatusPing-0.2.0-review.3-build5-debug-tested.apk",
+      "sha256": "e268728105edcea339110e72b46719a8548e01ac78b14634eead17a610915e96",
+      "bytes": 6511597,
+      "published": "2026-10-11",
+      "status": "Isolated debug test key; verified test build; not a production upgrade",
+      "githubUrl": "https://github.com/GoyoneByDesign/goyonebydesign/releases/download/apps-test-2026-10-11/StatusPing-0.2.0-review.3-build5-debug-tested.apk"
+    },
+    {
+      "app": "justmypick",
+      "platform": "android",
+      "version": "0.38-build38",
+      "path": "downloads/releases/justmypick/android/0.38-build38/JustMyPick-0.38-build38-debug-tested.apk",
+      "sha256": "f3370c6f69e991cb57a1e6b6e4348cb821c7822e7e9238f2c0f06612af4e1e1a",
+      "bytes": 13894315,
+      "published": "2026-10-11",
+      "status": "Isolated debug test key; verified test build; not a production upgrade",
+      "githubUrl": "https://github.com/GoyoneByDesign/goyonebydesign/releases/download/apps-test-2026-10-11/JustMyPick-0.38-build38-debug-tested.apk"
+    },
+    {
       "app": "savvykin",
       "platform": "android",
       "version": "0.36-debug",

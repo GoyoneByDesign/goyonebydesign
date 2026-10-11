@@ -1,5 +1,15 @@
 # goyonebydesign — AI handoff
 
+## October 11, 2026 - Authorized test-package publication
+
+- Michael explicitly approved publishing the verified current packages to GitHub and goyonebydesign.com. GitHub prerelease apps-test-2026-10-11 is public; all five assets were downloaded anonymously with HTTP200 and exact size/SHA256 matches before website deployment.
+- Current downloads: JustMyPick0.38/build38 Android debug APK; StatusPing0.2.0-review.3/build5 Android debug APK; VIEW4REAL0.2.2 Windows x64 unsigned portable ZIP containing the actual executable. Versioned website copies, current catalog records, Installation help links, GitHub mirrors, release notes and checksum metadata use the exact tested bytes. Prior binaries, releases and source history retained; no cleanup ran.
+- Warnings next to the download links identify isolated debug/unsigned status, unverified physical/live integrations and no production upgrade guarantee. JustMyPick's certificate differs from old SavvyKin0.36; an in-place update requires its original signing key. Do not uninstall/erase user data or bypass security protections. No compatible original key was found in the inspected local projects and signing configuration; no key changed or uploaded.
+- The public gallery remains a portfolio and links to the explicitly authorized test-download guide. Owner entry and private workspace routes remain unchanged. Updating the separately hosted private owner hub's actual links requires its supported tool; that hub was not modified here.
+- Checks passed: native package tests recorded in release notes, complete GitHub anonymous download integrity, catalog/asset/package validation, four portfolio +five catalog simulations, ten real headless Edge desktop/phone page checks. Final actual browser download-click and deployed Pages/served-byte evidence are recorded in the execution report. No Chrome/form interaction, real message/payment or paid CI.
+- GitHub Pages is the existing legacy main/root deployment on www.goyonebydesign.com. Push main only after final source/download checks; verify latest build commit and live HTML/package bytes afterward. Earlier local-only/pending-publication notes below are historical.
+
+
 ## October 11, 2026 - Tested visible rebrand working branch
 
 - VIEW4REAL is the visible product name on the homepage, catalog, product and subscription-agreement pages. Hidden aliases/routes retain compatibility. Subscription agreement changed only product-name casing; its substantive terms remain unchanged.
