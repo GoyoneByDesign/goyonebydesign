@@ -4,7 +4,9 @@ MAX-ALPHA is a personal assistant web app with an optional Mac companion. Instal
 
 ## Updates
 
-Use **Check updates** at the top of the app, or Settings → Install & updates. Web editions check on opening and foregrounding while online. A fresh, idle launch can apply a downloaded update automatically. Once interaction begins, choose Update & reopen after saving work. Software updates do not synchronize personal records between devices.
+Use **Check updates** at the top of the app, or Settings → Install & updates. Automatic checks default to off; enable **Check for updates automatically when online** on each device if wanted. Checks also require internet permission. A fresh, idle launch can apply a downloaded update after opt-in. Once interaction begins, choose Update & reopen after saving work. The browser separately manages its service-worker lifecycle. Software updates do not synchronize personal records between devices.
+
+Review build 1.16.3/build224 adds the saved opt-in. This uses the existing HTTPS/SHA256 web-release mechanism; the existing manifest remains unsigned. The separate signed-check foundation in draft PR #1 is not integrated. Native Mac updates and the standalone repository/security branch require separate reconciliation. This review does not establish release-signing authenticity or native installer compatibility.
 
 ## Features and requirements
 

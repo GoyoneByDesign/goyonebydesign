@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "version": "1.16.2",
-  "build": 223,
+  "version": "1.16.3",
+  "build": 224,
   "min_companion_build": 205,
   "files": [
     {
@@ -26,8 +26,8 @@
     },
     {
       "path": "README.md",
-      "sha256": "d502ec869e97ca295aa09b9f976b99b4f8fc7c39a610326700f966c715bbd060",
-      "bytes": 1892
+      "sha256": "8cf496bfcb847763253adbf1b4a2a2177347798e4e62a3ea77d9f8ae68007f8c",
+      "bytes": 2461
     },
     {
       "path": "VOICE-SETUP.md",
@@ -56,8 +56,8 @@
     },
     {
       "path": "app.js",
-      "sha256": "615c8dec21f26c1607845d9e3522300528e0cb389cbdb059a674f3644ee1c252",
-      "bytes": 150938
+      "sha256": "e0f2ea5e96ea4ab38ad2cfe808ab4f6294c1ca37ba8f4b3ae38c3d8ff3c5e750",
+      "bytes": 151442
     },
     {
       "path": "assets/goyonebydesign-logo.png",
@@ -306,7 +306,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "e649b85362f3343d98bfd3eb07c8e71d7f040a229739a2dfb25ee7f7dd5622ec",
+      "sha256": "2da63a68ce7bf9a9177d96d21f6f7e6d3208f56d093eda639a7beba0f704351e",
       "bytes": 259
     },
     {
@@ -346,7 +346,7 @@
     },
     {
       "path": "release-version.js",
-      "sha256": "b0ec8769f6f0b1448c362bcb1fddaa816fa798d12f3ee42dbf380d058ee8a76f",
+      "sha256": "2f2eca4cf3ec0cb1ade610bc0dbf162b56865a6a220401f325f20aad06c80fae",
       "bytes": 155
     },
     {
@@ -396,8 +396,8 @@
     },
     {
       "path": "state.js",
-      "sha256": "39be25099deb7b914c12caad645f9d6735d2903ec9fc56368bdaeff85ec96c55",
-      "bytes": 10863
+      "sha256": "73080ff27482d71147225910481c35b5d2b994c6361241fa2985f1db6e81f6ca",
+      "bytes": 10891
     },
     {
       "path": "style.css",
@@ -406,7 +406,7 @@
     },
     {
       "path": "sw.js",
-      "sha256": "ff0151002c723056d2fc090f04cabe42cf060de641afc0d32ff889842d5e87ce",
+      "sha256": "ad48989ece2a563bbd4f6c0e4510329fe52f7c431bb92dc46fcb447c917c4cbc",
       "bytes": 8491
     },
     {
@@ -426,13 +426,13 @@
     },
     {
       "path": "updates.css",
-      "sha256": "40d2b42f8957b616a4485a19eef7dab7c69e153edab4b902183b1ce81c459506",
-      "bytes": 736
+      "sha256": "965f6888601d2b65a96a23eee3796bf3a02e947760983abe59a9483e137c677c",
+      "bytes": 883
     },
     {
       "path": "updates.js",
-      "sha256": "dabab1b63b302c99d7a1fc21f31fb0cbe7123d89bdc6d009be48770e0e69f224",
-      "bytes": 8740
+      "sha256": "f981879773d4a7b2c49e6b7fb0aae5dcda67eee824d7f9356a835f0486056641",
+      "bytes": 10472
     },
     {
       "path": "voice-config.js",

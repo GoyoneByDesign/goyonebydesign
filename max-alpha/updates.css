@@ -3,6 +3,8 @@
 .update-actions{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}
 .update-actions .button{min-height:44px}
 .update-settings{line-height:1.65}
+.update-opt-in{display:flex;align-items:center;gap:12px;min-height:44px;cursor:pointer}
+.update-opt-in input{width:20px;height:20px;flex-shrink:0}
 #updateNoticeBtn{min-height:36px;border-color:#65c9ed;color:var(--text);white-space:normal}
 @media(max-width:700px){.topbar-actions{flex-wrap:wrap;justify-content:flex-end;gap:6px}#installBtn{min-height:36px}.update-actions .button{flex:1 1 150px}}
 @media(display-mode:standalone){.topbar{padding-top:max(12px,env(safe-area-inset-top))}.sidebar{padding-top:max(16px,env(safe-area-inset-top))}}

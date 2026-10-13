@@ -151,6 +151,7 @@ let updateSessionTouched=false;
 window.addEventListener('pointerdown',()=>{updateSessionTouched=true;},{capture:true,passive:true});
 window.addEventListener('keydown',()=>{updateSessionTouched=true;},{capture:true});
 const updates=createAppUpdates({desktop:desktopMode,request:operation=>connectorHub.updateRequest(operation),
+  canAutomaticCheck:()=>state.settings.automaticUpdateChecks===true,
   autoApply:!desktopMode,canAutoApply:()=>document.body.dataset.maxgReady==='true'&&!document.hidden&&!updateSessionTouched&&view==='chat'&&!document.querySelector('dialog[open]'),
   canCheck:()=>navigator.onLine!==false&&state.settings.permissions.internet!=='deny',
   beforeApply:async()=>{
@@ -168,7 +169,12 @@ const updates=createAppUpdates({desktop:desktopMode,request:operation=>connector
   }});
 async function checkAppUpdates(){if(navigator.onLine===false)throw Error('Reconnect to the internet to check for updates.');await permission('internet');return updates.check();}
 function openUpdateSettings(){renderSettings('updates');pauseVoiceOutput();$('settingsDialog').showModal();}
-function backgroundUpdateCheck(){if(!document.hidden&&state.settings.permissions.internet==='allow')updates.check({automatic:true}).catch(()=>{});}
+function backgroundUpdateCheck(){if(!document.hidden&&state.settings.automaticUpdateChecks===true&&state.settings.permissions.internet==='allow')updates.check({automatic:true}).catch(()=>{});}
+async function setAutomaticUpdateChecks(value){
+  const previous=state.settings.automaticUpdateChecks;
+  state.settings.automaticUpdateChecks=value===true;
+  if(!await persist()){state.settings.automaticUpdateChecks=previous;throw Error('The update preference could not be saved.');}
+}
 const browserPanel=createBrowserPanel({workspace:connectorHub.browserWorkspace,toast,onShow:()=>setView('chat'),onConnect:()=>{browserPanel.show(false);setView('connectors');},
   runTask:async action=>{if(active)throw new Error('Finish or stop the current MAX-ALPHA task first.');const run=begin('connector-command');try{return await action();}finally{finish(run);}}});
 let locationTask=null,locationSpeech=null;
@@ -924,7 +930,7 @@ async function renderSettings(tab=settingsTab){pauseVoiceOutput();stopPlay();loc
    if(settingsSignal.aborted)return;panel.replaceChildren();
  }
  if(tab==='companion'){renderCompanionSettings(panel,settingsSignal);return;}
- if(tab==='updates'){panel.append(renderUpdateSettings({manager:updates,desktop:desktopMode,check:()=>checkAppUpdates().catch(showError),apply:()=>updates.apply().catch(showError)}));return;}
+ if(tab==='updates'){panel.append(renderUpdateSettings({manager:updates,desktop:desktopMode,check:()=>checkAppUpdates().catch(showError),apply:()=>updates.apply().catch(showError),getAutomaticChecks:()=>state.settings.automaticUpdateChecks,setAutomaticChecks:setAutomaticUpdateChecks}));return;}
  if(tab==='extensions'){panel.append(renderExtensions({enabled:desktopMode,request:connectorHub.extensionRequest,signal:settingsSignal,permission,onAttach:file=>{if(attachments.length>=6)throw Error('Remove an attachment before adding another.');attachments.push(file);renderAttachments();}}));return;}
  if(tab==='device'){panel.append(renderDeviceSettings({getSettings:()=>state.settings,getRuntime:()=>({language:languageCode(),modelReady:engine.ready,modelId:engine.modelId,voiceReady:voice.neural.ready,storageOK,companion:connectorHub.deviceStatus,desktopMode,localAI:engine.capability}),signal:settingsSignal,onSave:async mode=>{if(settingsSignal.aborted)return false;if(active?.kind==='reset')throw Error('Wait for the reset to finish.');state.settings.deviceMode=normalizeDeviceMode(mode);idleModel.touch();if(!await persist())throw Error('Device settings could not be saved. Please try again.');return true;},onOpen:tab=>{if(tab==='connectors'){$('settingsDialog').close();setView('connectors');}else renderSettings(tab);}}));return;}
  if(tab==='profile'){panel.append(renderProfileSettings({profile:state.profile,style:state.settings.style,replyLength:state.settings.replyLength,signal:settingsSignal,onBeforeImage:()=>permission('files',{picked:true}),onSave:async value=>{if(settingsSignal.aborted)return false;stop();state.profile=normalizeProfile(value.profile);state.settings.style=value.style;state.settings.replyLength=value.replyLength;const saved=await persist();applySettings();return saved;}}));return;}

@@ -1,5 +1,12 @@
 # goyonebydesign — AI handoff
 
+## October 13, 2026 — MAX-ALPHA automatic update opt-in (separate draft)
+
+- Current website copy now has a saved Settings → Install & updates checkbox for app-requested automatic checks. New and migrated records default it off; manual checking remains available. Internet permission remains authoritative. Automatic activation rechecks opt-in after saving, and existing active-work/draft guards remain intact.
+- Review version 1.16.3/build224 and new service-worker cache identifier; regenerated all 94 manifest entries from repository LF bytes. Browser-managed service-worker lifecycle is separate from this app setting. The existing manifest remains unsigned and uses HTTPS/SHA256 integrity; signed foundation PR #1 is NOT imported or activated here.
+- Tests: 16 MAX-ALPHA tests (nine new opt-in cases, two stale/mismatched-release cases, one release-integrity test and four existing branding/activity cases), JavaScript syntax, catalog/portfolio regressions and whitespace checks. Native Mac, standalone/security-branch reconciliation and physical-device/browser UI tests remain separate. No automatic main merge/deployment, provider activation, permissions expansion or native installer.
+- Supported direct Library preparation succeeded for the verified newer native sources, but the official transfer helper then failed because Windows Python lacks os.setxattr. Preserve Library identity; cloud can publish reviewed source-only draft branches after source/secrets checks for a supported Git checkout here. Never use incomplete staging downloads as authoritative sources.
+
 ## October 11, 2026 - Authorized test-package publication
 
 - Michael explicitly approved publishing the verified current packages to GitHub and goyonebydesign.com. GitHub prerelease apps-test-2026-10-11 is public; all five assets were downloaded anonymously with HTTP200 and exact size/SHA256 matches before website deployment.

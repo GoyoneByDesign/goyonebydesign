@@ -2,9 +2,9 @@
  * Model tensors/config/tokenizers/WASM belong to WebLLM's IndexedDB cache.
  * This worker never caches searches, conversations, uploads or arbitrary pages.
  */
-const VERSION = '2026-10-07.alpha.1';
-const RELEASE_VERSION = '1.16.2';
-const RELEASE_BUILD = 223;
+const VERSION = '2026-10-13.alpha.1';
+const RELEASE_VERSION = '1.16.3';
+const RELEASE_BUILD = 224;
 const SCOPE = new URL(self.registration.scope);
 const PREFIX = `maxg-pwa:${encodeURIComponent(SCOPE.pathname)}:`;
 const SHELL_CACHE = `${PREFIX}shell:${VERSION}`;
