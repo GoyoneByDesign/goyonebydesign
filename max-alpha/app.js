@@ -22,7 +22,7 @@ import {createActivityFrame} from './activity-frame.js';
 import {deviceHints,devicePolicy,IdleModelPolicy,normalizeDeviceMode} from './device.js';
 import {freshState,loadState,saveState,LANGUAGES,memoryContext,isResetCode,normalizeSpeechContext,yearQuestionSpeechContext} from './state.js';
 import {quickAnswer,weatherRequest,weather,createWeatherClient,search,readJSON,safePublicURL,proxyBase,searchRoute,BUILTIN_SEARCH_URL} from './tools.js';
-import {askGemini,geminiHealth,validateSupportToken,validateSupportQuestion} from './gemini.js';
+import {askGemini,geminiHealth,validateSupportToken,validateSupportQuestion,containsProviderCredential} from './gemini.js';
 import {cloudflareMessages,cloudflareHealth,streamCloudflare,streamCloudflareNative,cloudflareError,CLOUDFLARE_AI_LABEL} from './cloudflare-ai.js';
 import {addFeedback,stageLesson,relevantLessons,evaluationCases,scoreEvaluation,summarizeRun,validateImprovement} from './improvement.js';
 import {createFeedbackControls,renderImprovementPanel} from './improvement-ui.js';
@@ -152,7 +152,7 @@ window.addEventListener('pointerdown',()=>{updateSessionTouched=true;},{capture:
 window.addEventListener('keydown',()=>{updateSessionTouched=true;},{capture:true});
 const updates=createAppUpdates({desktop:desktopMode,request:operation=>connectorHub.updateRequest(operation),
   canAutomaticCheck:()=>state.settings.automaticUpdateChecks===true,
-  autoApply:!desktopMode,canAutoApply:()=>document.body.dataset.maxgReady==='true'&&!document.hidden&&!updateSessionTouched&&view==='chat'&&!document.querySelector('dialog[open]'),
+  autoApply:false,canAutoApply:()=>document.body.dataset.maxgReady==='true'&&!document.hidden&&!updateSessionTouched&&view==='chat'&&!document.querySelector('dialog[open]'),
   canCheck:()=>navigator.onLine!==false&&state.settings.permissions.internet!=='deny',
   beforeApply:async()=>{
     if(view!=='chat')throw Error('Save your workspace changes and return to Conversation before applying this update.');
@@ -552,6 +552,7 @@ function renderGeminiSettings(signal){
 }
 async function submit(text=$('messageInput').value,selected=attachments){
   text=String(text).trim();if(isResetCode(text)){await factoryReset();return;}if(!text)return;
+  if(containsProviderCredential(text))return toast('Provider keys cannot be sent through chat. Remove the key from your draft and use a protected connection setup.');
   if(text.length>3000)return toast('Please shorten the message to 3,000 characters or attach a text file.');
   if(!active&&locationSpeech){locationSpeech=null;voice.stop();}
   if(active?.kind==='reset')return toast('Wait for the reset to finish. Your draft is still in the box.');

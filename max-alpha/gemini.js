@@ -9,9 +9,12 @@ export class GeminiSupportError extends Error{
   constructor(code,message){super(message);this.name='GeminiSupportError';this.code=code;}
 }
 function fail(code,message){return new GeminiSupportError(code,message);}
+export function containsProviderCredential(value){
+  return typeof value==='string'&&/\b(?:sk-|sess-|AIza)[A-Za-z0-9_.-]+|^\/(?:key|token|setkey)\b/i.test(value.trim());
+}
 export function validateSupportToken(raw){
   const token=typeof raw==='string'?raw.trim():'';
-  if(token.startsWith('AIza'))throw fail('INVALID_TOKEN','Use the MAX-ALPHA support access token, not your Google API key. Google API keys belong only in Cloudflare secrets.');
+  if(/^(?:sk-|sess-|AIza)/i.test(token))throw fail('INVALID_TOKEN','Provider API keys cannot be used here. Use only your separate MAX-ALPHA support access token for this session.');
   if(!/^[A-Za-z0-9_-]{32,256}$/.test(token))throw fail('INVALID_TOKEN','Enter your MAX-ALPHA support access token: 32–256 letters, numbers, underscores or hyphens. It is separate from your Google API key.');
   return token;
 }

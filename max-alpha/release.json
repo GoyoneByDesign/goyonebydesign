@@ -26,8 +26,8 @@
     },
     {
       "path": "README.md",
-      "sha256": "8cf496bfcb847763253adbf1b4a2a2177347798e4e62a3ea77d9f8ae68007f8c",
-      "bytes": 2461
+      "sha256": "91a52a263960e34f3f8de0ec43eb2e33b33f25fdaac18537e6a71a063e89ab9d",
+      "bytes": 2973
     },
     {
       "path": "VOICE-SETUP.md",
@@ -56,8 +56,8 @@
     },
     {
       "path": "app.js",
-      "sha256": "e0f2ea5e96ea4ab38ad2cfe808ab4f6294c1ca37ba8f4b3ae38c3d8ff3c5e750",
-      "bytes": 151442
+      "sha256": "d1fc89733f1a35fffa05076c2437c377304acf774d745a4f3eceb662d8e6d4b5",
+      "bytes": 151629
     },
     {
       "path": "assets/goyonebydesign-logo.png",
@@ -181,8 +181,8 @@
     },
     {
       "path": "gemini.js",
-      "sha256": "1a0f7fa9679bf6b33c34c81bada0b092ac71b1582eb99bdc8b0c2f0255e99015",
-      "bytes": 7548
+      "sha256": "2a4db3c2dbcdf2f68dedb06a2a0dc21331b9ad900bd2b1011253d9fbc2721159",
+      "bytes": 7725
     },
     {
       "path": "icons/apple-touch-icon.png",
@@ -431,8 +431,8 @@
     },
     {
       "path": "updates.js",
-      "sha256": "f981879773d4a7b2c49e6b7fb0aae5dcda67eee824d7f9356a835f0486056641",
-      "bytes": 10472
+      "sha256": "2793e7f03529bc3536918ea9c75e25b0d6c74679d4caa56b9cabc086f959a233",
+      "bytes": 10539
     },
     {
       "path": "voice-config.js",
