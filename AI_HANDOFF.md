@@ -1,5 +1,12 @@
 # goyonebydesign — AI handoff
 
+## October 13, 2026 — Connectivity and signed update foundation (draft review)
+
+- Added `apps/update-check.mjs`, an unwired integration foundation: default-disabled online checks, bounded HTTPS metadata, pinned public-key release authentication, strict installed identity/version/expiry checks, package hash verification, cancellation and offline/busy/unconfigured failures. No app runtime imports it; there is no production key or manifest. `wifiCommunicationStatus` cannot send or call.
+- Twelve synthetic focused tests pass: `node --test scripts/test-update-check.mjs`. No provider requests, real messages/calls, credentials, permission changes or new installers.
+- `apps/CONNECTIVITY-UPDATE-COVERAGE.md` records all nine catalog apps, actual owned repositories/branches, source/signing mismatches and required integrations. StatusPing, JustMyPick and VIEW4REAL latest sources exist in Library, but official materializer retrieval is unavailable in this Windows execution environment. Preserve newer published builds; do not regress to stale GitHub source.
+- StockPilot work branch and MAX-ALPHA security branch remain unreconciled; private MAX-ZETA/BOARDROOM Sites deployments need their supported authoring tools. No runtime deployment or all-app upgrade is claimed. Publish only the isolated review branch/draft PR; main/website/runtime integration waits for source and signing reconciliation.
+
 ## October 11, 2026 - Authorized test-package publication
 
 - Michael explicitly approved publishing the verified current packages to GitHub and goyonebydesign.com. GitHub prerelease apps-test-2026-10-11 is public; all five assets were downloaded anonymously with HTTP200 and exact size/SHA256 matches before website deployment.
