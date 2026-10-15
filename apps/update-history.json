@@ -28,6 +28,27 @@
       "name": "StatusPing",
       "entries": [
         {
+          "id": "maintenance-2026-10-15",
+          "version": "0.1.1",
+          "build": 2,
+          "recordedAt": "2026-10-15T14:30:09.106Z",
+          "releasedAt": "2026-10-15T10:28:37-04:00",
+          "status": "Tested source / backend and native deployment unverified",
+          "channel": "legacy main source maintenance; catalog 0.2.0-review.3/build5 unchanged",
+          "changes": [
+            "Pinned patched same-major gRPC 1.14.6 for the archived Firebase dependency chain.",
+            "Added local history access in About; synchronized legacy source metadata to 0.1.1/build2. Existing published APKs are unchanged."
+          ],
+          "validation": "10/10 tests pass serially, including offline Firebase/local gRPC, release metadata and bounded HTTP smoke checks; type-check/build pass; dependency audit reports zero findings. No new APK or phone test.",
+          "dateNote": "Time records the source commit. It is not an installation or deployment timestamp.",
+          "references": [
+            {
+              "label": "Tested source changes",
+              "url": "https://github.com/GoyoneByDesign/StatusPing/commit/8f5d08770f2cff03b018d373bf300c49cc5f98bb"
+            }
+          ]
+        },
+        {
           "id": "initial-observed-release",
           "version": "0.2.0-review.3",
           "build": 5,
@@ -49,6 +70,27 @@
       "name": "VIEW4REAL",
       "entries": [
         {
+          "id": "maintenance-2026-10-15",
+          "version": "0.2.3",
+          "build": 1,
+          "recordedAt": "2026-10-15T14:30:09.469Z",
+          "releasedAt": "2026-10-15T10:28:44-04:00",
+          "status": "Tested source review / existing installer unchanged",
+          "channel": "tested source / installer unchanged",
+          "changes": [
+            "Added a local Update history page on the current handoff-based review branch.",
+            "Synchronized package, lockfile, Rust crate and Tauri source versions to 0.2.3. Existing 0.2.2 Windows package remains unchanged."
+          ],
+          "validation": "14 source tests, 7 Rust tests, 42 optical-model and 24 solver checks pass; frontend build and desktop/mobile history checks pass. These are not clinical or real-hardware validation. Native packaging unchanged.",
+          "dateNote": "Time records the source commit. It is not an installation or deployment timestamp.",
+          "references": [
+            {
+              "label": "Tested source changes",
+              "url": "https://github.com/GoyoneByDesign/SightSync/commit/7d01260608fa3562c7dc070deced95a72573b9ec"
+            }
+          ]
+        },
+        {
           "id": "initial-observed-release",
           "version": "0.2.2",
           "build": null,
@@ -69,6 +111,27 @@
       "id": "max-alpha",
       "name": "MAX-ALPHA",
       "entries": [
+        {
+          "id": "maintenance-2026-10-15",
+          "version": "1.16.5",
+          "build": 226,
+          "recordedAt": "2026-10-15T14:30:08.649Z",
+          "releasedAt": "2026-10-15T10:29:19-04:00",
+          "status": "Tested website source / deployment checked separately",
+          "channel": "website",
+          "changes": [
+            "Added accessible local update history; retained device readiness and opt-in updates.",
+            "Added explicit hosted AI setup checks for configured model names and setup readiness; no questions, inference requests, key tests or account connections."
+          ],
+          "validation": "25 automated tests; isolated desktop/mobile browser checks; publication verified separately.",
+          "dateNote": "Time records the source commit. It is not an installation or deployment timestamp.",
+          "references": [
+            {
+              "label": "Tested source changes",
+              "url": "https://github.com/GoyoneByDesign/goyonebydesign/commit/9a945cdb1e640d2965290873ba544a225ac9db64"
+            }
+          ]
+        },
         {
           "id": "initial-observed-release",
           "version": "1.16.4",
@@ -118,6 +181,28 @@
       "name": "The Commissary",
       "entries": [
         {
+          "id": "maintenance-2026-10-15",
+          "version": "0.0.1",
+          "build": 1,
+          "recordedAt": "2026-10-15T14:30:08.941Z",
+          "releasedAt": "2026-10-15T10:28:34-04:00",
+          "status": "Tested source / backend and native deployment unverified",
+          "channel": "tested source / installer unchanged",
+          "changes": [
+            "Vendored official patched SheetJS 0.20.3 with its locked integrity hash.",
+            "Preserved inventory XLSX, legacy XLS and CSV parsing and export values.",
+            "Added a visible version and update history link."
+          ],
+          "validation": "5 synthetic spreadsheet tests and all 138 bundled forms compare equivalent with the prior parser; type-check/build pass; dependency audit reports zero findings.",
+          "dateNote": "Time records the source commit. It is not an installation or deployment timestamp.",
+          "references": [
+            {
+              "label": "Tested source changes",
+              "url": "https://github.com/GoyoneByDesign/the-commissary/commit/b49c26bdd9657fc9824bf501068a9faab5191582"
+            }
+          ]
+        },
+        {
           "id": "initial-observed-release",
           "version": "0.0.0",
           "build": null,
@@ -144,6 +229,28 @@
       "name": "Questrix",
       "entries": [
         {
+          "id": "maintenance-2026-10-15",
+          "version": "0.0.1",
+          "build": 1,
+          "recordedAt": "2026-10-15T14:30:08.796Z",
+          "releasedAt": "2026-10-15T10:28:30-04:00",
+          "status": "Tested source / backend and native deployment unverified",
+          "channel": "tested source / installer unchanged",
+          "changes": [
+            "Updated patched Nodemailer 10.1.1.",
+            "Report email no longer reports simulated, failed or rejected requests as successful; SMTP acceptance is distinguished from delivery.",
+            "Added a visible version and update history link."
+          ],
+          "validation": "5 no-send mail regression tests, type-check and production build pass.",
+          "dateNote": "Time records the source commit. It is not an installation or deployment timestamp.",
+          "references": [
+            {
+              "label": "Tested source changes",
+              "url": "https://github.com/GoyoneByDesign/Questrix/commit/e6eb9f5bc40d619b82ec4d3c54716fa6ee3fa7c6"
+            }
+          ]
+        },
+        {
           "id": "initial-observed-release",
           "version": "0.0.0",
           "build": null,
@@ -169,6 +276,27 @@
       "id": "stockpilot",
       "name": "StockPilot",
       "entries": [
+        {
+          "id": "maintenance-2026-10-15",
+          "version": "1.0.1",
+          "build": 1,
+          "recordedAt": "2026-10-15T14:30:09.303Z",
+          "releasedAt": "2026-10-15T10:28:41-04:00",
+          "status": "Tested source / backend and native deployment unverified",
+          "channel": "tested source / installer unchanged",
+          "changes": [
+            "Added visible update history in navigation and established source build metadata.",
+            "Fixed dashboard cards expanding the whole page on narrow screens while retaining horizontally scrollable tables."
+          ],
+          "validation": "284 existing mocked/local tests passed before navigation/CSS changes; responsive browser checks verify history access and no page overflow. No live commerce action.",
+          "dateNote": "Time records the source commit. It is not an installation or deployment timestamp.",
+          "references": [
+            {
+              "label": "Tested source changes",
+              "url": "https://github.com/GoyoneByDesign/StockPilot/commit/d996be8e7f10b8f001101aa3a5c9a8cc42cc2f08"
+            }
+          ]
+        },
         {
           "id": "initial-observed-release",
           "version": "1.0.0",
@@ -217,6 +345,27 @@
       "name": "Bibo's Giggles Fun Site",
       "entries": [
         {
+          "id": "maintenance-2026-10-15",
+          "version": "1.0.0",
+          "build": 1,
+          "recordedAt": "2026-10-15T14:30:09.636Z",
+          "releasedAt": "2026-10-15T10:28:48-04:00",
+          "status": "Tested website source / deployment checked separately",
+          "channel": "website",
+          "changes": [
+            "Added visible version and update history access.",
+            "Introduced version 1.0.0/build1 as the first tracked website release; earlier versions remain unknown."
+          ],
+          "validation": "Original game scripts and embedded artwork match the prior source after line-ending normalization; inline JavaScript parses. Desktop/mobile history navigation passes; gameplay logic was not changed or exhaustively re-tested.",
+          "dateNote": "Time records the source commit. It is not an installation or deployment timestamp.",
+          "references": [
+            {
+              "label": "Tested source changes",
+              "url": "https://github.com/GoyoneByDesign/bibosgiggles-fun-site/commit/1ccebbae2ce8c0f15e68dcbffcd4de580e16c492"
+            }
+          ]
+        },
+        {
           "id": "initial-observation",
           "version": "Not recorded",
           "build": null,
@@ -232,6 +381,67 @@
             {
               "label": "Existing website",
               "url": "https://bibosgiggles.goyonebydesign.com"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "goyonebydesign-portal",
+      "name": "GoyoneByDesign website and app portal",
+      "entries": [
+        {
+          "id": "maintenance-2026-10-15",
+          "version": "1.0.0",
+          "build": 1,
+          "recordedAt": "2026-10-15T14:30:09.801Z",
+          "releasedAt": "2026-10-15T10:29:19-04:00",
+          "status": "Tested website source / deployment checked separately",
+          "channel": "website",
+          "changes": [
+            "Added consistent versioned update history across the app portal; first tracked portal release."
+          ],
+          "validation": "Source and static browser checks; publication verified separately.",
+          "dateNote": "Time records the source commit. It is not an installation or deployment timestamp.",
+          "references": [
+            {
+              "label": "Tested source changes",
+              "url": "https://github.com/GoyoneByDesign/goyonebydesign/commit/9a945cdb1e640d2965290873ba544a225ac9db64"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "toast-training",
+      "name": "Toast Training App - V2 and V3",
+      "entries": [
+        {
+          "id": "inventory-observation-2026-10-15",
+          "version": "3.12.0 (observed V3 source)",
+          "build": null,
+          "recordedAt": "2026-10-15T14:30:09.801Z",
+          "releasedAt": null,
+          "status": "Active separate task / not modified in this audit",
+          "channel": "V3 working source observation; V2 version not recorded",
+          "changes": [
+            "Verified the existing Toast-Training-App repository and separate active V2/V3 task.",
+            "The V3 source package currently identifies version 3.12.0. This observation does not establish that this version is deployed. No concurrent source edits or redeployment were performed."
+          ],
+          "validation": "No new Toast tests were run by this audit. Existing task owns live menu verification, publication and release history integration.",
+          "dateNote": "Earlier release/build times were not established by this audit.",
+          "references": [
+            {
+              "label": "Existing source repository",
+              "url": "https://github.com/GoyoneByDesign/Toast-Training-App"
+            },
+            {
+              "label": "Existing V3 site",
+              "url": "https://toasttestv3.netlify.app"
+            },
+            {
+              "label": "Existing V2 site",
+              "url": "https://toasttestv2.netlify.app"
             }
           ]
         }
