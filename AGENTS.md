@@ -1,5 +1,9 @@
 # Project instructions
 
+## Storage retention across all apps
+
+Follow `STORAGE-RETENTION.md` for Michael's October 15, 2026 instruction to remove superseded copies safely. Keep source, required assets, public downloads, Excel forms, release history, unique evidence, current backups and a useful rollback. This supersedes blanket retention of every backup. No Git history rewrite or force push is authorized.
+
 ## Work across coding assistants
 
 This project must remain editable with Antigravity, ChatGPT/Codex, Gemini, and ordinary development tools. The repository files are the shared project memory.

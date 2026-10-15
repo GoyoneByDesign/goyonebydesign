@@ -1,5 +1,11 @@
 # goyonebydesign — AI handoff
 
+## Storage maintenance — October 15, 2026, 6:07 PM EDT
+
+Added STORAGE-RETENTION.md for all apps and linked it from AGENTS.md. This is documentation and cloud artifact maintenance; app versions/builds and deployable files are unchanged. Removed ten superseded completed Pages workflow artifacts (715,476,961 bytes); retained the two most recent successful Pages artifacts. Across the accessible app repositories, 32 obsolete workflow artifacts (841,514,086 bytes) were removed, retaining 13 artifacts including all device-test evidence. Source, Git history, public release assets, downloads and Commissary forms were preserved. The existing release-cleanup dry run found zero eligible tracked release files.
+
+Verification: deletion returned HTTP204 and artifact-list readback confirmed removed IDs absent and all retained IDs present. Portal root/apps and five public installer/APK/ZIP endpoints returned HTTP200 afterward; both Toast sites also returned HTTP200. Private Drive cleanup receipts are stored privately with the Toast project, not in this public repository. No device/runtime test was rerun for this maintenance.
+
 ## October 15, 2026 - MAX-ALPHA device readiness
 
 Release text now has explicit LF checkout rules in .gitattributes. Windows CRLF conversion otherwise produces locally valid hashes that differ from published Git blobs; the release manifest is regenerated from normalized bytes and must also be verified against the staged/archive bytes before push.
