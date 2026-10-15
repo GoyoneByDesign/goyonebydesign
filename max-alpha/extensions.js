@@ -1,4 +1,5 @@
 /** Curated tools for the installed Mac. All outputs are data, never executable UI. */
+import {deviceReadiness} from './device-readiness.js';
 export const EXTENSION_OPERATIONS = Object.freeze(['status','configure','math','document','memory/list','memory/save','memory/search','memory/delete','memory/clear','code','github']);
 export function extensionCommand(value) {
   const text=String(value).trim();
@@ -43,6 +44,11 @@ function field(label,{value='',type='text',options}={}) {
 
 export function renderExtensions({enabled,request,signal,permission,onAttach=()=>{},onResult=()=>{}}) {
   const root=el('div','','extensions-panel');root.append(el('h3','Your MAX-ALPHA extensions'),el('p','Free tools selected for your creative and app-building work. Local tools load only when used.','muted'));
+  const readiness=el('section','','ext-section');readiness.append(el('h4','Check this device'),el('p','Checks browser support without requesting permissions, connecting accounts or loading AI models. Support detected here does not confirm a working service.','muted'));
+  const checks=el('div','','ext-cards');checks.setAttribute('aria-live','polite');
+  const refreshChecks=()=>{checks.replaceChildren();for(const item of deviceReadiness({companion:enabled})){const card=el('div','','ext-card');card.append(el('strong',item.name),el('span',item.status),el('p',item.detail,'muted'));checks.append(card);}};
+  const recheck=el('button','Check again','button');recheck.type='button';recheck.onclick=refreshChecks;
+  readiness.append(checks,recheck);root.append(readiness);refreshChecks();
   if(!enabled){root.append(el('p','Open the installed MAX-ALPHA app on your Mac to use these local extensions. This website keeps its existing browser, file and account features.'));return root;}
   const status=el('p','Checking installed tools…','muted');status.setAttribute('role','status');root.append(status);
   const cards=el('div','','ext-cards');root.append(cards);

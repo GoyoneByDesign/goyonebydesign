@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "version": "1.16.3",
-  "build": 224,
+  "version": "1.16.4",
+  "build": 225,
   "min_companion_build": 205,
   "files": [
     {
@@ -26,8 +26,8 @@
     },
     {
       "path": "README.md",
-      "sha256": "91a52a263960e34f3f8de0ec43eb2e33b33f25fdaac18537e6a71a063e89ab9d",
-      "bytes": 2973
+      "sha256": "190166ce1fd01e0b8c9724d01eccf89b9a1f09dcd6533aeff038b38dcd8c703f",
+      "bytes": 3307
     },
     {
       "path": "VOICE-SETUP.md",
@@ -135,6 +135,11 @@
       "bytes": 6476
     },
     {
+      "path": "device-readiness.js",
+      "sha256": "d4a175148eb56c7c579ae5f6df092d55cdc381ddbf6f73159684ad3d5507eb96",
+      "bytes": 1734
+    },
+    {
       "path": "device-ui.js",
       "sha256": "cabeb8d3ec59036dcc25ab2fc01e20bfd158060e1e1b410deae7a1d40accbd1a",
       "bytes": 4405
@@ -166,8 +171,8 @@
     },
     {
       "path": "extensions.js",
-      "sha256": "1a7c3b0cc2859c6167e4f0896b6766141a6ad0f7a08b0404c9aa29f5a4584933",
-      "bytes": 11117
+      "sha256": "f6543ee0710fc108587e16300e755c9c3809fa633c4fa5e2aa7fcd6bc4dee523",
+      "bytes": 11959
     },
     {
       "path": "files.js",
@@ -306,7 +311,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "2da63a68ce7bf9a9177d96d21f6f7e6d3208f56d093eda639a7beba0f704351e",
+      "sha256": "2e5436c209a41dd395818c9592bfacecd4eb42abaa14de14692917922118879f",
       "bytes": 259
     },
     {
@@ -346,7 +351,7 @@
     },
     {
       "path": "release-version.js",
-      "sha256": "2f2eca4cf3ec0cb1ade610bc0dbf162b56865a6a220401f325f20aad06c80fae",
+      "sha256": "333000f94fbf03e8317c397fe1db6253130fd812e8f0d4024a0b4e08240a739f",
       "bytes": 155
     },
     {
@@ -406,8 +411,8 @@
     },
     {
       "path": "sw.js",
-      "sha256": "ad48989ece2a563bbd4f6c0e4510329fe52f7c431bb92dc46fcb447c917c4cbc",
-      "bytes": 8491
+      "sha256": "38725eae6fef04d80bf11f4d6ec034ec7d7e329590399df92e51eb9e9607300e",
+      "bytes": 8528
     },
     {
       "path": "tools.js",

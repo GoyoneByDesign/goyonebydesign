@@ -1,5 +1,15 @@
 # goyonebydesign — AI handoff
 
+## October 15, 2026 - MAX-ALPHA device readiness
+
+Release text now has explicit LF checkout rules in .gitattributes. Windows CRLF conversion otherwise produces locally valid hashes that differ from published Git blobs; the release manifest is regenerated from normalized bytes and must also be verified against the staged/archive bytes before push.
+
+Added Settings > Extensions > Check this device to the existing website app, v1.16.4/build225. It detects browser API support for local AI, voice input/output and selected files, and explains Mac companion and protected cloud setup requirements. Checks do not request permissions, access storage, connect accounts, load models or make network requests. Browser support is explicitly distinguished from operational verification. Preserved update opt-in, provider input guards, personal records, app routes and the independent standalone repository baseline.
+
+Verification: 22/22 Node tests including complete release hashes; catalog checks pass. Isolated Chromium checks at 1365px and 393px verify six cards, repeat checking, no horizontal overflow and no page errors; existing update-settings browser checks pass at both sizes. External requests were blocked in UI tests. No live inference or native-device verification. Release includes device-readiness.js in the offline shell and manifest.
+
+Rollback: revert only this readiness commit with git revert, regenerate max-alpha/release.json if resolving subsequent edits, run npm --prefix max-alpha test and node scripts/check-apps.mjs, then push normally. The pre-update website commit is 7c28000; do not reset/force-push or replace unrelated work. Existing MAX-ZETA/PMIX source and private redirects were not edited because coordination with the separate reporting task is outstanding. See apps/READINESS-2026-10-15.md for verified inventory and next priorities. Publication status must be verified from live bytes after push.
+
 ## October 13, 2026 — MAX-ALPHA automatic update opt-in (separate draft)
 
 - Current website copy now has a saved Settings → Install & updates checkbox for app-requested automatic checks. New and migrated records default it off; manual checking remains available. Internet permission remains authoritative. App-requested automatic activation is disabled until an independently signed channel exists; existing active-work/draft guards remain intact for manual Update & reopen.

@@ -1,0 +1,10 @@
+# Release hashes must describe the same bytes on Windows and GitHub Pages.
+max-alpha/**/*.js text eol=lf
+max-alpha/**/*.mjs text eol=lf
+max-alpha/**/*.cjs text eol=lf
+max-alpha/**/*.css text eol=lf
+max-alpha/**/*.html text eol=lf
+max-alpha/**/*.json text eol=lf
+max-alpha/**/*.md text eol=lf
+max-alpha/**/*.py text eol=lf
+max-alpha/**/*.svg text eol=lf
