@@ -1,6 +1,6 @@
 # Application readiness review - October 15, 2026
 
-This is a source/build review, not a production certification. The current catalog contains nine entries. Legacy names and independently versioned source must not be silently replaced.
+This is a source/build review, not a production certification. The current catalog contains nine entries. The homepage additionally links Bibo's Giggles Fun Site; its runtime repository was not verified in the local project inventory, so it remains a separate source/access follow-up. Legacy names and independently versioned source must not be silently replaced.
 
 | App | Verified source/status | Next high-value work |
 | --- | --- | --- |
