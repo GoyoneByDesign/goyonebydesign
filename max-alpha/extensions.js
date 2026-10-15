@@ -1,5 +1,6 @@
 /** Curated tools for the installed Mac. All outputs are data, never executable UI. */
 import {deviceReadiness} from './device-readiness.js';
+import {checkAIServiceReadiness} from './service-readiness.js';
 export const EXTENSION_OPERATIONS = Object.freeze(['status','configure','math','document','memory/list','memory/save','memory/search','memory/delete','memory/clear','code','github']);
 export function extensionCommand(value) {
   const text=String(value).trim();
@@ -49,6 +50,11 @@ export function renderExtensions({enabled,request,signal,permission,onAttach=()=
   const refreshChecks=()=>{checks.replaceChildren();for(const item of deviceReadiness({companion:enabled})){const card=el('div','','ext-card');card.append(el('strong',item.name),el('span',item.status),el('p',item.detail,'muted'));checks.append(card);}};
   const recheck=el('button','Check again','button');recheck.type='button';recheck.onclick=refreshChecks;
   readiness.append(checks,recheck);root.append(readiness);refreshChecks();
+  const services=el('section','','ext-section');services.append(el('h4','Hosted AI setup'),el('p','Check the existing hosted services only when you choose. This reads setup status and configured model names; it does not send a question, test a key or request an AI answer. Status checks require internet permission and may be unavailable in a local preview.','muted'));
+  const serviceStatus=el('p','','muted');serviceStatus.setAttribute('role','status');const serviceRows=el('div');
+  const serviceButton=el('button','Check hosted AI setup','button');serviceButton.type='button';
+  serviceButton.onclick=async()=>{if(signal?.aborted)return;serviceButton.disabled=true;serviceStatus.textContent='Checking hosted setup metadata…';try{await permission('internet');if(signal?.aborted)return;const results=await checkAIServiceReadiness({signal});if(signal?.aborted)return;serviceRows.replaceChildren();for(const item of results){const row=el('p','','ext-service-result');row.append(el('strong',item.provider+' · '+item.model),el('br'),el('span',item.detail));serviceRows.append(row);}serviceStatus.textContent='Setup check complete. Inference and account access were not tested.';}catch(error){if(!signal?.aborted)serviceStatus.textContent=error.message;}finally{serviceButton.disabled=false;}};
+  services.append(serviceButton,serviceStatus,serviceRows);root.append(services);
   if(!enabled){root.append(el('p','Open the installed MAX-ALPHA app on your Mac to use these local extensions. This website keeps its existing browser, file and account features.'));return root;}
   const status=el('p','Checking installed tools…','muted');status.setAttribute('role','status');root.append(status);
   const cards=el('div','','ext-cards');root.append(cards);

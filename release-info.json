@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "version": "1.0.0",
+  "build": 1,
+  "timezone": "America/New_York",
+  "preparedAt": "2026-10-15T14:02:12.541Z",
+  "channel": "website",
+  "changes": [
+    "Added consistent versioned update history across the app portal; first tracked portal release."
+  ],
+  "validation": "Source and static browser checks; publication verified separately."
+}

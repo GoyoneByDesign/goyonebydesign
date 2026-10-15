@@ -13,6 +13,7 @@ Compared standalone security branch `ec21c0560d90b273517750be1d83626245d1b4e5` w
 ## Features and requirements
 
 - Settings > Extensions > Check this device reports browser support for local AI, voice input, spoken replies and selected files, plus companion and cloud setup requirements. This read-only check requests no permissions and performs no network calls. Detected APIs do not establish that a model, microphone, account or service works.
+- In the separate Hosted AI setup section, Check hosted AI setup reads the existing services' health metadata and configured model names after internet permission. It sends no question or provider-key test and makes no inference request. Setup readiness is distinct from a tested AI answer; it does not connect accounts.
 - Conversation uses a separately configured AI connection or compatible downloaded local model. Installing the interface does not install a model or grant unlimited hosted AI.
 - Bills & budget works locally without AI credits. It tracks user-entered statements and budget assumptions; it does not access banks, pay bills or guarantee savings.
 - Work studio creates and exports documents and source files. Generated code requires review and testing. Local coding proposals depend on the Mac companion and configured local model.

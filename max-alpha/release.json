@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "version": "1.16.4",
-  "build": 225,
+  "version": "1.16.5",
+  "build": 226,
   "min_companion_build": 205,
   "files": [
     {
@@ -26,8 +26,8 @@
     },
     {
       "path": "README.md",
-      "sha256": "190166ce1fd01e0b8c9724d01eccf89b9a1f09dcd6533aeff038b38dcd8c703f",
-      "bytes": 3307
+      "sha256": "cf7cf839c494d9596708c11f7cdf3574c890ae4d32eab5e9d0961413e3da441c",
+      "bytes": 3628
     },
     {
       "path": "VOICE-SETUP.md",
@@ -171,8 +171,8 @@
     },
     {
       "path": "extensions.js",
-      "sha256": "f6543ee0710fc108587e16300e755c9c3809fa633c4fa5e2aa7fcd6bc4dee523",
-      "bytes": 11959
+      "sha256": "0afcdedcb7741007f413daa0fcebc45cf9c42e72237f77d1959186b89d450296",
+      "bytes": 13400
     },
     {
       "path": "files.js",
@@ -188,6 +188,11 @@
       "path": "gemini.js",
       "sha256": "2a4db3c2dbcdf2f68dedb06a2a0dc21331b9ad900bd2b1011253d9fbc2721159",
       "bytes": 7725
+    },
+    {
+      "path": "history.html",
+      "sha256": "2ba5e5b6aff8855430b6141cea60883a42212db67d4e57bdb00d791af30f416a",
+      "bytes": 2692
     },
     {
       "path": "icons/apple-touch-icon.png",
@@ -311,7 +316,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "2e5436c209a41dd395818c9592bfacecd4eb42abaa14de14692917922118879f",
+      "sha256": "fd0f7db2eb5856989080cc6197967ddccccdd447dd342dafab7b21a46df9f291",
       "bytes": 259
     },
     {
@@ -350,8 +355,13 @@
       "bytes": 13019
     },
     {
+      "path": "release-info.json",
+      "sha256": "dfe6cd682e35a04853152879b0d0df13290bb9044c99f5017cab1d6ed162c946",
+      "bytes": 543
+    },
+    {
       "path": "release-version.js",
-      "sha256": "333000f94fbf03e8317c397fe1db6253130fd812e8f0d4024a0b4e08240a739f",
+      "sha256": "b7fd7e067c1771fdda28b81f73d17df3f9983ca6a3b0dbbcfd0d391a0c54d8ec",
       "bytes": 155
     },
     {
@@ -390,6 +400,11 @@
       "bytes": 3852
     },
     {
+      "path": "service-readiness.js",
+      "sha256": "aa52e679404102f3a67fbc2f9b27c37e6b7845f22565d670942f381202711f8b",
+      "bytes": 1078
+    },
+    {
       "path": "song-vocals.js",
       "sha256": "7c81da7af194e3b8bdacad8843f32a5ce7278a80ccad2cb03d21baaf38f8a605",
       "bytes": 5908
@@ -411,8 +426,8 @@
     },
     {
       "path": "sw.js",
-      "sha256": "38725eae6fef04d80bf11f4d6ec034ec7d7e329590399df92e51eb9e9607300e",
-      "bytes": 8528
+      "sha256": "ba739da4d815cde03442d6a5a9887114dccecf55c42617e35a477ed9b58dc2d0",
+      "bytes": 8599
     },
     {
       "path": "tools.js",
@@ -436,8 +451,8 @@
     },
     {
       "path": "updates.js",
-      "sha256": "2793e7f03529bc3536918ea9c75e25b0d6c74679d4caa56b9cabc086f959a233",
-      "bytes": 10539
+      "sha256": "c98f1ab3f9a3a839861c073a5627f7591a9cb092f94e5cc5b65a93cae38aa253",
+      "bytes": 10819
     },
     {
       "path": "voice-config.js",

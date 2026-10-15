@@ -1,0 +1,7 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {easternTime,renderHistory,validateHistory} from './build-update-history.mjs';
+const record=()=>({schema:1,timezone:'America/New_York',apps:[{id:'test-app',name:'Test <App>',entries:[{id:'first',version:'1.0.0',build:null,recordedAt:'2026-10-15T13:00:00Z',releasedAt:null,status:'Source tested',channel:'Source only',changes:['<script>not executable</script>'],references:[]}]}]});
+test('Eastern timestamps follow daylight saving and preserve missing historical times',()=>{assert.match(easternTime('2026-10-15T13:00:00Z'),/9:00:00 AM EDT/);assert.match(easternTime('2026-12-15T13:00:00Z'),/8:00:00 AM EST/);assert.equal(easternTime(null),'Not recorded');assert.throws(()=>easternTime('2026-10-15'));});
+test('history escapes untrusted labels and does not invent a build or release time',()=>{const html=renderHistory(record());assert.ok(html.includes('Test &lt;App&gt;'));assert.ok(!html.includes('<script>'));assert.match(html,/Build not recorded/);assert.match(html,/Not recorded/);});
+test('rejects duplicate entries, unsafe references and unzoned dates',()=>{for(const mutate of [(r)=>r.apps.push(r.apps[0]),(r)=>r.apps[0].entries.push(r.apps[0].entries[0]),(r)=>r.apps[0].entries[0].references.push({url:'javascript:alert(1)'}),(r)=>r.apps[0].entries[0].releasedAt='2026-10-15']){const r=record();mutate(r);assert.throws(()=>validateHistory(r));}});

@@ -1,0 +1,241 @@
+{
+  "schema": 1,
+  "timezone": "America/New_York",
+  "apps": [
+    {
+      "id": "boardroom",
+      "name": "BOARDROOM",
+      "entries": [
+        {
+          "id": "initial-observed-release",
+          "version": "2",
+          "build": null,
+          "recordedAt": "2026-10-15T13:35:58.584Z",
+          "releasedAt": null,
+          "status": "Catalog observation / validation limited",
+          "channel": "Web / source",
+          "changes": [
+            "Web v2. Owner access only. Choose your PIN securely on first opening. AI teammates are not connected; paid requests are disabled."
+          ],
+          "validation": "See package limitations. This record does not establish new native-device testing.",
+          "dateNote": "Historical release time was not recorded. Catalog/package information was observed when this history entry was created.",
+          "references": []
+        }
+      ]
+    },
+    {
+      "id": "statusping",
+      "name": "StatusPing",
+      "entries": [
+        {
+          "id": "initial-observed-release",
+          "version": "0.2.0-review.3",
+          "build": 5,
+          "recordedAt": "2026-10-15T13:35:58.584Z",
+          "releasedAt": null,
+          "status": "Catalog observation / validation limited",
+          "channel": "Existing native test package",
+          "changes": [
+            "Android 7+ � StatusPing 0.2.0-review.3/build 5 isolated debug test APK. Regression and native emulator check-in/reminder tests passed, including bounded delivery after ordinary process death. Full 12-hour/Doze/reboot and real-phone reliability remain unverified. Live caregiver/email/SMS/call escalation is not tested; production upgrade compatibility is not established."
+          ],
+          "validation": "See package limitations. This record does not establish new native-device testing.",
+          "dateNote": "Historical release time was not recorded. Catalog/package information was observed when this history entry was created.",
+          "references": []
+        }
+      ]
+    },
+    {
+      "id": "view4real",
+      "name": "VIEW4REAL",
+      "entries": [
+        {
+          "id": "initial-observed-release",
+          "version": "0.2.2",
+          "build": null,
+          "recordedAt": "2026-10-15T13:35:58.584Z",
+          "releasedAt": null,
+          "status": "Catalog observation / validation limited",
+          "channel": "Existing native test package",
+          "changes": [
+            "VIEW4REAL 0.2.2 unsigned Windows x64 portable test ZIP, containing the actual executable. Build, browser interaction, Rust tests and native window launch/close checks passed. Physical brightness hardware and interactive native controls remain untested; billing is not connected. Existing WebView2 Runtime required. No Android or iOS installer."
+          ],
+          "validation": "See package limitations. This record does not establish new native-device testing.",
+          "dateNote": "Historical release time was not recorded. Catalog/package information was observed when this history entry was created.",
+          "references": []
+        }
+      ]
+    },
+    {
+      "id": "max-alpha",
+      "name": "MAX-ALPHA",
+      "entries": [
+        {
+          "id": "initial-observed-release",
+          "version": "1.16.4",
+          "build": 225,
+          "recordedAt": "2026-10-15T13:35:58.584Z",
+          "releasedAt": "2026-10-15T09:15:05-04:00",
+          "status": "Source tested; deployment separate",
+          "channel": "Web / source",
+          "changes": [
+            "Added device checks for local AI, voice, selected files, companion requirements and cloud setup.",
+            "Added consistent LF release text and verified all 95 published file hashes."
+          ],
+          "validation": "22 tests; desktop and phone browser checks; published bytes verified.",
+          "dateNote": "Time is the recorded source commit time, not an inferred installation or deployment time.",
+          "references": [
+            {
+              "label": "Source commit",
+              "url": "https://github.com/GoyoneByDesign/goyonebydesign/commit/269febaa5c6d4a2e98512ad29cef49e9a34f5c54"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "max-zeta",
+      "name": "MAX-ZETA",
+      "entries": [
+        {
+          "id": "initial-observed-release",
+          "version": "3.61.0",
+          "build": 84,
+          "recordedAt": "2026-10-15T13:35:58.584Z",
+          "releasedAt": null,
+          "status": "Catalog observation / validation limited",
+          "channel": "Web / source",
+          "changes": [
+            "v3.61.0 � Build 84. Owner sign-in and access PIN required. Native installers are not available."
+          ],
+          "validation": "See package limitations. This record does not establish new native-device testing.",
+          "dateNote": "Historical release time was not recorded. Catalog/package information was observed when this history entry was created.",
+          "references": []
+        }
+      ]
+    },
+    {
+      "id": "commissary",
+      "name": "The Commissary",
+      "entries": [
+        {
+          "id": "initial-observed-release",
+          "version": "0.0.0",
+          "build": null,
+          "recordedAt": "2026-10-15T13:35:58.584Z",
+          "releasedAt": "2026-10-15T09:15:09-04:00",
+          "status": "Source tested; deployment separate",
+          "channel": "Web / source",
+          "changes": [
+            "Development prototype. The Android architecture preview is not an installable Android app yet."
+          ],
+          "validation": "Source type-check and build passed.",
+          "dateNote": "Time is the recorded source commit time, not an inferred installation or deployment time.",
+          "references": [
+            {
+              "label": "Source commit",
+              "url": "https://github.com/GoyoneByDesign/the-commissary/commit/70e890b06bb9ec6b9f7e939f3e13d03c0840b697"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "questrix",
+      "name": "Questrix",
+      "entries": [
+        {
+          "id": "initial-observed-release",
+          "version": "0.0.0",
+          "build": null,
+          "recordedAt": "2026-10-15T13:35:58.584Z",
+          "releasedAt": "2026-10-15T09:15:06-04:00",
+          "status": "Source tested; deployment separate",
+          "channel": "Web / source",
+          "changes": [
+            "Web project in development. Opens in Google AI Studio and may require owner sign-in. No native installer has been released."
+          ],
+          "validation": "Source type-check and build passed.",
+          "dateNote": "Time is the recorded source commit time, not an inferred installation or deployment time.",
+          "references": [
+            {
+              "label": "Source commit",
+              "url": "https://github.com/GoyoneByDesign/Questrix/commit/f206125b7557f7704e1e6abfffd8cf2ba25e88b5"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "stockpilot",
+      "name": "StockPilot",
+      "entries": [
+        {
+          "id": "initial-observed-release",
+          "version": "1.0.0",
+          "build": null,
+          "recordedAt": "2026-10-15T13:35:58.584Z",
+          "releasedAt": "2026-09-30T07:46:49-04:00",
+          "status": "Source tested; deployment separate",
+          "channel": "Web / source",
+          "changes": [
+            "Self-hosted web application. Service configuration is required; native installers are not available."
+          ],
+          "validation": "284 mocked/local tests pass; live actions not tested.",
+          "dateNote": "Time is the recorded source commit time, not an inferred installation or deployment time.",
+          "references": [
+            {
+              "label": "Source commit",
+              "url": "https://github.com/GoyoneByDesign/StockPilot/commit/7a5afa25b578067d8b16f0058946749671900b29"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "justmypick",
+      "name": "JustMyPick",
+      "entries": [
+        {
+          "id": "initial-observed-release",
+          "version": "0.38",
+          "build": 38,
+          "recordedAt": "2026-10-15T13:35:58.584Z",
+          "releasedAt": null,
+          "status": "Catalog observation / validation limited",
+          "channel": "Existing native test package",
+          "changes": [
+            "Android 8+ � JustMyPick 0.38/build 38 debug test APK. Branding, startup and same-key emulator list/cart/budget preservation passed. Its test certificate differs from old SavvyKin 0.36: an in-place update requires the original key. Do not uninstall or erase your existing app to work around this. Live integrations and physical-phone validation remain pending."
+          ],
+          "validation": "See package limitations. This record does not establish new native-device testing.",
+          "dateNote": "Historical release time was not recorded. Catalog/package information was observed when this history entry was created.",
+          "references": []
+        }
+      ]
+    },
+    {
+      "id": "bibos-giggles",
+      "name": "Bibo's Giggles Fun Site",
+      "entries": [
+        {
+          "id": "initial-observation",
+          "version": "Not recorded",
+          "build": null,
+          "recordedAt": "2026-10-15T13:35:58.584Z",
+          "releasedAt": null,
+          "status": "Live site observed / source unverified",
+          "channel": "Website",
+          "changes": [
+            "Existing homepage destination returned HTTP 200. Its runtime repository is not yet verified."
+          ],
+          "validation": "Availability only; game correctness not tested.",
+          "references": [
+            {
+              "label": "Existing website",
+              "url": "https://bibosgiggles.goyonebydesign.com"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

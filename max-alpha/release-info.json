@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "version": "1.16.5",
+  "build": 226,
+  "timezone": "America/New_York",
+  "preparedAt": "2026-10-15T14:02:12.553Z",
+  "channel": "website",
+  "changes": [
+    "Added accessible local update history; retained device readiness and opt-in updates.",
+    "Added explicit hosted AI setup checks for configured model names and setup readiness; no questions, inference requests, key tests or account connections."
+  ],
+  "validation": "25 automated tests; isolated desktop/mobile browser checks; publication verified separately."
+}
