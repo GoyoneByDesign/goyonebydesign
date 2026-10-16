@@ -1,0 +1,131 @@
+[
+  {
+    "url": "https://www.goyonebydesign.com/",
+    "status": 200,
+    "appleTouch": "/apple-touch-icon.png?v=20261016",
+    "iconUrl": "https://www.goyonebydesign.com/apple-touch-icon.png?v=20261016",
+    "iconStatus": 200,
+    "contentType": "image/png",
+    "size": [
+      180,
+      180
+    ],
+    "sha256": "d9c2174aa710193b39c2f916f5876bf85aceedf7abb09b757970a6d8b083f69a"
+  },
+  {
+    "url": "https://www.goyonebydesign.com/apps/",
+    "status": 200,
+    "appleTouch": "/apple-touch-icon.png?v=20261016",
+    "iconUrl": "https://www.goyonebydesign.com/apple-touch-icon.png?v=20261016",
+    "iconStatus": 200,
+    "contentType": "image/png",
+    "size": [
+      180,
+      180
+    ],
+    "sha256": "d9c2174aa710193b39c2f916f5876bf85aceedf7abb09b757970a6d8b083f69a"
+  },
+  {
+    "url": "https://www.goyonebydesign.com/max-alpha/",
+    "status": 200,
+    "appleTouch": "./icons/apple-touch-icon.png?v=227",
+    "iconUrl": "https://www.goyonebydesign.com/max-alpha/icons/apple-touch-icon.png?v=227",
+    "iconStatus": 200,
+    "contentType": "image/png",
+    "size": [
+      180,
+      180
+    ],
+    "sha256": "f9f3bb372312681ec4109468fb44a535c041ddba63654fe9f5e0fee6c8d90e0b"
+  },
+  {
+    "url": "https://www.goyonebydesign.com/max-alpha/install.html",
+    "status": 200,
+    "appleTouch": "./icons/apple-touch-icon.png?v=227",
+    "iconUrl": "https://www.goyonebydesign.com/max-alpha/icons/apple-touch-icon.png?v=227",
+    "iconStatus": 200,
+    "contentType": "image/png",
+    "size": [
+      180,
+      180
+    ],
+    "sha256": "f9f3bb372312681ec4109468fb44a535c041ddba63654fe9f5e0fee6c8d90e0b"
+  },
+  {
+    "url": "https://www.goyonebydesign.com/max-g/",
+    "status": 200,
+    "appleTouch": "/max-alpha/icons/apple-touch-icon.png?v=20261016",
+    "iconUrl": "https://www.goyonebydesign.com/max-alpha/icons/apple-touch-icon.png?v=20261016",
+    "iconStatus": 200,
+    "contentType": "image/png",
+    "size": [
+      180,
+      180
+    ],
+    "sha256": "f9f3bb372312681ec4109468fb44a535c041ddba63654fe9f5e0fee6c8d90e0b"
+  },
+  {
+    "url": "https://www.goyonebydesign.com/view4real/",
+    "status": 200,
+    "appleTouch": "/view4real/apple-touch-icon.png?v=20261016",
+    "iconUrl": "https://www.goyonebydesign.com/view4real/apple-touch-icon.png?v=20261016",
+    "iconStatus": 200,
+    "contentType": "image/png",
+    "size": [
+      180,
+      180
+    ],
+    "sha256": "f8e186df609f5de833590e50b89192ff904e840af4f8879b6e280532ba291893"
+  },
+  {
+    "url": "https://www.goyonebydesign.com/sightsync/",
+    "status": 200,
+    "appleTouch": "/sightsync/apple-touch-icon.png?v=20261016",
+    "iconUrl": "https://www.goyonebydesign.com/sightsync/apple-touch-icon.png?v=20261016",
+    "iconStatus": 200,
+    "contentType": "image/png",
+    "size": [
+      180,
+      180
+    ],
+    "sha256": "f8e186df609f5de833590e50b89192ff904e840af4f8879b6e280532ba291893"
+  },
+  {
+    "url": "https://bibosgiggles.goyonebydesign.com/",
+    "status": 200,
+    "appleTouch": "./apple-touch-icon.png?v=2",
+    "iconStatus": 200,
+    "size": [
+      180,
+      180
+    ],
+    "sha256": "70bbb1d1cd5826024925f9498384f4232764f4c31e02ef918340679235e8de6b",
+    "validation": "Live downloaded PNG exactly matches committed source."
+  },
+  {
+    "url": "https://toasttestv2.netlify.app/",
+    "status": 200,
+    "appleTouch": "/apple-touch-icon.png?v=2.3.2",
+    "iconUrl": "https://toasttestv2.netlify.app/apple-touch-icon.png?v=2.3.2",
+    "iconStatus": 200,
+    "contentType": "image/png",
+    "size": [
+      180,
+      180
+    ],
+    "sha256": "275f52dc7d9c777ac9ca88739a87f837a30f2e17bbfd8b6dfe6898002208fd8b"
+  },
+  {
+    "url": "https://toasttestv3.netlify.app/",
+    "status": 200,
+    "appleTouch": "/apple-touch-icon.png?v=3.13.2",
+    "iconUrl": "https://toasttestv3.netlify.app/apple-touch-icon.png?v=3.13.2",
+    "iconStatus": 200,
+    "contentType": "image/png",
+    "size": [
+      180,
+      180
+    ],
+    "sha256": "813d59fad58978df2be967628bc6e41c8fd1a6373367d0ecce72ba3f093ac15b"
+  }
+]

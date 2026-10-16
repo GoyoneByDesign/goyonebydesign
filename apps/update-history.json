@@ -7,6 +7,27 @@
       "name": "BOARDROOM",
       "entries": [
         {
+          "id": "private-preview-home-screen-icons-2026-10-16",
+          "version": "2.0.1",
+          "build": 1,
+          "recordedAt": "2026-10-16T12:02:57Z",
+          "releasedAt": null,
+          "status": "Private Sites deployment succeeded",
+          "channel": "private preview icon metadata release; separate from main/native version",
+          "changes": [
+            "Added a 180px opaque Safari Home Screen icon from existing approved artwork.",
+            "Preserved current private application source, behavior and owner-only access.",
+            "Current Sites source commit: 5c061213c2780da6a5fce6fb302e13dd314f19e0"
+          ],
+          "validation": "Sites deployment succeeded; source PNG dimensions/opacity checked. Owner-only policy retains one user and zero external visitors; anonymous launch requests return403. No authenticated Safari installation or physical iOS test.",
+          "references": [
+            {
+              "label": "Owner-private app (sign-in required)",
+              "url": "https://goyonebydesign-boardroom.michaelgoyone78.chatgpt.site"
+            }
+          ]
+        },
+        {
           "id": "initial-observed-release",
           "version": "2",
           "build": null,
@@ -209,6 +230,27 @@
       "name": "The Commissary",
       "entries": [
         {
+          "id": "private-preview-home-screen-icons-2026-10-16",
+          "version": "0.0.1",
+          "build": 1,
+          "recordedAt": "2026-10-16T12:02:57Z",
+          "releasedAt": null,
+          "status": "Private Sites deployment succeeded",
+          "channel": "private preview icon metadata release; separate from main/native version",
+          "changes": [
+            "Added a 180px opaque Safari Home Screen icon from existing approved artwork.",
+            "Preserved current private application source, behavior and owner-only access.",
+            "Current Sites source commit: eef5f793086503294350458a8fc308f108ba0d10"
+          ],
+          "validation": "Sites deployment succeeded; source PNG dimensions/opacity checked. Owner-only policy retains one user and zero external visitors; anonymous launch requests return403. No authenticated Safari installation or physical iOS test.",
+          "references": [
+            {
+              "label": "Owner-private app (sign-in required)",
+              "url": "https://commissary-private-preview.michaelgoyone78.chatgpt.site"
+            }
+          ]
+        },
+        {
           "id": "home-screen-icons-2026-10-16",
           "version": "0.0.2",
           "build": 2,
@@ -270,6 +312,27 @@
       "id": "questrix",
       "name": "Questrix",
       "entries": [
+        {
+          "id": "private-preview-home-screen-icons-2026-10-16",
+          "version": "0.0.1",
+          "build": 1,
+          "recordedAt": "2026-10-16T12:02:57Z",
+          "releasedAt": null,
+          "status": "Private Sites deployment succeeded",
+          "channel": "private preview icon metadata release; separate from main/native version",
+          "changes": [
+            "Added a 180px opaque Safari Home Screen icon from existing approved artwork.",
+            "Preserved current private application source, behavior and owner-only access.",
+            "Current Sites source commit: c5e6b42a15c544411c0b2a5626a04cf7a790e810"
+          ],
+          "validation": "Sites deployment succeeded; source PNG dimensions/opacity checked. Owner-only policy retains one user and zero external visitors; anonymous launch requests return403. No authenticated Safari installation or physical iOS test.",
+          "references": [
+            {
+              "label": "Owner-private app (sign-in required)",
+              "url": "https://questrix-private-preview.michaelgoyone78.chatgpt.site"
+            }
+          ]
+        },
         {
           "id": "home-screen-icons-2026-10-16",
           "version": "0.0.2",

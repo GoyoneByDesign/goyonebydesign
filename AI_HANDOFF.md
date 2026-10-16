@@ -1,3 +1,7 @@
+# October 16, 2026 - Verified icon publication follow-up
+
+2026-10-16T12:02:11Z. See apps/ICON-OUTCOME-2026-10-16.md and apps/ICON-LIVE-2026-10-16.json for published URLs, actual live PNG sizes/hashes, private preview outcomes and limitations. Source fixes are pushed. Existing installers unchanged. No physical iOS device testing.
+
 # October 16, 2026 - Safari Home Screen icon maintenance
 
 2026-10-16T11:32:36Z. Portfolio 1.0.1/build2; MAX-ALPHA website 1.16.6/build227. Added Apple icons from existing verified artwork on root/gallery/install/product/redirect routes. Preserved redirect targets and private access. VIEW4REAL PNGs are direct rasterizations of assets/view4real/view4real-icon.svg. MAX-ALPHA retains its existing real 180px PNG, manifest /max-g/ identity, update opt-in and storage. Only shell cache version advances under the existing guarded update mechanism; no storage clearing or migration. App-source-only fixes are separately labeled in portal history. MAX-ZETA current source unavailable in this Sites connection (project not found); stale pmix-app/ untouched. No native packages or third-party sites changed. Run the existing source checks and verify deployed bytes before claiming publication.
