@@ -1,6 +1,6 @@
 {
-  "name": "VIEW4REAL",
-  "short_name": "VIEW4REAL",
+  "name": "View4Real",
+  "short_name": "View4Real",
   "start_url": "./",
   "scope": "./",
   "display": "browser",

@@ -57,39 +57,39 @@
   },
   {
     "id": "view4real",
-    "name": "VIEW4REAL",
+    "name": "View4Real",
     "category": "Display comfort",
     "status": "Unsigned Windows test build",
     "icon": "view4real.svg",
     "screen": "view4real-screen.png",
-    "caption": "VIEW4REAL display-comfort illustration; the current unsigned portable test download is separate from this artwork.",
+    "caption": "View4Real display-comfort illustration; the current unsigned portable test download is separate from this artwork.",
     "description": "Keep your display preferences together, with profiles for reading, work, and evening screen time.",
     "features": [
       "Display profiles",
       "Reading preferences",
       "Windows desktop"
     ],
-    "note": "VIEW4REAL 0.2.3 / build 2 unsigned Windows x64 portable test ZIP. Includes local version/history. Source, browser, Rust and native reader/history checks passed. Physical brightness hardware remains untested; billing is not connected. Existing WebView2 Runtime required. No Android or iOS installer.",
+    "note": "View4Real 0.2.3 / build 3 unsigned Windows x64 portable test ZIP. Approved app and GoyoneByDesign logos are included. Source, browser, Rust and native branding/reader/history checks passed. Physical brightness hardware remains untested; billing is not connected. Existing WebView2 Runtime required. No Android or iOS installer.",
     "web": "/view4real/",
-    "webLabel": "Explore VIEW4REAL",
+    "webLabel": "Explore View4Real",
     "downloads": {
       "windows": {
-        "file": "VIEW4REAL-0.2.3-build2-Windows-x64-portable-tested.zip",
-        "url": "/downloads/releases/view4real/windows/0.2.3-build2/VIEW4REAL-0.2.3-build2-Windows-x64-portable-tested.zip",
-        "githubUrl": "https://github.com/GoyoneByDesign/goyonebydesign/releases/download/view4real-0.2.3-build2/VIEW4REAL-0.2.3-build2-Windows-x64-portable-tested.zip",
-        "label": "VIEW4REAL 0.2.3 / Build 2 Windows x64 · Unsigned portable test ZIP",
-        "sha256": "94e343c9a4efa9ac0a62a28962fa37ba2561a41a6e9025a88a8fb8559d695f6d",
-        "bytes": 2912839,
+        "file": "VIEW4REAL-0.2.3-build3-Windows-x64-portable-tested.zip",
+        "url": "/downloads/releases/view4real/windows/0.2.3-build3/VIEW4REAL-0.2.3-build3-Windows-x64-portable-tested.zip",
+        "githubUrl": "https://github.com/GoyoneByDesign/goyonebydesign/releases/download/view4real-0.2.3-build3/VIEW4REAL-0.2.3-build3-Windows-x64-portable-tested.zip",
+        "label": "View4Real 0.2.3 / Build 3 Windows x64 — Unsigned portable test ZIP",
+        "sha256": "ec755d1cc0c2dee42f52bea46b70805b22fb4f2ff4bb74ef84751fc1795b3a72",
+        "bytes": 2941551,
         "verified": "2026-10-16",
-        "name": "VIEW4REAL 0.2.3 / Build 2 Windows x64 portable",
+        "name": "View4Real 0.2.3 / Build 3 Windows x64 portable",
         "signing": "Unsigned; Authenticode NotSigned"
       }
     },
     "development": true,
     "platforms": "Windows x64 test",
-    "version": "Windows test v0.2.3 · Build 2",
+    "version": "Windows test v0.2.3 · Build 3",
     "access": "Public test download; not a production upgrade",
-    "releaseNotes": "/downloads/releases/view4real/windows/0.2.3-build2/TEST-RELEASE-NOTES.txt"
+    "releaseNotes": "/downloads/releases/view4real/windows/0.2.3-build3/TEST-RELEASE-NOTES.txt"
   },
   {
     "id": "max-alpha",

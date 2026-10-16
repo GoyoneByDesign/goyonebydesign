@@ -1,0 +1,18 @@
+{
+  "version": "0.2.3",
+  "build": 3,
+  "exeSha256": "445120933888ac20862c1edd2b1b7aec67951596b9f9c953a96db3c76e140699",
+  "testedAt": "2026-10-16T22:04:13.236Z",
+  "windowsLaunchTested": true,
+  "checks": [
+    "Native window title View4Real",
+    "Both approved logos decoded in actual WebView2",
+    "Build 3 visible",
+    "Large print changes reader to 30px",
+    "Bundled Build 3 history renders",
+    "Requested clean window close and process exit"
+  ],
+  "brightnessHardwareTested": false,
+  "clinicalBenefit": "Not demonstrated",
+  "isolatedProfile": true
+}

@@ -1,0 +1,19 @@
+View4Real 0.2.3 / Build 3 - Windows x64 portable branding test release
+Prepared 2026-10-16 18:04:30 Eastern (America/New_York)
+
+Changes
+- Existing approved View4Real artwork is visible in the app header, favicon and Windows executable icon.
+- Existing approved GoyoneByDesign company logo is visible in the persistent header.
+- Exact View4Real display name, storage identifiers, preferences and reader functionality are preserved.
+
+Validation
+16 source tests, 7 Rust tests, 42 optical checks, 24 solver checks, 25 integration checks, and 22 Dell Edge browser checks passed. Actual copied-folder Windows WebView2 launch verified both decoded logos, title, Build 3 identity, large print (30px), local update history and clean requested close. Native executable product metadata is View4Real; its embedded icon was extracted for visual review.
+
+Extract the complete ZIP, then open VIEW4REAL.exe. Existing Microsoft Edge WebView2 Runtime required. Keep your existing app data and prior download. This package uses the same application identifier; test validation used a separate profile to preserve personal data.
+
+Unsigned test build (Authenticode NotSigned). Signing keys and security settings unchanged. Physical brightness hardware, connected billing and clinical effectiveness remain unverified. No Android/iOS installer. Report security blocks rather than bypassing them.
+
+Source commit: d3ad1a542a1b564dd888360edcc8b799a612f325
+Source fingerprint: 75ff9a8595cbb6fd4d64494e65a97d320680ea52f0cad8c0720ff81295ef4ad6
+Executable SHA256: 445120933888ac20862c1edd2b1b7aec67951596b9f9c953a96db3c76e140699
+ZIP SHA256: ec755d1cc0c2dee42f52bea46b70805b22fb4f2ff4bb74ef84751fc1795b3a72

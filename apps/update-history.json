@@ -102,8 +102,37 @@
     },
     {
       "id": "view4real",
-      "name": "VIEW4REAL",
+      "name": "View4Real",
       "entries": [
+        {
+          "id": "branding-0.2.3-build3-20261016",
+          "version": "0.2.3",
+          "build": 3,
+          "recordedAt": "2026-10-16T22:04:49.554Z",
+          "releasedAt": "2026-10-16T22:04:49.554Z",
+          "status": "Verified unsigned Windows portable test build",
+          "channel": "Windows x64 branding update",
+          "changes": [
+            "Reused the approved View4Real website logo in the reader header, browser favicon and Windows executable icon.",
+            "Added the approved GoyoneByDesign company logo to the persistent app header.",
+            "Preserved user preferences, storage identifiers, reader behavior and previous downloads."
+          ],
+          "validation": "16 source tests, 42 optical checks, 24 solver checks, 25 integration checks, 7 Rust tests and 22 Dell Edge browser checks passed. Actual Windows WebView2 verified both logos, Build 3, large print, bundled history and clean close. Physical brightness hardware and clinical benefit remain unverified.",
+          "references": [
+            {
+              "label": "Direct Windows test ZIP",
+              "url": "https://www.goyonebydesign.com/downloads/releases/view4real/windows/0.2.3-build3/VIEW4REAL-0.2.3-build3-Windows-x64-portable-tested.zip"
+            },
+            {
+              "label": "Source commit",
+              "url": "https://github.com/GoyoneByDesign/View4Real/commit/d3ad1a542a1b564dd888360edcc8b799a612f325"
+            },
+            {
+              "label": "GitHub download",
+              "url": "https://github.com/GoyoneByDesign/goyonebydesign/releases/download/view4real-0.2.3-build3/VIEW4REAL-0.2.3-build3-Windows-x64-portable-tested.zip"
+            }
+          ]
+        },
         {
           "id": "view4real-0-2-3-build2",
           "version": "0.2.3",

@@ -4,3 +4,5 @@
 f3370c6f69e991cb57a1e6b6e4348cb821c7822e7e9238f2c0f06612af4e1e1a  releases/justmypick/android/0.38-build38/JustMyPick-0.38-build38-debug-tested.apk
 e268728105edcea339110e72b46719a8548e01ac78b14634eead17a610915e96  releases/statusping/android/0.2.0-review.3-build5/StatusPing-0.2.0-review.3-build5-debug-tested.apk
 c58a14142f33bdf207f4b7fc80eda2a996eaa5075bf50ec0fd9d88ada4b42849  releases/view4real/windows/0.2.2/VIEW4REAL-0.2.2-Windows-x64-portable-tested.zip
+
+ec755d1cc0c2dee42f52bea46b70805b22fb4f2ff4bb74ef84751fc1795b3a72  downloads/releases/view4real/windows/0.2.3-build3/VIEW4REAL-0.2.3-build3-Windows-x64-portable-tested.zip
