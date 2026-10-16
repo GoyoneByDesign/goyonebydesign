@@ -166,3 +166,11 @@ Verification: four synthetic-token cancellation/import regression tests passed; 
 ## October 15, 2026 - visible history and hosted setup checks
 
 Prepared MAX-ALPHA 1.16.5/build226: added visible local release history and an explicit hosted-service health check, retaining device readiness. No inference, credentials or account connections. Added shared portal history with Eastern dates, explicit build/source/package distinctions, and preserved unknown historical values. Validation: 25 MAX tests, 3 history-generator tests, 16 desktop/mobile history checks, and mocked button check (zero background health requests; two explicit GETs only). All 138 Commissary forms remain equivalent after patched SheetJS. Publication and exact commit references are reported separately; existing native installers and preview-only gallery status remain unchanged.
+
+
+
+## October 16, 2026 - Daily research review (8:51 AM EDT)
+
+Added the public documentation-only review at apps/research/2026-10-16/ and one linked research entry in the existing portal history. Preserved all older history entries and the existing portal 1.0.1/build2 baseline. App code, workers, model configuration, release metadata, native downloads and private access are unchanged. VIEW4REAL papers remain experimental comparison candidates and do not establish eyesight benefit. The MAX-ALPHA Gemini request-contract observation is untested and does not establish a live failure.
+
+Verification: three existing history-generator tests pass; focused checks cover deterministic history generation, preservation of every previous history record, research HTML structure/links and the documentation-only file scope. No new app runtime, live inference, optical-bench, human or physical-device test ran. Remote commit, Pages deployment and served content must be checked separately before reporting publication.

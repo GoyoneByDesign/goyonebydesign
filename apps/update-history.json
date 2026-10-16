@@ -538,6 +538,28 @@
       "name": "GoyoneByDesign website and app portal",
       "entries": [
         {
+          "id": "research-review-2026-10-16",
+          "version": "1.0.1",
+          "build": 2,
+          "recordedAt": "2026-10-16T12:51:15Z",
+          "releasedAt": null,
+          "status": "Research review / no application change",
+          "channel": "Documentation only; existing portal version and build retained",
+          "changes": [
+            "Published the October 16 research review with source publication dates, experimental limits and explicit no-change decisions.",
+            "VIEW4REAL papers remain comparison candidates, with no eyesight-benefit claim. MAX-ALPHA provider compatibility remains an untested source finding; its worker and model are unchanged.",
+            "Recorded next verification candidates for StatusPing, StockPilot, Questrix, The Commissary and BOARDROOM. Existing app source, release metadata, downloads and private access are preserved."
+          ],
+          "validation": "Three existing history tests pass; generated history and research HTML pass focused structure, reference and preserved-history checks. No new application, native-device, optical-bench, clinical or live-provider test ran. Deployment is verified separately.",
+          "dateNote": "This timestamp records the research review, not an app release. Version 1.0.1 / build 2 is the existing portal baseline, unchanged by this documentation entry.",
+          "references": [
+            {
+              "label": "October 16 research and no-change decisions",
+              "url": "https://www.goyonebydesign.com/apps/research/2026-10-16/"
+            }
+          ]
+        },
+        {
           "id": "home-screen-icons-2026-10-16",
           "version": "1.0.1",
           "build": 2,
