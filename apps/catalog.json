@@ -105,14 +105,14 @@
       "Work studio",
       "Personal organization"
     ],
-    "note": "Web 1.16.5 / build 226. Automatic update checks are opt-in; downloaded updates wait for Update & reopen after saving work. A separately signed automatic installation channel is not configured. Available in your browser, including Home Screen setup. Native Android, iOS, and Windows installers have not been released.",
+    "note": "Web 1.16.6 / build 227. Automatic update checks are opt-in; downloaded updates wait for Update & reopen after saving work. A separately signed automatic installation channel is not configured. Available in your browser, including Home Screen setup. Native Android, iOS, and Windows installers have not been released.",
     "web": "/max-alpha/",
     "webLabel": "Open browser app",
     "downloads": {},
     "install": "/apps/install.html#max-alpha",
     "development": false,
     "platforms": "Browser / Home Screen",
-    "version": "Web v1.16.3 · Build 224",
+    "version": "Web v1.16.6 · Build 227",
     "access": "Browser interface"
   },
   {

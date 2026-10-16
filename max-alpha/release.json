@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "version": "1.16.5",
-  "build": 226,
+  "version": "1.16.6",
+  "build": 227,
   "min_companion_build": 205,
   "files": [
     {
@@ -191,8 +191,8 @@
     },
     {
       "path": "history.html",
-      "sha256": "197053c276542dda7933e373e50c304f8dfba5c1e2bf3bd8d436875b104a1cfd",
-      "bytes": 3751
+      "sha256": "34da0b89a94ee119bfcba1c4a5507ff0805cd82428b92b3b3175cc9094a36193",
+      "bytes": 4405
     },
     {
       "path": "icons/apple-touch-icon.png",
@@ -231,8 +231,8 @@
     },
     {
       "path": "index.html",
-      "sha256": "cc672f2e6da2fa0531c200c992c7eb7df4bd7b6bab16d591f40452d385dd7027",
-      "bytes": 24949
+      "sha256": "8d64b53a5206bc7ce706dd6cdf593a7eac83890221ed62a45aad96242c7dc355",
+      "bytes": 24969
     },
     {
       "path": "inference-worker.js",
@@ -246,8 +246,8 @@
     },
     {
       "path": "install.html",
-      "sha256": "b19eb09b6e2134c4ec07e647f8d90958719de87b9bf9e3bbde872b3418e931dc",
-      "bytes": 13819
+      "sha256": "3cb41153877963b4e09caa258429d731f26b1d16864f3e429fcb281a8a9147be",
+      "bytes": 13839
     },
     {
       "path": "install.js",
@@ -316,7 +316,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "fd0f7db2eb5856989080cc6197967ddccccdd447dd342dafab7b21a46df9f291",
+      "sha256": "a7f4bd005cb96a8eda493875f50b8be648abdeaa9a8b5e2f327eee66600a87a0",
       "bytes": 259
     },
     {
@@ -356,12 +356,12 @@
     },
     {
       "path": "release-info.json",
-      "sha256": "dfe6cd682e35a04853152879b0d0df13290bb9044c99f5017cab1d6ed162c946",
-      "bytes": 543
+      "sha256": "65f96bca1b7b48f17faa495ca00f38addc064355c80dead50d5b4aa42162886d",
+      "bytes": 451
     },
     {
       "path": "release-version.js",
-      "sha256": "b7fd7e067c1771fdda28b81f73d17df3f9983ca6a3b0dbbcfd0d391a0c54d8ec",
+      "sha256": "5155ff7555cceabcd93049de0b996a5d86fc7d0e13039ae53e8fd8767830b6f5",
       "bytes": 155
     },
     {
@@ -426,8 +426,8 @@
     },
     {
       "path": "sw.js",
-      "sha256": "ba739da4d815cde03442d6a5a9887114dccecf55c42617e35a477ed9b58dc2d0",
-      "bytes": 8599
+      "sha256": "a75cb6ea9f599add7744780bb997cd9f7b9f8dd06ac939f03667157116cb9bfc",
+      "bytes": 8597
     },
     {
       "path": "tools.js",

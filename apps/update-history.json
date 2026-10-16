@@ -28,6 +28,20 @@
       "name": "StatusPing",
       "entries": [
         {
+          "id": "home-screen-icons-2026-10-16",
+          "version": "0.1.2",
+          "build": 3,
+          "recordedAt": "2026-10-16T11:30:28Z",
+          "releasedAt": null,
+          "status": "Source icon update / deployment not established",
+          "channel": "web source; existing native packages unchanged",
+          "changes": [
+            "Added Safari Home Screen PNG icons from the existing approved logo; preserved application behavior, privacy and storage."
+          ],
+          "validation": "PNG dimensions/opacity and metadata paths checked; build results recorded in AI_HANDOFF.md. No physical iOS testing or live backend deployment.",
+          "references": []
+        },
+        {
           "id": "maintenance-2026-10-15",
           "version": "0.1.1",
           "build": 2,
@@ -57,7 +71,7 @@
           "status": "Catalog observation / validation limited",
           "channel": "Existing native test package",
           "changes": [
-            "Android 7+ � StatusPing 0.2.0-review.3/build 5 isolated debug test APK. Regression and native emulator check-in/reminder tests passed, including bounded delivery after ordinary process death. Full 12-hour/Doze/reboot and real-phone reliability remain unverified. Live caregiver/email/SMS/call escalation is not tested; production upgrade compatibility is not established."
+            "Android 7+ ï¿½ StatusPing 0.2.0-review.3/build 5 isolated debug test APK. Regression and native emulator check-in/reminder tests passed, including bounded delivery after ordinary process death. Full 12-hour/Doze/reboot and real-phone reliability remain unverified. Live caregiver/email/SMS/call escalation is not tested; production upgrade compatibility is not established."
           ],
           "validation": "See package limitations. This record does not establish new native-device testing.",
           "dateNote": "Historical release time was not recorded. Catalog/package information was observed when this history entry was created.",
@@ -111,6 +125,20 @@
       "id": "max-alpha",
       "name": "MAX-ALPHA",
       "entries": [
+        {
+          "id": "home-screen-icons-2026-10-16",
+          "version": "1.16.6",
+          "build": 227,
+          "recordedAt": "2026-10-16T11:32:36Z",
+          "releasedAt": null,
+          "status": "Source prepared; publication verified separately",
+          "channel": "website icon metadata",
+          "changes": [
+            "Added explicit sized Apple Home Screen icon declarations and refreshed icon URLs, retaining the existing real MAX-ALPHA logo and installed-app identity."
+          ],
+          "validation": "PNG sizes, opacity and metadata paths checked. No physical iOS device testing. Live publication is reported separately.",
+          "references": []
+        },
         {
           "id": "maintenance-2026-10-15",
           "version": "1.16.5",
@@ -168,7 +196,7 @@
           "status": "Catalog observation / validation limited",
           "channel": "Web / source",
           "changes": [
-            "v3.61.0 � Build 84. Owner sign-in and access PIN required. Native installers are not available."
+            "v3.61.0 ï¿½ Build 84. Owner sign-in and access PIN required. Native installers are not available."
           ],
           "validation": "See package limitations. This record does not establish new native-device testing.",
           "dateNote": "Historical release time was not recorded. Catalog/package information was observed when this history entry was created.",
@@ -180,6 +208,20 @@
       "id": "commissary",
       "name": "The Commissary",
       "entries": [
+        {
+          "id": "home-screen-icons-2026-10-16",
+          "version": "0.0.2",
+          "build": 2,
+          "recordedAt": "2026-10-16T11:30:28Z",
+          "releasedAt": null,
+          "status": "Source icon update / deployment not established",
+          "channel": "web source; existing native packages unchanged",
+          "changes": [
+            "Added Safari Home Screen PNG icons from the existing approved logo; preserved application behavior, privacy and storage."
+          ],
+          "validation": "PNG dimensions/opacity and metadata paths checked; build results recorded in AI_HANDOFF.md. No physical iOS testing or live backend deployment.",
+          "references": []
+        },
         {
           "id": "maintenance-2026-10-15",
           "version": "0.0.1",
@@ -229,6 +271,20 @@
       "name": "Questrix",
       "entries": [
         {
+          "id": "home-screen-icons-2026-10-16",
+          "version": "0.0.2",
+          "build": 2,
+          "recordedAt": "2026-10-16T11:30:28Z",
+          "releasedAt": null,
+          "status": "Source icon update / deployment not established",
+          "channel": "web source; existing native packages unchanged",
+          "changes": [
+            "Added Safari Home Screen PNG icons from the existing approved logo; preserved application behavior, privacy and storage."
+          ],
+          "validation": "PNG dimensions/opacity and metadata paths checked; build results recorded in AI_HANDOFF.md. No physical iOS testing or live backend deployment.",
+          "references": []
+        },
+        {
           "id": "maintenance-2026-10-15",
           "version": "0.0.1",
           "build": 1,
@@ -276,6 +332,20 @@
       "id": "stockpilot",
       "name": "StockPilot",
       "entries": [
+        {
+          "id": "home-screen-icons-2026-10-16",
+          "version": "1.0.2",
+          "build": 2,
+          "recordedAt": "2026-10-16T11:30:28Z",
+          "releasedAt": null,
+          "status": "Source icon update / deployment not established",
+          "channel": "web source; existing native packages unchanged",
+          "changes": [
+            "Added Safari Home Screen PNG icons from the existing approved logo; preserved application behavior, privacy and storage."
+          ],
+          "validation": "PNG dimensions/opacity and metadata paths checked; build results recorded in AI_HANDOFF.md. No physical iOS testing or live backend deployment.",
+          "references": []
+        },
         {
           "id": "maintenance-2026-10-15",
           "version": "1.0.1",
@@ -332,7 +402,7 @@
           "status": "Catalog observation / validation limited",
           "channel": "Existing native test package",
           "changes": [
-            "Android 8+ � JustMyPick 0.38/build 38 debug test APK. Branding, startup and same-key emulator list/cart/budget preservation passed. Its test certificate differs from old SavvyKin 0.36: an in-place update requires the original key. Do not uninstall or erase your existing app to work around this. Live integrations and physical-phone validation remain pending."
+            "Android 8+ ï¿½ JustMyPick 0.38/build 38 debug test APK. Branding, startup and same-key emulator list/cart/budget preservation passed. Its test certificate differs from old SavvyKin 0.36: an in-place update requires the original key. Do not uninstall or erase your existing app to work around this. Live integrations and physical-phone validation remain pending."
           ],
           "validation": "See package limitations. This record does not establish new native-device testing.",
           "dateNote": "Historical release time was not recorded. Catalog/package information was observed when this history entry was created.",
@@ -344,6 +414,20 @@
       "id": "bibos-giggles",
       "name": "Bibo's Giggles Fun Site",
       "entries": [
+        {
+          "id": "home-screen-icons-2026-10-16",
+          "version": "1.0.1",
+          "build": 2,
+          "recordedAt": "2026-10-16T11:32:36Z",
+          "releasedAt": null,
+          "status": "Source prepared; publication verified separately",
+          "channel": "website icon metadata",
+          "changes": [
+            "Served the exact existing embedded Home Screen logo as an external PNG for Safari."
+          ],
+          "validation": "PNG sizes, opacity and metadata paths checked. No physical iOS device testing. Live publication is reported separately.",
+          "references": []
+        },
         {
           "id": "maintenance-2026-10-15",
           "version": "1.0.0",
@@ -390,6 +474,21 @@
       "id": "goyonebydesign-portal",
       "name": "GoyoneByDesign website and app portal",
       "entries": [
+        {
+          "id": "home-screen-icons-2026-10-16",
+          "version": "1.0.1",
+          "build": 2,
+          "recordedAt": "2026-10-16T11:32:36Z",
+          "releasedAt": null,
+          "status": "Source prepared; publication verified separately",
+          "channel": "website icon metadata",
+          "changes": [
+            "Added the original GoyoneByDesign Home Screen icon to the studio, gallery and installation pages.",
+            "Added authentic VIEW4REAL PNG icons to product pages and legacy routes, and app-specific metadata to existing redirect pages. No private destination or access changed."
+          ],
+          "validation": "PNG sizes, opacity and metadata paths checked. No physical iOS device testing. Live publication is reported separately.",
+          "references": []
+        },
         {
           "id": "maintenance-2026-10-15",
           "version": "1.0.0",

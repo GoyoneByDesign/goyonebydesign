@@ -1,13 +1,12 @@
 {
   "schema": 1,
-  "version": "1.16.5",
-  "build": 226,
+  "version": "1.16.6",
+  "build": 227,
   "timezone": "America/New_York",
-  "preparedAt": "2026-10-15T14:02:12.553Z",
+  "preparedAt": "2026-10-16T11:32:36Z",
   "channel": "website",
   "changes": [
-    "Added accessible local update history; retained device readiness and opt-in updates.",
-    "Added explicit hosted AI setup checks for configured model names and setup readiness; no questions, inference requests, key tests or account connections."
+    "Added explicit sized Apple Home Screen icon declarations and refreshed icon URLs, retaining the existing real MAX-ALPHA logo and installed-app identity."
   ],
-  "validation": "25 automated tests; isolated desktop/mobile browser checks; publication verified separately."
+  "validation": "Release integrity, existing Node checks and live HTTP icon verification; no physical iOS testing."
 }
