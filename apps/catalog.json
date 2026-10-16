@@ -69,27 +69,27 @@
       "Reading preferences",
       "Windows desktop"
     ],
-    "note": "VIEW4REAL 0.2.2 unsigned Windows x64 portable test ZIP, containing the actual executable. Build, browser interaction, Rust tests and native window launch/close checks passed. Physical brightness hardware and interactive native controls remain untested; billing is not connected. Existing WebView2 Runtime required. No Android or iOS installer.",
+    "note": "VIEW4REAL 0.2.3 / build 2 unsigned Windows x64 portable test ZIP. Includes local version/history. Source, browser, Rust and native reader/history checks passed. Physical brightness hardware remains untested; billing is not connected. Existing WebView2 Runtime required. No Android or iOS installer.",
     "web": "/view4real/",
     "webLabel": "Explore VIEW4REAL",
     "downloads": {
       "windows": {
-        "file": "VIEW4REAL-0.2.2-Windows-x64-portable-tested.zip",
-        "url": "/downloads/releases/view4real/windows/0.2.2/VIEW4REAL-0.2.2-Windows-x64-portable-tested.zip",
-        "githubUrl": "https://github.com/GoyoneByDesign/goyonebydesign/releases/download/apps-test-2026-10-11/VIEW4REAL-0.2.2-Windows-x64-portable-tested.zip",
-        "label": "VIEW4REAL 0.2.2 Windows x64 portable · Unsigned portable test ZIP",
-        "sha256": "c58a14142f33bdf207f4b7fc80eda2a996eaa5075bf50ec0fd9d88ada4b42849",
-        "bytes": 3040051,
-        "verified": "2026-10-11",
-        "name": "VIEW4REAL 0.2.2 Windows x64 portable",
+        "file": "VIEW4REAL-0.2.3-build2-Windows-x64-portable-tested.zip",
+        "url": "/downloads/releases/view4real/windows/0.2.3-build2/VIEW4REAL-0.2.3-build2-Windows-x64-portable-tested.zip",
+        "githubUrl": "https://github.com/GoyoneByDesign/goyonebydesign/releases/download/view4real-0.2.3-build2/VIEW4REAL-0.2.3-build2-Windows-x64-portable-tested.zip",
+        "label": "VIEW4REAL 0.2.3 / Build 2 Windows x64 · Unsigned portable test ZIP",
+        "sha256": "94e343c9a4efa9ac0a62a28962fa37ba2561a41a6e9025a88a8fb8559d695f6d",
+        "bytes": 2912839,
+        "verified": "2026-10-16",
+        "name": "VIEW4REAL 0.2.3 / Build 2 Windows x64 portable",
         "signing": "Unsigned; Authenticode NotSigned"
       }
     },
     "development": true,
     "platforms": "Windows x64 test",
-    "version": "Windows test v0.2.2",
+    "version": "Windows test v0.2.3 · Build 2",
     "access": "Public test download; not a production upgrade",
-    "releaseNotes": "/downloads/releases/apps-test-2026-10-11/TEST-RELEASE-NOTES.txt"
+    "releaseNotes": "/downloads/releases/view4real/windows/0.2.3-build2/TEST-RELEASE-NOTES.txt"
   },
   {
     "id": "max-alpha",

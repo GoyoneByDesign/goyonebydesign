@@ -55,7 +55,7 @@ assert.ok(!apps.some(a=>a.id==='mythang'),'Preserve requested MyThang removal');
 assert.equal(apps.find(a=>a.id==='justmypick').downloads.android.file,'JustMyPick-0.38-build38-debug-tested.apk','Offer the actual newly tested APK');
 assert.ok(apps.find(a=>a.id==='justmypick').note.includes('Do not uninstall'),'Disclose data-preserving upgrade limitation');
 assert.equal(apps.find(a=>a.id==='view4real').name,'VIEW4REAL','Use the requested visible name');
-assert.equal(apps.find(a=>a.id==='view4real').downloads.windows.file,'VIEW4REAL-0.2.2-Windows-x64-portable-tested.zip','Offer the actual new portable test ZIP');
+assert.equal(apps.find(a=>a.id==='view4real').downloads.windows.file,'VIEW4REAL-0.2.3-build2-Windows-x64-portable-tested.zip','Offer the actual new portable test ZIP');
 assert.ok(apps.find(a=>a.id==='view4real').downloads.windows.label.includes('Unsigned'),'Disclose Windows signing status');
 assert.equal(apps.find(a=>a.id==='statusping').downloads.android.file,'StatusPing-0.2.0-review.3-build5-debug-tested.apk','Offer the final tested supplied StatusPing build');
 assert.ok(html.includes('href="/owner/"'),'Owner entry links to the separately protected hub');

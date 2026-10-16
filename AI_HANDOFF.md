@@ -1,3 +1,7 @@
+## October 16, 2026 - View4Real 0.2.3 / build 2 Windows download
+
+Prepared publication October 16, 2026 at 4:38:12 PM EDT. Download mirrored locally under downloads/releases/view4real/windows/0.2.3-build2/ and on the public GitHub release view4real-0.2.3-build2. Private application source is commit 32dd148bc248d1ffaef00aab50585505028903a4 on codex/update-history-20261015 in View4Real; default main remains the older baseline. Version/build, source and publication times, descriptions, test results, package bytes/hash and existing release history are preserved. 16 source tests, 42 optical-model checks, 24 solver checks, 25 integration checks, 7 Rust tests, 20 browser interaction checks and 12 history viewport checks passed. Native Windows checks: Copied-folder launch with isolated WebView2 profile; Visible 0.2.3 / Build 2 identity; Large print changed reader to 30 px; Bundled history rendered current and older entries with Eastern time; Clean requested close confirmed by process exit. Brightness hardware and billing remain unverified; experimental optical checks are not evidence of clinical benefit. Prior public downloads remain intact. Verify GitHub Pages and both served ZIP hashes before reporting publication.
+
 # October 16, 2026 - Verified icon publication follow-up
 
 2026-10-16T12:02:11Z. See apps/ICON-OUTCOME-2026-10-16.md and apps/ICON-LIVE-2026-10-16.json for published URLs, actual live PNG sizes/hashes, private preview outcomes and limitations. Source fixes are pushed. Existing installers unchanged. No physical iOS device testing.

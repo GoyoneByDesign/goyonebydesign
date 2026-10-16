@@ -1,0 +1,24 @@
+VIEW4REAL 0.2.3 / BUILD 2 - WINDOWS X64 TEST RELEASE
+Prepared for publication October 16, 2026 at 4:20:22 PM EDT (America/New_York)
+
+Changes
+- Built the latest 0.2.3 source, including the local Update history screen.
+- App and package identify build 2. History records Eastern timestamps.
+- Native integrity checks bind release metadata and build number to the exact executable.
+- Fresh-checkout research checks create their output folder. Existing locked dependencies and notices are preserved.
+- Tauri manifest line endings are stable across Windows builds; compiled diagnostics exclude private local machine paths.
+
+16 source tests, 42 optical-model checks, 24 solver checks, 25 integration checks, 7 Rust tests, 20 browser interaction checks and 12 history viewport checks passed. Native Windows checks: Copied-folder launch with isolated WebView2 profile; Visible 0.2.3 / Build 2 identity; Large print changed reader to 30 px; Bundled history rendered current and older entries with Eastern time; Clean requested close confirmed by process exit.
+
+Extract the complete ZIP, then open VIEW4REAL.exe. An existing Microsoft Edge WebView2 Runtime is required. Check that the app shows 0.2.3 / Build 2. Test the local reader and Update history first.
+
+Unsigned development test build (Authenticode NotSigned). Actual brightness hardware, all Windows/display configurations, connected billing and clinical effectiveness are not established. No Android/iOS installer. Keep prescribed eyewear. Report any security block rather than bypassing it.
+
+Build source: 32dd148bc248d1ffaef00aab50585505028903a4
+Source fingerprint: 869c1887535f0b6d347940027fdfd77ed5b649dade2e911bd0986bbf1ffeec5c
+Executable SHA-256: 5811c85ad67c9afd383e26c2953272c63f26d220698be762decf61ceebd8c66d
+ZIP SHA-256: 94e343c9a4efa9ac0a62a28962fa37ba2561a41a6e9025a88a8fb8559d695f6d
+ZIP bytes: 2912839
+Built at: October 16, 2026 at 4:18:56 PM EDT (America/New_York)
+Source: https://github.com/GoyoneByDesign/View4Real/releases/tag/v0.2.3-build2 (private repository; owner login required)
+Public GitHub mirror: https://github.com/GoyoneByDesign/goyonebydesign/releases/download/view4real-0.2.3-build2/VIEW4REAL-0.2.3-build2-Windows-x64-portable-tested.zip

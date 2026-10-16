@@ -1,0 +1,35 @@
+{
+  "version": "0.2.3",
+  "build": 2,
+  "timezone": "America/New_York",
+  "sourceTests": 16,
+  "opticalModelChecks": 42,
+  "solverChecks": 24,
+  "integrationChecks": 25,
+  "rustTests": 7,
+  "browserInteractionChecks": 20,
+  "historyViewportChecks": 12,
+  "browserExternalRequests": 0,
+  "browserPageErrors": 0,
+  "windowsLaunchTested": true,
+  "brightnessHardwareTested": false,
+  "billing": "Not connected",
+  "clinicalBenefit": "Not demonstrated",
+  "nativeChecks": [
+    "Copied-folder launch with isolated WebView2 profile",
+    "Visible 0.2.3 / Build 2 identity",
+    "Large print changed reader to 30 px",
+    "Bundled history rendered current and older entries with Eastern time",
+    "Clean requested close confirmed by process exit"
+  ],
+  "unverified": [
+    "Physical brightness controls",
+    "Missing-WebView2 behavior",
+    "All Windows versions and display scaling configurations",
+    "Long-running optical performance",
+    "Connected billing",
+    "Clinical effectiveness"
+  ],
+  "exeSha256": "5811c85ad67c9afd383e26c2953272c63f26d220698be762decf61ceebd8c66d",
+  "verifiedAt": "2026-10-16T20:20:02.3330363Z"
+}

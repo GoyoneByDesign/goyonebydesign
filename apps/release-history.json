@@ -5,6 +5,20 @@
     {
       "app": "view4real",
       "platform": "windows",
+      "version": "0.2.3",
+      "build": 2,
+      "path": "downloads/releases/view4real/windows/0.2.3-build2/VIEW4REAL-0.2.3-build2-Windows-x64-portable-tested.zip",
+      "sha256": "94e343c9a4efa9ac0a62a28962fa37ba2561a41a6e9025a88a8fb8559d695f6d",
+      "bytes": 2912839,
+      "published": "2026-10-16T20:38:12Z",
+      "timezone": "America/New_York",
+      "status": "Unsigned Windows test build; source, browser and bounded native UI checks passed",
+      "githubUrl": "https://github.com/GoyoneByDesign/goyonebydesign/releases/download/view4real-0.2.3-build2/VIEW4REAL-0.2.3-build2-Windows-x64-portable-tested.zip",
+      "sourceCommit": "32dd148bc248d1ffaef00aab50585505028903a4"
+    },
+    {
+      "app": "view4real",
+      "platform": "windows",
       "version": "0.2.2",
       "path": "downloads/releases/view4real/windows/0.2.2/VIEW4REAL-0.2.2-Windows-x64-portable-tested.zip",
       "sha256": "c58a14142f33bdf207f4b7fc80eda2a996eaa5075bf50ec0fd9d88ada4b42849",

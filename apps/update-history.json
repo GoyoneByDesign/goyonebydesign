@@ -105,6 +105,38 @@
       "name": "VIEW4REAL",
       "entries": [
         {
+          "id": "view4real-0-2-3-build2",
+          "version": "0.2.3",
+          "build": 2,
+          "recordedAt": "2026-10-16T20:43:39.505Z",
+          "releasedAt": "2026-10-16T20:38:12Z",
+          "status": "Windows portable test build",
+          "channel": "Unsigned Windows x64 testing release",
+          "dateNote": "Published Windows test package. Its bundled history also records the earlier source preparation time. Older downloads remain available.",
+          "changes": [
+            "Packaged the latest 0.2.3 source as Windows portable test build 2, including the local version and update history page.",
+            "Updated the app header and portable instructions to identify the testing build and preserve the View4Real name.",
+            "Bound release metadata and build number to native build integrity checks; package filenames and manifests now include the build number.",
+            "Preserved the reader, comfort preferences, sandboxed optical lab and optional brightness controls. No billing service or clinical effectiveness is established.",
+            "Made clean-checkout research outputs and Tauri manifest line endings reliable; removed local machine paths from public executable diagnostics and added a publication regression check."
+          ],
+          "validation": "16 source tests, 42 optical-model checks, 24 solver checks, 25 integration checks, 7 Rust tests, 20 browser interaction checks and 12 history viewport checks passed. Native Windows checks: Copied-folder launch with isolated WebView2 profile; Visible 0.2.3 / Build 2 identity; Large print changed reader to 30 px; Bundled history rendered current and older entries with Eastern time; Clean requested close confirmed by process exit. Physical brightness hardware, missing-WebView2 behavior, all Windows/scaling configurations, connected billing and clinical effectiveness remain unverified.",
+          "references": [
+            {
+              "label": "Versioned source and package",
+              "url": "https://github.com/GoyoneByDesign/View4Real/releases/tag/v0.2.3-build2"
+            },
+            {
+              "label": "Download and test instructions",
+              "url": "https://www.goyonebydesign.com/apps/install.html#view4real"
+            },
+            {
+              "label": "Test results and package checksums",
+              "url": "https://www.goyonebydesign.com/downloads/releases/view4real/windows/0.2.3-build2/TEST-RELEASE-NOTES.txt"
+            }
+          ]
+        },
+        {
           "id": "maintenance-2026-10-15",
           "version": "0.2.3",
           "build": 1,
