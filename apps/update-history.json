@@ -457,6 +457,27 @@
       "name": "StockPilot",
       "entries": [
         {
+          "id": "sqlite-shutdown-2026-10-17",
+          "version": "1.0.3",
+          "build": 3,
+          "recordedAt": "2026-10-17T20:48:20Z",
+          "releasedAt": null,
+          "status": "Tested source / backend deployment unverified",
+          "channel": "source-only shutdown repair; no new installer",
+          "changes": [
+            "Wait for tracked background work and SQLite closure before StockPilot reports a complete shutdown.",
+            "Made the CJ webhook privacy regression deterministic by checking exact saved fields instead of random audit identifiers."
+          ],
+          "validation": "285 local Node tests passed, including a Windows database-release regression. An isolated local start/stop check loaded five routes and removed its temporary database. No live eBay, supplier, or hosted-backend test.",
+          "dateNote": "The recorded time is the source-update preparation time in Eastern daylight time; it is not a deployment or release timestamp.",
+          "references": [
+            {
+              "label": "Tested source repair",
+              "url": "https://github.com/GoyoneByDesign/StockPilot/commit/57b9e567ee0e3727837a5c7c35f4f2d74925d635"
+            }
+          ]
+        },
+        {
           "id": "home-screen-icons-2026-10-16",
           "version": "1.0.2",
           "build": 2,
