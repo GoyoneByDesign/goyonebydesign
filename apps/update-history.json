@@ -620,6 +620,28 @@
       "name": "GoyoneByDesign website and app portal",
       "entries": [
         {
+          "id": "research-review-2026-10-19",
+          "version": "1.0.1",
+          "build": 2,
+          "recordedAt": "2026-10-19T13:04:00Z",
+          "releasedAt": null,
+          "status": "Research review / no application change",
+          "channel": "Documentation only; existing portal version and build retained",
+          "changes": [
+            "Added the October 19 primary-source research review and reconciled current release channels without changing application code, models, installers or versions.",
+            "Recorded the forthcoming October 21 Node security-release checkpoint, package-specific React advisory limits and the July WCAG-EM 2.0 evaluation method.",
+            "Separated older human adaptation and Chinese optical-bench evidence from ordinary-screen software claims. Toast remains stopped; MyThang remains removed."
+          ],
+          "validation": "Three existing history tests and focused documentation checks pass: deterministic generation, preserved prior records and HTML, source/page consistency, safe references and four-file scope. No app build, provider, native-device, optical-bench, clinical or browser visual test ran. Remote publication and live content are verified separately.",
+          "dateNote": "This timestamp records the research review, not an app release. Version 1.0.1 / build 2 is the existing portal baseline, unchanged by this documentation entry.",
+          "references": [
+            {
+              "label": "October 19 research and no-change decisions",
+              "url": "https://www.goyonebydesign.com/apps/research/2026-10-19/"
+            }
+          ]
+        },
+        {
           "id": "research-review-2026-10-18",
           "version": "1.0.1",
           "build": 2,
