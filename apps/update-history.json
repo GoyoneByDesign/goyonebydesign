@@ -457,6 +457,28 @@
       "name": "StockPilot",
       "entries": [
         {
+          "id": "review-2026-10-19",
+          "version": "1.0.4-review.1",
+          "build": 4,
+          "recordedAt": "2026-10-19T22:31:09.378Z",
+          "releasedAt": null,
+          "status": "Tested review branch / backend deployment unverified",
+          "channel": "source review; existing main and installers unchanged",
+          "changes": [
+            "Reconciled latest main release history, Home Screen icons and deterministic shutdown regressions with the existing truthful financial and alert-only monitoring branch.",
+            "Added a bounded read-only backend verifier and public build identity to distinguish Node readiness from proxy errors, static previews and synthetic proofs.",
+            "Preserved unknown financial costs, original branding, isolated demo, inactive write gates and separate disabled hosted proof."
+          ],
+          "validation": "365 Node tests, 19 local workerd/D1 tests and 2 hosted-proof tests passed with no failures/skips. Real Chrome local Node dashboard/demo/mobile/history checks and synthetic session/allocation/backup restore flow passed. No hosted backend or live provider acceptance.",
+          "dateNote": "Preparation timestamp only; not an installation or backend deployment.",
+          "references": [
+            {
+              "label": "Private source review (owner access required)",
+              "url": "https://github.com/GoyoneByDesign/StockPilot/pull/1"
+            }
+          ]
+        },
+        {
           "id": "sqlite-shutdown-2026-10-17",
           "version": "1.0.3",
           "build": 3,
