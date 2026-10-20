@@ -92,7 +92,7 @@
           "status": "Catalog observation / validation limited",
           "channel": "Existing native test package",
           "changes": [
-            "Android 7+ ï¿½ StatusPing 0.2.0-review.3/build 5 isolated debug test APK. Regression and native emulator check-in/reminder tests passed, including bounded delivery after ordinary process death. Full 12-hour/Doze/reboot and real-phone reliability remain unverified. Live caregiver/email/SMS/call escalation is not tested; production upgrade compatibility is not established."
+            "Android 7+ \u00ef\u00bf\u00bd StatusPing 0.2.0-review.3/build 5 isolated debug test APK. Regression and native emulator check-in/reminder tests passed, including bounded delivery after ordinary process death. Full 12-hour/Doze/reboot and real-phone reliability remain unverified. Live caregiver/email/SMS/call escalation is not tested; production upgrade compatibility is not established."
           ],
           "validation": "See package limitations. This record does not establish new native-device testing.",
           "dateNote": "Historical release time was not recorded. Catalog/package information was observed when this history entry was created.",
@@ -104,6 +104,29 @@
       "id": "view4real",
       "name": "View4Real",
       "entries": [
+        {
+          "id": "source-0.2.4-build4-import-ordering-20261020",
+          "version": "0.2.4",
+          "build": 4,
+          "recordedAt": "2026-10-20T09:32:00Z",
+          "releasedAt": "2026-10-20T09:31:17Z",
+          "status": "Source update / Windows download unchanged",
+          "channel": "Reader import reliability and privacy hardening",
+          "dateNote": "Timestamp records source publication, not a Windows installer release. The existing Windows test download remains 0.2.3 / build 3 and does not include these changes.",
+          "changes": [
+            "Prevent delayed file imports from overwriting newer reader edits or newer imports.",
+            "Invalidate pending imports when clearing saved app data, so a completed read cannot restore cleared content or preferences.",
+            "Selecting or editing a comfort preset also invalidates an older profile import; research harness filename now works on case-sensitive systems.",
+            "Preserve existing downloads, storage identifiers, local-only reader behavior and experimental optical boundaries."
+          ],
+          "validation": "TypeScript and production frontend build pass; 20 source tests (four new), 42 optical checks, 24 solver checks and 25 simulated integration checks pass. Seven new browser regression cases were authored; browser execution was blocked by environment launch restrictions. No Windows executable, native display or clinical validation was performed.",
+          "references": [
+            {
+              "label": "Source changes",
+              "url": "https://github.com/GoyoneByDesign/View4Real/commit/84d58ff3fe5d61f0747e7b78bfde2ada7f0078dc"
+            }
+          ]
+        },
         {
           "id": "branding-0.2.3-build3-20261016",
           "version": "0.2.3",
@@ -278,7 +301,7 @@
           "status": "Catalog observation / validation limited",
           "channel": "Web / source",
           "changes": [
-            "v3.61.0 ï¿½ Build 84. Owner sign-in and access PIN required. Native installers are not available."
+            "v3.61.0 \u00ef\u00bf\u00bd Build 84. Owner sign-in and access PIN required. Native installers are not available."
           ],
           "validation": "See package limitations. This record does not establish new native-device testing.",
           "dateNote": "Historical release time was not recorded. Catalog/package information was observed when this history entry was created.",
@@ -569,7 +592,7 @@
           "status": "Catalog observation / validation limited",
           "channel": "Existing native test package",
           "changes": [
-            "Android 8+ ï¿½ JustMyPick 0.38/build 38 debug test APK. Branding, startup and same-key emulator list/cart/budget preservation passed. Its test certificate differs from old SavvyKin 0.36: an in-place update requires the original key. Do not uninstall or erase your existing app to work around this. Live integrations and physical-phone validation remain pending."
+            "Android 8+ \u00ef\u00bf\u00bd JustMyPick 0.38/build 38 debug test APK. Branding, startup and same-key emulator list/cart/budget preservation passed. Its test certificate differs from old SavvyKin 0.36: an in-place update requires the original key. Do not uninstall or erase your existing app to work around this. Live integrations and physical-phone validation remain pending."
           ],
           "validation": "See package limitations. This record does not establish new native-device testing.",
           "dateNote": "Historical release time was not recorded. Catalog/package information was observed when this history entry was created.",

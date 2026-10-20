@@ -1,3 +1,7 @@
+## October 20, 2026 — VIEW4REAL source-only 0.2.4 / build 4
+
+Added visible history for the private app source commit 84d58ff3fe5d61f0747e7b78bfde2ada7f0078dc (codex/import-ordering-20261020). Delayed reader/profile imports no longer overwrite newer edits, presets or privacy clearing. Source tests20, optical42, solver24 and simulated integration25 pass; TypeScript/frontend build pass. Seven real-browser regression cases exist but browser launch was blocked; no Windows/device testing or new installer. Existing 0.2.3/build3 downloads and catalog are unchanged. The history generator/tests validate this portal-only change; all previous entries are preserved. Verify Pages deployment and served bytes before claiming website publication.
+
 ## October 17, 2026 — StockPilot tested-source history sync
 
 Added StockPilot 1.0.3/build3 to the portal's visible update history to match its local package/release metadata and history page. It describes the Windows SQLite shutdown repair as tested source only, not a new installer or hosted backend. The prior entries and public app catalog remain intact. The history generator validated all 12 applications; its three timezone/escaping/history tests passed, and the public catalog check passed with nine preview-only cards and three preserved installer records. No browser/device, live eBay, supplier, or backend deployment test ran for this portal change. Verify GitHub push and served Pages history before claiming publication.
