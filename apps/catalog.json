@@ -193,7 +193,7 @@
       "Order workflows",
       "Supplier integrations"
     ],
-    "note": "Main source 1.0.3/build 3; tested review source 1.0.4-review.1/build 4 is separate. No verified hosted backend or live supplier acceptance. Self-hosted configuration is required; native installers are not available.",
+    "note": "Main source 1.0.3/build 3; tested review source 1.0.4-review.6/build 9 is separate. No verified hosted backend or live supplier acceptance. Self-hosted configuration is required; native installers are not available.",
     "downloads": {},
     "development": true,
     "platforms": "Browser prototype",

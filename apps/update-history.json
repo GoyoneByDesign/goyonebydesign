@@ -801,6 +801,28 @@
       "name": "GoyoneByDesign website and app portal",
       "entries": [
         {
+          "id": "research-review-2026-10-20",
+          "version": "1.0.1",
+          "build": 2,
+          "recordedAt": "2026-10-20T12:38:00Z",
+          "releasedAt": null,
+          "status": "Research review / no application change",
+          "channel": "Documentation only; existing portal version and build retained",
+          "changes": [
+            "Added the October 20 View4Real research review with an explicit no-algorithm-change decision and no new release.",
+            "Separated previously reviewed ordinary-screen candidates from special-optics simulation and headset-specific prism correction; no new human reading benefit is established.",
+            "Corrected the StockPilot catalog review-source note to 1.0.4-review.6/build 9; stable main source, downloads and existing release history remain unchanged."
+          ],
+          "validation": "Three existing history tests and focused preservation, deterministic generation and document checks pass. No app runtime, browser visual, native-device, optical-bench or human test ran. Remote publication and exact live bytes are verified separately.",
+          "dateNote": "Research review time, not an application release. Existing portal 1.0.1/build 2 is unchanged.",
+          "references": [
+            {
+              "label": "October 20 research and no-change decision",
+              "url": "https://www.goyonebydesign.com/apps/research/2026-10-20/"
+            }
+          ]
+        },
+        {
           "id": "research-review-2026-10-19",
           "version": "1.0.1",
           "build": 2,
