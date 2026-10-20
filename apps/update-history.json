@@ -480,6 +480,33 @@
       "name": "StockPilot",
       "entries": [
         {
+          "id": "stockpilot-1.0.4-review.4-build7-feeds-20261020",
+          "version": "1.0.4-review.4",
+          "build": 7,
+          "recordedAt": "2026-10-20T11:27:42Z",
+          "releasedAt": "2026-10-20T11:25:31Z",
+          "status": "Published review source / not merged or deployed",
+          "channel": "Fictional supplier-feed observations; synthetic cloud proof only",
+          "dateNote": "Time records publication to the existing private draft pull request, not a hosted application launch. Existing main and downloads remain unchanged.",
+          "changes": [
+            "Reused the Node CSV normalizer for bounded fictional-only supplier feeds, with exact SKU, variant, warehouse, currency and freshness checks.",
+            "Added owner-session/CSRF-protected durable D1 previews and atomic observation-only apply, guarded by digest, revision, expiry, one-use receipt and mapping fences.",
+            "Added explicit demo review and skipped-row controls. Observed stock and cost remain separate from desired values; no products are created and missing product reviews remain listing-ineligible.",
+            "No live supplier, provider, listing or payment action occurred. AutoDS remains the real-store writer; cloud deployment and live acceptance remain separate gates."
+          ],
+          "validation": "414 Node tests; 38 Worker/UI tests (32 real local workerd/D1 and 6 client/minimal-DOM); and 14 hosted/Access tests (4 workerd/D1 and 10 focused authentication) passed, with zero failures/skips. Asset build, JavaScript syntax and whitespace checks passed; independent review has no blocking findings. Chromium visual QA was blocked before DevTools by environment socket permissions. No actual cloud identity, hosted deployment, live provider or commercial-readiness acceptance is claimed.",
+          "references": [
+            {
+              "label": "Private review-source commit",
+              "url": "https://github.com/GoyoneByDesign/StockPilot/commit/8b5308462597adca6dc9ee920f35af19fe8b8406"
+            },
+            {
+              "label": "Existing draft review",
+              "url": "https://github.com/GoyoneByDesign/StockPilot/pull/1"
+            }
+          ]
+        },
+        {
           "id": "stockpilot-1.0.4-review.3-build6-access-20261020",
           "version": "1.0.4-review.3",
           "build": 6,
@@ -878,3 +905,4 @@
     }
   ]
 }
+

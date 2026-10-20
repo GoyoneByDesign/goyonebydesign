@@ -1,3 +1,7 @@
+## October 20, 2026 — StockPilot build 7 fictional supplier-feed source history
+
+Added one StockPilot 1.0.4-review.4/build7 source-only record for private draft-PR commit 8b5308462597adca6dc9ee920f35af19fe8b8406, published at 7:25:31 AM EDT. All 40 prior history entries, main/application availability, catalogs and downloads are preserved. The new record distinguishes 414 Node, 38 local Worker/UI and 14 hosted/Access test passes from blocked Chromium visual QA and unperformed deployed/provider acceptance. Fictional observation-only previews/apply do not create products, change desired values or activate a store writer. No hosted launch, merge or commercial-readiness claim. Only history JSON, generated history HTML and this handoff changed. History generation and the three existing generator tests passed; focused preservation, deterministic generation, source-reference, status and exact three-file-scope checks passed. Verify the remote commit, exact Pages workflow and canonical served history bytes before reporting website publication.
+
 ## October 20, 2026 — StockPilot build 6 and Access source history
 
 Added one source-only StockPilot 1.0.4-review.3/build6 record for commit 1c81775adf8761b4d4981205478ac7a678aef60f, preserving all 39 prior entries and existing downloads. Node 410, hosted 13 and proof 19 local passes are distinguished from unperformed live identity/provider/hosted acceptance; no application deployment or commercial-ready claim. Only history JSON, generated HTML and this handoff changed. Portal generation/tests and preserved-record checks passed; publication/live verification reported separately.
@@ -208,3 +212,4 @@ Preserved every previous history entry, portal 1.0.1/build2, releasedAt:null for
 ## October 19, 2026 — StockPilot review-source evidence
 
 Updated only StockPilot catalog availability and version history, preserving existing screenshots, installer files/hashes, owner-only destinations and other app entries. The separate private review branch is 1.0.4-review.1/build4; main remains 1.0.3/build3. Recorded 365 Node, 19 local Worker/D1 and 2 hosted-proof passing tests plus real local Chrome Node/synthetic workflows; none establishes a hosted backend or live supplier acceptance. Timestamp is source preparation, not deployment. Source history references the private draft PR. History/catalog source tests pass 8/8 and full catalog integrity check passes (9 preview cards/3 preserved installers). Publication/served-byte verification is recorded in task result.
+
