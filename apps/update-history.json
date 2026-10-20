@@ -480,6 +480,32 @@
       "name": "StockPilot",
       "entries": [
         {
+          "id": "stockpilot-1.0.4-review.5-build8-restore-20261020",
+          "version": "1.0.4-review.5",
+          "build": 8,
+          "recordedAt": "2026-10-20T12:16:21Z",
+          "releasedAt": null,
+          "status": "Published review source / not merged or deployed",
+          "channel": "Synthetic restore-selection safety; existing main and downloads unchanged",
+          "dateNote": "Source prepared October 20, 2026 at 8:12 AM EDT. This history entry does not establish a hosted application launch or a new installer.",
+          "changes": [
+            "Prevented an older asynchronous backup read or restore preview from becoming applicable after the selected file changes or is cleared.",
+            "Cleared obsolete restore counts immediately and required a fresh review for the current file, including same-file reselection.",
+            "Added four focused regression tests. No supplier, listing, payment, authentication or deployment behavior changed."
+          ],
+          "validation": "414 Node tests, 42 Worker/UI tests (32 real local workerd/D1 and 10 client/minimal-DOM), and 14 hosted/Access tests passed, with zero failures/skips. JavaScript syntax and whitespace checks passed. Cloud socket permissions still block Chromium startup, so browser visual acceptance remains unverified. No checks or pull-request-triggered workflow runs were returned for this source commit; no hosted or live-provider acceptance is claimed.",
+          "references": [
+            {
+              "label": "Private review-source commit",
+              "url": "https://github.com/GoyoneByDesign/StockPilot/commit/40813f8905e09cd31afa80bf049ab5cf4040651d"
+            },
+            {
+              "label": "Existing draft review",
+              "url": "https://github.com/GoyoneByDesign/StockPilot/pull/1"
+            }
+          ]
+        },
+        {
           "id": "stockpilot-1.0.4-review.4-build7-feeds-20261020",
           "version": "1.0.4-review.4",
           "build": 7,
@@ -905,4 +931,3 @@
     }
   ]
 }
-
