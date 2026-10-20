@@ -480,6 +480,37 @@
       "name": "StockPilot",
       "entries": [
         {
+          "id": "stockpilot-1.0.4-review.6-build9-supplier-readiness-20261020",
+          "version": "1.0.4-review.6",
+          "build": 9,
+          "recordedAt": "2026-10-20T12:27:25Z",
+          "releasedAt": null,
+          "status": "Published review source / not merged or deployed",
+          "channel": "Supplier readiness directory and scoped product-review gate; no live supplier connections",
+          "dateNote": "Source prepared October 20, 2026 at 8:22 AM EDT. The linked public directory is a read-only research preview, not an operational StockPilot deployment or a new installer.",
+          "changes": [
+            "Added a read-only readiness directory for CJ, Banggood, Printful, Printify, Gelato, Gooten and Prodigi, with official references, account/API requirements and product/route acceptance gaps. All seven remain unactivated candidates.",
+            "Added exact supplier/SKU/variant/warehouse review-evidence checks for new eBay preparation, saved drafts and disabled Sandbox operations, including reviews-read counts, public sources, findings, freshness and unresolved quality concerns. Evidence binds to the plan digest and is rechecked after asynchronous waits.",
+            "The 30-day maximum review age is a local application policy, not a supplier guarantee. Assessments are supplied evidence, not independently certified quality or reliability.",
+            "Legacy attempts remain read-only reconcilable; legacy catalog intake and other provider paths are not fully covered. No real product was added, no listing or order was sent and no live supplier was activated."
+          ],
+          "validation": "428 Node tests, 42 Worker/UI tests and 14 hosted/Access tests passed, with zero failures/skips; 59 focused listing/review/directory checks also passed. Syntax and whitespace checks passed. Cloud socket permissions still block Chromium visual testing. No live-provider, hosted-integration, production-deployment or independent supplier-reliability acceptance is claimed.",
+          "references": [
+            {
+              "label": "Read-only supplier research preview",
+              "url": "https://www.goyonebydesign.com/apps/stockpilot-suppliers/"
+            },
+            {
+              "label": "Private review-source commit",
+              "url": "https://github.com/GoyoneByDesign/StockPilot/commit/fdce4ab35afff5ea4078604a18f43f19f8b65be3"
+            },
+            {
+              "label": "Existing draft review",
+              "url": "https://github.com/GoyoneByDesign/StockPilot/pull/1"
+            }
+          ]
+        },
+        {
           "id": "stockpilot-1.0.4-review.5-build8-restore-20261020",
           "version": "1.0.4-review.5",
           "build": 8,
