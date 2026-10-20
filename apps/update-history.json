@@ -92,7 +92,7 @@
           "status": "Catalog observation / validation limited",
           "channel": "Existing native test package",
           "changes": [
-            "Android 7+ \u00ef\u00bf\u00bd StatusPing 0.2.0-review.3/build 5 isolated debug test APK. Regression and native emulator check-in/reminder tests passed, including bounded delivery after ordinary process death. Full 12-hour/Doze/reboot and real-phone reliability remain unverified. Live caregiver/email/SMS/call escalation is not tested; production upgrade compatibility is not established."
+            "Android 7+ ï¿½ StatusPing 0.2.0-review.3/build 5 isolated debug test APK. Regression and native emulator check-in/reminder tests passed, including bounded delivery after ordinary process death. Full 12-hour/Doze/reboot and real-phone reliability remain unverified. Live caregiver/email/SMS/call escalation is not tested; production upgrade compatibility is not established."
           ],
           "validation": "See package limitations. This record does not establish new native-device testing.",
           "dateNote": "Historical release time was not recorded. Catalog/package information was observed when this history entry was created.",
@@ -301,7 +301,7 @@
           "status": "Catalog observation / validation limited",
           "channel": "Web / source",
           "changes": [
-            "v3.61.0 \u00ef\u00bf\u00bd Build 84. Owner sign-in and access PIN required. Native installers are not available."
+            "v3.61.0 ï¿½ Build 84. Owner sign-in and access PIN required. Native installers are not available."
           ],
           "validation": "See package limitations. This record does not establish new native-device testing.",
           "dateNote": "Historical release time was not recorded. Catalog/package information was observed when this history entry was created.",
@@ -480,6 +480,32 @@
       "name": "StockPilot",
       "entries": [
         {
+          "id": "stockpilot-1.0.4-review.3-build6-access-20261020",
+          "version": "1.0.4-review.3",
+          "build": 6,
+          "recordedAt": "2026-10-20T10:54:24Z",
+          "releasedAt": "2026-10-20T10:53:07Z",
+          "status": "Published review source / not merged or deployed",
+          "channel": "Local listing review, durable reconciliation and owner-only Access preparation",
+          "dateNote": "Time records final source publication to the existing draft pull request, not a hosted application launch. Existing downloads remain unchanged.",
+          "changes": [
+            "Added local listing-plan preview, explicit reviewed draft saving and durable uncertain-outcome reconciliation; no publishing or purchase action is exposed in the dashboard.",
+            "Added disabled-by-default owner-only Cloudflare Access verification across API and static routes, exact issuer/audience/email checks, bounded app sessions and retained CSRF protection.",
+            "Preserved inactive provider-write gates and existing live-store ownership. No live provider acceptance, application deployment or commercial-readiness claim."
+          ],
+          "validation": "410 local Node tests passed for the build 6 listing-review increment. Access addendum: 13 hosted tests (10 focused/adversarial and 3 local workerd/D1), plus 19 existing proof tests passed; generated client/UI syntax checks passed. Independent adversarial review found no authentication bypass. Browser launch was blocked, so no new visual acceptance is claimed. No actual Access identity, live provider or hosted acceptance test ran; Access remains unconfigured and disabled.",
+          "references": [
+            {
+              "label": "Final private source commit",
+              "url": "https://github.com/GoyoneByDesign/StockPilot/commit/1c81775adf8761b4d4981205478ac7a678aef60f"
+            },
+            {
+              "label": "Existing draft review",
+              "url": "https://github.com/GoyoneByDesign/StockPilot/pull/1"
+            }
+          ]
+        },
+        {
           "id": "stockpilot-1.0.4-review.2-build5-20261020",
           "version": "1.0.4-review.2",
           "build": 5,
@@ -618,7 +644,7 @@
           "status": "Catalog observation / validation limited",
           "channel": "Existing native test package",
           "changes": [
-            "Android 8+ \u00ef\u00bf\u00bd JustMyPick 0.38/build 38 debug test APK. Branding, startup and same-key emulator list/cart/budget preservation passed. Its test certificate differs from old SavvyKin 0.36: an in-place update requires the original key. Do not uninstall or erase your existing app to work around this. Live integrations and physical-phone validation remain pending."
+            "Android 8+ ï¿½ JustMyPick 0.38/build 38 debug test APK. Branding, startup and same-key emulator list/cart/budget preservation passed. Its test certificate differs from old SavvyKin 0.36: an in-place update requires the original key. Do not uninstall or erase your existing app to work around this. Live integrations and physical-phone validation remain pending."
           ],
           "validation": "See package limitations. This record does not establish new native-device testing.",
           "dateNote": "Historical release time was not recorded. Catalog/package information was observed when this history entry was created.",
