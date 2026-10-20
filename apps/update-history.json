@@ -480,6 +480,32 @@
       "name": "StockPilot",
       "entries": [
         {
+          "id": "stockpilot-1.0.4-review.2-build5-20261020",
+          "version": "1.0.4-review.2",
+          "build": 5,
+          "recordedAt": "2026-10-20T10:33:10Z",
+          "releasedAt": "2026-10-20T10:31:09Z",
+          "status": "Published review source / not merged or deployed",
+          "channel": "Offline eBay listing preparation and disabled Sandbox contract",
+          "dateNote": "Time records publication of the private source commit to the existing draft pull request, not a live application release or provider activation.",
+          "changes": [
+            "Added offline single-SKU fixed-price eBay listing payload preparation and a usable local preparation command.",
+            "Added disabled Sandbox-only inventory-create, unpublished offer-create and separately acknowledged publish contracts with identity, stale-state, bounded-response and uncertain-outcome safeguards.",
+            "Preserved existing live-store ownership and documented readiness gates. No dashboard writer, merge, deployment, actual store write or provider activation occurred."
+          ],
+          "validation": "386 local Node tests passed, including 21 new synthetic listing preparation and endpoint tests; 0 failed or skipped. Offline CLI smoke, JavaScript syntax and whitespace checks passed. No live or Sandbox account acceptance was performed; the Sandbox client remains disabled and untested against a provider. Existing Workers, hosted and Chrome suites were not rerun. This source update does not establish commercial readiness.",
+          "references": [
+            {
+              "label": "Private source commit",
+              "url": "https://github.com/GoyoneByDesign/StockPilot/commit/f4f37f66c6b9e7434a87468f9b469e2efd6e5156"
+            },
+            {
+              "label": "Existing draft review",
+              "url": "https://github.com/GoyoneByDesign/StockPilot/pull/1"
+            }
+          ]
+        },
+        {
           "id": "review-2026-10-19",
           "version": "1.0.4-review.1",
           "build": 4,
