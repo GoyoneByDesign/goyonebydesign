@@ -801,6 +801,28 @@
       "name": "GoyoneByDesign website and app portal",
       "entries": [
         {
+          "id": "research-review-2026-10-21",
+          "version": "1.0.1",
+          "build": 2,
+          "recordedAt": "2026-10-21T08:11:00-04:00",
+          "releasedAt": null,
+          "status": "Research review / no application change",
+          "channel": "Documentation only; existing portal version and build retained",
+          "changes": [
+            "Reconciled current catalog, review-source versus installer channels and paused/removed projects without changing application code or versions.",
+            "Recorded bounded international VIEW4REAL review, an April optical-prototype background source and retained experimental validation requirements.",
+            "Rechecked the Node security checkpoint, prepared StatusPing Billing 9.1.0 dependency, MAX-ALPHA incomplete-response handling and storage/provider acceptance boundaries."
+          ],
+          "validation": "Three existing history-generator tests plus focused append-only, deterministic generation, HTML structure, reference and four-file-scope checks passed. No application lint, type, unit, integration, native build, UI/device, optical-bench or human testing ran. Remote commit, Pages and served bytes are verified separately.",
+          "dateNote": "Research review October 21, 2026 at 8:11 AM EDT (America/New_York, UTC-04:00), not an application release. Existing portal 1.0.1/build 2 retained. Previous history and releases are unchanged.",
+          "references": [
+            {
+              "label": "October 21 research and decisions",
+              "url": "https://www.goyonebydesign.com/apps/research/2026-10-21/"
+            }
+          ]
+        },
+        {
           "id": "research-review-2026-10-20",
           "version": "1.0.1",
           "build": 2,
