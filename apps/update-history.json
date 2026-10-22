@@ -92,7 +92,7 @@
           "status": "Catalog observation / validation limited",
           "channel": "Existing native test package",
           "changes": [
-            "Android 7+ ï¿½ StatusPing 0.2.0-review.3/build 5 isolated debug test APK. Regression and native emulator check-in/reminder tests passed, including bounded delivery after ordinary process death. Full 12-hour/Doze/reboot and real-phone reliability remain unverified. Live caregiver/email/SMS/call escalation is not tested; production upgrade compatibility is not established."
+            "Android 7+ \u00ef\u00bf\u00bd StatusPing 0.2.0-review.3/build 5 isolated debug test APK. Regression and native emulator check-in/reminder tests passed, including bounded delivery after ordinary process death. Full 12-hour/Doze/reboot and real-phone reliability remain unverified. Live caregiver/email/SMS/call escalation is not tested; production upgrade compatibility is not established."
           ],
           "validation": "See package limitations. This record does not establish new native-device testing.",
           "dateNote": "Historical release time was not recorded. Catalog/package information was observed when this history entry was created.",
@@ -104,6 +104,27 @@
       "id": "view4real",
       "name": "View4Real",
       "entries": [
+        {
+          "id": "source-validation-20261022",
+          "version": "0.2.4",
+          "build": 4,
+          "recordedAt": "2026-10-22T10:19:14Z",
+          "releasedAt": null,
+          "status": "Existing source reverified / Windows download unchanged",
+          "channel": "Validation only; no new app release",
+          "dateNote": "Existing source build4 is not present in public Windows0.2.3/build3. No installer replacement.",
+          "changes": [
+            "Re-ran existing reader/import reliability and optical-model checks without altering app source.",
+            "Retained pending browser/native acceptance: Chromium could not launch because the cloud environment denied a socket operation; Windows package/device validation was not available."
+          ],
+          "validation": "TypeScript and production build pass;20 source tests,42 optical checks,24 solver checks and25 simulated integration checks pass. Browser suite failed before test execution; no actual browser, Windows, physical display, billing or clinical validation.",
+          "references": [
+            {
+              "label": "Existing source commit",
+              "url": "https://github.com/GoyoneByDesign/View4Real/commit/84d58ff3fe5d61f0747e7b78bfde2ada7f0078dc"
+            }
+          ]
+        },
         {
           "id": "source-0.2.4-build4-import-ordering-20261020",
           "version": "0.2.4",
@@ -231,6 +252,37 @@
       "name": "MAX-ALPHA",
       "entries": [
         {
+          "id": "gemini-adapter-compatibility-20261022",
+          "version": "1.18.2",
+          "build": 225,
+          "recordedAt": "2026-10-22T10:18:06Z",
+          "releasedAt": null,
+          "status": "Source review only / public app and Worker unchanged",
+          "channel": "Standalone security-maintenance baseline; adapter revision 2026-10-22.1",
+          "dateNote": "Version/build identify the existing standalone baseline, not a newly packaged browser release. Public website remains 1.16.6/build227; GitHub source publication does not deploy Cloudflare.",
+          "changes": [
+            "Removed deprecated temperature and unsupported candidateCount from fixed-model Gemini adapter requests, retaining maxOutputTokens512.",
+            "Added14 provider-mocked regressions for request compatibility, incomplete/blocked responses, privacy boundaries, free-tier gating, cancellation and no retries.",
+            "Preserved configured model, authentication, permissions, browser package, public website and live Worker. No provider inference, new cost, credentials or automatic model migration.",
+            "Mirrored this same tested adapter source and mocked tests in the website repository; no Cloudflare service deployment."
+          ],
+          "validation": "33 Node tests pass (19 existing plus14 new); syntax passes. Request-contract regression fails original adapter and passes updated source. Four GitHub source files exact-byte verified. No live provider, browser visual, native-device or deployed Worker test.",
+          "references": [
+            {
+              "label": "Source review (private repository)",
+              "url": "https://github.com/GoyoneByDesign/MAX-ALPHA/pull/1"
+            },
+            {
+              "label": "Source commit",
+              "url": "https://github.com/GoyoneByDesign/MAX-ALPHA/commit/47da42456d281453b2cea8f7c4a70584d1b41077"
+            },
+            {
+              "label": "Official Gemini migration guidance",
+              "url": "https://ai.google.dev/gemini-api/docs/generate-content/whats-new-gemini-3.6"
+            }
+          ]
+        },
+        {
           "id": "home-screen-icons-2026-10-16",
           "version": "1.16.6",
           "build": 227,
@@ -301,7 +353,7 @@
           "status": "Catalog observation / validation limited",
           "channel": "Web / source",
           "changes": [
-            "v3.61.0 ï¿½ Build 84. Owner sign-in and access PIN required. Native installers are not available."
+            "v3.61.0 \u00ef\u00bf\u00bd Build 84. Owner sign-in and access PIN required. Native installers are not available."
           ],
           "validation": "See package limitations. This record does not establish new native-device testing.",
           "dateNote": "Historical release time was not recorded. Catalog/package information was observed when this history entry was created.",
@@ -479,6 +531,31 @@
       "id": "stockpilot",
       "name": "StockPilot",
       "entries": [
+        {
+          "id": "truthful-local-draft-save-feedback-2026-10-22",
+          "version": "1.0.4-review.7",
+          "build": 10,
+          "recordedAt": "2026-10-22T10:15:00Z",
+          "releasedAt": null,
+          "status": "Tested review source / not deployed",
+          "channel": "truthful local draft save feedback source / not deployed",
+          "changes": [
+            "Distinguished confirmed local draft saves from subsequent history-refresh errors; saved work is no longer reported as incomplete.",
+            "Required a matching local-only unpublished draft receipt. Lost or malformed responses remain unconfirmed, clear save authority and direct users to inspect local history without automatic retry.",
+            "Added regression coverage for refresh failure after save, lost responses, malformed receipts and session expiry; provider and deployment gates remain unchanged."
+          ],
+          "validation": "433 Node tests, 42 Worker/UI tests and 14 hosted/Access tests passed with zero failures/skips; 13 focused UI tests passed. Four regressions fail against build 9. Independent review found no blocking issue; receipt ID validation was hardened afterward. Syntax and whitespace checks passed. Minimal-DOM and local HTTP/workerd evidence only; no new browser visual, provider, hosted deployment or installer acceptance claimed.",
+          "references": [
+            {
+              "label": "Private source review",
+              "url": "https://github.com/GoyoneByDesign/StockPilot/pull/1"
+            },
+            {
+              "label": "Tested source commit",
+              "url": "https://github.com/GoyoneByDesign/StockPilot/commit/8b5618ad5c655be0ba25154d88e72e6561ee03f4"
+            }
+          ]
+        },
         {
           "id": "stockpilot-1.0.4-review.6-build9-supplier-readiness-20261020",
           "version": "1.0.4-review.6",
@@ -728,7 +805,7 @@
           "status": "Catalog observation / validation limited",
           "channel": "Existing native test package",
           "changes": [
-            "Android 8+ ï¿½ JustMyPick 0.38/build 38 debug test APK. Branding, startup and same-key emulator list/cart/budget preservation passed. Its test certificate differs from old SavvyKin 0.36: an in-place update requires the original key. Do not uninstall or erase your existing app to work around this. Live integrations and physical-phone validation remain pending."
+            "Android 8+ \u00ef\u00bf\u00bd JustMyPick 0.38/build 38 debug test APK. Branding, startup and same-key emulator list/cart/budget preservation passed. Its test certificate differs from old SavvyKin 0.36: an in-place update requires the original key. Do not uninstall or erase your existing app to work around this. Live integrations and physical-phone validation remain pending."
           ],
           "validation": "See package limitations. This record does not establish new native-device testing.",
           "dateNote": "Historical release time was not recorded. Catalog/package information was observed when this history entry was created.",

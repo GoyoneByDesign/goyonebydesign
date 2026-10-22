@@ -168,7 +168,9 @@ export async function handleGemini(request, env = {}, { origins = PUBLIC_ORIGINS
         body: JSON.stringify({
           systemInstruction: { parts: [{ text: SYSTEM }] },
           contents: [{ role: 'user', parts: [{ text: body.question.trim() }] }],
-          generationConfig: { temperature: 0, candidateCount: 1, maxOutputTokens: 512 },
+          // Gemini 3.5 Flash-Lite ignores deprecated sampling parameters;
+          // candidateCount is unsupported on Gemini 3+. Keep the answer cap.
+          generationConfig: { maxOutputTokens: 512 },
         }),
       });
       if (!response.ok || response.redirected) {
@@ -193,3 +195,4 @@ export async function handleGemini(request, env = {}, { origins = PUBLIC_ORIGINS
       status === 429 ? { 'Retry-After': '60' } : status === 401 ? { 'WWW-Authenticate': 'Bearer realm="MAX-ALPHA support"' } : {});
   }
 }
+
