@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "version": "1.16.6",
-  "build": 227,
+  "version": "1.16.7",
+  "build": 228,
   "min_companion_build": 205,
   "files": [
     {
@@ -156,8 +156,8 @@
     },
     {
       "path": "document-context.js",
-      "sha256": "fccf623ce9c5262c21717511d3eb6ca3bf090207ba396f6fdb94fb55b8754cc1",
-      "bytes": 2537
+      "sha256": "090729f8179fb72368985744ba8948ba47e92e37f81612263f375e75d419174e",
+      "bytes": 3239
     },
     {
       "path": "engine.js",
@@ -191,8 +191,8 @@
     },
     {
       "path": "history.html",
-      "sha256": "34da0b89a94ee119bfcba1c4a5507ff0805cd82428b92b3b3175cc9094a36193",
-      "bytes": 4405
+      "sha256": "df479f2d3c00e08d67438be53c3b6553ccd0b50ae9b747dced18d166644ad0b6",
+      "bytes": 5571
     },
     {
       "path": "icons/apple-touch-icon.png",
@@ -316,7 +316,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "a7f4bd005cb96a8eda493875f50b8be648abdeaa9a8b5e2f327eee66600a87a0",
+      "sha256": "abf5639a02a11df7bded0f5511b75221c483ce26c59b2d0cdfec1725fd36615e",
       "bytes": 259
     },
     {
@@ -356,12 +356,12 @@
     },
     {
       "path": "release-info.json",
-      "sha256": "65f96bca1b7b48f17faa495ca00f38addc064355c80dead50d5b4aa42162886d",
-      "bytes": 451
+      "sha256": "2d5d31f284191e4af8683dbf73baee5ff86f1a5a0573e3d51e1a468da0f88dd1",
+      "bytes": 596
     },
     {
       "path": "release-version.js",
-      "sha256": "5155ff7555cceabcd93049de0b996a5d86fc7d0e13039ae53e8fd8767830b6f5",
+      "sha256": "d7cd4563ca20dd7ebf837c9126ff63f1840ce3e56b6fdf6f9755c7f2779da378",
       "bytes": 155
     },
     {
@@ -426,8 +426,8 @@
     },
     {
       "path": "sw.js",
-      "sha256": "a75cb6ea9f599add7744780bb997cd9f7b9f8dd06ac939f03667157116cb9bfc",
-      "bytes": 8597
+      "sha256": "76bd995758a4a2b0fa9019af10ac96c683e3e3d1d5e781577b5783e5fa37d386",
+      "bytes": 8625
     },
     {
       "path": "tools.js",
@@ -493,6 +493,11 @@
       "path": "weather-place.js",
       "sha256": "b8c5102a78ed0da369546ce0eb3ac89005ad8c4c8aad58d45d3a6e73f8749d1a",
       "bytes": 10509
+    },
+    {
+      "path": "upgrade-guide.html",
+      "bytes": 6922,
+      "sha256": "806a033fad63e2f459ffcb132949fb445abf060f5042b700bef802a84bc1605d"
     }
   ]
 }

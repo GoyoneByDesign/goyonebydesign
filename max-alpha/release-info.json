@@ -1,12 +1,13 @@
 {
   "schema": 1,
-  "version": "1.16.6",
-  "build": 227,
+  "version": "1.16.7",
+  "build": 228,
   "timezone": "America/New_York",
-  "preparedAt": "2026-10-16T11:32:36Z",
+  "preparedAt": "2026-10-26T14:50:00Z",
   "channel": "website",
   "changes": [
-    "Added explicit sized Apple Home Screen icon declarations and refreshed icon URLs, retaining the existing real MAX-ALPHA logo and installed-app identity."
+    "Refresh document excerpts after edits; improve unspaced Chinese/Japanese and full-width keyword matching.",
+    "Add official-source upgrade research, licensing decisions and explicit capability limits."
   ],
-  "validation": "Release integrity, existing Node checks and live HTTP icon verification; no physical iOS testing."
+  "validation": "Nine document retrieval regressions pass; five failed before the fix. Final package and existing tests are recorded in update history. Live provider and browser/device checks are not verified."
 }
