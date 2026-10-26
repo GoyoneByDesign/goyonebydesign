@@ -105,14 +105,14 @@
       "Work studio",
       "Personal organization"
     ],
-    "note": "Web 1.16.7 / build 228. Document retrieval reliability and multilingual matching improved. Automatic update checks are opt-in; downloaded updates wait for Update & reopen after saving work. A separately signed automatic installation channel is not configured. Available in your browser, including Home Screen setup. Native Android, iOS, and Windows installers have not been released.",
+    "note": "Web 1.16.8 / build 229. Faster long-query retrieval plus honest capability and optional smoke-check panel; no overall speed guarantee. Automatic update checks are opt-in; downloaded updates wait for Update & reopen after saving work. A separately signed automatic installation channel is not configured. Available in your browser, including Home Screen setup. Native Android, iOS, and Windows installers have not been released.",
     "web": "/max-alpha/",
     "webLabel": "Open browser app",
     "downloads": {},
     "install": "/apps/install.html#max-alpha",
     "development": false,
     "platforms": "Browser / Home Screen",
-    "version": "Web v1.16.7 · Build 228",
+    "version": "Web v1.16.8 · Build 229",
     "access": "Browser interface"
   },
   {

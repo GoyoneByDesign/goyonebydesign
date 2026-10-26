@@ -1,14 +1,14 @@
 {
   "schema": 1,
-  "version": "1.16.7",
-  "build": 228,
+  "version": "1.16.8",
+  "build": 229,
   "timezone": "America/New_York",
-  "preparedAt": "2026-10-26T14:50:00Z",
+  "preparedAt": "2026-10-26T15:09:00Z",
   "channel": "website",
   "changes": [
-    "Refresh document excerpts after edits; improve unspaced Chinese/Japanese and full-width keyword matching.",
-    "Add official-source upgrade research, licensing decisions and explicit capability limits."
+    "Reduce long-query document retrieval work while preserving baseline outputs; synthetic retrieval speed is not overall assistant speed.",
+    "Add capability status panel separating configured, tested, unavailable and prerequisite-dependent features.",
+    "Add explicit synthetic excerpt checks and manual AI prompts with user-reported-only results; no automatic inference, uploads, account access or storage."
   ],
-  "validation": "All 48 Node tests and JavaScript syntax checks pass. Pages build/deployment succeeded; key live files verified by HTTP 200 and exact bytes. Chromium launch blocked; no live model inference or native-device verification.",
-  "releasedAt": "2026-10-26T14:54:21Z"
+  "validation": "57 Node tests pass; JavaScript syntax and102-file manifest checked. Synthetic retrieval benchmark shows15\u201325x on long diverse queries,1.4\u20132.2x on short English, Japanese approximately unchanged; not overall speed. Browser visual tests blocked; inference not independently measured. Deployment checked separately."
 }

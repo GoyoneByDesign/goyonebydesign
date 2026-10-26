@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "version": "1.16.7",
-  "build": 228,
+  "version": "1.16.8",
+  "build": 229,
   "min_companion_build": 205,
   "files": [
     {
@@ -56,8 +56,8 @@
     },
     {
       "path": "app.js",
-      "sha256": "d1fc89733f1a35fffa05076c2437c377304acf774d745a4f3eceb662d8e6d4b5",
-      "bytes": 151629
+      "sha256": "ee19a62b5a917f1e4065e01da052ad5ba53a464a3b33b9dbb3e7c9adb5e1fc79",
+      "bytes": 151651
     },
     {
       "path": "assets/goyonebydesign-logo.png",
@@ -156,8 +156,8 @@
     },
     {
       "path": "document-context.js",
-      "sha256": "090729f8179fb72368985744ba8948ba47e92e37f81612263f375e75d419174e",
-      "bytes": 3239
+      "sha256": "f79904b2c9d9702793094ba7bb58fc98dfba6ba4662946023e1eda3cfbb5472e",
+      "bytes": 3602
     },
     {
       "path": "engine.js",
@@ -191,8 +191,8 @@
     },
     {
       "path": "history.html",
-      "sha256": "0deeaf524e9e96a88a0d12fada70899ae1d3ca1ec8e91b1edcc799551ff79309",
-      "bytes": 5975
+      "sha256": "66f0471c096839ae7345530a3269d01aa8f8e7e2031ccd9ccc5dbaba36242ed6",
+      "bytes": 7730
     },
     {
       "path": "icons/apple-touch-icon.png",
@@ -231,8 +231,8 @@
     },
     {
       "path": "index.html",
-      "sha256": "8d64b53a5206bc7ce706dd6cdf593a7eac83890221ed62a45aad96242c7dc355",
-      "bytes": 24969
+      "sha256": "f77f5d82728f0ac715ed2c96de2f7e9352f1ed8b0c67e8e167c15dc2f730d0ac",
+      "bytes": 25085
     },
     {
       "path": "inference-worker.js",
@@ -316,7 +316,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "abf5639a02a11df7bded0f5511b75221c483ce26c59b2d0cdfec1725fd36615e",
+      "sha256": "39bccb58e4796e0a66f5d04d9ff7b423955fb1d368fdddf456620d0632711e75",
       "bytes": 259
     },
     {
@@ -356,12 +356,12 @@
     },
     {
       "path": "release-info.json",
-      "sha256": "b28142a1028c0e0cc1edec756a566a6dae4ab26fbec0f1b7e32d949a20b2bc03",
-      "bytes": 663
+      "sha256": "b50efdfaf0897b12b5d186b9bcff1f6d1e9c32936d73ac5171a7b132c6350c21",
+      "bytes": 933
     },
     {
       "path": "release-version.js",
-      "sha256": "d7cd4563ca20dd7ebf837c9126ff63f1840ce3e56b6fdf6f9755c7f2779da378",
+      "sha256": "c2f72deee6f1309a93afee74a7f5ec5a63bf648661cd0d4437c985023f537f50",
       "bytes": 155
     },
     {
@@ -426,8 +426,8 @@
     },
     {
       "path": "sw.js",
-      "sha256": "ff13975d821c4153d5d5f669177f8fa082c3f529593ca454f7c4def107e5befd",
-      "bytes": 8625
+      "sha256": "7e59af47e5d1a24c647c4fce3e7c80dc364bf8cf2b4d75a6e0cd6a1dc08a8355",
+      "bytes": 8704
     },
     {
       "path": "tools.js",
@@ -496,8 +496,23 @@
     },
     {
       "path": "upgrade-guide.html",
-      "bytes": 6922,
-      "sha256": "806a033fad63e2f459ffcb132949fb445abf060f5042b700bef802a84bc1605d"
+      "bytes": 7009,
+      "sha256": "1f743c2824882f3031dcbb7700018dcf040e03c462ae455f17906e3791a49678"
+    },
+    {
+      "path": "capabilities.html",
+      "bytes": 3041,
+      "sha256": "5853111e5aa981965f341694e34dcd1ce3e183b2171080226be038800edf86a3"
+    },
+    {
+      "path": "capability-status.js",
+      "bytes": 3492,
+      "sha256": "4516cde3bde7d6a72cd08bc5aa3e2457b3558b64ff4df1ef3d798a93593970bd"
+    },
+    {
+      "path": "capability-panel.js",
+      "bytes": 2402,
+      "sha256": "2b296dbd5c35a89259948edcb023971e14ca700f8e9f681c08023949237ff91d"
     }
   ]
 }

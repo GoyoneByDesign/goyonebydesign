@@ -36,7 +36,15 @@ export function documentContext(files, query, maxChars=1700) {
   const terms=new Set(words(String(query).slice(0,24000)));
   const budget=Math.floor((Math.min(6000,maxChars)-70)/selected.length);
   const sections=selected.map(file=>{
-    const candidates=chunks(file).map((chunk,index)=>({...chunk,index,score:[...terms].reduce((n,t)=>n+(chunk.terms.has(t)?1:0),0)}));
+    // Intersect the smaller set. Long questions no longer multiply work by every
+    // query term for every chunk; counts and tie ordering remain unchanged.
+    const candidates=chunks(file).map((chunk,index)=>{
+      let score=0;
+      const smaller=terms.size<=chunk.terms.size?terms:chunk.terms;
+      const larger=smaller===terms?chunk.terms:terms;
+      for(const term of smaller)if(larger.has(term))score++;
+      return {...chunk,index,score};
+    });
     candidates.sort((a,b)=>b.score-a.score||a.index-b.index);
     const name=String(file.name||'Document').replace(/[\r\n]/g,' ').slice(0,80);
     let result=`File: ${name}\n`;
@@ -45,7 +53,8 @@ export function documentContext(files, query, maxChars=1700) {
       if(room<30)break;
       let start=0;
       if(c.text.length>room&&c.score){
-        const positions=[...terms].filter(t=>c.terms.has(t)).map(t=>normalize(c.text).indexOf(t)).filter(n=>n>=0);
+        const normalized=normalize(c.text);
+        const positions=[...terms].filter(t=>c.terms.has(t)).map(t=>normalized.indexOf(t)).filter(n=>n>=0);
         const firstMatch=Math.min(...positions);
         if(firstMatch>=room-40)start=Math.max(0,firstMatch-Math.floor(room/3));
       }
