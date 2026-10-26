@@ -10,5 +10,6 @@
     "Add capability status panel separating configured, tested, unavailable and prerequisite-dependent features.",
     "Add explicit synthetic excerpt checks and manual AI prompts with user-reported-only results; no automatic inference, uploads, account access or storage."
   ],
-  "validation": "57 Node tests pass; JavaScript syntax and102-file manifest checked. Synthetic retrieval benchmark shows15\u201325x on long diverse queries,1.4\u20132.2x on short English, Japanese approximately unchanged; not overall speed. Browser visual tests blocked; inference not independently measured. Deployment checked separately."
+  "validation": "57 Node tests pass; JavaScript syntax and102-file manifest checked. Synthetic retrieval benchmark shows15\u201325x on long diverse queries,1.4\u20132.2x on short English, Japanese approximately unchanged; not overall speed. Browser visual tests blocked; inference not independently measured. Pages build and deployment succeeded.",
+  "releasedAt": "2026-10-26T15:15:30Z"
 }
