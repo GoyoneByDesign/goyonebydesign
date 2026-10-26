@@ -1,10 +1,12 @@
+import {stageRelease,validateManifest} from './update-manifest.js';
 /* MAX-ALPHA offline shell. Bump VERSION when any shipped shell file changes.
  * Model tensors/config/tokenizers/WASM belong to WebLLM's IndexedDB cache.
  * This worker never caches searches, conversations, uploads or arbitrary pages.
  */
-const VERSION = '2026-10-26.alpha.capabilities.1';
-const RELEASE_VERSION = '1.16.8';
-const RELEASE_BUILD = 229;
+const VERSION = '2026-10-26.alpha.completeupdate.1';
+const RELEASE_VERSION = '1.16.9';
+const RELEASE_BUILD = 230;
+const RELEASE_DATE = '2026-10-26T15:26:00Z';
 const SCOPE = new URL(self.registration.scope);
 const PREFIX = `maxg-pwa:${encodeURIComponent(SCOPE.pathname)}:`;
 const SHELL_CACHE = `${PREFIX}shell:${VERSION}`;
@@ -12,6 +14,7 @@ const LIBRARY_CACHE = `${PREFIX}libraries:0.2.85`;
 const WEBLLM_URL = 'https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@0.2.85/+esm';
 const SHELL_FILES = [
   './capabilities.html', './capability-status.js', './capability-panel.js',
+  './update-manifest.js',
   './service-readiness.js',
   './release-info.json',
   './history.html', './upgrade-guide.html',
@@ -33,6 +36,7 @@ const VOICE_LIBRARIES=new Set(['https://cdn.jsdelivr.net/npm/kokoro-js@1.2.1/dis
   'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.5.1/dist/ort-wasm-simd-threaded.jsep.mjs',
   'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.5.1/dist/ort-wasm-simd-threaded.jsep.wasm']);
 const SHELL_URLS = new Set(SHELL_FILES.map(file => new URL(file, SCOPE).href));
+const REQUIRED_PATHS=[...SHELL_URLS].map(url=>url===SCOPE.href?'index.html':url.slice(SCOPE.href.length));
 const RELEASE_URL = new URL('./release.json', SCOPE).href;
 function integrityFor(hash) {
   if(!/^[a-f0-9]{64}$/.test(hash||''))throw Error('A shell asset is missing its release hash.');
@@ -49,17 +53,7 @@ self.addEventListener('install', event => {
       const raw = await response.text();
       if (raw.length > 160000) throw Error('Release manifest is too large.');
       const release = JSON.parse(raw);
-      if (release.schema !== 1 || release.version !== RELEASE_VERSION || release.build !== RELEASE_BUILD || !Array.isArray(release.files))
-        throw Error('The shared release is still being published.');
-      const hashes = new Map(release.files.map(file=>[file.path,file.sha256]));
-      const requests = [...SHELL_URLS].map(url=>{
-        const path = url===SCOPE.href?'index.html':url.slice(SCOPE.href.length);
-        const hash=hashes.get(path);
-        const integrity=integrityFor(hash);
-        return new Request(url,{cache:'reload',credentials:'omit',redirect:'error',integrity});
-      });
-      await cache.addAll(requests);
-      await cache.put(RELEASE_URL,new Response(raw,{headers:{'Content-Type':'application/json'}}));
+      await stageRelease({cache,release,raw,scope:SCOPE,version:RELEASE_VERSION,build:RELEASE_BUILD,requiredPaths:REQUIRED_PATHS});
     } catch (error) {
       await caches.delete(SHELL_CACHE);
       throw error;
@@ -69,21 +63,28 @@ self.addEventListener('install', event => {
   })());
 });
 
+async function completeCache(){const cache=await caches.open(SHELL_CACHE),marker=await cache.match(RELEASE_URL);if(!marker)return false;try{const release=await marker.json();const files=validateManifest(release,{scope:SCOPE,version:RELEASE_VERSION,build:RELEASE_BUILD,requiredPaths:REQUIRED_PATHS});return (await Promise.all(files.map(file=>cache.match(new URL(file.path,SCOPE).href)))).every(Boolean);}catch{return false;}}
+
 self.addEventListener('activate', event => {
   event.waitUntil((async () => {
-    for (const name of await caches.keys()) {
-      if (name.startsWith(PREFIX) && name !== SHELL_CACHE && name !== LIBRARY_CACHE && name !== VOICE_LIBRARY_CACHE) await caches.delete(name);
-    }
+    if(!await completeCache())throw Error('Incomplete update cache.');
+    // Keep the immediately preceding shell for recovery; never touch personal/model caches.
+    const older=(await caches.keys()).filter(name=>name.startsWith(PREFIX+'shell:')&&name!==SHELL_CACHE);
+    for(const name of older.slice(0,-1))await caches.delete(name);
     await self.clients.claim();
   })());
 });
 
 self.addEventListener('message', event => {
-  // Same-origin page code asks for an update only after it has saved its work.
-  if (event.data?.type === 'MAXG_ACTIVATE_UPDATE' && event.source?.url) {
-    const source=new URL(event.source.url);
-    if(source.origin===SCOPE.origin&&source.pathname.startsWith(SCOPE.pathname))self.skipWaiting();
+  if(!event.source?.url)return;
+  const source=new URL(event.source.url);
+  if(source.origin!==SCOPE.origin||!source.pathname.startsWith(SCOPE.pathname))return;
+  if(event.data?.type==='MAXG_UPDATE_METADATA'){
+    event.waitUntil((async()=>{const complete=await completeCache();event.ports?.[0]?.postMessage({version:RELEASE_VERSION,build:RELEASE_BUILD,releasedAt:RELEASE_DATE,complete});})());
   }
+  // Older installed interfaces lack target fields; their save guard still runs.
+  const legacy=event.data?.build===undefined&&event.data?.version===undefined;
+  if(event.data?.type==='MAXG_ACTIVATE_UPDATE'&&(legacy||event.data.build===RELEASE_BUILD&&event.data.version===RELEASE_VERSION))event.waitUntil((async()=>{if(await completeCache())await self.skipWaiting();})());
 });
 
 async function staticResponse(request) {
@@ -134,7 +135,7 @@ self.addEventListener('fetch', event => {
     event.respondWith((async () => {
       const cached = await (await caches.open(SHELL_CACHE)).match(new URL('./index.html', SCOPE).href);
       if (cached) return cached;
-      try { return await fetch(request); }
+      try { return await staticResponse(new Request(new URL('./index.html',SCOPE))); }
       catch { return new Response('MAX-ALPHA is offline and its app shell was removed by the browser. Reconnect once to restore it.', { status: 503, headers: { 'Content-Type': 'text/plain; charset=utf-8' } }); }
     })());
     return;

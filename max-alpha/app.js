@@ -3,7 +3,7 @@ import {renderFinance,normalizeFinance} from './finance.js';
 import {MaxGEngine,MODELS as WEB_MODELS,DEFAULT_MODEL as WEB_DEFAULT_MODEL,checkWebGPU,boundedMessages,boundedStoryHistory} from './engine.js';
 import {MaxGLocalEngine,LOCAL_MODELS,LOCAL_DEFAULT_MODEL,LOCAL_CODING_MODEL,isDesktopMode,desktopDefaults} from './local-ai.js';
 import {installMobileViewport} from './mobile-viewport.js';
-import {createAppUpdates,installedDisplay,renderUpdateSettings} from './updates.js';
+import {createAppUpdates,installedDisplay,renderUpdateSettings,releaseDateLabel} from './updates.js';
 import {understandRequest} from './request-understanding.js';
 import {creativeRequest} from './creative-writing.js';
 import {readDeliveryCue,replyDelivery,normalizeDelivery} from './conversation-delivery.js';
@@ -168,6 +168,7 @@ const updates=createAppUpdates({desktop:desktopMode,request:operation=>connector
     const check=$('checkUpdatesBtn');if(check)check.disabled=['checking','applying'].includes(value.phase);
   }});
 async function checkAppUpdates(){if(navigator.onLine===false)throw Error('Reconnect to the internet to check for updates.');await permission('internet');return updates.check();}
+const releaseIdentity=$('releaseIdentity');if(releaseIdentity)releaseIdentity.textContent=`Version ${updates.state.version} · Build ${updates.state.build} · Prepared ${releaseDateLabel(updates.state.releasedAt)}`;
 function openUpdateSettings(){renderSettings('updates');pauseVoiceOutput();$('settingsDialog').showModal();}
 function backgroundUpdateCheck(){if(!document.hidden&&state.settings.automaticUpdateChecks===true&&state.settings.permissions.internet==='allow')updates.check({automatic:true}).catch(()=>{});}
 async function setAutomaticUpdateChecks(value){
@@ -990,7 +991,7 @@ function bind(){
  window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();deferredInstall=event;$('installBtn').hidden=false;});
  window.addEventListener('appinstalled',()=>{$('installBtn').hidden=true;deferredInstall=null;});
  $('installBtn').onclick=async()=>{if(deferredInstall){await deferredInstall.prompt();const choice=await deferredInstall.userChoice;deferredInstall=null;if(choice?.outcome==='accepted')$('installBtn').hidden=true;}else{if($('messageInput').value.trim()||attachments.length)return toast('Send or clear your draft, then open the install guide.');if(await persist())location.href='./install.html';}};
- $('updateNoticeBtn').onclick=openUpdateSettings;
+ $('updateNoticeBtn').onclick=()=>{if(updates.state.phase==='ready')updates.apply().catch(showError);else openUpdateSettings();};
  $('quickCheckUpdatesBtn').onclick=async()=>{openUpdateSettings();try{await checkAppUpdates();}catch(error){showError(error);}};
  document.addEventListener('visibilitychange',backgroundUpdateCheck);window.addEventListener('online',backgroundUpdateCheck);
  window.addEventListener('pagehide',()=>{stop();clearPublicTopic();fastWeather.clear();forgetGeminiToken();locationHub.forget({persist:false});releaseOwnership?.();engine.unload().catch(()=>{});});window.addEventListener('pageshow',event=>{if(event.persisted)location.reload();});

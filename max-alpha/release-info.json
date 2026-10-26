@@ -1,15 +1,14 @@
 {
   "schema": 1,
-  "version": "1.16.8",
-  "build": 229,
+  "version": "1.16.9",
+  "build": 230,
   "timezone": "America/New_York",
-  "preparedAt": "2026-10-26T15:09:00Z",
+  "preparedAt": "2026-10-26T15:26:00Z",
   "channel": "website",
   "changes": [
-    "Reduce long-query document retrieval work while preserving baseline outputs; synthetic retrieval speed is not overall assistant speed.",
-    "Add capability status panel separating configured, tested, unavailable and prerequisite-dependent features.",
-    "Add explicit synthetic excerpt checks and manual AI prompts with user-reported-only results; no automatic inference, uploads, account access or storage."
+    "One click on Update available installs the complete verified web release and reopens after save guards.",
+    "Verify every declared app file by byte length and SHA256; reject incomplete, stale or mismatched updates.",
+    "Show installed version, build and release preparation date/time in America/New_York with UTC offset; preserve prior shell and personal data."
   ],
-  "validation": "57 Node tests pass; JavaScript syntax and102-file manifest checked. Synthetic retrieval benchmark shows15\u201325x on long diverse queries,1.4\u20132.2x on short English, Japanese approximately unchanged; not overall speed. Browser visual tests blocked; inference not independently measured. Pages build and deployment succeeded.",
-  "releasedAt": "2026-10-26T15:15:30Z"
+  "validation": "71 automated Node tests pass, including worker lifecycle simulations, partial-download/hash failures, stale target refusal, exactly-once reload, storage preservation and complete manifest integrity. Syntax checks pass; real browser lifecycle/visual testing remains blocked in the environment. Live publication is verified separately."
 }

@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "version": "1.16.8",
-  "build": 229,
+  "version": "1.16.9",
+  "build": 230,
   "min_companion_build": 205,
   "files": [
     {
@@ -56,8 +56,8 @@
     },
     {
       "path": "app.js",
-      "sha256": "ee19a62b5a917f1e4065e01da052ad5ba53a464a3b33b9dbb3e7c9adb5e1fc79",
-      "bytes": 151651
+      "sha256": "85e2d985b885a44f274f47d559c435463b6bc2ec1d8f9e269efa11c0d309f202",
+      "bytes": 151964
     },
     {
       "path": "assets/goyonebydesign-logo.png",
@@ -191,8 +191,8 @@
     },
     {
       "path": "history.html",
-      "sha256": "3e2ca5cea2f52373fec8083b4e39c14372d77d8f6e6eddfc80d3d56abf4f83e1",
-      "bytes": 8021
+      "sha256": "3ac8cd798008f9de038ccd4feeabd528ce641f6201a6b29c8e49dfac2f2acf89",
+      "bytes": 9955
     },
     {
       "path": "icons/apple-touch-icon.png",
@@ -231,8 +231,8 @@
     },
     {
       "path": "index.html",
-      "sha256": "f77f5d82728f0ac715ed2c96de2f7e9352f1ed8b0c67e8e167c15dc2f730d0ac",
-      "bytes": 25085
+      "sha256": "83272837e65c719cf4eb2520d784be2dc98f87b031e813e1e9c54e1c982fc9f4",
+      "bytes": 25260
     },
     {
       "path": "inference-worker.js",
@@ -316,7 +316,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "39bccb58e4796e0a66f5d04d9ff7b423955fb1d368fdddf456620d0632711e75",
+      "sha256": "e8e6e6210d820f253363125112b74ca322a83d7833f577d88f3be6566319edb5",
       "bytes": 259
     },
     {
@@ -356,13 +356,13 @@
     },
     {
       "path": "release-info.json",
-      "sha256": "1df884b60320054207087a6e116a2675e1adb4902c24eca3894bf405e2c8154f",
-      "bytes": 980
+      "sha256": "1d8bc4b586076a11f4cfea54901817a1cc044f3588a24f3f32a843e38f694f87",
+      "bytes": 899
     },
     {
       "path": "release-version.js",
-      "sha256": "c2f72deee6f1309a93afee74a7f5ec5a63bf648661cd0d4437c985023f537f50",
-      "bytes": 155
+      "sha256": "b717b35cc96553f4a249326b3a7c0bc9302bb09482597623776296d52b290814",
+      "bytes": 208
     },
     {
       "path": "reply-speech.js",
@@ -426,8 +426,8 @@
     },
     {
       "path": "sw.js",
-      "sha256": "7e59af47e5d1a24c647c4fce3e7c80dc364bf8cf2b4d75a6e0cd6a1dc08a8355",
-      "bytes": 8704
+      "sha256": "1fbb5dc1107e38379beed119e399856da23ac1ce7ceafa6b3c20ffe769bc5c91",
+      "bytes": 9423
     },
     {
       "path": "tools.js",
@@ -451,8 +451,8 @@
     },
     {
       "path": "updates.js",
-      "sha256": "c98f1ab3f9a3a839861c073a5627f7591a9cb092f94e5cc5b65a93cae38aa253",
-      "bytes": 10819
+      "sha256": "33b5888d0a963544c282c3a2edacf6f5a7bcddfb6d03acf924b1f59bfa9b24aa",
+      "bytes": 13238
     },
     {
       "path": "voice-config.js",
@@ -513,6 +513,11 @@
       "path": "capability-panel.js",
       "bytes": 2402,
       "sha256": "2b296dbd5c35a89259948edcb023971e14ca700f8e9f681c08023949237ff91d"
+    },
+    {
+      "path": "update-manifest.js",
+      "bytes": 2628,
+      "sha256": "b83911ac62217bf8b308828a92f42f1fdeaab575e082db10b8d2d68f06ed6ae7"
     }
   ]
 }
