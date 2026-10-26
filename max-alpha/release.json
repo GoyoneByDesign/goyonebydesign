@@ -191,8 +191,8 @@
     },
     {
       "path": "history.html",
-      "sha256": "df479f2d3c00e08d67438be53c3b6553ccd0b50ae9b747dced18d166644ad0b6",
-      "bytes": 5571
+      "sha256": "0deeaf524e9e96a88a0d12fada70899ae1d3ca1ec8e91b1edcc799551ff79309",
+      "bytes": 5975
     },
     {
       "path": "icons/apple-touch-icon.png",
@@ -356,8 +356,8 @@
     },
     {
       "path": "release-info.json",
-      "sha256": "2d5d31f284191e4af8683dbf73baee5ff86f1a5a0573e3d51e1a468da0f88dd1",
-      "bytes": 596
+      "sha256": "b28142a1028c0e0cc1edec756a566a6dae4ab26fbec0f1b7e32d949a20b2bc03",
+      "bytes": 663
     },
     {
       "path": "release-version.js",
@@ -426,7 +426,7 @@
     },
     {
       "path": "sw.js",
-      "sha256": "76bd995758a4a2b0fa9019af10ac96c683e3e3d1d5e781577b5783e5fa37d386",
+      "sha256": "ff13975d821c4153d5d5f669177f8fa082c3f529593ca454f7c4def107e5befd",
       "bytes": 8625
     },
     {

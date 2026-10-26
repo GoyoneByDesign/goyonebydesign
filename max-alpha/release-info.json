@@ -9,5 +9,6 @@
     "Refresh document excerpts after edits; improve unspaced Chinese/Japanese and full-width keyword matching.",
     "Add official-source upgrade research, licensing decisions and explicit capability limits."
   ],
-  "validation": "Nine document retrieval regressions pass; five failed before the fix. Final package and existing tests are recorded in update history. Live provider and browser/device checks are not verified."
+  "validation": "All 48 Node tests and JavaScript syntax checks pass. Pages build/deployment succeeded; key live files verified by HTTP 200 and exact bytes. Chromium launch blocked; no live model inference or native-device verification.",
+  "releasedAt": "2026-10-26T14:54:21Z"
 }
