@@ -242,3 +242,8 @@ Updated only StockPilot catalog availability and version history, preserving exi
 ## October 27, 2026 — StockPilot build 12 source-only history
 
 Recorded verified source commit 399ad9f68d0aa12f6926fe73380c26568be70f52: fresh exact-order read-only eBay inspection and local/UI evidence fences, not a purchasing permit or live deployment. Final 583 Node tests passed; independent HTTP/UI 8 tests passed. All 16 changed source blobs read back exactly, zero removed/unintended files. Real browser, live provider, host and payment acceptance remain unrun. Source has no remote Actions runs. Existing history and native catalog/downloads remain unchanged. Portal publication and Pages/live integrity verified separately.
+
+
+## October 27, 2026 — StockPilot build 13 disabled real-contract Worker source
+
+Source 3ad3af19a10b91c9448bfa6eef22e66a6067fb91 verified all 17 changed blobs, with no removed/unintended files. Final Node suite 657/657; new pipeline 74 tests; existing synthetic 42/42 and hosted 14/14; independent HTTP5/5. Browser-platform ESM bundle24,744 bytes. Wrangler dry-run stopped at missing configuration directory; no deploy claim. Real eBay contract source now separate from unchanged Node and synthetic proof, with bounded Inventory-only/30-day-order coverage and explicit seller-net refund basis. No credential/grant/card/remote resource/live read or write. Supplier/full-store/recovery/live acceptance remain open. Existing histories/native downloads preserved; Pages/live verification recorded separately.

@@ -599,6 +599,32 @@
       "name": "StockPilot",
       "entries": [
         {
+          "id": "real-contract-ebay-worker-source-2026-10-27",
+          "version": "1.0.4-review.10",
+          "build": 13,
+          "recordedAt": "2026-10-27T23:03:00Z",
+          "releasedAt": null,
+          "status": "Tested source / disabled and not deployed",
+          "channel": "real-contract read-only Worker source / disabled and not deployed",
+          "changes": [
+            "Added a separate real-contract eBay read-only Worker/D1 pipeline, preserving the full Node app and separate synthetic proof. Manual owner-protected reads publish only complete bounded observations.",
+            "Implemented official Inventory page-index/href and Fulfillment record-offset pagination, privacy-minimized order/inventory projections and explicit seller-net order-refund coverage; no buyer details or gross-refund inference.",
+            "Added durable leases, connection-scoped last-good snapshots, atomic coverage checkpoints, restart safety, daily attempt limits and explicit stale/error state. Failed or incomplete reads never imply empty inventory.",
+            "Added an owner-protected status/read page and disabled scheduled source entry. Coverage is Inventory API-only and a rolling 30-day order window; supplier parity, recovery tooling and real deployment/provider acceptance remain unfinished."
+          ],
+          "validation": "Final full Node suite 657/657 passed; 74 new adapter/workerd-D1/UI tests passed, including 58 adapter, 9 persistence/lease/quota, 5 HTTP and 2 UI checks. Independent updated HTTP review passed 5/5. Existing synthetic Worker/UI 42/42 and hosted/Access 14/14 passed. Browser-platform ESM bundle passed (24,744 bytes), with syntax/whitespace checks clean. Workerd exposed and fixed unsupported redirect:error; official OpenAPI review corrected Inventory pagination and seller-net refund semantics before final rerun. UI initial-load race fixed and tested. Wrangler dry-run stopped at missing /home/agent/.config/.wrangler; no deployment/configuration retry or remote build success claimed. Evidence is mocked provider plus real local workerd/D1, not live seller access. Rendered browser, live eBay/supplier, remote Worker, Free-tier capacity and production acceptance were not run.",
+          "references": [
+            {
+              "label": "Verified source commit",
+              "url": "https://github.com/GoyoneByDesign/StockPilot/commit/3ad3af19a10b91c9448bfa6eef22e66a6067fb91"
+            },
+            {
+              "label": "Real-contract pipeline scope and gates",
+              "url": "https://github.com/GoyoneByDesign/StockPilot/blob/3ad3af19a10b91c9448bfa6eef22e66a6067fb91/worker-readonly/README.md"
+            }
+          ]
+        },
+        {
           "id": "fresh-ebay-order-inspection-2026-10-27",
           "version": "1.0.4-review.9",
           "build": 12,
