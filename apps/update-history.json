@@ -920,6 +920,27 @@
       "name": "GoyoneByDesign website and app portal",
       "entries": [
         {
+          "id": "research-review-20261027",
+          "version": "Research review",
+          "build": null,
+          "recordedAt": "2026-10-27T12:42:00Z",
+          "releasedAt": null,
+          "status": "Documentation only; no application release",
+          "channel": "Primary-source research / no optical algorithm change",
+          "changes": [
+            "Closed Node.js advance-notice checkpoint: fixed versions now published; assistant-cloud runtime already24.22.1.",
+            "Classified gaze-adaptive near-eye pre-correction as special-optics background, not ordinary-screen or clinical proof.",
+            "Reconciled today's existing source maintenance without duplicating app versions, tests or releases."
+          ],
+          "validation": "History schema/generator tests and append-only preservation checks; no new app or device tests. Full-text access limits disclosed in research note.",
+          "references": [
+            {
+              "label": "October27 bounded research review",
+              "url": "https://www.goyonebydesign.com/apps/research/2026-10-27/"
+            }
+          ]
+        },
+        {
           "id": "research-review-2026-10-21",
           "version": "1.0.1",
           "build": 2,

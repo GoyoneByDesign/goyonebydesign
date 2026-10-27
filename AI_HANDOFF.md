@@ -1,3 +1,7 @@
+# October 27, 2026 — bounded research checkpoint (documentation only)
+
+Published research note at apps/research/2026-10-27/: no optical algorithm change or new installer. Node official October21 security releases now confirmed; this cloud already uses24.22.1. Prior source maintenance remains distinct. Full-text access and unrun browser/native/optical gates disclosed. Existing history and privacy preserved.
+
 ## October 27, 2026 — StatusPing parser maintenance history
 
 Appended source-only StatusPing review.6/build8 parser-patch record for commit7ed6fbb44bdc85e33bbe521607d19552c46e4534. Existing public APKbuild5, features and disabled service/billing defaults unchanged. Fresh239 automated tests/typecheck/build pass; native/device/SMS/store acceptance remains unverified. History generator tests passed; all previous entries preserved. Publication/live bytes verified separately.
