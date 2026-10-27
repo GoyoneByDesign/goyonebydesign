@@ -1,3 +1,7 @@
+# October 27 evening — verified source updates, not new public binaries
+
+StockPilot review1.0.4-review.8/build11 source88d6cabbd94d4851200f5cf858b45ba9ea8ea942: eBay local planning evidence guards and original AutoDS workflow research;505Node tests pass. View4Real0.2.5/build5 source94d85ba974b59711a6c71eec5f7e68ae18781e6d: adaptable reader spacing/reflow; source checks pass, browser/native gates unrun. Appended both source-only history entries; catalog/public download assets and private access unchanged.
+
 # October 27, 2026 — bounded research checkpoint (documentation only)
 
 Published research note at apps/research/2026-10-27/: no optical algorithm change or new installer. Node official October21 security releases now confirmed; this cloud already uses24.22.1. Prior source maintenance remains distinct. Full-text access and unrun browser/native/optical gates disclosed. Existing history and privacy preserved.

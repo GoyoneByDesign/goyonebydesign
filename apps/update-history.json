@@ -126,6 +126,31 @@
       "name": "View4Real",
       "entries": [
         {
+          "id": "reader-spacing-reflow-20261027",
+          "version": "0.2.5",
+          "build": 5,
+          "recordedAt": "2026-10-27T22:12:00Z",
+          "releasedAt": null,
+          "status": "Source tested / Windows package unchanged",
+          "channel": "Adaptable reader source; no new native installer",
+          "changes": [
+            "Added independent letter/word spacing with neutral defaults, strict bounds and backward-compatible appearance profiles.",
+            "Added narrow-screen reflow safeguards and expanded browser acceptance scenarios; existing settings, data and optical/native gates preserved.",
+            "Public Windows download remains0.2.3/build3. No eyesight-correction or full WCAG-compliance claim."
+          ],
+          "validation": "TypeScript/build pass;23 source groups,42 optics,24 solver and25 simulated integration checks pass. Browser scripts syntax only; browser layout/interactions, Windows packaging/device checks and clinical benefit NOT tested.",
+          "references": [
+            {
+              "label": "Verified View4Real source",
+              "url": "https://github.com/GoyoneByDesign/View4Real/commit/94d85ba974b59711a6c71eec5f7e68ae18781e6d"
+            },
+            {
+              "label": "Reader adaptability research",
+              "url": "https://github.com/GoyoneByDesign/View4Real/blob/94d85ba974b59711a6c71eec5f7e68ae18781e6d/research/2026-10-27-reader-adaptability.md"
+            }
+          ]
+        },
+        {
           "id": "dev-lock-maintenance-20261027",
           "version": "0.2.4",
           "build": 4,
@@ -573,6 +598,32 @@
       "id": "stockpilot",
       "name": "StockPilot",
       "entries": [
+        {
+          "id": "ebay-fulfillment-evidence-20261027",
+          "version": "1.0.4-review.8",
+          "build": 11,
+          "recordedAt": "2026-10-27T22:18:45Z",
+          "releasedAt": null,
+          "status": "Tested review source / not deployed",
+          "channel": "eBay local planning safeguards; not AutoDS cutover",
+          "changes": [
+            "Prevented unpaid, payment-unknown, refunded, cancellation-uncertain and already-fulfilled eBay records from being treated as ready for a new local fulfillment plan.",
+            "Required exact unique order/line/product/SKU and supplier-reference evidence plus safe integer quantities; blocked records no longer reserve stock ahead of valid orders.",
+            "Preserved ordered/in-progress, manual and WooCommerce workflows and all provider-write gates. Added explicit fresh-provider-readback warning; no eBay-to-CJ purchase transport was enabled.",
+            "Added official AutoDS workflow, cost/compliance and staged acceptance research without copying proprietary code or promising production parity."
+          ],
+          "validation": "Final full Node suite505/505 passed with zero failures/skips;72 new focused eBay-planner tests passed; independent86-test review passed. Earlier full runs exposed a transient Printify fixture cleanup ENOTEMPTY (unchanged isolated8/8 then final pass) and a broad CJ999-substring assertion, now corrected to retain exact values and raw-payload exclusion (CJ5/5). Syntax, whitespace and release metadata checks passed. Existing42 Worker/UI and14 hosted/Access tests passed earlier today and were not rerun for this Node-only change. Real browser, live provider, hosted deployment, payment and device acceptance were not run.",
+          "references": [
+            {
+              "label": "Verified StockPilot source",
+              "url": "https://github.com/GoyoneByDesign/StockPilot/commit/88d6cabbd94d4851200f5cf858b45ba9ea8ea942"
+            },
+            {
+              "label": "Official workflow and staged acceptance research",
+              "url": "https://github.com/GoyoneByDesign/StockPilot/blob/88d6cabbd94d4851200f5cf858b45ba9ea8ea942/docs/AUTODS_EQUIVALENCE_2026-10-27.md"
+            }
+          ]
+        },
         {
           "id": "truthful-local-draft-save-feedback-2026-10-22",
           "version": "1.0.4-review.7",
