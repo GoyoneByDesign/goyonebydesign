@@ -105,6 +105,27 @@
       "name": "View4Real",
       "entries": [
         {
+          "id": "dev-lock-maintenance-20261027",
+          "version": "0.2.4",
+          "build": 4,
+          "recordedAt": "2026-10-27T09:57:00Z",
+          "releasedAt": null,
+          "status": "Tested source maintenance; Windows download unchanged",
+          "channel": "Compatible build-tool lockfile maintenance on existing review source",
+          "changes": [
+            "Updated nine compatible development-only dependencies; application behavior, data, branding, runtime dependencies and native downloads unchanged.",
+            "Full dependency audit reduced from seven findings to two remaining build-tool findings (Vite/esbuild); runtime-only audit reports zero."
+          ],
+          "validation": "Clean install, TypeScript, production build, 20 source tests, 42 optical checks, 24 solver checks and 25 simulated integration checks pass. Chromium failed before test execution; seven browser import-race checks and native Windows/hardware checks remain unverified. No new installer, paid service, billing or live-device claim.",
+          "dateNote": "Source baseline remains 0.2.4/build 4; public Windows 0.2.3/build 3 does not include source-only changes.",
+          "references": [
+            {
+              "label": "Verified source maintenance commit",
+              "url": "https://github.com/GoyoneByDesign/View4Real/commit/75c0cd751fc054eaaae9570094cba1c4905fcf7f"
+            }
+          ]
+        },
+        {
           "id": "source-validation-20261022",
           "version": "0.2.4",
           "build": 4,
