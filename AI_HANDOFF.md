@@ -237,3 +237,8 @@ Preserved every previous history entry, portal 1.0.1/build2, releasedAt:null for
 
 Updated only StockPilot catalog availability and version history, preserving existing screenshots, installer files/hashes, owner-only destinations and other app entries. The separate private review branch is 1.0.4-review.1/build4; main remains 1.0.3/build3. Recorded 365 Node, 19 local Worker/D1 and 2 hosted-proof passing tests plus real local Chrome Node/synthetic workflows; none establishes a hosted backend or live supplier acceptance. Timestamp is source preparation, not deployment. Source history references the private draft PR. History/catalog source tests pass 8/8 and full catalog integrity check passes (9 preview cards/3 preserved installers). Publication/served-byte verification is recorded in task result.
 
+
+
+## October 27, 2026 — StockPilot build 12 source-only history
+
+Recorded verified source commit 399ad9f68d0aa12f6926fe73380c26568be70f52: fresh exact-order read-only eBay inspection and local/UI evidence fences, not a purchasing permit or live deployment. Final 583 Node tests passed; independent HTTP/UI 8 tests passed. All 16 changed source blobs read back exactly, zero removed/unintended files. Real browser, live provider, host and payment acceptance remain unrun. Source has no remote Actions runs. Existing history and native catalog/downloads remain unchanged. Portal publication and Pages/live integrity verified separately.

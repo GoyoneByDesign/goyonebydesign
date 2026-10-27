@@ -599,6 +599,32 @@
       "name": "StockPilot",
       "entries": [
         {
+          "id": "fresh-ebay-order-inspection-2026-10-27",
+          "version": "1.0.4-review.9",
+          "build": 12,
+          "recordedAt": "2026-10-27T22:42:00Z",
+          "releasedAt": null,
+          "status": "Tested review source / not deployed",
+          "channel": "fresh read-only eBay order inspection source / not deployed",
+          "changes": [
+            "Added a fresh exact-order eBay read in the fulfillment dialog using the existing read-only connection; no supplier purchase, payment, listing change or new scope.",
+            "Rejects unpaid, refunded, cancellation-uncertain, fulfilled, mismatched or malformed current order/line evidence and any local state change during the provider read.",
+            "Returns no buyer details or raw provider payload and no reservation or purchase permit. UI ignores stale results after selection changes, newer reads or dialog close.",
+            "Documented exact protected-host, read-only credential, supplier-route and acceptance dependencies; production replacement remains blocked, not inferred from mocks."
+          ],
+          "validation": "Final full Node suite 583/583 passed with zero failures/skips; 70 new service tests and 8 HTTP/UI tests passed, with independent HTTP/UI 8/8 review finding no blocking issue. Syntax, whitespace and metadata checks passed. Earlier test harness lacked the new imported controller; it now loads the actual controller and preserves offline-demo blocking. A resumed test process had no terminal receipt and was rerun to verified completion. Mocked service, loopback provider and minimal-DOM/controller evidence only. Real browser, live eBay/supplier, hosted deployment, payment and device acceptance were not run. Earlier Worker/UI and hosted/Access tests were not rerun for this Node-only change.",
+          "references": [
+            {
+              "label": "Verified source commit",
+              "url": "https://github.com/GoyoneByDesign/StockPilot/commit/399ad9f68d0aa12f6926fe73380c26568be70f52"
+            },
+            {
+              "label": "Live dependencies and acceptance limits",
+              "url": "https://github.com/GoyoneByDesign/StockPilot/blob/399ad9f68d0aa12f6926fe73380c26568be70f52/docs/EBAY_FULFILLMENT_INSPECTION.md"
+            }
+          ]
+        },
+        {
           "id": "ebay-fulfillment-evidence-20261027",
           "version": "1.0.4-review.8",
           "build": 11,
