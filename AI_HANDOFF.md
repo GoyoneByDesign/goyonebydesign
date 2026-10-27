@@ -1,3 +1,7 @@
+## October 27, 2026 — StatusPing parser maintenance history
+
+Appended source-only StatusPing review.6/build8 parser-patch record for commit7ed6fbb44bdc85e33bbe521607d19552c46e4534. Existing public APKbuild5, features and disabled service/billing defaults unchanged. Fresh239 automated tests/typecheck/build pass; native/device/SMS/store acceptance remains unverified. History generator tests passed; all previous entries preserved. Publication/live bytes verified separately.
+
 ## October 27, 2026 — View4Real maintenance history and MAX-ALPHA catalog reconciliation
 
 Append-only View4Real0.2.4/build4 source-maintenance entry references verified private commit75c0cd751fc054eaaae9570094cba1c4905fcf7f. No new Windows installer; public0.2.3/build3 retained. Catalog wording follows current MAX-ALPHA1.16.9/build230 manifest and preserves the real-browser/device verification caveat. Three history-generator tests pass; prior entries and other app data checked unchanged. No application code, logos, audience, secrets, pricing, billing or access changed. Generated pages and source JSON must be exact-byte verified after Pages deployment.

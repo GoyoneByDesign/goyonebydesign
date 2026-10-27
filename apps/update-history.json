@@ -49,6 +49,27 @@
       "name": "StatusPing",
       "entries": [
         {
+          "id": "parser-security-maintenance-20261027",
+          "version": "0.2.0-review.6",
+          "build": 8,
+          "recordedAt": "2026-10-27T10:01:45Z",
+          "releasedAt": null,
+          "status": "Tested source maintenance; public Android APK unchanged",
+          "channel": "Private review-source parser security patch, not a native release",
+          "changes": [
+            "Patched body-parser 1.20.8 to 1.20.9 and added lockfile-floor plus compressed-JSON error/recovery regressions.",
+            "Features, branding, settings, personal data, signing and disabled service/billing defaults preserved."
+          ],
+          "validation": "Fresh clean install, TypeScript, Vite build and 239 automated tests pass. Production dependency audit: zero high/critical, two existing moderate optional-backend findings. Android javac/licensed SDK toolchain unavailable; iOS needs Mac/Xcode. No native/device/background, live SMS, store purchase or sale-readiness verification.",
+          "dateNote": "Existing review.6/build8 source baseline retained; public Android build5 does not include this patch.",
+          "references": [
+            {
+              "label": "Verified private source patch",
+              "url": "https://github.com/GoyoneByDesign/StatusPing/commit/7ed6fbb44bdc85e33bbe521607d19552c46e4534"
+            }
+          ]
+        },
+        {
           "id": "home-screen-icons-2026-10-16",
           "version": "0.1.2",
           "build": 3,
