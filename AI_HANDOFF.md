@@ -1,3 +1,7 @@
+# October28,2026 — research and truthful source catalog (no app release)
+
+Added apps/research/2026-10-28 with international optical evidence limits, D1 recovery/size/quota acceptance gates and Gemini new-paid-project privacy checkpoint. StockPilot catalog now records already-published review build13, still undeployed. No source/runtime/version/installers/access/signing changes. Preserve all prior history, private/paused scope and native gates. Documentation verification and exact Pages checks required.
+
 # October 27 evening — verified source updates, not new public binaries
 
 StockPilot review1.0.4-review.8/build11 source88d6cabbd94d4851200f5cf858b45ba9ea8ea942: eBay local planning evidence guards and original AutoDS workflow research;505Node tests pass. View4Real0.2.5/build5 source94d85ba974b59711a6c71eec5f7e68ae18781e6d: adaptable reader spacing/reflow; source checks pass, browser/native gates unrun. Appended both source-only history entries; catalog/public download assets and private access unchanged.

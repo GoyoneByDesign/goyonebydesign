@@ -193,7 +193,7 @@
       "Order workflows",
       "Supplier integrations"
     ],
-    "note": "Main source 1.0.3/build 3; tested review source 1.0.4-review.6/build 9 is separate. No verified hosted backend or live supplier acceptance. Self-hosted configuration is required; native installers are not available.",
+    "note": "Main source 1.0.3/build 3; tested review source 1.0.4-review.10/build 13 is separate. Read-only eBay Worker pipeline is source-only, not deployed or accepted with real providers. No verified hosted backend or complete supplier/order automation. Self-hosted configuration and explicit access approval are required; native installers are not available.",
     "downloads": {},
     "development": true,
     "platforms": "Browser prototype",

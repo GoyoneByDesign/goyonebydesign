@@ -1023,6 +1023,28 @@
       "name": "GoyoneByDesign website and app portal",
       "entries": [
         {
+          "id": "research-review-20261028",
+          "version": "Research review",
+          "build": null,
+          "recordedAt": "2026-10-28T12:13:00Z",
+          "releasedAt": null,
+          "status": "Documentation only; no application release",
+          "channel": "Primary-source research and catalog correction",
+          "changes": [
+            "Corrected StockPilot catalog review-source build 9 to verified build 13; retained undeployed/development status.",
+            "Recorded Japanese/Chinese optical research limits without replacing the View4Real solver or claiming clinical efficacy.",
+            "Documented D1 recovery invariants and the Gemini new-paid-project storage-default checkpoint; no account, permission or runtime changes."
+          ],
+          "validation": "Documentation/history tests, generator idempotence, append-only preservation and exact source/Pages verification. No app, native-device, rendered-browser or provider test rerun.",
+          "dateNote": "Reviewed at 08:13 EDT (UTC-04:00), 12:13 UTC. Research record only; no new app version, package or deployment.",
+          "references": [
+            {
+              "label": "October 28 research and no-change decisions",
+              "url": "https://www.goyonebydesign.com/apps/research/2026-10-28/"
+            }
+          ]
+        },
+        {
           "id": "research-review-20261027",
           "version": "Research review",
           "build": null,
