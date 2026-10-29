@@ -462,6 +462,30 @@
       "name": "MAX-ZETA",
       "entries": [
         {
+          "id": "always-preview-adjust-balance-20261029-build123",
+          "version": "3.80.1",
+          "build": 123,
+          "recordedAt": "2026-10-29T17:10:53.422769+00:00",
+          "releasedAt": "2026-10-29T17:10:19.645525+00:00",
+          "status": "Owner-private browser hotfix deployed",
+          "channel": "Private Sites application; no native installer",
+          "changes": [
+            "Owner-confirmed positive Adjust Balance transactions count as value added, not deductions. Quantities remain load transactions, not inferred new cards; signed reversals and invalid statuses retain validation.",
+            "Saved unknown Adjust Balance rows are re-evaluated without rewriting source files or stored transactions.",
+            "Known report families always open a valid preview or an actionable source-review popup, even when the former automatic-preview option was off. Completing missing scope automatically opens the validated report.",
+            "Mixed uploads open an available validated report immediately and retain an in-popup report-type switcher. Source data, settings, manual tools and layouts are preserved; unrelated totals stay separate.",
+            "Native source commit: 8e664f4c1fe5dd8987eb348faa82f540e23a09b8. Rollback source: 047956db84b1019ecd7006d6d22fe3a0a4b8003e."
+          ],
+          "validation": "Final focused suites: 41 classifier/reader/upload/restore/readiness/history, 32 viewer/carousel/capability/labor-sales, 14 contextual workflow, 9 always-preview/review and 1 search/upload contract check pass (97 total), with no skipped checks. Syntax, history and production build pass. Actual six private CSV sources were audited; an individually valid source auto-opened correctly, and the full source set automatically opened its specific unresolved duplicate-review dialog while retaining every source. Viewer interception/JSDOM is not authenticated production-browser acceptance. Broader attempts encountered obsolete automatic-off expectations and a deferred-PDF fixture; those exercised contracts were corrected and rechecked. No clean complete-repository-suite claim for this hotfix.",
+          "dateNote": "Eastern publication time is shown above (UTC-04:00 on this date). Save the current working-report JSON before refreshing, then reopen it afterward. Existing ambiguous source rows still require review; this update does not fabricate a complete report from blocked data.",
+          "references": [
+            {
+              "label": "Open owner-private MAX-ZETA",
+              "url": "https://anitas-pmix-reports.michaelgoyone78.chatgpt.site/#giftCardSection"
+            }
+          ]
+        },
+        {
           "id": "contextual-popup-carousel-20261029-build122",
           "version": "3.80.0",
           "build": 122,
