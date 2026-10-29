@@ -128,13 +128,13 @@
       "Document tools",
       "Private workspace"
     ],
-    "note": "Version 3.80.2 · Build 124 · Updated October 29, 2026. Exact source coordinates, highlighted review copies and retained gift-card audit warnings. Owner sign-in and access PIN required. Native installers are not available.",
+    "note": "Version 3.80.3 · Build 125 · Updated October 29, 2026. Conservative redemption / void cancellation pairs with preserved source audit. Owner sign-in and access PIN required. Native installers are not available.",
     "web": "/pmix/",
     "webLabel": "Open private workspace",
     "downloads": {},
     "development": false,
     "platforms": "Browser",
-    "version": "3.80.2 · Build 124",
+    "version": "3.80.3 · Build 125",
     "access": "Owner-private"
   },
   {

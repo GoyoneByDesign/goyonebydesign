@@ -462,6 +462,30 @@
       "name": "MAX-ZETA",
       "entries": [
         {
+          "id": "redemption-void-reconciliation-20261029-build125",
+          "version": "3.80.3",
+          "build": 125,
+          "recordedAt": "2026-10-29T18:46:12.587573+00:00",
+          "releasedAt": "2026-10-29T18:35:11.785244+00:00",
+          "status": "Owner-private browser hotfix deployed",
+          "channel": "Private Sites application; no native installer",
+          "changes": [
+            "A uniquely matched negative Redemption and equal positive Void Redemption cancel in redemption calculations; both original source rows remain auditable. Gross positive-load totals do not change.",
+            "Matching requires same card, exact recorded timestamp and source context. Unequal amounts, different times, repeated candidates and unmatched voids are not guessed or removed. Ambiguous balanced candidate groups show their raw signed sum separately, without claiming unique matching.",
+            "Older saved sources can gain privacy-safe matching metadata by uploading the exact original once. Existing rows, titles and classifications are retained; repeated upload is idempotent. No reset is needed.",
+            "Raw card identifiers are not retained in report metadata. All original files, layouts, settings and tools remain preserved.",
+            "Native source commit: e6d496feea2df88f0d4bd202ec8484dcfa09817f. Rollback source: 063b48c552366f0aa4d2671702f2db4686216ae3."
+          ],
+          "validation": "73 focused checks passed,0 failed/skipped; build passed. Actual private six-store audit retained all source rows and gross loads; none of the supplied sources contains a unique exact-context pair. There is no transaction or reversal-reference column linking later voids. Controlled fixtures verify matching, ambiguity, signed arithmetic and source-preserving migration. Authenticated production browser acceptance and full-repository suite were not run for this hotfix.",
+          "dateNote": "Eastern publication time is shown above (UTC-04:00 on this date). Save the current working-report JSON before refreshing, then reopen it afterward. After refreshing, older workspace or saved JSON sources need their original gift-card exports uploaded once for new matching evidence. Do not clear or reset. New uploads use the rule automatically.",
+          "references": [
+            {
+              "label": "Open owner-private MAX-ZETA",
+              "url": "https://anitas-pmix-reports.michaelgoyone78.chatgpt.site/#giftCardSection"
+            }
+          ]
+        },
+        {
           "id": "source-coordinates-highlighted-review-20261029-build124",
           "version": "3.80.2",
           "build": 124,
