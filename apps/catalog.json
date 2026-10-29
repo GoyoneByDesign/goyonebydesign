@@ -128,13 +128,13 @@
       "Document tools",
       "Private workspace"
     ],
-    "note": "Version 3.79.1 · Build 121 · Updated October 29, 2026. Selected-report preview routing and visible gift-card validation. Owner sign-in and access PIN required. Native installers are not available.",
+    "note": "Version 3.80.0 · Build 122 · Updated October 29, 2026. Automatic report popup, contextual tools and selectable layouts. Owner sign-in and access PIN required. Native installers are not available.",
     "web": "/pmix/",
     "webLabel": "Open private workspace",
     "downloads": {},
     "development": false,
     "platforms": "Browser",
-    "version": "3.79.1 · Build 121",
+    "version": "3.80.0 · Build 122",
     "access": "Owner-private"
   },
   {

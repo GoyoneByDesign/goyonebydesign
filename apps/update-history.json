@@ -462,6 +462,30 @@
       "name": "MAX-ZETA",
       "entries": [
         {
+          "id": "contextual-popup-carousel-20261029-build122",
+          "version": "3.80.0",
+          "build": 122,
+          "recordedAt": "2026-10-29T16:48:31.994172+00:00",
+          "releasedAt": "2026-10-29T16:47:55.307468+00:00",
+          "status": "Owner-private browser workflow update deployed",
+          "channel": "Private Sites application; no native installer",
+          "changes": [
+            "Validated uploads automatically open a report popup with Download PDF, Download Excel, Edit File and Cancel. Mixed families ask which report to view while preserving every source.",
+            "Centered right arrow and keyboard RightArrow select supported layouts. Generic reports offer seven built-in presentations plus exact-current settings when needed; specialized gift-card reports offer six paper/orientation alternatives. PDFs render lazily with bounded caching.",
+            "Only relevant report-family tools and source-supported modifiers, dayparts, dining options and other controls are shown by default. Show all tools & filters restores access without inventing missing values.",
+            "Edit File opens a separate editable workbook copy of the displayed report. Original source files, saved settings, existing layouts and private access are preserved.",
+            "Native source commit: 047956db84b1019ecd7006d6d22fe3a0a4b8003e. Rollback source: c8cd5b82f3875a479650efe7e644dc0a4f685173."
+          ],
+          "validation": "Final contextual workflow 14/14, viewer actions/carousel 25/25, upload/capability/history 17/17, routed-source readiness/gift 9/9 and 45 workspace cases in five isolated batches pass; syntax, history and build checks pass. Aggregate: 1,154 passes and one workspace process failure without an individual assertion; a separate long workspace process also failed after 33 cases, and a concurrent contextual process failed before its standalone 14/14 pass. Process cause remains unproven; no all-green aggregate claim. Actual owner gift reference workbook regenerated in six PDF paper/orientation layouts with totals preserved; Letter portrait and Ledger landscape table renders visually inspected. Authenticated production browser UI remains unrun at owner sign-in.",
+          "dateNote": "Publication time above is shown in Eastern time (UTC-04:00 on this date). Before refreshing an existing gift-card session, Save gift-card report, then reopen that JSON after refresh. Known-schema detection is not universal Excel interpretation; incomplete sources retain visible review requirements.",
+          "references": [
+            {
+              "label": "Open owner-private MAX-ZETA",
+              "url": "https://anitas-pmix-reports.michaelgoyone78.chatgpt.site/#giftCardSection"
+            }
+          ]
+        },
+        {
           "id": "selected-report-preview-fix-20261029-build121",
           "version": "3.79.1",
           "build": 121,
