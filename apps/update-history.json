@@ -126,6 +126,31 @@
       "name": "View4Real",
       "entries": [
         {
+          "id": "windows-packaging-maintenance-20261029",
+          "version": "0.2.5",
+          "build": 5,
+          "recordedAt": "2026-10-29T10:10:00Z",
+          "releasedAt": null,
+          "status": "Source packaging fixes tested / new Windows package pending",
+          "channel": "Private review source maintenance; existing download unchanged",
+          "changes": [
+            "Fixed the Windows workflow artifact pattern to match produced portable ZIP filenames.",
+            "Portable archives are now labeled untested unless exact-binary Windows launch validation is supplied; existing validation and manual workflow controls are preserved.",
+            "No version bump, feature removal, settings or user-data change. Public Windows download remains 0.2.3/build3."
+          ],
+          "validation": "26 source regression checks, 42 optics, 24 solver and 25 simulated integration checks pass; TypeScript and production web build pass. PowerShell execution, Windows build/launch and real-browser interactions have not run for this source update. No new downloadable binary or eyesight-benefit claim.",
+          "references": [
+            {
+              "label": "Verified packaging source",
+              "url": "https://github.com/GoyoneByDesign/View4Real/commit/9f9a80c925481779e9f2efca9d8f249ba0f12045"
+            },
+            {
+              "label": "Source rollback baseline",
+              "url": "https://github.com/GoyoneByDesign/View4Real/commit/94d85ba974b59711a6c71eec5f7e68ae18781e6d"
+            }
+          ]
+        },
+        {
           "id": "reader-spacing-reflow-20261027",
           "version": "0.2.5",
           "build": 5,
