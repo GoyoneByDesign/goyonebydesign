@@ -113,7 +113,7 @@
           "status": "Catalog observation / validation limited",
           "channel": "Existing native test package",
           "changes": [
-            "Android 7+ \u00ef\u00bf\u00bd StatusPing 0.2.0-review.3/build 5 isolated debug test APK. Regression and native emulator check-in/reminder tests passed, including bounded delivery after ordinary process death. Full 12-hour/Doze/reboot and real-phone reliability remain unverified. Live caregiver/email/SMS/call escalation is not tested; production upgrade compatibility is not established."
+            "Android 7+ ï¿½ StatusPing 0.2.0-review.3/build 5 isolated debug test APK. Regression and native emulator check-in/reminder tests passed, including bounded delivery after ordinary process death. Full 12-hour/Doze/reboot and real-phone reliability remain unverified. Live caregiver/email/SMS/call escalation is not tested; production upgrade compatibility is not established."
           ],
           "validation": "See package limitations. This record does not establish new native-device testing.",
           "dateNote": "Historical release time was not recorded. Catalog/package information was observed when this history entry was created.",
@@ -445,7 +445,7 @@
           "status": "Catalog observation / validation limited",
           "channel": "Web / source",
           "changes": [
-            "v3.61.0 \u00ef\u00bf\u00bd Build 84. Owner sign-in and access PIN required. Native installers are not available."
+            "v3.61.0 ï¿½ Build 84. Owner sign-in and access PIN required. Native installers are not available."
           ],
           "validation": "See package limitations. This record does not establish new native-device testing.",
           "dateNote": "Historical release time was not recorded. Catalog/package information was observed when this history entry was created.",
@@ -623,6 +623,54 @@
       "id": "stockpilot",
       "name": "StockPilot",
       "entries": [
+        {
+          "id": "private-sandbox-sites-preview-2026-10-29",
+          "version": "0.1.0-sandbox",
+          "build": 1,
+          "recordedAt": "2026-10-29T11:15:59.490189Z",
+          "releasedAt": "2026-10-29T11:15:59.490189Z",
+          "status": "Owner-private test Site deployed / setup still required",
+          "channel": "Separate Sandbox-only adapter; not core version or production commerce",
+          "changes": [
+            "Deployed a dedicated owner-private StockPilot Sandbox test workspace with configuration readiness, explicit coverage/stale-state display and protected observation export/recovery.",
+            "Pinned Sandbox-only provider path and server-side owner authorization; production connections, purchases, listing writes and schedules are unavailable. Preserved original Node and standalone Access sources.",
+            "Dedicated D1 observation schema provisioned; only Michael is permitted, with zero external visitors or groups. Per-Site owner-ID binding and secure Sandbox credentials are not yet configured.",
+            "Sites source commit 6d339a4edbab97e356141990f6df1fe7efb02e6d. This is a test version, not an AutoDS replacement or evidence of full-store/supplier coverage."
+          ],
+          "validation": "25 local security/D1/UI tests, TypeScript and Sites build passed; 7 built-Worker local HTTP checks passed. Native private deployment succeeded at 11:15:59 UTC with environment revision 1; owner-only access and four live D1 tables verified. Reads and recovery remain disabled; authenticated hosted UI, owner binding, actual eBay Sandbox readback, off-device recovery and operational capacity remain unverified. No production eBay grant, purchase, paid plan or cutover.",
+          "references": [
+            {
+              "label": "Owner-private Sandbox test workspace (sign-in required)",
+              "url": "https://stockpilot-sandbox.michaelgoyone78.chatgpt.site"
+            },
+            {
+              "label": "Core recovery source",
+              "url": "https://github.com/GoyoneByDesign/StockPilot/commit/469c7b703ed970683b1c1c07fd32c92b768ebf03"
+            }
+          ]
+        },
+        {
+          "id": "observation-recovery-source-2026-10-29",
+          "version": "1.0.4-review.11",
+          "build": 14,
+          "recordedAt": "2026-10-29T11:04:38.222Z",
+          "releasedAt": null,
+          "status": "Tested review source / standalone Worker disabled and undeployed",
+          "channel": "real-contract observation recovery source / disabled and not deployed",
+          "changes": [
+            "Added owner-protected export of minimized real-contract observations and disabled-by-default, reviewed recovery into empty observation storage; no overwrite or deletion of existing records.",
+            "Bound recovery to current connection, server-verified owner, exact reviewed digest, ten-minute one-use token and atomic D1 empty-state fences; kept imported evidence unverified with a readback receipt and conservative current-day quota protection.",
+            "Made failed/running/recovered observations explicitly stale; absent evidence counts remain unknown and client status/network failures invalidate displayed freshness rather than retaining a fresh label.",
+            "Added a readable recovery UI with file-change and repeated-action safeguards, explicit confirmation and truthful handling of lost responses or post-success refresh failures. Original Node/synthetic workflows and default-disabled provider/hosting gates remain intact."
+          ],
+          "validation": "Full local regression 711/711 and focused sequential recovery/D1/HTTP/UI 70/70 passed, zero failures/skips. Browser-platform bundle and JavaScript syntax/whitespace checks passed. Original Worker/UI 42/42 and hosted/Access 14/14 also passed with zero failures/skips. A concurrent local workerd run hit socket closures; the established sequential runner passed. Cloud browser could not reach the isolated loopback UI fixture (ERR_CONNECTION_REFUSED); no rendered-browser acceptance claimed. Mocked provider, local HTTP/minimal DOM and real local workerd/D1 evidence only; no live provider, hosted recovery, deployment, production capacity or AutoDS replacement acceptance. Independent parent recovery/HTTP/UI rerun:61/61 passed. GitHub review commit verified; main and existing production stores unchanged.",
+          "references": [
+            {
+              "label": "Verified source commit",
+              "url": "https://github.com/GoyoneByDesign/StockPilot/commit/469c7b703ed970683b1c1c07fd32c92b768ebf03"
+            }
+          ]
+        },
         {
           "id": "real-contract-ebay-worker-source-2026-10-27",
           "version": "1.0.4-review.10",
@@ -975,7 +1023,7 @@
           "status": "Catalog observation / validation limited",
           "channel": "Existing native test package",
           "changes": [
-            "Android 8+ \u00ef\u00bf\u00bd JustMyPick 0.38/build 38 debug test APK. Branding, startup and same-key emulator list/cart/budget preservation passed. Its test certificate differs from old SavvyKin 0.36: an in-place update requires the original key. Do not uninstall or erase your existing app to work around this. Live integrations and physical-phone validation remain pending."
+            "Android 8+ ï¿½ JustMyPick 0.38/build 38 debug test APK. Branding, startup and same-key emulator list/cart/budget preservation passed. Its test certificate differs from old SavvyKin 0.36: an in-place update requires the original key. Do not uninstall or erase your existing app to work around this. Live integrations and physical-phone validation remain pending."
           ],
           "validation": "See package limitations. This record does not establish new native-device testing.",
           "dateNote": "Historical release time was not recorded. Catalog/package information was observed when this history entry was created.",

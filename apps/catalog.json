@@ -193,7 +193,7 @@
       "Order workflows",
       "Supplier integrations"
     ],
-    "note": "Main source 1.0.3/build 3; tested review source 1.0.4-review.10/build 13 is separate. Read-only eBay Worker pipeline is source-only, not deployed or accepted with real providers. No verified hosted backend or complete supplier/order automation. Self-hosted configuration and explicit access approval are required; native installers are not available.",
+    "note": "Main source 1.0.3/build 3; tested review source 1.0.4-review.11/build 14 remains separate. Dedicated owner-private Sandbox test Site 0.1.0-sandbox/build 1 is deployed, but owner binding and Sandbox credentials/provider acceptance remain pending. Reads are disabled; no live store, full supplier/order automation, AutoDS replacement or native installer is verified.",
     "downloads": {},
     "development": true,
     "platforms": "Browser prototype",
