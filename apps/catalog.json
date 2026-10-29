@@ -128,13 +128,13 @@
       "Document tools",
       "Private workspace"
     ],
-    "note": "Version 3.81.0 · Build 126 · Updated October 29, 2026. Data-driven labor hours and cost previews without requiring a sales summary. Owner sign-in and access PIN required. Native installers are not available.",
+    "note": "Version 3.82.0 · Build 127 · Updated October 29, 2026. Populated source-backed preview choices, sequential PDF preparation and direct print/download/edit. Additional specialized adapters remain in progress. Owner sign-in and access PIN required; no native installer.",
     "web": "/pmix/",
     "webLabel": "Open private workspace",
     "downloads": {},
     "development": false,
     "platforms": "Browser",
-    "version": "3.81.0 · Build 126",
+    "version": "3.82.0 · Build 127",
     "access": "Owner-private"
   },
   {

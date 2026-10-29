@@ -462,6 +462,31 @@
       "name": "MAX-ZETA",
       "entries": [
         {
+          "id": "populated-preview-gallery-20261029-build127",
+          "version": "3.82.0",
+          "build": 127,
+          "recordedAt": "2026-10-29T20:39:38.653661+00:00",
+          "releasedAt": "2026-10-29T20:38:48.617912+00:00",
+          "status": "Owner-private browser update deployed",
+          "channel": "Private Sites application; no native installer",
+          "changes": [
+            "Automatic preview opens the exact selected report first. Populated alternative cards show actual PDF readiness; right-side and keyboard arrows select complete report arrangements. Print PDF, PDF/Excel download and Edit File remain direct actions.",
+            "Supported source-backed choices cover available labor layouts, sales/discount measures, selected gift-card dataset, verified full-menu hierarchies, ordinary single-metric PMIX arrangements and same-total soup pivots. Different measures are labeled; missing data is never invented.",
+            "Sequential background preparation uses a bounded64 MiB/24-entry PDF cache and recent-view cache. Rapid choices retain one active and latest queued foreground PDF. Cancel, source changes and retries cannot revive stale reports.",
+            "Saved paper preferences, design tools, Show all tools, all existing controls and source data remain. Browsing does not persist settings; explicit preferred-layout selection stores only its ID.",
+            "Soup exception-based display differences and other specialty/multi-period/hidden-column contexts are not silently substituted. Additional exact-scope adapters remain ongoing work, not a universal20-layout claim.",
+            "Native source commit: d744a0f8fc6ed09aee114ab3b694b3889ae51f48. Rollback source: bbfdcc195a177b9ad8e231154cafbcfc5fdcd967."
+          ],
+          "validation": "129 focused tests passed; build passed. Includes upload DOM/race/cancellation, source-scope and missing-measure guards, actual generated PDFs and both Excel writers. Production owner-authenticated browser acceptance, physical print dialog and full repository suite were not run.",
+          "dateNote": "Save the current working-report JSON before refreshing, then reopen it; originals and settings are preserved. Gallery excerpts are not the whole PDF: select a card for the complete generated document. Some specialized adapters remain in progress.",
+          "references": [
+            {
+              "label": "Open owner-private MAX-ZETA",
+              "url": "https://anitas-pmix-reports.michaelgoyone78.chatgpt.site/"
+            }
+          ]
+        },
+        {
           "id": "data-driven-labor-20261029-build126",
           "version": "3.81.0",
           "build": 126,
