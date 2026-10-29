@@ -113,7 +113,7 @@
           "status": "Catalog observation / validation limited",
           "channel": "Existing native test package",
           "changes": [
-            "Android 7+ ï¿½ StatusPing 0.2.0-review.3/build 5 isolated debug test APK. Regression and native emulator check-in/reminder tests passed, including bounded delivery after ordinary process death. Full 12-hour/Doze/reboot and real-phone reliability remain unverified. Live caregiver/email/SMS/call escalation is not tested; production upgrade compatibility is not established."
+            "Android 7+ \u00ef\u00bf\u00bd StatusPing 0.2.0-review.3/build 5 isolated debug test APK. Regression and native emulator check-in/reminder tests passed, including bounded delivery after ordinary process death. Full 12-hour/Doze/reboot and real-phone reliability remain unverified. Live caregiver/email/SMS/call escalation is not tested; production upgrade compatibility is not established."
           ],
           "validation": "See package limitations. This record does not establish new native-device testing.",
           "dateNote": "Historical release time was not recorded. Catalog/package information was observed when this history entry was created.",
@@ -344,6 +344,31 @@
       "name": "MAX-ALPHA",
       "entries": [
         {
+          "id": "bill-edit-save-recovery-20261029",
+          "version": "1.16.10",
+          "build": 231,
+          "recordedAt": "2026-10-29T12:42:00Z",
+          "releasedAt": null,
+          "status": "Browser release; simulated storage-failure tests passed",
+          "channel": "Website browser package; no new native installer",
+          "dateNote": "Release preparation at 8:42 AM EDT (UTC-04:00); deployment verified separately. Previous build230 remains in Git history for rollback.",
+          "changes": [
+            "Keep a bill edit attached to its original entry after a failed save, so retrying cannot duplicate the bill or count its cost twice.",
+            "Preserve draft values, original bill identity, notes and intentional in-tab changes when local persistence fails. Existing removal and undo behavior is unchanged."
+          ],
+          "validation": "74 automated Node tests pass, including three bill-edit save-failure/retry regressions covering rejection before and after in-tab state mutation, plus complete release integrity. Syntax checks pass. Real browser/device validation has not run. Removal/undo failure lifecycle is not changed by this release. Live publication is verified separately.",
+          "references": [
+            {
+              "label": "Current browser source",
+              "url": "https://github.com/GoyoneByDesign/goyonebydesign/tree/main/max-alpha"
+            },
+            {
+              "label": "Rollback source baseline",
+              "url": "https://github.com/GoyoneByDesign/goyonebydesign/tree/afc737aa6549e4e831573371fef6d7be22fbee0a/max-alpha"
+            }
+          ]
+        },
+        {
           "id": "gemini-adapter-compatibility-20261022",
           "version": "1.18.2",
           "build": 225,
@@ -445,7 +470,7 @@
           "status": "Catalog observation / validation limited",
           "channel": "Web / source",
           "changes": [
-            "v3.61.0 ï¿½ Build 84. Owner sign-in and access PIN required. Native installers are not available."
+            "v3.61.0 \u00ef\u00bf\u00bd Build 84. Owner sign-in and access PIN required. Native installers are not available."
           ],
           "validation": "See package limitations. This record does not establish new native-device testing.",
           "dateNote": "Historical release time was not recorded. Catalog/package information was observed when this history entry was created.",
@@ -1027,7 +1052,7 @@
           "status": "Catalog observation / validation limited",
           "channel": "Existing native test package",
           "changes": [
-            "Android 8+ ï¿½ JustMyPick 0.38/build 38 debug test APK. Branding, startup and same-key emulator list/cart/budget preservation passed. Its test certificate differs from old SavvyKin 0.36: an in-place update requires the original key. Do not uninstall or erase your existing app to work around this. Live integrations and physical-phone validation remain pending."
+            "Android 8+ \u00ef\u00bf\u00bd JustMyPick 0.38/build 38 debug test APK. Branding, startup and same-key emulator list/cart/budget preservation passed. Its test certificate differs from old SavvyKin 0.36: an in-place update requires the original key. Do not uninstall or erase your existing app to work around this. Live integrations and physical-phone validation remain pending."
           ],
           "validation": "See package limitations. This record does not establish new native-device testing.",
           "dateNote": "Historical release time was not recorded. Catalog/package information was observed when this history entry was created.",

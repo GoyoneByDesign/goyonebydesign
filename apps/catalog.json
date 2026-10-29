@@ -105,14 +105,14 @@
       "Work studio",
       "Personal organization"
     ],
-    "note": "Web1.16.9/build230. Update available installs the complete verified browser package and reopens after saving work; drafts and active tasks safely block installation. Version, build and packaged release time are visible. Native tool updates still require their existing installer/restart. No native iOS or Windows installer is released.",
+    "note": "Web1.16.10/build231. Bill-edit retries preserve the original entry after a failed save. Update available installs the complete verified browser package and reopens after saving work; drafts and active tasks safely block installation. Version, build and packaged release time are visible. Native tool updates still require their existing installer/restart. No native iOS or Windows installer is released.",
     "web": "/max-alpha/",
     "webLabel": "Open browser app",
     "downloads": {},
     "install": "/apps/install.html#max-alpha",
     "development": false,
     "platforms": "Browser / Home Screen",
-    "version": "Web v1.16.9 · Build 230",
+    "version": "Web v1.16.10 · Build 231",
     "access": "Browser interface"
   },
   {
@@ -236,3 +236,4 @@
     "releaseNotes": "/downloads/releases/apps-test-2026-10-11/TEST-RELEASE-NOTES.txt"
   }
 ]
+

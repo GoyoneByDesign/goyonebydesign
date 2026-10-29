@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "version": "1.16.9",
-  "build": 230,
+  "version": "1.16.10",
+  "build": 231,
   "min_companion_build": 205,
   "files": [
     {
@@ -88,6 +88,21 @@
       "path": "browser-task.js",
       "sha256": "eb75b4ba0492f09832b751056fcf76ad0974204962b831fe0bd6b904b7cd6af4",
       "bytes": 9141
+    },
+    {
+      "path": "capabilities.html",
+      "sha256": "5853111e5aa981965f341694e34dcd1ce3e183b2171080226be038800edf86a3",
+      "bytes": 3041
+    },
+    {
+      "path": "capability-panel.js",
+      "sha256": "2b296dbd5c35a89259948edcb023971e14ca700f8e9f681c08023949237ff91d",
+      "bytes": 2402
+    },
+    {
+      "path": "capability-status.js",
+      "sha256": "4516cde3bde7d6a72cd08bc5aa3e2457b3558b64ff4df1ef3d798a93593970bd",
+      "bytes": 3492
     },
     {
       "path": "cloudflare-ai.js",
@@ -181,8 +196,8 @@
     },
     {
       "path": "finance.js",
-      "sha256": "06c9eb3f5d828f41d2ab37f9e85fa083fc02de374290882204119698f125bdbc",
-      "bytes": 13490
+      "sha256": "127b714fa0525b68a5c1ade6858602dd6b1a60cf114a976ee0af70fb5c55d46a",
+      "bytes": 13528
     },
     {
       "path": "gemini.js",
@@ -191,8 +206,8 @@
     },
     {
       "path": "history.html",
-      "sha256": "3ac8cd798008f9de038ccd4feeabd528ce641f6201a6b29c8e49dfac2f2acf89",
-      "bytes": 9955
+      "sha256": "3047ed72b0ab670f2a4c066ae13bea397c84727855e1b8e178eb72954f45aefa",
+      "bytes": 10857
     },
     {
       "path": "icons/apple-touch-icon.png",
@@ -316,8 +331,8 @@
     },
     {
       "path": "package.json",
-      "sha256": "e8e6e6210d820f253363125112b74ca322a83d7833f577d88f3be6566319edb5",
-      "bytes": 259
+      "sha256": "371fb621a3da282f86eacd58de801e9ec36e844827c94e5b8f0070512038e17c",
+      "bytes": 260
     },
     {
       "path": "performance-worker.js",
@@ -356,13 +371,13 @@
     },
     {
       "path": "release-info.json",
-      "sha256": "1d8bc4b586076a11f4cfea54901817a1cc044f3588a24f3f32a843e38f694f87",
-      "bytes": 899
+      "sha256": "25f411bf96a51fd95164bc8d84e7b5182c41e90bfc0a4938ba78f50d04ca04c0",
+      "bytes": 850
     },
     {
       "path": "release-version.js",
-      "sha256": "b717b35cc96553f4a249326b3a7c0bc9302bb09482597623776296d52b290814",
-      "bytes": 208
+      "sha256": "1f53366ff434b044112660b1517fd10659e1b6811c1b5fb4a8491f420bf6ea81",
+      "bytes": 209
     },
     {
       "path": "reply-speech.js",
@@ -426,8 +441,8 @@
     },
     {
       "path": "sw.js",
-      "sha256": "1fbb5dc1107e38379beed119e399856da23ac1ce7ceafa6b3c20ffe769bc5c91",
-      "bytes": 9423
+      "sha256": "be9ef21def0ff806567a953e0bcb6dd5860b745282ba6e6a1b423d617811dcd7",
+      "bytes": 9421
     },
     {
       "path": "tools.js",
@@ -445,6 +460,11 @@
       "bytes": 1625
     },
     {
+      "path": "update-manifest.js",
+      "sha256": "b83911ac62217bf8b308828a92f42f1fdeaab575e082db10b8d2d68f06ed6ae7",
+      "bytes": 2628
+    },
+    {
       "path": "updates.css",
       "sha256": "965f6888601d2b65a96a23eee3796bf3a02e947760983abe59a9483e137c677c",
       "bytes": 883
@@ -453,6 +473,11 @@
       "path": "updates.js",
       "sha256": "33b5888d0a963544c282c3a2edacf6f5a7bcddfb6d03acf924b1f59bfa9b24aa",
       "bytes": 13238
+    },
+    {
+      "path": "upgrade-guide.html",
+      "sha256": "1f743c2824882f3031dcbb7700018dcf040e03c462ae455f17906e3791a49678",
+      "bytes": 7009
     },
     {
       "path": "voice-config.js",
@@ -493,31 +518,6 @@
       "path": "weather-place.js",
       "sha256": "b8c5102a78ed0da369546ce0eb3ac89005ad8c4c8aad58d45d3a6e73f8749d1a",
       "bytes": 10509
-    },
-    {
-      "path": "upgrade-guide.html",
-      "bytes": 7009,
-      "sha256": "1f743c2824882f3031dcbb7700018dcf040e03c462ae455f17906e3791a49678"
-    },
-    {
-      "path": "capabilities.html",
-      "bytes": 3041,
-      "sha256": "5853111e5aa981965f341694e34dcd1ce3e183b2171080226be038800edf86a3"
-    },
-    {
-      "path": "capability-status.js",
-      "bytes": 3492,
-      "sha256": "4516cde3bde7d6a72cd08bc5aa3e2457b3558b64ff4df1ef3d798a93593970bd"
-    },
-    {
-      "path": "capability-panel.js",
-      "bytes": 2402,
-      "sha256": "2b296dbd5c35a89259948edcb023971e14ca700f8e9f681c08023949237ff91d"
-    },
-    {
-      "path": "update-manifest.js",
-      "bytes": 2628,
-      "sha256": "b83911ac62217bf8b308828a92f42f1fdeaab575e082db10b8d2d68f06ed6ae7"
     }
   ]
 }

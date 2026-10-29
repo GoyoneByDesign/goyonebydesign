@@ -1,14 +1,13 @@
 {
   "schema": 1,
-  "version": "1.16.9",
-  "build": 230,
+  "version": "1.16.10",
+  "build": 231,
   "timezone": "America/New_York",
-  "preparedAt": "2026-10-26T15:26:00Z",
+  "preparedAt": "2026-10-29T12:42:00Z",
   "channel": "website",
   "changes": [
-    "One click on Update available installs the complete verified web release and reopens after save guards.",
-    "Verify every declared app file by byte length and SHA256; reject incomplete, stale or mismatched updates.",
-    "Show installed version, build and release preparation date/time in America/New_York with UTC offset; preserve prior shell and personal data."
+    "Keep a bill edit attached to its original entry after a failed save, so retrying cannot duplicate the bill or count its cost twice.",
+    "Preserve draft values, original bill identity, notes and intentional in-tab changes when local persistence fails. Existing removal and undo behavior is unchanged."
   ],
-  "validation": "71 automated Node tests pass, including worker lifecycle simulations, partial-download/hash failures, stale target refusal, exactly-once reload, storage preservation and complete manifest integrity. Syntax checks pass; real browser lifecycle/visual testing remains blocked in the environment. Live publication is verified separately."
+  "validation": "74 automated Node tests pass, including three bill-edit save-failure/retry regressions covering rejection before and after in-tab state mutation, plus complete release integrity. Syntax checks pass. Real browser/device validation has not run. Removal/undo failure lifecycle is not changed by this release. Live publication is verified separately."
 }
