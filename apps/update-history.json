@@ -462,6 +462,30 @@
       "name": "MAX-ZETA",
       "entries": [
         {
+          "id": "selected-report-preview-fix-20261029-build121",
+          "version": "3.79.1",
+          "build": 121,
+          "recordedAt": "2026-10-29T15:42:29.172256+00:00",
+          "releasedAt": "2026-10-29T15:41:42.422471+00:00",
+          "status": "Owner-private browser hotfix deployed",
+          "channel": "Private Sites application; no native installer",
+          "changes": [
+            "Common preview controls preserve the selected Gift Cards, Labor or Sales report rather than silently opening PMIX; explicit PMIX controls remain explicit.",
+            "Gift-card previews use the shared multi-page viewer and chart-inclusive PDF. Valid gift-card-only uploads honor the automatic-preview checkbox.",
+            "Source-validation and download errors appear beside gift-card action buttons. Unknown or incomplete raw source information is still blocked rather than guessed.",
+            "Preserves uploaded source data, existing layouts, settings, known-schema recognition and owner-private access. Restores native history links while retaining previous release entries.",
+            "Native source commit: c8cd5b82f3875a479650efe7e644dc0a4f685173. Rollback source: 522033d421a4bb6ea70e706d7c7f131b89774ea9."
+          ],
+          "validation": "Final 18 focused preview/upload/summary checks, two history checks, 45 isolated workspace checks and build pass. Aggregate run: 1,113 passes and three failures; two history/footer failures were fixed and rechecked; the workspace process failed without an individual assertion and passed all 45 checks isolated. Aggregate process cause remains unproven; no all-green aggregate claim. Actual owner reference workbook reread and Excel/four-page PDF regenerated, with table render inspected. Authenticated production browser UI remains unrun at owner sign-in.",
+          "dateNote": "Deployed October 29, 2026 at 11:41:42 EDT (UTC-04:00). Before refreshing an existing gift-card session, Save gift-card report, then reopen that JSON after refresh to preserve working uploads. The reported raw-ledger screenshot omitted its validation message; this hotfix does not claim that all unknown source issues are resolved.",
+          "references": [
+            {
+              "label": "Open owner-private MAX-ZETA",
+              "url": "https://anitas-pmix-reports.michaelgoyone78.chatgpt.site/#giftCardSection"
+            }
+          ]
+        },
+        {
           "id": "gift-card-summary-recognition-20261029-build120",
           "version": "3.79.0",
           "build": 120,
