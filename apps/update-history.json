@@ -462,6 +462,30 @@
       "name": "MAX-ZETA",
       "entries": [
         {
+          "id": "source-coordinates-highlighted-review-20261029-build124",
+          "version": "3.80.2",
+          "build": 124,
+          "recordedAt": "2026-10-29T17:38:10.438622+00:00",
+          "releasedAt": "2026-10-29T17:37:46.386800+00:00",
+          "status": "Owner-private browser hotfix deployed",
+          "channel": "Private Sites application; no native installer",
+          "changes": [
+            "Source-review descriptions lead with the original worksheet row and known column letters, including related transaction rows.",
+            "Download highlighted review creates a separate Excel copy with issue-cell and related-row fills plus a review legend. Download untouched original preserves original bytes; restored ZIP sources extract only the exact saved member for annotation.",
+            "Same-card transactions remain distinct by timestamp, type, signed amount and identity. Identical no-ID excluded redemption records remain retained audit warnings without blocking independently validated positive loads; redeemed totals remain explicitly unverified.",
+            "Ambiguous positive loads and conflicting true transaction IDs still block. Original source data, worksheets, formulas, settings, report layouts and all manual tools remain preserved.",
+            "Native source commit: 063b48c552366f0aa4d2671702f2db4686216ae3. Rollback source: 8e664f4c1fe5dd8987eb348faa82f540e23a09b8."
+          ],
+          "validation": "58 focused checks passed: parser, annotation exports, automatic previews, source-review UI, history, original-byte preservation, CSV row offsets, formula/long-ID preservation, error highlighting priority, restored ZIP extraction and missing-member recovery. Build passed. Actual private six-store source audit produced a validated positive-load report while retaining redemption uncertainty and missing-store coverage. Authenticated production browser acceptance and full-repository suite were not run for this hotfix.",
+          "dateNote": "Eastern publication time is shown above (UTC-04:00 on this date). Save the current working-report JSON before refreshing, then reopen it afterward. Source rows are retained; audit warnings do not establish whether identical redemption rows are true duplicates. Missing locations remain unavailable, not zero.",
+          "references": [
+            {
+              "label": "Open owner-private MAX-ZETA",
+              "url": "https://anitas-pmix-reports.michaelgoyone78.chatgpt.site/#giftCardSection"
+            }
+          ]
+        },
+        {
           "id": "always-preview-adjust-balance-20261029-build123",
           "version": "3.80.1",
           "build": 123,
