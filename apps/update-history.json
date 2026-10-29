@@ -644,6 +644,10 @@
               "url": "https://stockpilot-sandbox.michaelgoyone78.chatgpt.site"
             },
             {
+              "label": "Verified complete Sandbox source mirror",
+              "url": "https://github.com/GoyoneByDesign/StockPilot/commit/a37c3e0e285c4c5438279224509755655caccf24"
+            },
+            {
               "label": "Core recovery source",
               "url": "https://github.com/GoyoneByDesign/StockPilot/commit/469c7b703ed970683b1c1c07fd32c92b768ebf03"
             }

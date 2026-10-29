@@ -255,3 +255,8 @@ Recorded verified source commit 399ad9f68d0aa12f6926fe73380c26568be70f52: fresh 
 ## October 27, 2026 — StockPilot build 13 disabled real-contract Worker source
 
 Source 3ad3af19a10b91c9448bfa6eef22e66a6067fb91 verified all 17 changed blobs, with no removed/unintended files. Final Node suite 657/657; new pipeline 74 tests; existing synthetic 42/42 and hosted 14/14; independent HTTP5/5. Browser-platform ESM bundle24,744 bytes. Wrangler dry-run stopped at missing configuration directory; no deploy claim. Real eBay contract source now separate from unchanged Node and synthetic proof, with bounded Inventory-only/30-day-order coverage and explicit seller-net refund basis. No credential/grant/card/remote resource/live read or write. Supplier/full-store/recovery/live acceptance remain open. Existing histories/native downloads preserved; Pages/live verification recorded separately.
+
+
+## StockPilot Sandbox source mirror reference — 2026-10-29 12:34 UTC
+
+Added the exact verified private GitHub mirror commit a37c3e0e285c4c5438279224509755655caccf24 to the existing Sandbox build1 history entry. All135 native source files match, three documentation updates included,281 other core files preserved,zero deletions. This is a source-reference update only: no new app version, deployment, credential, provider acceptance or AutoDS replacement claim. All59 history entries retained.
