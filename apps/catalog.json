@@ -128,13 +128,13 @@
       "Document tools",
       "Private workspace"
     ],
-    "note": "Version 3.80.3 · Build 125 · Updated October 29, 2026. Conservative redemption / void cancellation pairs with preserved source audit. Owner sign-in and access PIN required. Native installers are not available.",
+    "note": "Version 3.81.0 · Build 126 · Updated October 29, 2026. Data-driven labor hours and cost previews without requiring a sales summary. Owner sign-in and access PIN required. Native installers are not available.",
     "web": "/pmix/",
     "webLabel": "Open private workspace",
     "downloads": {},
     "development": false,
     "platforms": "Browser",
-    "version": "3.80.3 · Build 125",
+    "version": "3.81.0 · Build 126",
     "access": "Owner-private"
   },
   {

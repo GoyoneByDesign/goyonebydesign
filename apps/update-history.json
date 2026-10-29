@@ -462,6 +462,30 @@
       "name": "MAX-ZETA",
       "entries": [
         {
+          "id": "data-driven-labor-20261029-build126",
+          "version": "3.81.0",
+          "build": 126,
+          "recordedAt": "2026-10-29T20:08:58.025820+00:00",
+          "releasedAt": "2026-10-29T20:08:34.516126+00:00",
+          "status": "Owner-private browser update deployed",
+          "channel": "Private Sites application; no native installer",
+          "changes": [
+            "Recognized standalone Toast labor hours, cost and combined sources produce labor reports without requiring Net Sales. Missing measures remain unavailable; recorded zero values remain data.",
+            "Labor percentages require matching cost and valid nonzero sales. Partial-source comparisons remain null-safe; full-source summary/comparison formats and formulas are preserved.",
+            "Complementary same-scope labor hours/cost details reconcile without double counting. Unknown scope and conflicting measures remain actionable review instead of invented figures.",
+            "Labor uploads automatically open populated labor previews. PMIX panels/presets/navigation and absent labor-detail fields hide by default; Show all tools retains every control and saved choice. Mixed-family switching remains intact.",
+            "Native source commit: bbfdcc195a177b9ad8e231154cafbcfc5fdcd967. Rollback source: e6d496feea2df88f0d4bd202ec8484dcfa09817f."
+          ],
+          "validation": "60 focused checks passed; build passed. Computational, XLSX export and upload DOM tests cover hours-only, cost-only, combined and zero-valued sources, safe missing denominators, source reconciliation, contextual controls and mixed-family switching. Authenticated production browser acceptance and full-repository suite were not run for this release.",
+          "dateNote": "Save current working-report JSON before refreshing, then reopen it. Source data and settings are preserved. The broader gallery of all supported populated layouts remains separate ongoing work; this release does not claim that gallery complete.",
+          "references": [
+            {
+              "label": "Open owner-private MAX-ZETA labor workspace",
+              "url": "https://anitas-pmix-reports.michaelgoyone78.chatgpt.site/#laborSection"
+            }
+          ]
+        },
+        {
           "id": "redemption-void-reconciliation-20261029-build125",
           "version": "3.80.3",
           "build": 125,
