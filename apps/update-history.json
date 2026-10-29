@@ -113,7 +113,7 @@
           "status": "Catalog observation / validation limited",
           "channel": "Existing native test package",
           "changes": [
-            "Android 7+ \u00ef\u00bf\u00bd StatusPing 0.2.0-review.3/build 5 isolated debug test APK. Regression and native emulator check-in/reminder tests passed, including bounded delivery after ordinary process death. Full 12-hour/Doze/reboot and real-phone reliability remain unverified. Live caregiver/email/SMS/call escalation is not tested; production upgrade compatibility is not established."
+            "Android 7+ ï¿½ StatusPing 0.2.0-review.3/build 5 isolated debug test APK. Regression and native emulator check-in/reminder tests passed, including bounded delivery after ordinary process death. Full 12-hour/Doze/reboot and real-phone reliability remain unverified. Live caregiver/email/SMS/call escalation is not tested; production upgrade compatibility is not established."
           ],
           "validation": "See package limitations. This record does not establish new native-device testing.",
           "dateNote": "Historical release time was not recorded. Catalog/package information was observed when this history entry was created.",
@@ -462,6 +462,30 @@
       "name": "MAX-ZETA",
       "entries": [
         {
+          "id": "gift-card-summary-recognition-20261029-build120",
+          "version": "3.79.0",
+          "build": 120,
+          "recordedAt": "2026-10-29T14:33:39+00:00",
+          "releasedAt": "2026-10-29T14:31:19.022480+00:00",
+          "status": "Owner-private browser release deployed",
+          "channel": "Private Sites application; no native installer",
+          "changes": [
+            "Recognizes checked Physical / E-Gift / TOTAL summary workbooks by worksheet headers and content, not filenames, retaining per-store dates and separate refund/void/net adjustments.",
+            "Keeps summary datasets separate from raw transactions; invalid or ambiguous files require review rather than invented transaction detail.",
+            "Remembers matching schema layout settings in the same browser and report backups; existing compact layout remains alongside reference Excel spacing and rightmost-TTL PDF layout.",
+            "Preserves normalized Default Online Ordering as E-Gift, existing report layouts, settings, source history and owner-only access.",
+            "Native source commit: 522033d421a4bb6ea70e706d7c7f131b89774ea9. Rollback source: 2ba5db556159093e1818ccce41f1d5443979f170."
+          ],
+          "validation": "Final 35 gift-card parser, reader, UI and export checks pass; build passes. Initial full run: 1,101 passes and two failures; affected preview and workspace suites passed isolated, including 45 workspace checks. Actual private reference imported/reconciled; generated Excel/PDF and both charts rendered and visually checked. Authenticated production UI remains unrun at the cloud browser owner-login gate. No private workbook or report images published here.",
+          "dateNote": "Deployment succeeded October 29, 2026 at 10:31:19 EDT (UTC-04:00). Known-schema recognition, not guaranteed interpretation of every Excel file. Actual-file read/recognize/reconcile median 240 ms over seven cloud-worker runs, excluding browser/network/render time. Isolated header scan improved from 298.31 to 46.18 ms for 100k rows; no whole-app speed guarantee.",
+          "references": [
+            {
+              "label": "Open owner-private MAX-ZETA",
+              "url": "https://anitas-pmix-reports.michaelgoyone78.chatgpt.site"
+            }
+          ]
+        },
+        {
           "id": "initial-observed-release",
           "version": "3.61.0",
           "build": 84,
@@ -470,7 +494,7 @@
           "status": "Catalog observation / validation limited",
           "channel": "Web / source",
           "changes": [
-            "v3.61.0 \u00ef\u00bf\u00bd Build 84. Owner sign-in and access PIN required. Native installers are not available."
+            "v3.61.0 ï¿½ Build 84. Owner sign-in and access PIN required. Native installers are not available."
           ],
           "validation": "See package limitations. This record does not establish new native-device testing.",
           "dateNote": "Historical release time was not recorded. Catalog/package information was observed when this history entry was created.",
@@ -1052,7 +1076,7 @@
           "status": "Catalog observation / validation limited",
           "channel": "Existing native test package",
           "changes": [
-            "Android 8+ \u00ef\u00bf\u00bd JustMyPick 0.38/build 38 debug test APK. Branding, startup and same-key emulator list/cart/budget preservation passed. Its test certificate differs from old SavvyKin 0.36: an in-place update requires the original key. Do not uninstall or erase your existing app to work around this. Live integrations and physical-phone validation remain pending."
+            "Android 8+ ï¿½ JustMyPick 0.38/build 38 debug test APK. Branding, startup and same-key emulator list/cart/budget preservation passed. Its test certificate differs from old SavvyKin 0.36: an in-place update requires the original key. Do not uninstall or erase your existing app to work around this. Live integrations and physical-phone validation remain pending."
           ],
           "validation": "See package limitations. This record does not establish new native-device testing.",
           "dateNote": "Historical release time was not recorded. Catalog/package information was observed when this history entry was created.",

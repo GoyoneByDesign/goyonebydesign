@@ -128,13 +128,13 @@
       "Document tools",
       "Private workspace"
     ],
-    "note": "v3.61.0 · Build 84. Owner sign-in and access PIN required. Native installers are not available.",
+    "note": "Version 3.79.0 · Build 120 · Updated October 29, 2026. Gift-card summary recognition and reusable layouts. Owner sign-in and access PIN required. Native installers are not available.",
     "web": "/pmix/",
     "webLabel": "Open private workspace",
     "downloads": {},
     "development": false,
     "platforms": "Browser",
-    "version": "v3.61.0 · Build 84",
+    "version": "3.79.0 · Build 120",
     "access": "Owner-private"
   },
   {
@@ -236,4 +236,3 @@
     "releaseNotes": "/downloads/releases/apps-test-2026-10-11/TEST-RELEASE-NOTES.txt"
   }
 ]
-
