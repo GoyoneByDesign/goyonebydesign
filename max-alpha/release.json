@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "version": "1.16.10",
-  "build": 231,
+  "version": "1.16.11",
+  "build": 232,
   "min_companion_build": 205,
   "files": [
     {
@@ -196,8 +196,8 @@
     },
     {
       "path": "finance.js",
-      "sha256": "127b714fa0525b68a5c1ade6858602dd6b1a60cf114a976ee0af70fb5c55d46a",
-      "bytes": 13528
+      "sha256": "a5e6089bfc7841059fb11eb3eab5df2e1bb6cca8a9fd3bbfac8df1872c7beae1",
+      "bytes": 13535
     },
     {
       "path": "gemini.js",
@@ -206,8 +206,8 @@
     },
     {
       "path": "history.html",
-      "sha256": "3047ed72b0ab670f2a4c066ae13bea397c84727855e1b8e178eb72954f45aefa",
-      "bytes": 10857
+      "sha256": "9941314cd999124d776acbf3dbaee07e007a304ea0b0bec86c6f08daa912d00e",
+      "bytes": 12092
     },
     {
       "path": "icons/apple-touch-icon.png",
@@ -331,7 +331,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "371fb621a3da282f86eacd58de801e9ec36e844827c94e5b8f0070512038e17c",
+      "sha256": "046a03b4a4267bd04371a3b39ce21d3abd8a25a0671ee26f11b507be6a1d214b",
       "bytes": 260
     },
     {
@@ -371,12 +371,12 @@
     },
     {
       "path": "release-info.json",
-      "sha256": "25f411bf96a51fd95164bc8d84e7b5182c41e90bfc0a4938ba78f50d04ca04c0",
-      "bytes": 850
+      "sha256": "111eaee92f4f32ff71f23e3b05f0f46c4c574ac9ab6f1f51a6af98194692cf92",
+      "bytes": 778
     },
     {
       "path": "release-version.js",
-      "sha256": "1f53366ff434b044112660b1517fd10659e1b6811c1b5fb4a8491f420bf6ea81",
+      "sha256": "600840043fa78f5af0c43e2889e0b8e933edb47a67672b384e6adaef2524d781",
       "bytes": 209
     },
     {
@@ -441,7 +441,7 @@
     },
     {
       "path": "sw.js",
-      "sha256": "be9ef21def0ff806567a953e0bcb6dd5860b745282ba6e6a1b423d617811dcd7",
+      "sha256": "9872ad7b1432d4eee0bd2c75d301ad748ba8b0ec07dc1ef29d57d1a23a15abdd",
       "bytes": 9421
     },
     {

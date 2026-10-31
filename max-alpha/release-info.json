@@ -1,13 +1,13 @@
 {
   "schema": 1,
-  "version": "1.16.10",
-  "build": 231,
+  "version": "1.16.11",
+  "build": 232,
   "timezone": "America/New_York",
-  "preparedAt": "2026-10-29T12:42:00Z",
+  "preparedAt": "2026-10-31T17:26:19Z",
   "channel": "website",
   "changes": [
-    "Keep a bill edit attached to its original entry after a failed save, so retrying cannot duplicate the bill or count its cost twice.",
-    "Preserve draft values, original bill identity, notes and intentional in-tab changes when local persistence fails. Existing removal and undo behavior is unchanged."
+    "Keep Undo last removal available after a bill-restoration save fails, including across a later redraw.",
+    "Clear the recovery record only after a successful save; preserve bill identity, notes and existing monthly planning."
   ],
-  "validation": "74 automated Node tests pass, including three bill-edit save-failure/retry regressions covering rejection before and after in-tab state mutation, plus complete release integrity. Syntax checks pass. Real browser/device validation has not run. Removal/undo failure lifecycle is not changed by this release. Live publication is verified separately."
+  "validation": "76 automated Node tests passed, zero failures/skips, including two new undo-save failure/redraw regressions that fail on build 231 and pass here, plus complete 103-file release integrity. JavaScript syntax checks passed. Real Chromium launch was blocked by socket Operation not permitted; no browser/device acceptance or native installer is claimed."
 }

@@ -30,3 +30,14 @@ for(const renamed of [false,true])test(`in-tab failed persistence retains edited
  f.input('Current bill (USD)').value='130.00';f.fail=false;await f.button('Save bill changes').onclick();assert.equal(f.data.bills.length,1);assert.equal(f.data.bills[0].id,'original');assert.equal(f.data.bills[0].amount,13000);assert.equal(f.data.bills[0].name,renamed?'New Power':'Power');assert.equal(f.data.bills[0].notes,'retain me');assert.ok(f.button('Add bill'));assert.equal(f.calls,2);
  }finally{f.restore();}
 });
+
+for(const mutateBeforeReject of [false,true])test(`failed undo retains recovery until a later successful save (${mutateBeforeReject?'in-tab mutation':'no mutation'})`,async()=>{
+ const f=fixture({mutateBeforeReject});try{
+  await f.button('Remove entry').onclick();assert.equal(f.data.bills.length,0);
+  f.fail=true;await f.button('Undo last removal').onclick();assert.equal(f.messages.at(-1),'storage full');
+  f.fail=false;await f.button('Save monthly plan').onclick();
+  assert.ok(f.button('Undo last removal'),'recovery must survive redraw after failed persistence');
+  await f.button('Undo last removal').onclick();
+  assert.equal(f.data.bills.length,1);assert.equal(f.data.bills[0].id,'original');assert.equal(f.data.bills[0].notes,'retain me');assert.equal(f.button('Undo last removal'),undefined);
+ }finally{f.restore();}
+});
