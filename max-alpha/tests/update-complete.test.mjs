@@ -15,3 +15,35 @@ test('activation metadata mismatch fails without reload',async()=>{let calls=0,r
 test('packaged date displays Eastern offset and does not invent missing dates',()=>{assert.match(releaseDateLabel('2026-10-26T15:26:00Z'),/11:26:00 AM/);assert.match(releaseDateLabel('2026-10-26T15:26:00Z'),/GMT-4/);assert.match(releaseDateLabel('2026-01-26T15:26:00Z'),/GMT-5/);assert.equal(releaseDateLabel(''),'Date not recorded');});
 test('worker repair is pinned and cache cleanup only targets older shell caches',()=>{const source=fs.readFileSync(new URL('../sw.js',import.meta.url),'utf8');assert.match(source,/staticResponse\(new Request\(new URL\('\.\/index.html'/);assert.doesNotMatch(source,/try \{ return await fetch\(request\); \}/);assert.match(source,/name.startsWith\(PREFIX\+'shell:'/);assert.match(source,/older.slice\(0,-1\)/);});
 test('update notice invokes installation directly while keeping save guards',()=>{const source=fs.readFileSync(new URL('../app.js',import.meta.url),'utf8');assert.match(source,/updateNoticeBtn'\)\.onclick=.*updates.apply\(\)/);assert.match(source,/if\(!await persist\(\)\)throw Error\('MAX-ALPHA could not save/);});
+
+function deferred(){let resolve;const promise=new Promise(r=>{resolve=r;});return {promise,resolve};}
+test('checks during save or activation cannot replace the verified update target',async()=>{
+ const gate=deferred(),events={};let fetches=0,reloads=0;
+ const reg={waiting:{postMessage(){}},addEventListener(){}};
+ const manager=createAppUpdates({sw:{controller:{},addEventListener:(n,fn)=>events[n]=fn},beforeApply:()=>gate.promise,getWorkerMetadata:async()=>next,reload:()=>reloads++,fetcher:async()=>{fetches++;return new Response(JSON.stringify({...next,schema:1,build:next.build+1}));}});
+ manager.attach(reg);
+ const applying=manager.apply();
+ try{
+  await manager.check();assert.equal(fetches,0,'no competing release fetch while personal work is saving');
+  gate.resolve();await applying;assert.equal(manager.state.phase,'applying');
+  await manager.check();assert.equal(fetches,0,'no competing release fetch while activation is pending');assert.equal(manager.state.phase,'applying');
+ }finally{gate.resolve();await applying.catch(()=>{});await events.controllerchange();}
+ assert.equal(reloads,1,'the original verified release still activates');
+});
+test('worker events during activation do not offer a second installation',async()=>{
+ const events={},registrationEvents={},workerEvents={};
+ const reg={waiting:{postMessage(){}},installing:{state:'installed',addEventListener:(n,fn)=>workerEvents[n]=fn},addEventListener:(n,fn)=>registrationEvents[n]=fn};
+ const manager=createAppUpdates({sw:{controller:{},addEventListener:(n,fn)=>events[n]=fn},getWorkerMetadata:async()=>next,reload(){}});
+ manager.attach(reg);await manager.apply();
+ try{registrationEvents.updatefound();workerEvents.statechange();assert.equal(manager.state.phase,'applying');}
+ finally{await events.controllerchange();}
+});
+test('installation waits for an already-running release check to finish',async()=>{
+ const gate=deferred(),events={},registrationEvents={},workerEvents={};let saves=0;
+ const reg={waiting:null,installing:{state:'installed',addEventListener:(n,fn)=>workerEvents[n]=fn},addEventListener:(n,fn)=>registrationEvents[n]=fn,async update(){}};
+ const manager=createAppUpdates({sw:{controller:{},addEventListener:(n,fn)=>events[n]=fn},beforeApply:async()=>{saves++;},getWorkerMetadata:async()=>next,reload(){},fetcher:()=>gate.promise});
+ manager.attach(reg);const checking=manager.check();reg.waiting={postMessage(){}};registrationEvents.updatefound();workerEvents.statechange();
+ try{await assert.rejects(manager.apply(),/check.*finish/i);assert.equal(saves,0);}
+ finally{gate.resolve(new Response(JSON.stringify({...next,schema:1})));await checking;await events.controllerchange();}
+ await manager.apply();await events.controllerchange();assert.equal(saves,1);
+});

@@ -35,7 +35,7 @@ export function createAppUpdates({desktop=false, request, beforeApply=async()=>{
     }).catch(()=>{}); // beforeApply preserves unsaved work; manual update remains available.
   };
   const waiting=()=>{
-    if(registration?.waiting){set({phase:'ready',message:'A MAX-ALPHA update is downloaded. Update when you are ready.'});maybeAutoApply();}
+    if(!applying&&registration?.waiting){set({phase:'ready',message:'A MAX-ALPHA update is downloaded. Update when you are ready.'});maybeAutoApply();}
   };
   sw?.addEventListener('controllerchange',async()=>{if(!activationRequested||desktop)return;activationRequested=false;clearTimeout(activationTimer);try{const active=await getWorkerMetadata(sw.controller);if(!target||active.build!==target.build||active.version!==target.version)throw Error('The activated release differs from the verified update. Keep this window open and retry.');applying=false;reload();}catch(error){applying=false;set({phase:'error',message:error.message});}});
 
@@ -51,6 +51,8 @@ export function createAppUpdates({desktop=false, request, beforeApply=async()=>{
     });
   }
   async function check({automatic=false}={}) {
+    // Keep the verified target stable until saving and activation have finished.
+    if(applying)return {...state};
     if(checking)return checking;
     if(!canCheck()||(automatic&&(!canAutomaticCheck()||Date.now()-lastCheck<30*60*1000)))return {...state};
     lastCheck=Date.now();automaticActivation=automatic;
@@ -87,6 +89,7 @@ export function createAppUpdates({desktop=false, request, beforeApply=async()=>{
   }
   async function apply({automatic=false}={}){
     if(applying)return;
+    if(checking)throw Error('Wait for the update check to finish before installing.');
     if(state.phase!=='ready')throw Error('Check for an available update first.');
     applying=true;
     try{

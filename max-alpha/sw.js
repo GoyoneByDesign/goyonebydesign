@@ -3,10 +3,10 @@ import {stageRelease,validateManifest} from './update-manifest.js';
  * Model tensors/config/tokenizers/WASM belong to WebLLM's IndexedDB cache.
  * This worker never caches searches, conversations, uploads or arbitrary pages.
  */
-const VERSION = '2026-10-31.alpha.financeundo.1';
-const RELEASE_VERSION = '1.16.11';
-const RELEASE_BUILD = 232;
-const RELEASE_DATE = '2026-10-31T17:26:19Z';
+const VERSION = '2026-11-01.alpha.updatecoordination.1';
+const RELEASE_VERSION = '1.16.12';
+const RELEASE_BUILD = 233;
+const RELEASE_DATE = '2026-11-01T05:16:48Z';
 const SCOPE = new URL(self.registration.scope);
 const PREFIX = `maxg-pwa:${encodeURIComponent(SCOPE.pathname)}:`;
 const SHELL_CACHE = `${PREFIX}shell:${VERSION}`;

@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "version": "1.16.11",
-  "build": 232,
+  "version": "1.16.12",
+  "build": 233,
   "min_companion_build": 205,
   "files": [
     {
@@ -206,8 +206,8 @@
     },
     {
       "path": "history.html",
-      "sha256": "9941314cd999124d776acbf3dbaee07e007a304ea0b0bec86c6f08daa912d00e",
-      "bytes": 12092
+      "sha256": "e00b0da37a7d005cda9f0d11bce955317084334eba81578975c4ff69f9df377c",
+      "bytes": 13090
     },
     {
       "path": "icons/apple-touch-icon.png",
@@ -331,7 +331,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "046a03b4a4267bd04371a3b39ce21d3abd8a25a0671ee26f11b507be6a1d214b",
+      "sha256": "d20f4f2ccdb0489541fbe0161560d730a1b36d545555d86f52182afed8e761bb",
       "bytes": 260
     },
     {
@@ -371,12 +371,12 @@
     },
     {
       "path": "release-info.json",
-      "sha256": "111eaee92f4f32ff71f23e3b05f0f46c4c574ac9ab6f1f51a6af98194692cf92",
-      "bytes": 778
+      "sha256": "9dab4b77f9988f17faa2b3d7e0183a887c24bcd546d34a429b4b099992d66593",
+      "bytes": 844
     },
     {
       "path": "release-version.js",
-      "sha256": "600840043fa78f5af0c43e2889e0b8e933edb47a67672b384e6adaef2524d781",
+      "sha256": "18771e4cb055f997335e733098f6ee53b04cb8fa496379410bcb6d2cad14349f",
       "bytes": 209
     },
     {
@@ -441,8 +441,8 @@
     },
     {
       "path": "sw.js",
-      "sha256": "9872ad7b1432d4eee0bd2c75d301ad748ba8b0ec07dc1ef29d57d1a23a15abdd",
-      "bytes": 9421
+      "sha256": "893d66db97a6b2c620abb80f44bf718771c7bd457875401fb09a1d83350b0b51",
+      "bytes": 9428
     },
     {
       "path": "tools.js",
@@ -471,8 +471,8 @@
     },
     {
       "path": "updates.js",
-      "sha256": "33b5888d0a963544c282c3a2edacf6f5a7bcddfb6d03acf924b1f59bfa9b24aa",
-      "bytes": 13238
+      "sha256": "dd5e735d53b0bc2889be19b9f3a6055e087776fd5faa0d3df51df966120e4e38",
+      "bytes": 13453
     },
     {
       "path": "upgrade-guide.html",

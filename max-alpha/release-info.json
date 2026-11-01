@@ -1,13 +1,13 @@
 {
   "schema": 1,
-  "version": "1.16.11",
-  "build": 232,
+  "version": "1.16.12",
+  "build": 233,
   "timezone": "America/New_York",
-  "preparedAt": "2026-10-31T17:26:19Z",
+  "preparedAt": "2026-11-01T05:16:48Z",
   "channel": "website",
   "changes": [
-    "Keep Undo last removal available after a bill-restoration save fails, including across a later redraw.",
-    "Clear the recovery record only after a successful save; preserve bill identity, notes and existing monthly planning."
+    "Keep the verified update target stable while personal work is being saved and a downloaded update is activating.",
+    "Prevent overlapping update checks and installations from replacing the in-progress status; preserve manual update, saved data and automatic-check preferences."
   ],
-  "validation": "76 automated Node tests passed, zero failures/skips, including two new undo-save failure/redraw regressions that fail on build 231 and pass here, plus complete 103-file release integrity. JavaScript syntax checks passed. Real Chromium launch was blocked by socket Operation not permitted; no browser/device acceptance or native installer is claimed."
+  "validation": "79 automated Node tests passed, zero failures/skips, including three new update concurrency regressions that fail on build 232 and pass here, plus complete 103-file release integrity. JavaScript syntax checks passed. Browser acceptance was not run because the installed Playwright browser executable is absent; no device or native installer acceptance is claimed."
 }
