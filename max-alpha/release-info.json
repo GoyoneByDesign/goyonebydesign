@@ -1,13 +1,14 @@
 {
   "schema": 1,
-  "version": "1.16.12",
-  "build": 233,
+  "version": "1.16.13",
+  "build": 234,
   "timezone": "America/New_York",
-  "preparedAt": "2026-11-01T05:16:48Z",
-  "channel": "website",
+  "preparedAt": "2026-11-04T13:38:00Z",
+  "channel": "review-source-not-deployed",
   "changes": [
-    "Keep the verified update target stable while personal work is being saved and a downloaded update is activating.",
-    "Prevent overlapping update checks and installations from replacing the in-progress status; preserve manual update, saved data and automatic-check preferences."
+    "Add local preview and explicit confirmation for additive personal-record recovery from existing complete JSON exports, without replacing the export feature.",
+    "Reject invalid records, conflicts, capacity overflow, stale previews and cross-tab changes; atomically save accepted recovery while preserving existing records and settings.",
+    "Keep imported notes, workflows, memories, lessons and schedules paused; require explicit chat-saving consent and never import permissions, credentials or provider connections."
   ],
-  "validation": "79 automated Node tests passed, zero failures/skips, including three new update concurrency regressions that fail on build 232 and pass here, plus complete 103-file release integrity. JavaScript syntax checks passed. Browser acceptance was not run because the installed Playwright browser executable is absent; no device or native installer acceptance is claimed."
+  "validation": "127 automated Node tests passed, including 48 recovery tests using DOM and transactional storage doubles. JavaScript syntax and complete release integrity checked. Real Chromium acceptance was blocked by cloud sandbox/environment startup errors; actual browser reload, quota, multiple-window, device and offline inference acceptance remain unrun. Review source only; live version 1.16.12/build 233 remains unchanged."
 }

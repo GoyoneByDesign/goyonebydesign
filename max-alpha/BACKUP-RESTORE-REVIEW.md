@@ -1,0 +1,6 @@
+# November 4, 2026 — MAX-ALPHA backup restore review source
+
+Candidate 1.16.13/build234, prepared 2026-11-04T13:38:00Z (8:38 AM EST), adds non-destructive personal-record restore with strict validation, explicit preview/confirmation and atomic saved-state comparison. Existing complete export, records, settings, credentials and permissions are preserved; imported knowledge and schedules are paused. 127 Node tests (48 focused recovery checks), syntax and release-integrity checks pass; DOM/storage doubles are not real browser acceptance. Chromium launch is blocked by the cloud sandbox/environment. Do not merge/deploy until browser reload, failed writes, cross-tab and cancellation acceptance pass. Live1.16.12/build233 and all existing installers remain unchanged. See max-alpha/DEVICE-GUIDE.md for recovery limits and independent/offline acceptance. Review branch publication is verified separately.
+
+
+This review does not change the live website or any installer. Before deployment, run actual-browser acceptance for file selection, Cancel/Escape, repeated confirmation, failed storage writes, reload persistence, and two-window interference. Keep the existing complete personal export private. See DEVICE-GUIDE.md for supported fields and excluded runtime/preferences.
