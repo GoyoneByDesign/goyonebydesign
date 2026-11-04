@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "version": "1.16.12",
-  "build": 233,
+  "version": "1.16.13",
+  "build": 234,
   "min_companion_build": 205,
   "files": [
     {
@@ -11,8 +11,8 @@
     },
     {
       "path": "DEVICE-GUIDE.md",
-      "sha256": "5fa99acb8f5556b3153fd2cc4d7a0e4e89b8d8613f718b09a6966bcc96d1cb0b",
-      "bytes": 11151
+      "sha256": "9bdc59a9e9350d2d86ee9fa3dbc21cc2363d0ab2aabee5e958b3d18b94e4d5db",
+      "bytes": 15494
     },
     {
       "path": "IOS-INSTALL.md",
@@ -26,8 +26,8 @@
     },
     {
       "path": "README.md",
-      "sha256": "cf7cf839c494d9596708c11f7cdf3574c890ae4d32eab5e9d0961413e3da441c",
-      "bytes": 3628
+      "sha256": "f7f736c352d124b10c857626bf7f707840e47858fac3535fcb29840b4c6cc98f",
+      "bytes": 4485
     },
     {
       "path": "VOICE-SETUP.md",
@@ -56,8 +56,8 @@
     },
     {
       "path": "app.js",
-      "sha256": "85e2d985b885a44f274f47d559c435463b6bc2ec1d8f9e269efa11c0d309f202",
-      "bytes": 151964
+      "sha256": "f10340f3745d4c3e1f0498bc3bf50f346a3aa7bbb7152a45db866e99abd696d9",
+      "bytes": 153108
     },
     {
       "path": "assets/goyonebydesign-logo.png",
@@ -73,6 +73,21 @@
       "path": "assets/song/male-syllables-v1.json",
       "sha256": "a01ed48843afea8dd7d9509ddfaca407a37d0ece5ef35df79f84e02ef55b778e",
       "bytes": 1255827
+    },
+    {
+      "path": "backup-storage.js",
+      "sha256": "eb3c72baa5cfb2ecf28e3cd710d3365df57e337422cb4f2370b4d8a0aa014c52",
+      "bytes": 2438
+    },
+    {
+      "path": "backup-ui.js",
+      "sha256": "c197bbcefd0baa06fbb33c5dc69e1181414ae51f07bcb7fc92048281f0a1efab",
+      "bytes": 4267
+    },
+    {
+      "path": "backup.js",
+      "sha256": "c6ea80603d5169734c3b3f3b29f0f4f9088850cdcfc0a7f1951eb6ed77b4cea1",
+      "bytes": 8138
     },
     {
       "path": "browser-panel.css",
@@ -206,8 +221,8 @@
     },
     {
       "path": "history.html",
-      "sha256": "e00b0da37a7d005cda9f0d11bce955317084334eba81578975c4ff69f9df377c",
-      "bytes": 13090
+      "sha256": "04aaee8ae8d2601104bd21b91e291e1f074418e1b5caa7396d661aca4499bb32",
+      "bytes": 14381
     },
     {
       "path": "icons/apple-touch-icon.png",
@@ -331,7 +346,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "d20f4f2ccdb0489541fbe0161560d730a1b36d545555d86f52182afed8e761bb",
+      "sha256": "78b6801c884a13a2cc4f640cade55810cf4cd633a3a1eb11e206cf61cfa5472d",
       "bytes": 260
     },
     {
@@ -371,12 +386,12 @@
     },
     {
       "path": "release-info.json",
-      "sha256": "9dab4b77f9988f17faa2b3d7e0183a887c24bcd546d34a429b4b099992d66593",
-      "bytes": 844
+      "sha256": "afd17919e0f6917bd4c918b3bee8dbb5a91bc31d0bfb0f897873f214a72d6853",
+      "bytes": 1158
     },
     {
       "path": "release-version.js",
-      "sha256": "18771e4cb055f997335e733098f6ee53b04cb8fa496379410bcb6d2cad14349f",
+      "sha256": "b6b9368405a8662aa56b3a06e0545c2916156012f2caab3d012e730a1176a25c",
       "bytes": 209
     },
     {
@@ -441,8 +456,8 @@
     },
     {
       "path": "sw.js",
-      "sha256": "893d66db97a6b2c620abb80f44bf718771c7bd457875401fb09a1d83350b0b51",
-      "bytes": 9428
+      "sha256": "0f4e53a9eba170935a2ed552b3ed91a39954150635ec38b0ac08a60e5c2acdb4",
+      "bytes": 9487
     },
     {
       "path": "tools.js",

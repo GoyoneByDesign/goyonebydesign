@@ -137,8 +137,10 @@ Profiles, saved places, notes, conversations and downloads remain local to each
 browser or installed app. There is no automatic cross-device account sync.
 Export important personal backups/notes from **Memory & data**. A personal
 backup file does not grant another device your microphone, location, files,
-connector credentials, pairing or operating-system access. The current import
-flow supports notes; full personal-backup restoration is not implemented.
+connector credentials, pairing or operating-system access. The existing notes-only import remains available. This review source adds a separate
+**Settings → Memory & data → Restore personal backup** flow. It is not an exact
+whole-device restoration: see the recovery checklist below. Real-browser storage
+and device acceptance are still required before treating the new flow as verified.
 
 Each device requires its own permissions and initial model/voice downloads.
 Offline UI caching does not mean every model is cached. Browser storage can be
@@ -160,3 +162,68 @@ the new device-settings modules.
 ## Install and stay current
 
 Use [Get MAX-ALPHA](https://www.goyonebydesign.com/max-alpha/install.html) for the free iPhone/iPad Home Screen app. On each device, open **Settings → Install & updates**. The shared version number identifies the website, installed web app and Mac interface. Updates need internet and never run over an active task. Apply a downloaded web update to reopen, or download a Mac update and quit/reopen MAX-ALPHA. Native Mac tools may need a newer installer. Chat data and downloads remain local to each device.
+
+## Personal-data recovery (review source, not device-verified)
+
+Keep **Export personal backup** files private. The existing full-state export is
+unchanged. Never upload a personal backup to the public website or repository.
+
+1. Close other MAX-ALPHA windows. On a fresh browser, save Settings once to create
+   its local saved state. Export any important existing data before merging.
+2. In **Settings → Memory & data**, choose **Restore personal backup** and select
+   a complete JSON backup, up to 12 MB. Existing notes-only import is separate.
+3. Choose **Preview backup**. Review record counts and before/after profile and
+   budget values. If conversations need chat saving, explicitly check that choice
+   and preview again. Merely selecting or previewing a file does not import it.
+4. Choose **Confirm restore** only after review. Wait for the saved confirmation.
+   Reopen the app and verify the imported records before relying on recovery.
+
+The restore adds conversations, notes, saved workflows, personal memories,
+schedules, bills, improvement records and study history. Profile and budget
+fields can fill defaults, with visible before/after values. Existing nondefault
+values are never replaced. Conflicting identities, invalid records and exceeded
+storage limits stop the whole restore instead of silently overwriting or trimming.
+Keep both backups and recover in a separate empty browser profile if merging is
+blocked. Older exports that do not match the current supported data schema may
+be rejected; keep the original file for manual recovery.
+
+New notes, workflows, personal memories and lessons are paused. New schedules
+are disabled. Review them before enabling. Restored conversations remain visible
+but their old contents are excluded from future local AI context until new turns
+are added. They are not sent as restored Cloudflare conversation context.
+
+Permissions, access modes, provider settings, credentials, pairing, cloud-memory
+sharing, display and other device preferences are not imported. Existing settings
+remain unchanged apart from explicitly enabling chat saving when requested.
+Saved places inside device settings are also not restored by this flow. The full
+export retains these fields for manual reference. Models, voice downloads,
+attachments, workspace files, native installations and account authorization
+must be recovered separately. This is personal-record recovery, not a full-device
+or ChatGPT/Muse account clone.
+
+Preview checks both this window and its saved state. A changed window, another
+tab's saved edits, failed write or aborted storage transaction blocks the restore.
+If a disk/window mismatch is reported, preserve an export before reloading; do not
+save stale data over another tab's edits. Automated tests use DOM and transactional
+storage doubles. Actual browser reload, quota failure, multiple windows and offline
+inference remain acceptance gates, not established results.
+
+## Independent offline readiness checklist
+
+Before an outage, on each intended device:
+
+- Choose **Local AI**, check device support, download/load its model and ask a new
+  question. The default Cloudflare mode needs internet and service access.
+- Export important personal data and keep a separate private copy. Confirm which
+  data and runtime files the export does and does not include.
+- Disable the network, fully close/reopen MAX-ALPHA, reload the cached model and
+  test a new question, a follow-up, a reviewed note and a harmless local export.
+- Separately test speech if needed. Cached interface files do not prove model,
+  speech or dictation readiness. Browser storage can still be evicted.
+- On an authorized personal Mac, separately verify the companion, installed
+  Ollama weights and one reviewed harmless native action. The website alone
+  cannot establish native setup, and a phone cannot use the Mac through localhost.
+
+A passing source test or a healthy cloud endpoint does not prove these checks.
+Local inference needs no OpenAI account, but a small local model does not promise
+frontier-model accuracy or equivalent autonomous task execution.
