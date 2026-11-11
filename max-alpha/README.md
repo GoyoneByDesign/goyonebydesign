@@ -23,3 +23,17 @@ Compared standalone security branch `ec21c0560d90b273517750be1d83626245d1b4e5` w
 ## Development
 
 Use Node.js 22 or later for `npm test`. Serve the folder over localhost for development; use HTTPS for the public installation. `python3 scripts/build-release.py` creates the release manifest from the explicit shipped-file inventory. Publish every manifest-listed file and release.json together at the established app path. Never publish credentials, private runtime data or personal backups. Internal development history is retained separately and is not in the public release inventory.
+
+## Personal recovery review
+
+The review source adds a non-destructive **Restore personal backup** preview in
+Memory & data. Existing full-state export and notes import remain unchanged.
+Only supported personal records are merged; access, provider settings and device
+preferences are not imported. Conflicts and capacity limits stop the entire
+restore. New memories, notes, workflows and lessons are paused, and schedules
+are disabled. Explicit confirmation and, where necessary, chat-saving consent
+are required. See [recovery and offline checks](DEVICE-GUIDE.md#personal-data-recovery-review-source-not-device-verified).
+
+Automated recovery tests use synthetic data, DOM doubles and an IndexedDB
+transaction double. Real-browser recovery, reload, quota/abort and cross-window
+acceptance plus local-model inference on the owner's device remain unverified.
