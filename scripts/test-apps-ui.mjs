@@ -5,8 +5,9 @@ import {test} from 'node:test';
 const apps=JSON.parse(fs.readFileSync(new URL('../apps/catalog.json',import.meta.url)));
 const code=fs.readFileSync(new URL('../apps/apps.js',import.meta.url),'utf8');
 function harness(hash=''){
-  const element=(dataset={})=>({dataset,hidden:false,value:'',textContent:'',handlers:{},attributes:{},addEventListener(type,fn){this.handlers[type]=fn;},setAttribute(k,v){this.attributes[k]=v;}});
+  const element=(dataset={})=>({dataset,hidden:false,value:'',textContent:'',handlers:{},attributes:{},children:[],append(child){this.children.push(child);},prepend(child){this.children.unshift(child);},after(child){this.next=child;},querySelector(selector){return this.children.find(child=>selector==='[data-public-app-action]'&&child.dataset.publicAppAction==='true')||null;},addEventListener(type,fn){this.handlers[type]=fn;},setAttribute(k,v){this.attributes[k]=v;}});
   const cards=apps.map(a=>({...element({search:[a.name,a.category,...(a.aliases||[])].join(' '),development:String(a.development),downloadable:String(Object.keys(a.downloads).length>0)}),id:a.id}));
+  for(const card of cards){card.body=element();card.querySelector=selector=>selector==='.card-body'?card.body:null;}
   const search=element(),results=element(),empty=element();
   const filters=['all','downloads','development'].map(filter=>element({filter}));
   const icons=apps.map(()=>element());
@@ -16,8 +17,9 @@ function harness(hash=''){
   const singles={'#search':search,'#results':results,'#empty':empty,'#preview':dialog};
   const lists={'.app-card':cards,'[data-filter]':filters,'.icon-wall a':icons,'[data-image]':previews};
   const location={hash};
-  vm.runInNewContext(code,{location,document:{querySelector:s=>singles[s],querySelectorAll:s=>lists[s]}});
-  return {cards,search,results,empty,filters,icons,previews,dialog,img,location,visible:()=>cards.filter(c=>!c.hidden),clickFilter:name=>filters.find(f=>f.dataset.filter===name).handlers.click()};
+  const context={location,document:{createElement:()=>element(),querySelector:s=>s==='[data-download-navigation-history]'?results.next:singles[s],querySelectorAll:s=>lists[s]}};
+  vm.runInNewContext(code,context);
+  return {cards,search,results,empty,filters,icons,previews,dialog,img,location,addActions:()=>context.addPublicAppActions(),visible:()=>cards.filter(c=>!c.hidden),clickFilter:name=>filters.find(f=>f.dataset.filter===name).handlers.click()};
 }
 test('filters use actual download and development fields',()=>{
   const h=harness();h.clickFilter('downloads');assert.equal(h.visible().length,3);h.clickFilter('development');assert.equal(h.visible().length,6);h.clickFilter('all');assert.equal(h.visible().length,9);
@@ -33,4 +35,28 @@ test('legacy app anchors retain their destination',()=>{
 });
 test('preview can reopen and backdrop dismiss without changing source',()=>{
   const h=harness();h.previews[0].handlers.click();assert.equal(h.dialog.open,true);assert.equal(h.img.src,h.previews[0].dataset.image);h.dialog.handlers.click({target:h.dialog,clientX:0,clientY:0});assert.equal(h.dialog.open,false);h.previews[1].handlers.click();assert.equal(h.dialog.open,true);assert.equal(h.img.alt,h.previews[1].dataset.caption);
+});
+
+test('three public test downloads route through existing installation warnings',()=>{
+  const h=harness();
+  for(const id of ['statusping','view4real','justmypick']){
+    const actions=h.cards.find(card=>card.id===id).body.children;
+    assert.equal(actions.length,1);
+    assert.equal(actions[0].children[0].href,`/apps/install.html#${id}`);
+    assert.match(actions[0].children[0].textContent,/test download & instructions/);
+  }
+});
+test('only the existing public browser app receives a launch action',()=>{
+  const h=harness();
+  const links=h.cards.filter(card=>card.body.children.length).map(card=>card.id);
+  assert.deepEqual(links,['statusping','view4real','max-alpha','justmypick']);
+  assert.equal(h.cards.find(card=>card.id==='max-alpha').body.children[0].children[0].href,'/max-alpha/');
+  assert.equal(h.cards.find(card=>card.id==='boardroom').body.children.length,0);
+});
+test('repeated enhancement is idempotent and preserves history navigation',()=>{
+  const h=harness();h.addActions();h.addActions();
+  assert.equal(h.cards.reduce((n,card)=>n+card.body.children.length,0),4);
+  assert.equal(h.results.next.children[0].href,'/apps/download-history.html');
+  assert.equal(h.results.next.next,undefined);
+  h.clickFilter('downloads');assert.equal(h.visible().length,3);
 });
