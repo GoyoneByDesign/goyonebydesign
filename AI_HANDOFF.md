@@ -274,3 +274,9 @@ Restored the regular Gift Card Report and added a separate Early Bird report for
 Catalog and owner-hub release metadata now describe per-store price ranges, quantities/amounts and underlying qualifying purchases. Individual-load eligibility is explicit; no combined-checkout eligibility claim. Regular report, older release history, backups, downloads and private access retained. Final publication/test receipts recorded separately.
 
 App deployment verified 2026-11-16T14:34:09.394315Z, source 2e1d6f44046617e3d8cece9c4cccfa0c9575c860. 22 focused packaging tests passed: tier boundaries, missingness, source privacy, reversals, sample reconciliation, UI/restores, Excel formulas, PDF worker and six paper settings, regular report and footer regressions. Build passed; PDF visually reviewed. No clean broad-suite claim. Catalog/hub 3 history tests and static destination/preservation checks pass. No private workbook values or rows included.
+
+
+## November 16, 2026 — MAX-ZETA build138 three-report template
+Staged metadata for original regular report, exact-template Early Bird and below-$250 report. Percentage labels do not imply extra sales. Prior history/data/access retained; no private workbook values or rows published. Awaiting app deployment receipt before publishing.
+
+App build138 deployment verified 2026-11-16T15:16:59.489421Z, source62a7931424b85b455b077bd08249e64a0d357992. Build and 16 final packaging checks passed; 30 broader focused checks passed covering all modes, exact template, boundaries, workers, exports and regular report/footer regressions. Portrait and landscape visually inspected. No claim that the entire broad suite passed. No private workbook values or rows included.

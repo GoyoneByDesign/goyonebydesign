@@ -113,7 +113,7 @@
           "status": "Catalog observation / validation limited",
           "channel": "Existing native test package",
           "changes": [
-            "Android 7+ \u00ef\u00bf\u00bd StatusPing 0.2.0-review.3/build 5 isolated debug test APK. Regression and native emulator check-in/reminder tests passed, including bounded delivery after ordinary process death. Full 12-hour/Doze/reboot and real-phone reliability remain unverified. Live caregiver/email/SMS/call escalation is not tested; production upgrade compatibility is not established."
+            "Android 7+ ï¿½ StatusPing 0.2.0-review.3/build 5 isolated debug test APK. Regression and native emulator check-in/reminder tests passed, including bounded delivery after ordinary process death. Full 12-hour/Doze/reboot and real-phone reliability remain unverified. Live caregiver/email/SMS/call escalation is not tested; production upgrade compatibility is not established."
           ],
           "validation": "See package limitations. This record does not establish new native-device testing.",
           "dateNote": "Historical release time was not recorded. Catalog/package information was observed when this history entry was created.",
@@ -482,6 +482,28 @@
       "name": "MAX-ZETA",
       "entries": [
         {
+          "id": "gift-three-reports-build138-2026-11-16",
+          "version": "3.83.7",
+          "build": 138,
+          "recordedAt": "2026-11-16T15:12:46.804083+00:00",
+          "releasedAt": "2026-11-16T15:16:59.489421Z",
+          "status": "Owner-private deployment verified",
+          "channel": "owner-private browser workspace",
+          "changes": [
+            "Three distinct options preserve the regular all-together Gift Card Report, Early Bird individual loads of $250 or more, and a separate below-$250 report.",
+            "Early Bird uses the exact North/South template with Physical/E-Gift/TTL rows in 25% ($250–374.99), 27% ($375–499.99) and 30% ($500+) sections, plus store and grand totals.",
+            "Percentage labels are template labels; bonus dollars are not added to reported sales. Existing source data, history and owner-private access remain unchanged."
+          ],
+          "validation": "Build and 16 final packaging checks passed; 30 broader focused checks passed covering all modes, exact template, boundaries, workers, exports and regular report/footer regressions. Portrait and landscape visually inspected. No claim that the entire broad suite passed.",
+          "references": [
+            {
+              "label": "Owner-private app",
+              "url": "https://anitas-pmix-reports.michaelgoyone78.chatgpt.site"
+            }
+          ],
+          "dateNote": "App source 62a7931424b85b455b077bd08249e64a0d357992. Deployment verified November 16, 2026 at 10:16 AM EST."
+        },
+        {
           "id": "early-bird-tiers-build137-2026-11-16",
           "version": "3.83.6",
           "build": 137,
@@ -490,7 +512,7 @@
           "status": "Owner-private deployment verified",
           "channel": "owner-private browser workspace",
           "changes": [
-            "Early Bird separates stores into $250\u2013374.99, $375\u2013499.99 and $500+ ranges, each with QTY and AMOUNT, followed by the underlying qualifying purchases.",
+            "Early Bird separates stores into $250–374.99, $375–499.99 and $500+ ranges, each with QTY and AMOUNT, followed by the underlying qualifying purchases.",
             "Regular Gift Card Report, dynamic path/file footer, existing data and owner-private access retained.",
             "Threshold is applied per individual load. Missing checkout identifiers prevent verifying combined multi-card checkout eligibility."
           ],
@@ -745,7 +767,7 @@
           "status": "Catalog observation / validation limited",
           "channel": "Web / source",
           "changes": [
-            "v3.61.0 \u00ef\u00bf\u00bd Build 84. Owner sign-in and access PIN required. Native installers are not available."
+            "v3.61.0 ï¿½ Build 84. Owner sign-in and access PIN required. Native installers are not available."
           ],
           "validation": "See package limitations. This record does not establish new native-device testing.",
           "dateNote": "Historical release time was not recorded. Catalog/package information was observed when this history entry was created.",
@@ -1327,7 +1349,7 @@
           "status": "Catalog observation / validation limited",
           "channel": "Existing native test package",
           "changes": [
-            "Android 8+ \u00ef\u00bf\u00bd JustMyPick 0.38/build 38 debug test APK. Branding, startup and same-key emulator list/cart/budget preservation passed. Its test certificate differs from old SavvyKin 0.36: an in-place update requires the original key. Do not uninstall or erase your existing app to work around this. Live integrations and physical-phone validation remain pending."
+            "Android 8+ ï¿½ JustMyPick 0.38/build 38 debug test APK. Branding, startup and same-key emulator list/cart/budget preservation passed. Its test certificate differs from old SavvyKin 0.36: an in-place update requires the original key. Do not uninstall or erase your existing app to work around this. Live integrations and physical-phone validation remain pending."
           ],
           "validation": "See package limitations. This record does not establish new native-device testing.",
           "dateNote": "Historical release time was not recorded. Catalog/package information was observed when this history entry was created.",

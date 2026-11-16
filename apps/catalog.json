@@ -128,13 +128,13 @@
       "Document tools",
       "Private workspace"
     ],
-    "note": "Version 3.83.6 \u00b7 Build 137 \u00b7 Updated November 16, 2026. Early Bird now separates each store into $250\u2013374.99, $375\u2013499.99 and $500+ ranges, with quantity, amount and underlying qualifying purchase rows. The regular Gift Card Report is unchanged. Eligibility uses each individual load, not combined checkout totals; source workbook grouping limits remain explicit. Owner-private browser app; no native installer.",
+    "note": "Version 3.83.7 \u00b7 Build 138 \u00b7 Updated November 16, 2026. Three distinct reports: the original all-together Gift Card Report, Early Bird for individual loads of $250 or more using the exact North/South template, and a separate below-$250 report. Early Bird preserves Physical/E-Gift/TTL rows in 25% ($250\u2013374.99), 27% ($375\u2013499.99), and 30% ($500+) template sections with store and grand totals. Percentage labels do not add bonus dollars to sales. Owner-private browser app; no native installer.",
     "web": "/pmix/",
     "webLabel": "Open private workspace",
     "downloads": {},
     "development": false,
     "platforms": "Browser",
-    "version": "3.83.6 \u00b7 Build 137",
+    "version": "3.83.7 \u00b7 Build 138",
     "access": "Owner-private"
   },
   {

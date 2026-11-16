@@ -1,12 +1,12 @@
 {
   "schema": 1,
-  "version": "1.0.4",
-  "build": 5,
+  "version": "1.0.5",
+  "build": 6,
   "timezone": "America/New_York",
-  "preparedAt": "2026-11-16T14:30:15.759751+00:00",
+  "preparedAt": "2026-11-16T15:12:46.804083+00:00",
   "channel": "website catalog maintenance",
   "changes": [
-    "Synchronized MAX-ZETA 3.83.6/build137 tiered Early Bird metadata; retained historical entries and backups."
+    "Synchronized MAX-ZETA 3.83.7/build138 three-report metadata; preserved prior releases and backups."
   ],
   "validation": "Catalog and history integrity checked; runtime releases not replaced."
 }
