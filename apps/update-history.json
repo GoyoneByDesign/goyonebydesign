@@ -482,6 +482,28 @@
       "name": "MAX-ZETA",
       "entries": [
         {
+          "id": "entry-history-links-build142-2026-11-16",
+          "version": "3.83.11",
+          "build": 142,
+          "recordedAt": "2026-11-16T16:18:58.277450+00:00",
+          "releasedAt": "2026-11-16T16:18:04Z",
+          "status": "Owner-private deployment verified",
+          "channel": "owner-private browser workspace",
+          "changes": [
+            "Corrected stale update-history links and current fallback version in both app entry pages.",
+            "Normalized README release headings; no report-accounting or layout changes.",
+            "Retained restored Toast help links/local-processing privacy statement and all prior releases."
+          ],
+          "validation": "Build succeeded and 9 final targeted tests passed. Broad suite is not clean: preexisting preview-readiness failures remain; no all-tests-passed claim.",
+          "dateNote": "App source b6fa8c5027810c13e6e01b7ca3ab801b69b74eb1. Deployment verified November 16, 2026 at 11:18 AM EST.",
+          "references": [
+            {
+              "label": "Owner-private app (sign-in required)",
+              "url": "https://anitas-pmix-reports.michaelgoyone78.chatgpt.site"
+            }
+          ]
+        },
+        {
           "id": "gift-help-restoration-build141-2026-11-16",
           "version": "3.83.10",
           "build": 141,

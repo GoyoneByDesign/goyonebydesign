@@ -293,3 +293,6 @@ App build140 deployment verified 2026-11-16T15:49:17Z, source e07befc32ec79015c0
 Staged restored Toast help links/local-processing privacy metadata. No accounting/layout/source-data change; no private data published. Awaiting app deployment receipt before publishing.
 
 App build141 deployment verified 2026-11-16T16:09:47Z, source a797a8262234342a292c8899de71f1a650d850b9. Build succeeded; 141 model/export tests, 37 UI/workflow tests and 23 additional packaging checks passed. Broad full-suite testing has unrelated hierarchy failures under investigation; no clean full-suite claim. No private data published.
+
+## November 16, 2026 — MAX-ZETA build142 history links
+App deployment verified 2026-11-16T16:18:04Z, source b6fa8c5027810c13e6e01b7ca3ab801b69b74eb1. Corrected entry history links/fallback versions and README headings only. No accounting/layout change; no private data published. Build succeeded and 9 final targeted tests passed. Broad suite is not clean: preexisting preview-readiness failures remain; no all-tests-passed claim.

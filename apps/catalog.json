@@ -128,13 +128,13 @@
       "Document tools",
       "Private workspace"
     ],
-    "note": "Version 3.83.10 · Build 141 · Updated November 16, 2026. Restored existing Toast background-help links and the local-processing privacy statement in Gift Card help. Purchase accounting, report layouts and source data are unchanged. Owner-private browser app; no native installer.",
+    "note": "Version 3.83.11 · Build 142 · Updated November 16, 2026. Corrected the update-history link and current fallback version in both app entry pages, and normalized README release headings. Report accounting and layouts are unchanged; the restored Toast help links and local-processing privacy statement remain intact. Owner-private browser app; no native installer.",
     "web": "/pmix/",
     "webLabel": "Open private workspace",
     "downloads": {},
     "development": false,
     "platforms": "Browser",
-    "version": "3.83.10 · Build 141",
+    "version": "3.83.11 · Build 142",
     "access": "Owner-private"
   },
   {

@@ -1,12 +1,12 @@
 {
   "schema": 1,
-  "version": "1.0.8",
-  "build": 9,
+  "version": "1.0.9",
+  "build": 10,
   "timezone": "America/New_York",
-  "preparedAt": "2026-11-16T16:09:14.016792+00:00",
+  "preparedAt": "2026-11-16T16:18:58.277450+00:00",
   "channel": "website catalog maintenance",
   "changes": [
-    "Synchronized MAX-ZETA 3.83.10/build141 help-restoration metadata; preserved prior releases and backups."
+    "Synchronized MAX-ZETA 3.83.11/build142 history-link maintenance metadata; preserved prior releases and backups."
   ],
   "validation": "Catalog and history integrity checked; runtime releases not replaced."
 }
