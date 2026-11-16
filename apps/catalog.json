@@ -128,13 +128,13 @@
       "Document tools",
       "Private workspace"
     ],
-    "note": "Version 3.83.8 · Build 139 · Updated November 16, 2026. Three prominent numbered view buttons select the regular all-together Gift Card Report, Early Bird individual loads of $250 or more, or the below-$250 report. A Viewing status identifies the selection, and preview/download follows that mode while preserving source rows. The existing exact Early Bird template remains unchanged. Owner-private browser app; no native installer.",
+    "note": "Version 3.83.9 · Build 140 · Updated November 16, 2026. All three Gift Card reports count Add Value purchases only, excluding Adjust Balance entries of either sign, Redemption and redemption reversals while retaining source rows. Three numbered report selectors now appear directly below the Gift Card heading, before uploads, help and source lists. Existing report templates and layouts are preserved. Owner-private browser app; no native installer.",
     "web": "/pmix/",
     "webLabel": "Open private workspace",
     "downloads": {},
     "development": false,
     "platforms": "Browser",
-    "version": "3.83.8 · Build 139",
+    "version": "3.83.9 · Build 140",
     "access": "Owner-private"
   },
   {

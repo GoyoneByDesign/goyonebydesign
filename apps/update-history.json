@@ -482,6 +482,28 @@
       "name": "MAX-ZETA",
       "entries": [
         {
+          "id": "gift-add-value-only-build140-2026-11-16",
+          "version": "3.83.9",
+          "build": 140,
+          "recordedAt": "2026-11-16T15:46:37.319091+00:00",
+          "releasedAt": "2026-11-16T15:49:17Z",
+          "status": "Owner-private deployment verified",
+          "channel": "owner-private browser workspace",
+          "changes": [
+            "All three Gift Card reports count Add Value purchases only. Adjust Balance entries of either sign, Redemption and redemption reversals are excluded from purchase totals; source rows remain retained.",
+            "Three numbered report-selection buttons move directly below the Gift Card heading, before uploads, help and source lists.",
+            "Existing report templates, layouts and prior releases are preserved. No private source data is published."
+          ],
+          "validation": "Build succeeded and 31 targeted checks passed. DOM click behavior verified. Live UI browser inspection was blocked by private sign-in. Legacy accounting tests retain superseded-rule expectations; no clean full-suite claim.",
+          "references": [
+            {
+              "label": "Owner-private app (sign-in required)",
+              "url": "https://anitas-pmix-reports.michaelgoyone78.chatgpt.site"
+            }
+          ],
+          "dateNote": "App source e07befc32ec79015c0d22e94f4f318391bb2e262. Deployment verified November 16, 2026 at 10:49 AM EST."
+        },
+        {
           "id": "gift-view-buttons-build139-2026-11-16",
           "version": "3.83.8",
           "build": 139,

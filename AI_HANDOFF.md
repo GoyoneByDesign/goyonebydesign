@@ -283,3 +283,8 @@ App build138 deployment verified 2026-11-16T15:16:59.489421Z, source62a7931424b8
 
 ## November 16, 2026 — MAX-ZETA build139 view buttons
 Numbered report selectors and Viewing status. Preview/download follows selected mode; source rows and existing template retained. No private rows/totals included. App deployment verified 2026-11-16T15:27:13Z, source d1c2db14c1644deb99e52fe94a6029156109bb62. 17 targeted checks passed covering actual outputs, threshold boundaries, six PDF paper/orientation settings and regular report preservation. App deployment verified; no full-suite claim.
+
+## November 16, 2026 — MAX-ZETA build140 purchase-only reports
+Staged Add Value-only rules and top-positioned numbered selectors metadata. Source rows, templates, layout and history retained; no private data included. Awaiting app deployment before publication.
+
+App build140 deployment verified 2026-11-16T15:49:17Z, source e07befc32ec79015c0d22e94f4f318391bb2e262. Build succeeded and 31 targeted checks passed. DOM click behavior verified. Live UI browser inspection was blocked by private sign-in. Legacy accounting tests retain superseded-rule expectations; no clean full-suite claim. No private data published.
