@@ -264,3 +264,7 @@ Added the exact verified private GitHub mirror commit a37c3e0e285c4c543827922450
 ## November 16, 2026 — Current release link synchronization
 
 Updated stale catalog/hub metadata to verified current releases without replacing app runtime code, native installers, user data or permissions. Retained historical entries and legacy package references. Source-only newer native work remains distinct from tested downloads. Verification and publication results recorded by the task.
+
+
+## MAX-ZETA build136 catalog correction
+Restored the regular Gift Card Report and added a separate Early Bird report for individual cards of $250 or more, with store and regional totals. Retained the path/file footer. Focused checks passed; no clean broad-suite claim. Source commit dbab1432932115e9577d3885ad5d90b108b9a1cb. Hub/catalog only; app runtime unchanged.

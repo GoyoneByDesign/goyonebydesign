@@ -482,6 +482,26 @@
       "name": "MAX-ZETA",
       "entries": [
         {
+          "id": "gift-card-correction-build136-2026-11-16",
+          "version": "3.83.5",
+          "build": 136,
+          "recordedAt": "2026-11-16T13:35:40.062039+00:00",
+          "releasedAt": null,
+          "status": "Owner-private deployment verified",
+          "channel": "browser workspace",
+          "changes": [
+            "Restored the regular Gift Card Report and added a separate Early Bird report for individual cards of $250 or more, with store and regional totals. Retained the path/file footer. Focused checks passed; no clean broad-suite claim.",
+            "Supersedes build 135; prior release history retained."
+          ],
+          "validation": "Focused tests: 36 + 11 + 62 passed; final package checks: 15 passed. Broad regression suite is not claimed clean.",
+          "references": [
+            {
+              "label": "Owner-private app",
+              "url": "https://anitas-pmix-reports.michaelgoyone78.chatgpt.site"
+            }
+          ]
+        },
+        {
           "id": "verified-catalog-sync-20261116",
           "version": "3.83.4",
           "build": 135,

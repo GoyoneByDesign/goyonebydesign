@@ -1,12 +1,12 @@
 {
   "schema": 1,
-  "version": "1.0.2",
-  "build": 3,
+  "version": "1.0.3",
+  "build": 4,
   "timezone": "America/New_York",
-  "preparedAt": "2026-11-16T12:40:00Z",
+  "preparedAt": "2026-11-16T13:35:40.062039+00:00",
   "channel": "website catalog maintenance",
   "changes": [
-    "Synchronized MAX-ALPHA and MAX-ZETA release metadata and retained all earlier histories and installer artifacts."
+    "Synchronized MAX-ZETA 3.83.5/build136 metadata; preserved prior history and backups."
   ],
   "validation": "Catalog and history integrity checked; runtime releases not replaced."
 }
