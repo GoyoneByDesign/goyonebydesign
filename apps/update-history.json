@@ -482,6 +482,28 @@
       "name": "MAX-ZETA",
       "entries": [
         {
+          "id": "early-bird-tiers-build137-2026-11-16",
+          "version": "3.83.6",
+          "build": 137,
+          "recordedAt": "2026-11-16T14:30:15.759751+00:00",
+          "releasedAt": "2026-11-16T14:34:09.394315Z",
+          "status": "Owner-private deployment verified",
+          "channel": "owner-private browser workspace",
+          "changes": [
+            "Early Bird separates stores into $250\u2013374.99, $375\u2013499.99 and $500+ ranges, each with QTY and AMOUNT, followed by the underlying qualifying purchases.",
+            "Regular Gift Card Report, dynamic path/file footer, existing data and owner-private access retained.",
+            "Threshold is applied per individual load. Missing checkout identifiers prevent verifying combined multi-card checkout eligibility."
+          ],
+          "validation": "22 focused packaging tests passed: tier boundaries, missingness, source privacy, reversals, sample reconciliation, UI/restores, Excel formulas, PDF worker and six paper settings, regular report and footer regressions. Build passed; PDF visually reviewed. No clean broad-suite claim.",
+          "references": [
+            {
+              "label": "Owner-private app",
+              "url": "https://anitas-pmix-reports.michaelgoyone78.chatgpt.site"
+            }
+          ],
+          "dateNote": "App source commit 2e1d6f44046617e3d8cece9c4cccfa0c9575c860; timestamp is the verified app deployment, not a native installer release."
+        },
+        {
           "id": "gift-card-correction-build136-2026-11-16",
           "version": "3.83.5",
           "build": 136,

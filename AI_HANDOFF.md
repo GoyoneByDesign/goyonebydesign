@@ -268,3 +268,9 @@ Updated stale catalog/hub metadata to verified current releases without replacin
 
 ## MAX-ZETA build136 catalog correction
 Restored the regular Gift Card Report and added a separate Early Bird report for individual cards of $250 or more, with store and regional totals. Retained the path/file footer. Focused checks passed; no clean broad-suite claim. Source commit dbab1432932115e9577d3885ad5d90b108b9a1cb. Hub/catalog only; app runtime unchanged.
+
+
+## November 16, 2026 — MAX-ZETA build137 tier display
+Catalog and owner-hub release metadata now describe per-store price ranges, quantities/amounts and underlying qualifying purchases. Individual-load eligibility is explicit; no combined-checkout eligibility claim. Regular report, older release history, backups, downloads and private access retained. Final publication/test receipts recorded separately.
+
+App deployment verified 2026-11-16T14:34:09.394315Z, source 2e1d6f44046617e3d8cece9c4cccfa0c9575c860. 22 focused packaging tests passed: tier boundaries, missingness, source privacy, reversals, sample reconciliation, UI/restores, Excel formulas, PDF worker and six paper settings, regular report and footer regressions. Build passed; PDF visually reviewed. No clean broad-suite claim. Catalog/hub 3 history tests and static destination/preservation checks pass. No private workbook values or rows included.
