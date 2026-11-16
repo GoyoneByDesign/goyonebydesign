@@ -296,3 +296,8 @@ App build141 deployment verified 2026-11-16T16:09:47Z, source a797a8262234342a29
 
 ## November 16, 2026 — MAX-ZETA build142 history links
 App deployment verified 2026-11-16T16:18:04Z, source b6fa8c5027810c13e6e01b7ca3ab801b69b74eb1. Corrected entry history links/fallback versions and README headings only. No accounting/layout change; no private data published. Build succeeded and 9 final targeted tests passed. Broad suite is not clean: preexisting preview-readiness failures remain; no all-tests-passed claim.
+
+## November 16, 2026 — MAX-ZETA build143 requested layouts
+Staged user-requested regular tier-grid and compact below-$250 layouts. Early Bird and Add Value-only rules retained; summary input does not invent purchase detail. No private figures included. Awaiting deployment receipt before publishing.
+
+App build143 deployment verified 2026-11-16T16:34:12Z, source 0370506c94ff2e0469c5868bfbd61fde4c1099f3. Build succeeded; 22 focused tests, 6 corrected workflow tests, 36 UI cases, 49 model tests and 8 exporter tests passed. Two obsolete UI header expectations were corrected. Actual PDF visually inspected. No live signed-in UI or full-suite-clean claim. No private data published.

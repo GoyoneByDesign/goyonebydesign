@@ -128,13 +128,13 @@
       "Document tools",
       "Private workspace"
     ],
-    "note": "Version 3.83.11 · Build 142 · Updated November 16, 2026. Corrected the update-history link and current fallback version in both app entry pages, and normalized README release headings. Report accounting and layouts are unchanged; the restored Toast help links and local-processing privacy statement remain intact. Owner-private browser app; no native installer.",
+    "note": "Version 3.83.12 · Build 143 · Updated November 16, 2026. The regular all-purchases report uses a North/South/Grand tier grid, with Below $250 after $500+ and before Store Total. The below-$250 option uses a compact North/South/Grand Physical/E-Gift/TTL template. Early Bird remains $250 or more; all three visible choices and Add Value-only purchase rules remain. Tiering requires individual purchase detail; summary-only input does not invent detail. Owner-private browser app; no native installer.",
     "web": "/pmix/",
     "webLabel": "Open private workspace",
     "downloads": {},
     "development": false,
     "platforms": "Browser",
-    "version": "3.83.11 · Build 142",
+    "version": "3.83.12 · Build 143",
     "access": "Owner-private"
   },
   {
