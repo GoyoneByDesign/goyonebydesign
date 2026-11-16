@@ -128,13 +128,13 @@
       "Document tools",
       "Private workspace"
     ],
-    "note": "Version 3.83.9 · Build 140 · Updated November 16, 2026. All three Gift Card reports count Add Value purchases only, excluding Adjust Balance entries of either sign, Redemption and redemption reversals while retaining source rows. Three numbered report selectors now appear directly below the Gift Card heading, before uploads, help and source lists. Existing report templates and layouts are preserved. Owner-private browser app; no native installer.",
+    "note": "Version 3.83.10 · Build 141 · Updated November 16, 2026. Restored existing Toast background-help links and the local-processing privacy statement in Gift Card help. Purchase accounting, report layouts and source data are unchanged. Owner-private browser app; no native installer.",
     "web": "/pmix/",
     "webLabel": "Open private workspace",
     "downloads": {},
     "development": false,
     "platforms": "Browser",
-    "version": "3.83.9 · Build 140",
+    "version": "3.83.10 · Build 141",
     "access": "Owner-private"
   },
   {

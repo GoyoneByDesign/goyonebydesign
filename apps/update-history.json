@@ -482,6 +482,28 @@
       "name": "MAX-ZETA",
       "entries": [
         {
+          "id": "gift-help-restoration-build141-2026-11-16",
+          "version": "3.83.10",
+          "build": 141,
+          "recordedAt": "2026-11-16T16:09:14.016792+00:00",
+          "releasedAt": "2026-11-16T16:09:47Z",
+          "status": "Owner-private deployment verified",
+          "channel": "owner-private browser workspace",
+          "changes": [
+            "Restored existing Toast background-help links and local-processing privacy statement omitted during the preceding help-text rewrite.",
+            "No purchase-accounting, report-layout or source-data changes. Existing Add Value-only report rules remain in place.",
+            "Updated obsolete test expectations to current Add Value and footer rules; preserved prior releases."
+          ],
+          "validation": "Build succeeded; 141 model/export tests, 37 UI/workflow tests and 23 additional packaging checks passed. Broad full-suite testing has unrelated hierarchy failures under investigation; no clean full-suite claim.",
+          "references": [
+            {
+              "label": "Owner-private app (sign-in required)",
+              "url": "https://anitas-pmix-reports.michaelgoyone78.chatgpt.site"
+            }
+          ],
+          "dateNote": "App source a797a8262234342a292c8899de71f1a650d850b9. Deployment verified November 16, 2026 at 11:09 AM EST."
+        },
+        {
           "id": "gift-add-value-only-build140-2026-11-16",
           "version": "3.83.9",
           "build": 140,
