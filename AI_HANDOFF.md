@@ -280,3 +280,6 @@ App deployment verified 2026-11-16T14:34:09.394315Z, source 2e1d6f44046617e3d8ce
 Staged metadata for original regular report, exact-template Early Bird and below-$250 report. Percentage labels do not imply extra sales. Prior history/data/access retained; no private workbook values or rows published. Awaiting app deployment receipt before publishing.
 
 App build138 deployment verified 2026-11-16T15:16:59.489421Z, source62a7931424b85b455b077bd08249e64a0d357992. Build and 16 final packaging checks passed; 30 broader focused checks passed covering all modes, exact template, boundaries, workers, exports and regular report/footer regressions. Portrait and landscape visually inspected. No claim that the entire broad suite passed. No private workbook values or rows included.
+
+## November 16, 2026 — MAX-ZETA build139 view buttons
+Numbered report selectors and Viewing status. Preview/download follows selected mode; source rows and existing template retained. No private rows/totals included. App deployment verified 2026-11-16T15:27:13Z, source d1c2db14c1644deb99e52fe94a6029156109bb62. 17 targeted checks passed covering actual outputs, threshold boundaries, six PDF paper/orientation settings and regular report preservation. App deployment verified; no full-suite claim.

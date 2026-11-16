@@ -35,13 +35,13 @@
       "Local reminders",
       "Backup & restore"
     ],
-    "note": "Android 7+ \u00b7 StatusPing 0.2.0-review.3/build 5 isolated debug test APK. Regression and native emulator check-in/reminder tests passed, including bounded delivery after ordinary process death. Full 12-hour/Doze/reboot and real-phone reliability remain unverified. Live caregiver/email/SMS/call escalation is not tested; production upgrade compatibility is not established.",
+    "note": "Android 7+ · StatusPing 0.2.0-review.3/build 5 isolated debug test APK. Regression and native emulator check-in/reminder tests passed, including bounded delivery after ordinary process death. Full 12-hour/Doze/reboot and real-phone reliability remain unverified. Live caregiver/email/SMS/call escalation is not tested; production upgrade compatibility is not established.",
     "downloads": {
       "android": {
         "file": "StatusPing-0.2.0-review.3-build5-debug-tested.apk",
         "url": "/downloads/releases/statusping/android/0.2.0-review.3-build5/StatusPing-0.2.0-review.3-build5-debug-tested.apk",
         "githubUrl": "https://github.com/GoyoneByDesign/goyonebydesign/releases/download/apps-test-2026-10-11/StatusPing-0.2.0-review.3-build5-debug-tested.apk",
-        "label": "StatusPing 0.2.0-review.3 / build 5 \u00b7 Debug test APK",
+        "label": "StatusPing 0.2.0-review.3 / build 5 · Debug test APK",
         "sha256": "e268728105edcea339110e72b46719a8548e01ac78b14634eead17a610915e96",
         "bytes": 6511597,
         "verified": "2026-10-11",
@@ -77,7 +77,7 @@
         "file": "VIEW4REAL-0.2.3-build3-Windows-x64-portable-tested.zip",
         "url": "/downloads/releases/view4real/windows/0.2.3-build3/VIEW4REAL-0.2.3-build3-Windows-x64-portable-tested.zip",
         "githubUrl": "https://github.com/GoyoneByDesign/goyonebydesign/releases/download/view4real-0.2.3-build3/VIEW4REAL-0.2.3-build3-Windows-x64-portable-tested.zip",
-        "label": "View4Real 0.2.3 / Build 3 Windows x64 \u2014 Unsigned portable test ZIP",
+        "label": "View4Real 0.2.3 / Build 3 Windows x64 — Unsigned portable test ZIP",
         "sha256": "ec755d1cc0c2dee42f52bea46b70805b22fb4f2ff4bb74ef84751fc1795b3a72",
         "bytes": 2941551,
         "verified": "2026-10-16",
@@ -87,7 +87,7 @@
     },
     "development": true,
     "platforms": "Windows x64 test",
-    "version": "Windows test v0.2.3 \u00b7 Build 3",
+    "version": "Windows test v0.2.3 · Build 3",
     "access": "Public test download; not a production upgrade",
     "releaseNotes": "/downloads/releases/view4real/windows/0.2.3-build3/TEST-RELEASE-NOTES.txt"
   },
@@ -112,7 +112,7 @@
     "install": "/apps/install.html#max-alpha",
     "development": false,
     "platforms": "Browser / Home Screen",
-    "version": "Web v1.16.12 \u00b7 Build 233",
+    "version": "Web v1.16.12 · Build 233",
     "access": "Browser interface"
   },
   {
@@ -128,13 +128,13 @@
       "Document tools",
       "Private workspace"
     ],
-    "note": "Version 3.83.7 \u00b7 Build 138 \u00b7 Updated November 16, 2026. Three distinct reports: the original all-together Gift Card Report, Early Bird for individual loads of $250 or more using the exact North/South template, and a separate below-$250 report. Early Bird preserves Physical/E-Gift/TTL rows in 25% ($250\u2013374.99), 27% ($375\u2013499.99), and 30% ($500+) template sections with store and grand totals. Percentage labels do not add bonus dollars to sales. Owner-private browser app; no native installer.",
+    "note": "Version 3.83.8 · Build 139 · Updated November 16, 2026. Three prominent numbered view buttons select the regular all-together Gift Card Report, Early Bird individual loads of $250 or more, or the below-$250 report. A Viewing status identifies the selection, and preview/download follows that mode while preserving source rows. The existing exact Early Bird template remains unchanged. Owner-private browser app; no native installer.",
     "web": "/pmix/",
     "webLabel": "Open private workspace",
     "downloads": {},
     "development": false,
     "platforms": "Browser",
-    "version": "3.83.7 \u00b7 Build 138",
+    "version": "3.83.8 · Build 139",
     "access": "Owner-private"
   },
   {
@@ -212,13 +212,13 @@
       "Price comparison prototype",
       "Saved-list source work"
     ],
-    "note": "Android 8+ \u00b7 JustMyPick 0.38/build 38 debug test APK. Branding, startup and same-key emulator list/cart/budget preservation passed. Its test certificate differs from old SavvyKin 0.36: an in-place update requires the original key. Do not uninstall or erase your existing app to work around this. Live integrations and physical-phone validation remain pending.",
+    "note": "Android 8+ · JustMyPick 0.38/build 38 debug test APK. Branding, startup and same-key emulator list/cart/budget preservation passed. Its test certificate differs from old SavvyKin 0.36: an in-place update requires the original key. Do not uninstall or erase your existing app to work around this. Live integrations and physical-phone validation remain pending.",
     "downloads": {
       "android": {
         "file": "JustMyPick-0.38-build38-debug-tested.apk",
         "url": "/downloads/releases/justmypick/android/0.38-build38/JustMyPick-0.38-build38-debug-tested.apk",
         "githubUrl": "https://github.com/GoyoneByDesign/goyonebydesign/releases/download/apps-test-2026-10-11/JustMyPick-0.38-build38-debug-tested.apk",
-        "label": "JustMyPick 0.38 / build 38 \u00b7 Debug test APK",
+        "label": "JustMyPick 0.38 / build 38 · Debug test APK",
         "sha256": "f3370c6f69e991cb57a1e6b6e4348cb821c7822e7e9238f2c0f06612af4e1e1a",
         "bytes": 13894315,
         "verified": "2026-10-11",

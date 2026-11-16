@@ -482,6 +482,28 @@
       "name": "MAX-ZETA",
       "entries": [
         {
+          "id": "gift-view-buttons-build139-2026-11-16",
+          "version": "3.83.8",
+          "build": 139,
+          "recordedAt": "2026-11-16T15:28:21.115145+00:00",
+          "releasedAt": "2026-11-16T15:27:13Z",
+          "status": "Owner-private deployment verified",
+          "channel": "owner-private browser workspace",
+          "changes": [
+            "Three prominent numbered buttons select regular all-together, Early Bird individual loads of $250 or more, and below-$250 reports.",
+            "Viewing status makes the selected report explicit; preview and download follow that mode without dropping source rows.",
+            "The existing exact Early Bird export template and regular report are preserved. No private workbook rows or totals are published."
+          ],
+          "validation": "17 targeted checks passed covering actual outputs, threshold boundaries, six PDF paper/orientation settings and regular report preservation. App deployment verified; no full-suite claim.",
+          "dateNote": "App source d1c2db14c1644deb99e52fe94a6029156109bb62. Deployment verified November 16, 2026 at 10:27 AM EST.",
+          "references": [
+            {
+              "label": "Owner-private app (sign-in required)",
+              "url": "https://anitas-pmix-reports.michaelgoyone78.chatgpt.site"
+            }
+          ]
+        },
+        {
           "id": "gift-three-reports-build138-2026-11-16",
           "version": "3.83.7",
           "build": 138,
