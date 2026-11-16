@@ -35,13 +35,13 @@
       "Local reminders",
       "Backup & restore"
     ],
-    "note": "Android 7+ · StatusPing 0.2.0-review.3/build 5 isolated debug test APK. Regression and native emulator check-in/reminder tests passed, including bounded delivery after ordinary process death. Full 12-hour/Doze/reboot and real-phone reliability remain unverified. Live caregiver/email/SMS/call escalation is not tested; production upgrade compatibility is not established.",
+    "note": "Android 7+ \u00b7 StatusPing 0.2.0-review.3/build 5 isolated debug test APK. Regression and native emulator check-in/reminder tests passed, including bounded delivery after ordinary process death. Full 12-hour/Doze/reboot and real-phone reliability remain unverified. Live caregiver/email/SMS/call escalation is not tested; production upgrade compatibility is not established.",
     "downloads": {
       "android": {
         "file": "StatusPing-0.2.0-review.3-build5-debug-tested.apk",
         "url": "/downloads/releases/statusping/android/0.2.0-review.3-build5/StatusPing-0.2.0-review.3-build5-debug-tested.apk",
         "githubUrl": "https://github.com/GoyoneByDesign/goyonebydesign/releases/download/apps-test-2026-10-11/StatusPing-0.2.0-review.3-build5-debug-tested.apk",
-        "label": "StatusPing 0.2.0-review.3 / build 5 · Debug test APK",
+        "label": "StatusPing 0.2.0-review.3 / build 5 \u00b7 Debug test APK",
         "sha256": "e268728105edcea339110e72b46719a8548e01ac78b14634eead17a610915e96",
         "bytes": 6511597,
         "verified": "2026-10-11",
@@ -77,7 +77,7 @@
         "file": "VIEW4REAL-0.2.3-build3-Windows-x64-portable-tested.zip",
         "url": "/downloads/releases/view4real/windows/0.2.3-build3/VIEW4REAL-0.2.3-build3-Windows-x64-portable-tested.zip",
         "githubUrl": "https://github.com/GoyoneByDesign/goyonebydesign/releases/download/view4real-0.2.3-build3/VIEW4REAL-0.2.3-build3-Windows-x64-portable-tested.zip",
-        "label": "View4Real 0.2.3 / Build 3 Windows x64 — Unsigned portable test ZIP",
+        "label": "View4Real 0.2.3 / Build 3 Windows x64 \u2014 Unsigned portable test ZIP",
         "sha256": "ec755d1cc0c2dee42f52bea46b70805b22fb4f2ff4bb74ef84751fc1795b3a72",
         "bytes": 2941551,
         "verified": "2026-10-16",
@@ -87,7 +87,7 @@
     },
     "development": true,
     "platforms": "Windows x64 test",
-    "version": "Windows test v0.2.3 · Build 3",
+    "version": "Windows test v0.2.3 \u00b7 Build 3",
     "access": "Public test download; not a production upgrade",
     "releaseNotes": "/downloads/releases/view4real/windows/0.2.3-build3/TEST-RELEASE-NOTES.txt"
   },
@@ -105,14 +105,14 @@
       "Work studio",
       "Personal organization"
     ],
-    "note": "Web1.16.10/build231. Bill-edit retries preserve the original entry after a failed save. Update available installs the complete verified browser package and reopens after saving work; drafts and active tasks safely block installation. Version, build and packaged release time are visible. Native tool updates still require their existing installer/restart. No native iOS or Windows installer is released.",
+    "note": "Web 1.16.12/build 233. Update activation keeps the verified target stable while personal work is saved, and overlapping update checks preserve the in-progress status. 79 automated checks pass; physical-device and native installer acceptance are not claimed. AI connections require separate setup.",
     "web": "/max-alpha/",
     "webLabel": "Open browser app",
     "downloads": {},
     "install": "/apps/install.html#max-alpha",
     "development": false,
     "platforms": "Browser / Home Screen",
-    "version": "Web v1.16.10 · Build 231",
+    "version": "Web v1.16.12 \u00b7 Build 233",
     "access": "Browser interface"
   },
   {
@@ -128,13 +128,13 @@
       "Document tools",
       "Private workspace"
     ],
-    "note": "Version 3.82.0 · Build 127 · Updated October 29, 2026. Populated source-backed preview choices, sequential PDF preparation and direct print/download/edit. Additional specialized adapters remain in progress. Owner sign-in and access PIN required; no native installer.",
+    "note": "Version 3.83.4 \u00b7 Build 135 \u00b7 Updated November 16, 2026. Gift Card exports separate North and South with right-side regional totals and a grand total. Footer uses dynamic path and filename plus report name, MG and date. Focused report checks and packaging passed; the broad regression suite is not clean. Owner-private browser app; no native installer.",
     "web": "/pmix/",
     "webLabel": "Open private workspace",
     "downloads": {},
     "development": false,
     "platforms": "Browser",
-    "version": "3.82.0 · Build 127",
+    "version": "3.83.4 \u00b7 Build 135",
     "access": "Owner-private"
   },
   {
@@ -212,13 +212,13 @@
       "Price comparison prototype",
       "Saved-list source work"
     ],
-    "note": "Android 8+ · JustMyPick 0.38/build 38 debug test APK. Branding, startup and same-key emulator list/cart/budget preservation passed. Its test certificate differs from old SavvyKin 0.36: an in-place update requires the original key. Do not uninstall or erase your existing app to work around this. Live integrations and physical-phone validation remain pending.",
+    "note": "Android 8+ \u00b7 JustMyPick 0.38/build 38 debug test APK. Branding, startup and same-key emulator list/cart/budget preservation passed. Its test certificate differs from old SavvyKin 0.36: an in-place update requires the original key. Do not uninstall or erase your existing app to work around this. Live integrations and physical-phone validation remain pending.",
     "downloads": {
       "android": {
         "file": "JustMyPick-0.38-build38-debug-tested.apk",
         "url": "/downloads/releases/justmypick/android/0.38-build38/JustMyPick-0.38-build38-debug-tested.apk",
         "githubUrl": "https://github.com/GoyoneByDesign/goyonebydesign/releases/download/apps-test-2026-10-11/JustMyPick-0.38-build38-debug-tested.apk",
-        "label": "JustMyPick 0.38 / build 38 · Debug test APK",
+        "label": "JustMyPick 0.38 / build 38 \u00b7 Debug test APK",
         "sha256": "f3370c6f69e991cb57a1e6b6e4348cb821c7822e7e9238f2c0f06612af4e1e1a",
         "bytes": 13894315,
         "verified": "2026-10-11",

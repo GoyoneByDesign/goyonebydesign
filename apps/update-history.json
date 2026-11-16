@@ -113,7 +113,7 @@
           "status": "Catalog observation / validation limited",
           "channel": "Existing native test package",
           "changes": [
-            "Android 7+ ï¿½ StatusPing 0.2.0-review.3/build 5 isolated debug test APK. Regression and native emulator check-in/reminder tests passed, including bounded delivery after ordinary process death. Full 12-hour/Doze/reboot and real-phone reliability remain unverified. Live caregiver/email/SMS/call escalation is not tested; production upgrade compatibility is not established."
+            "Android 7+ \u00ef\u00bf\u00bd StatusPing 0.2.0-review.3/build 5 isolated debug test APK. Regression and native emulator check-in/reminder tests passed, including bounded delivery after ordinary process death. Full 12-hour/Doze/reboot and real-phone reliability remain unverified. Live caregiver/email/SMS/call escalation is not tested; production upgrade compatibility is not established."
           ],
           "validation": "See package limitations. This record does not establish new native-device testing.",
           "dateNote": "Historical release time was not recorded. Catalog/package information was observed when this history entry was created.",
@@ -344,6 +344,26 @@
       "name": "MAX-ALPHA",
       "entries": [
         {
+          "id": "verified-catalog-sync-20261116",
+          "version": "1.16.12",
+          "build": 233,
+          "recordedAt": "2026-11-16T12:40:00Z",
+          "releasedAt": null,
+          "status": "Verified release/catalog synchronization",
+          "channel": "Published release metadata; no new native package",
+          "changes": [
+            "Catalog synchronized to the existing published browser release; no runtime code or installer replaced.",
+            "Verified update activation and concurrency fixes already present in this browser package."
+          ],
+          "validation": "79 Node tests passed in this review. Native/device tests not run.",
+          "references": [
+            {
+              "label": "Current app resource",
+              "url": "https://www.goyonebydesign.com/max-alpha/"
+            }
+          ]
+        },
+        {
           "id": "bill-edit-save-recovery-20261029",
           "version": "1.16.10",
           "build": 231,
@@ -461,6 +481,26 @@
       "id": "max-zeta",
       "name": "MAX-ZETA",
       "entries": [
+        {
+          "id": "verified-catalog-sync-20261116",
+          "version": "3.83.4",
+          "build": 135,
+          "recordedAt": "2026-11-16T12:40:00Z",
+          "releasedAt": null,
+          "status": "Verified release/catalog synchronization",
+          "channel": "Published release metadata; no new native package",
+          "changes": [
+            "North and South Gift Card sections with right-side totals and separate grand total.",
+            "Dynamic Excel path/file footer, report filename, MG and current date; matching PDF/CSV naming."
+          ],
+          "validation": "Published private Site verified by deployment; focused report, import, footer and packaging checks passed. Broad regression suite has failures. Original source workbook/data not changed.",
+          "references": [
+            {
+              "label": "Current app resource",
+              "url": "https://anitas-pmix-reports.michaelgoyone78.chatgpt.site"
+            }
+          ]
+        },
         {
           "id": "populated-preview-gallery-20261029-build127",
           "version": "3.82.0",
@@ -663,7 +703,7 @@
           "status": "Catalog observation / validation limited",
           "channel": "Web / source",
           "changes": [
-            "v3.61.0 ï¿½ Build 84. Owner sign-in and access PIN required. Native installers are not available."
+            "v3.61.0 \u00ef\u00bf\u00bd Build 84. Owner sign-in and access PIN required. Native installers are not available."
           ],
           "validation": "See package limitations. This record does not establish new native-device testing.",
           "dateNote": "Historical release time was not recorded. Catalog/package information was observed when this history entry was created.",
@@ -1245,7 +1285,7 @@
           "status": "Catalog observation / validation limited",
           "channel": "Existing native test package",
           "changes": [
-            "Android 8+ ï¿½ JustMyPick 0.38/build 38 debug test APK. Branding, startup and same-key emulator list/cart/budget preservation passed. Its test certificate differs from old SavvyKin 0.36: an in-place update requires the original key. Do not uninstall or erase your existing app to work around this. Live integrations and physical-phone validation remain pending."
+            "Android 8+ \u00ef\u00bf\u00bd JustMyPick 0.38/build 38 debug test APK. Branding, startup and same-key emulator list/cart/budget preservation passed. Its test certificate differs from old SavvyKin 0.36: an in-place update requires the original key. Do not uninstall or erase your existing app to work around this. Live integrations and physical-phone validation remain pending."
           ],
           "validation": "See package limitations. This record does not establish new native-device testing.",
           "dateNote": "Historical release time was not recorded. Catalog/package information was observed when this history entry was created.",
@@ -1317,6 +1357,26 @@
       "id": "goyonebydesign-portal",
       "name": "GoyoneByDesign website and app portal",
       "entries": [
+        {
+          "id": "verified-catalog-sync-20261116",
+          "version": "1.0.2",
+          "build": 3,
+          "recordedAt": "2026-11-16T12:40:00Z",
+          "releasedAt": null,
+          "status": "Verified release/catalog synchronization",
+          "channel": "Published release metadata; no new native package",
+          "changes": [
+            "Synchronized app catalog and owner-hub links to verified releases.",
+            "Preserved all earlier release history, legacy download references, owner-only access and original installer bytes."
+          ],
+          "validation": "Catalog integrity and history tests pass. This is a portal maintenance release, not a new native installer.",
+          "references": [
+            {
+              "label": "Current app resource",
+              "url": "https://www.goyonebydesign.com/apps/"
+            }
+          ]
+        },
         {
           "id": "research-review-20261029",
           "version": "Research review",

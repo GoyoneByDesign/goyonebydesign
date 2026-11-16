@@ -1,12 +1,12 @@
 {
   "schema": 1,
-  "version": "1.0.0",
-  "build": 1,
+  "version": "1.0.2",
+  "build": 3,
   "timezone": "America/New_York",
-  "preparedAt": "2026-10-15T14:02:12.541Z",
-  "channel": "website",
+  "preparedAt": "2026-11-16T12:40:00Z",
+  "channel": "website catalog maintenance",
   "changes": [
-    "Added consistent versioned update history across the app portal; first tracked portal release."
+    "Synchronized MAX-ALPHA and MAX-ZETA release metadata and retained all earlier histories and installer artifacts."
   ],
-  "validation": "Source and static browser checks; publication verified separately."
+  "validation": "Catalog and history integrity checked; runtime releases not replaced."
 }

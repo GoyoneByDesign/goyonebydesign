@@ -260,3 +260,7 @@ Source 3ad3af19a10b91c9448bfa6eef22e66a6067fb91 verified all 17 changed blobs, w
 ## StockPilot Sandbox source mirror reference — 2026-10-29 12:34 UTC
 
 Added the exact verified private GitHub mirror commit a37c3e0e285c4c5438279224509755655caccf24 to the existing Sandbox build1 history entry. All135 native source files match, three documentation updates included,281 other core files preserved,zero deletions. This is a source-reference update only: no new app version, deployment, credential, provider acceptance or AutoDS replacement claim. All59 history entries retained.
+
+## November 16, 2026 — Current release link synchronization
+
+Updated stale catalog/hub metadata to verified current releases without replacing app runtime code, native installers, user data or permissions. Retained historical entries and legacy package references. Source-only newer native work remains distinct from tested downloads. Verification and publication results recorded by the task.
