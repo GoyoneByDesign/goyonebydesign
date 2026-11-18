@@ -1,3 +1,18 @@
+# November 10, 2026 — MAX-ALPHA recovery acceptance preparation
+
+Existing review/max-alpha-backup-20261104 candidate remains 1.16.13/build 234; live
+1.16.12/build 233 is unchanged. Revalidation passed 127 app tests, three history
+tests, JavaScript syntax, integrity and catalog checks on Node 24.22.1. Added the
+synthetic real-browser/IndexedDB acceptance runner and its instructions in
+max-alpha/BACKUP-RESTORE-REVIEW.md. The runner has only passed syntax checking:
+Chromium still fails before launch with socket Operation not permitted, including
+the permitted elevated attempt. Browser, real quota, physical-device and offline
+inference gates remain open. No app runtime, version, release manifest, portal
+metadata/history, existing download, access setting or user data changed. Preserve
+the existing public portal privacy hold and keep PR #3 draft/unmerged. Next: run
+the isolated acceptance checks in an authorized browser-capable environment,
+review screenshots, and resolve the remaining gates before any deployment.
+
 # October 29, 2026 — StockPilot recovery source and private Sandbox test Site
 
 Core review 1.0.4-review.11 / build 14 is published at 469c7b703ed970683b1c1c07fd32c92b768ebf03 (711 main + 42 Worker/UI + 14 hosted/Access tests; independent 61-check review). The standalone Access Worker remains disabled and undeployed. Separate owner-private Sites adapter 0.1.0-sandbox / build 1 deployed at 11:15:59 UTC, source 6d339a4edbab97e356141990f6df1fe7efb02e6d, with 25 tests, typecheck/build and 7 local HTTP checks passing. Four dedicated D1 tables and Michael-only access were verified. Owner-ID binding, Sandbox credentials and genuine provider acceptance remain pending; reads and recovery are off. No production store connection or AutoDS replacement is claimed. Appended two truthful history entries and reconciled the catalog note. All 57 prior entries, downloads and unrelated apps are preserved. The app generator would have dropped an existing MAX-ZETA version and private-workspace link, so the rendered app page was instead patched only at the StockPilot note. Source and live Pages verification are recorded separately.
